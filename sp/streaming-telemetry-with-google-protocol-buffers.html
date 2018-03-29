@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Streaming Telemetry with Google Protocol Buffers</title>
+
+	<meta property="og:image" content="https://alln-extcloud-storage.cisco.com/ciscoblogs/photo-3-1-460x230.jpg"/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"193838"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Insight and Action from Data at the Edge' href='https://blogs.cisco.com/analytics-automation/insight-and-action-from-data-at-the-edge' />
+<link rel='next' title='F5 Agility Vienna | Welcome to &#8216;The City of Dreams&#8217; where Hi-tech Meets Tradition' href='https://blogs.cisco.com/datacenter/f5-agility-vienna-welcome-to-the-city-of-dreams-where-hi-tech-meets-tradition' />
+
+<link rel="canonical" href="https://blogs.cisco.com/sp/streaming-telemetry-with-google-protocol-buffers" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=193838' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Streaming Telemetry with Google Protocol Buffers"/>
+  <meta property="og:url" content="https://blogs.cisco.com/sp/streaming-telemetry-with-google-protocol-buffers"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2016-05-11T07:00:46+00:00"/>
+  <meta property="article:modified_time" content="2016-05-10T15:30:52+00:00" />
+  <meta property="og:updated_time" content="2016-05-10T15:30:52+00:00" />
+  <meta property="article:section" content="SP360: Service Provider"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Streaming Telemetry with Google Protocol Buffers"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/sp/streaming-telemetry-with-google-protocol-buffers"/>
+  <meta name="twitter:description" content="In a recent blog on “Why You Should Care About Model-Driven Telemetry”, I reviewed the need for streaming telemetry and the high-level architecture that makes it possible. Today I’m going to drill down on some specific design choices we made in order to quickly export large amounts of data.
+
+Tell Me"/>
+  <meta name="twitter:image" content="https://alln-extcloud-storage.cisco.com/ciscoblogs/photo-3-1.jpg"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:creator" content="@http://twitter.com/scadora"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521459699";
+		var sig = "481f14013e7c9b8fb276f051c8506c94";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=https://blogs.cisco.com/sp/streaming-telemetry-with-google-protocol-buffers&text=Drill+down+on+specific+design+choices+when+streaming+telemetry+with+Google+Protocol+Buffers%3A&via=CiscoSP360" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/sp/streaming-telemetry-with-google-protocol-buffers&title=Streaming Telemetry with Google Protocol Buffers" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/sp/streaming-telemetry-with-google-protocol-buffers" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/sp/streaming-telemetry-with-google-protocol-buffers" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Streaming Telemetry with Google Protocol Buffers&body=I saw this post on Cisco SP360: Service Provider blog and thought you might like to read it.%0A%0AStreaming Telemetry with Google Protocol Buffers%0A%0Ahttps://blogs.cisco.com/sp/streaming-telemetry-with-google-protocol-buffers%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/sp/'>SP360: Service Provider</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/photo-3-1-460x230.jpg">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							SP360: Service Provider  						</span>
+						<h1 id="post-193838" class="kindle_title title">Streaming Telemetry with Google Protocol Buffers</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1465523175-bpthumb.jpg"></div><div class="author_rewards_box">			<ul class = "nitro_author193838 bunchballAwards">
+		<li>
+			<div class = "nitro_badge badgenitro_author193838">
+			</div>
+			<div class = "nitro_points pointsnitro_author193838">
+			</div>
+		</li>
+		<script>
+var nitroName = 'scadora';
+var sessionKey = '';
+
+
+nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "postBadges", "nitro_author193838");</script>
+
+		</ul>
+		</ul>
+	<div class = "clear"></div>
+</div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/shellycadora" title="Posts by Shelly Cadora" rel="author">Shelly Cadora</a> - May 11, 2016 - 0 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p>In a recent blog on <a href="http://blogs.cisco.com/sp/why-you-should-care-about-model-driven-telemetry" target="_blank">“Why You Should Care About <font color="red">Model-Driven Telemetry</font>”,</a> I reviewed the need for <font color="red">streaming telemetry</font> and the high-level architecture that makes it possible. Today I’m going to drill down on some specific design choices we made in order to quickly export large amounts of <font color="red">data</font>.</p>
+<h2>Tell Me How You Really Feel About <font color="red">XML</font></h2>
+<p>When we first started working on <font color="red">streaming telemetry</font>, one of the key questions was how we should encode (or “serialize”) the <font color="red">data</font> on the <font color="red">wire</font>. <font color="red">XML</font>, that warhorse of <font color="red">NETCONF</font> fame, seemed like an obvious first choice. <font color="red">XML</font> is a well-defined, text-based markup language that encloses everything in <font color="red">tags</font>. Now some people like <font color="red">XML</font> and some people really do not.  But one thing is for sure: <font color="red">XML</font> is not a compact <font color="red">encoding</font>.  All those <font color="red">tags</font> are strings and strings simply take up more space than, say, <font color="red">integers</font>. Moreover, string operations are just plain slower in most programming languages.  Since <font color="red">high performance</font> was one of our key goals for <font color="red">telemetry</font>, <font color="red">XML</font> was not really the best fit.</p>
+<p>After some experiments and <font color="red">customer engagements</font>, we settled on <a href="https://developers.google.com/protocol-buffers/" target="_blank">Google Protocol Buffers</a> (aka &#8220;<font color="red">GPB</font>&#8221; or &#8220;protobufs&#8221;) as a widely adopted, highly efficient way of encoding <font color="red">telemetry</font> <font color="red">data</font> (we also support <font color="red">JSON</font> <font color="red">encoding</font>, but that’s another story).   In our first release (<font color="red">XR</font> 6.0.0), we went all-in on performance with a “compact” <font color="red">GPB</font> format that represents the ultimate in efficiency and speed.  However, that compactness came at a cost of some operational complexity.  So in <font color="red">XR</font> 6.0.1, we introduced an alternative format (&#8220;key-value&#8221; or “self-describing”) that is less efficient but simpler to use.</p>
+<p>The main difference between the two <font color="red">GPB</font> <font color="red">telemetry</font> formats is how they represent keys. Any piece of <font color="red">data</font> is only interesting if you know what it is.  For example, if a <font color="red">router</font> sent you an <font color="red">integer</font> like &#8220;449825&#8221;, it could represent anything &#8212; uptime, <font color="red">packets</font> in, <font color="red">bytes</font> out, etc.  In order to know what &#8220;449852&#8221; is, you need a key.  So let’s take a closer look at how these keys are represented in the different <font color="red">encodings</font>.</p>
+<h2>Compact <font color="red">GPB</font></h2>
+<p>Compact <font color="red">GPB</font> was the original format supported in <font color="red">XR</font> 6.0.0.  In compact <font color="red">GPB</font>, the &#8220;key&#8221; that the <font color="red">router</font> includes in the <font color="red">telemetry</font> <font color="red">packet</font> is just an <font color="red">integer</font>.  So, for the <font color="red">interface</font> statistics, you&#8217;d get <font color="red">data</font> that looked like this:</p>
+<p>1: GigabitEthernet0/0/0/0<br />
+50: 449825<br />
+51: 41624083<br />
+52: 360333<br />
+53: 29699362<br />
+54: 91299<br />
+55: 25<br />
+56: 188801<br />
+&lt;snipped for brevity&gt;</p>
+<p>You might guess that &#8220;1&#8221; stands for the <font color="red">interface</font> name, but what about 50, 51, 52?  In order for you to decode this, you need a decoder ring.  The decoder ring for <font color="red">GPB</font> is called a &#8220;.<font color="red">proto</font>&#8221; file.  With compact <font color="red">GPB</font>, you need to generate a “.<font color="red">proto</font>” file on the <font color="red">router</font> for every path that you want to stream and upload it to your collector.  For example, if you wanted to stream the <font color="red">interface</font> statistics, you would need to generate a “.<font color="red">proto</font>” (&#8216;int_stats.<font color="red">proto</font>&#8217; below) as follows:</p>
+<pre>RP/0/RP0/CPU0:Sun601# <font color="red">telemetry</font> generate gpb-encoding path 'RootOper.InfraStatistics.Interface(*).Latest.GenericCounters' file disk0:int_stats.<font color="red">proto</font> syntax <font color="red">proto</font>3</pre>
+<p>Here’s part of the int_stats.<font color="red">proto</font> I just generated:</p>
+<p><img class="wp-image-193841 size-large aligncenter" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/photo-1-1-550x131.jpg" alt="photo 1" width="550" height="131" /></p>
+<p>With this “.proto” file, your collector can determine that key (or &#8220;field number&#8221;) &#8220;50&#8221; means packets_received, &#8220;51&#8221; means bytes_received, and so on.</p>
+<p><img class="alignleft wp-image-193842 size-medium" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/photo-2-1-300x340.jpg" alt="photo 2" width="300" height="340" />Now you might be wondering why anyone would bother with all this secret-squirrel-decoder-proto stuff.  The answer goes back to the name.  This <font color="red">encoding</font> is compact.  It is far more efficient to send <font color="red">integers</font> like &#8220;54&#8221; across the <font color="red">wire</font> than strings like &#8220;MulticastPacketsReceived.&#8221;  And <font color="red">GPB</font> is really good at sending <font color="red">integers</font> on the <font color="red">wire</font>:  it uses the concept of &#8220;<a href="https://developers.google.com/protocol-buffers/docs/encoding#varints" target="_blank">varints</a>&#8221; to serialize <font color="red">integers</font> even more efficiently (i.e. a 64 bit <font color="red">integer</font> doesn&#8217;t actually need to take up 64 bits on the <font color="red">wire</font> most of the time).  As you can see from the sniffer trace, <font color="red">GPB</font> allows us to get 35 counters for 5 <font color="red">interfaces</font> in 833 <font color="red">bytes</font>.  So if efficiency, speed, and performance are paramount for you, you might be willing to put up with the operational headache of managing the “.<font color="red">proto</font>” files on your collector.</p>
+<p>Note: Unfortunately for those of us who like to read sniffer traces, <font color="red">GPB</font>&#8217;s heavy use of varints means that you can&#8217;t easily &#8220;eyeball&#8221; the trace and pick out field numbers and values.  You&#8217;ll have to take a <font color="blue">deep dive</font> into the mysteries of <u>varints </u>to understand why 0x0A16 indicates that field number &#8220;1&#8221; (InterfaceName) with a length-delimited value of 20 <font color="red">bytes</font> will follow (&#8220;GigabitEthernet0/0/0/0&#8221;).</p>
+<h2>Key-Value / “Self-Describing” Format</h2>
+<p>In the key-value format, the key is sent as a string.  Strings are much less efficient on the <font color="red">wire</font> than varints, but they are self-describing.  This means that you don&#8217;t need a “.<font color="red">proto</font>” file decoder ring for every path.  You use a single “.<font color="red">proto</font>” file for all paths, then read the keys to figure out what the values refer to.  The sniffer trace for key-value encoding &#8220;scans&#8221; more easily because of all the strings:</p>
+<p><img class="aligncenter wp-image-193843 size-large" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/photo-3-1-550x537.jpg" alt="photo 3" width="550" height="537" /></p>
+<p>That&#8217;s much friendlier to look at, but note how much bigger the <font color="red">data</font> is.  Instead of 833 <font color="red">bytes</font> in a single <font color="red">UDP</font> <font color="red">packet</font>, you now have more than 4000 <font color="red">bytes</font> across 4 TCP <font color="red">packets</font> (plus the overhead of the TCP session itself).</p>
+<h2>Base <font color="red">Proto</font> Comparison</h2>
+<p>The following table compares the “.<font color="red">proto</font>” files for compact <font color="red">GPB</font> vs. Key-Value.  Note that the &#8220;policy_path&#8221; in the Telemetry_Table of the compact <font color="red">GPB</font> is used by the collector to select which path-specific “.<font color="red">proto</font>” (like the int_stats.<font color="red">proto</font> above) to decode the <font color="red">data</font> in the repeated &#8220;rows&#8221; that follow.  In contrast, the key-value “.<font color="red">proto</font>” is the only file the collector needs.</p>
+<p><img class="aligncenter wp-image-193848 size-large" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/photo-4-550x511.png" alt="photo 4" width="550" height="511" /></p>
+<h2>Transport</h2>
+<p>Because it&#8217;s so compact, the compact <font color="red">GPB</font> <font color="red">encoding</font> can fit even some of the longest &#8220;rows&#8221; of <font color="red">data</font> in <font color="red">XR</font> into a single <font color="red">packet</font> (tables can be split across multiple <font color="red">packets</font> but rows cannot).  Therefore, <font color="red">UDP</font> can be used as a transport for compact <font color="red">GPB</font> and it is the default.  If you really like TCP or encounter one of the few rows in <font color="red">IOS</font> <font color="red">XR</font> that can&#8217;t fit in a compact <font color="red">packet</font> (even with IncludeFilters), then you can optionally enable TCP (which handles fragmentation for you).  For key-value, TCP is the only supported transport since the <font color="red">packets</font> will be so much bigger.</p>
+<h2>Configuration</h2>
+<p>The following table summarizes the differences in configuration for compact <font color="red">GPB</font> (over <font color="red">UDP</font> and TCP) and Key-Value <font color="red">GPB</font> in <font color="red">XR</font> 6.0.1. As you can see, the key-value <font color="red">encoding</font> is the default if you specify TCP transport for <font color="red">GPB</font>.</p>
+<p><img class="aligncenter wp-image-193851 size-large" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/photo-5-3-550x137.png" alt="photo 5" width="550" height="137" /></p>
+<h2>The Bottom Line</h2>
+<p>The key-value <font color="red">GPB</font> <font color="red">encoding</font> has a lot of appeal from an operational perspective since you’re managing a single static “.<font color="red">proto</font>” file on the collector. On the other hand, the compact <font color="red">GPB</font> <font color="red">encoding</font> is (on average) three times more compact and at least twice as fast in our early performance testing (and that’s not counting any improvements on the collector side that come from avoiding a lot of string manipulation).  Another relevant point is that the performance of key-value <font color="red">GPB</font> <font color="red">encoding</font> is in the same ballpark as compressed <font color="red">JSON</font>.  So if protobufs are unfamiliar or intimidating, you can always use the <font color="red">JSON</font> <font color="red">encoding</font> and know that you’re getting a good balance of usability and performance. Ultimately, the one that’s right for you will depend on your <font color="red">use case</font> and your toolchain.  Give them a try and let us know what you think!</p>
+<h2>Further Resources</h2>
+<p>Check out the <a href="https://github.com/cisco/bigmuddy-network-telemetry-collector/blob/master/telemetry.proto" target="_blank">compact telemetry.proto</a> and the <a href="https://github.com/cisco/bigmuddy-network-telemetry-collector/blob/master/telemetry_kv.proto" target="_blank">key-value telemetry.proto</a> on github.com, along with <a href="https://github.com/cisco/bigmuddy-network-telemetry-collector" target="_blank">sample collector <font color="red">scripts</font></a> and <a href="https://github.com/cisco/bigmuddy-network-telemetry-stacks" target="_blank">open-source collector stacks</a>.  For more information about <font color="red">streaming telemetry</font>, including access to a virtual <font color="red">IOS</font> <font color="red">XR</font> image, go to our <a href="https://developer.cisco.com/site/ios-xr/" target="_blank">DevNet site for IOS-XR</a> 6.0. And stay tuned for more blogs on <font color="red">telemetry</font>, including some thoughts on the limits of <font color="red">SNMP</font> and customer <font color="red">use cases</font>.</p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=gpb">GPB</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=ios-xr">IOS XR</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=protobuf">Protobuf</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=telemetry">telemetry</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+		</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to SP360: Service Provider:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogSp360ServiceProvider', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogSp360ServiceProvider" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with SP360: Service Provider</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscosp360"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://www.twitter.com/ciscosp360"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/100804265176498970877"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosp360"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://www.youtubecisco.com/serviceproviders"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogSp360ServiceProvider"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+
+	<li id ="twitter_widget" class="widget">
+
+	<!-- white background -->
+	<div class="topContainer">
+	 <div class="twit_container">
+
+		<div id="twit_req">
+
+			<span class="widgetheading">
+				Tweets
+			</span>
+
+			<a href="https://twitter.com/" target="_blank"><span class="twit_logo"></span></a>
+							<div class="clear"></div>
+							</div>
+			<!-- <span class="twit_logo" href="#"></span> -->
+			<div class="clear"></div>
+		</div></div>
+		</li>
+
+<br class="clear" />
+
+<script type = "text/javascript">
+
+jQuery(document).ready(function() {
+ //Calling Twitter Widget
+var url = "https://tts-prod.cloudapps.cisco.com/ciscotweetsapp/api/v1/gettweets/sp360followinglist/response.jsonp";
+
+		loadSpotlightTweet(url);
+
+		//Metrics for each reply retweet and favorites(loop for each tweet)
+		cdc.util.addMetricsRule(".twit_reply", {linktext: "reply"});
+		cdc.util.addMetricsRule(".twit_retweet", {linktext: " retweet "});
+		cdc.util.addMetricsRule(".twit_favorite", {linktext: " favorite "});
+
+	   //lpos for all clicks inside twitter_widget
+		cdc.util.addMetricsRule("#twitter_widget a[href]", {lpos: "tweets"});
+
+});
+
+String.prototype.parseURL = function() {
+	var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+	return this.replace(exp, "<a href='$1' target='_blank'>$1</a>");
+};
+
+String.prototype.parseUsername = function() {
+	return this.replace(/[@]+[A-Za-z0-9-_]+/g, function(u) {
+		var username = u.replace("@", "");
+		// return u.link("http://twitter.com/" + username);
+		return '<a target="_blank" href="https://twitter.com/' + username
+				+ '">' + u + '</a>';
+		// return u.link(window.open('http://www.google.com', '_blank',
+		// 'toolbar=0,location=0,menubar=0'));
+	});
+
+};
+
+String.prototype.parseHashtag = function() {
+	return this.replace(/[#]+[A-Za-z0-9-_]+/g, function(t) {
+		var tag = t.replace("#", "%23");
+		// tag = tag.replace(tag,"<a href='$1' target='_blank'>$1</a>");
+		// return t.link("https://twitter.com/search?q=" + tag +
+		// "&src=hash");//https://twitter.com/search?q=%23retail&src=hash
+		return '<a target="_blank" href="https://twitter.com/search?q=' + tag
+				+ '&src=hash">' + t + '</a>';
+	});
+
+};
+
+function parseURLEntities(t, arg) {
+	for ( var j = 0; j < arg.length; j++) {
+		t = t.replace(arg[j].url, '<a target="_blank" href="' + arg[j].url
+				+ '">' + arg[j].displayURL + '</a>');
+	}
+	return t;
+}
+
+
+function parseDate(str) {
+	var v = str.split(' ');
+	return new Date(Date.parse(v[1] + " " + v[2] + ", " + v[5] + " " + v[3]
+			+ " UTC"));
+}
+
+function selectDay() {
+	var d = new Date();
+	var weekday = new Array(7);
+	weekday[0] = "Sun";
+	weekday[1] = "Mon";
+	weekday[2] = "Tue";
+	weekday[3] = "Wed";
+	weekday[4] = "Thu";
+	weekday[5] = "Fri";
+	weekday[6] = "Sat";
+
+	var n = weekday[d.getDay()];
+
+	return n;
+}
+
+
+var checkIE = function () {
+    var a = navigator.userAgent;
+    return {
+        ie: a.match(/MSIE\s([^;]*)/)
+    };
+}();
+
+
+function relative_time(time_value) {
+	//time_value is in millisecond (GMT)
+
+	var d = new Date(time_value);//converting to our local PST default Date Format
+	//console.log('PST : ' + d);
+
+	var values = d.toString().split(" ");
+	var time_value_format = values[1] + " " + values[2] + ", " + values[3] + " " + values[4];
+//	console.log(time_value_format);
+
+	var parsed_date = Date.parse(time_value_format);
+    var relative_to = (arguments.length > 1) ? arguments[1] : new Date();
+//    console.log(relative_to.getTime());
+    var delta = parseInt((relative_to.getTime() - parsed_date) / 1000);
+    //delta = delta + (relative_to.getTimezoneOffset() * 60); 	//Not Required: converting into GMT since we are getting in GMT Format
+
+   	if (delta < 60) {
+		return delta + 's';
+	} else if (delta < 120) {
+		return '1m';
+	} else if (delta < (60 * 60)) {
+		return (parseInt(delta / 60)).toString() + 'm';
+	} else if (delta < (120 * 60)) {
+		return '1h';
+	} else if (delta < (24 * 60 * 60)) {
+		return (parseInt(delta / 3600)).toString() + 'h';
+	} else if (delta < (48 * 60 * 60)) {
+		return values[2] + " " + values[1];
+	} else {
+		return values[2] + " " + values[1];
+	}
+
+}
+
+
+	function loadSpotlightTweet(tweetsURL)
+	{
+
+	try {
+		var req = jQuery.ajax({
+			url: tweetsURL,
+			async: false,
+			dataType : "jsonp",
+			timeout : 1000,
+
+		});
+
+			req
+				.success(function(data) {
+			var metricsUser= "";
+
+				  if(data == "")
+					  return;
+
+					var arr1 = [];
+					var displayVal = [];
+
+					for ( var i = data.length-1; i >= 0; i -= 1) {
+
+						arr1.push(data[i].createdAt);
+
+					}
+
+					arr1.sort();
+
+                // Sorting for tweets based on Time
+				for ( var i = arr1.length - 1; i >= 0; i -=1) {
+
+						for ( var j = 0; j < data.length; j++) {
+
+							if (arr1[i] == (data[j].createdAt)) {
+								displayVal.push(j);
+
+							}
+						}
+					}
+
+					//Tweets Multiple Display URL Links
+					var t1 = "";
+					var screen_Name = "";
+					var retweeted = "";
+
+					 // Retweets User/Screen Names.
+					 var RetScreenName = "";
+					 var RetUserName = "" ;
+					 var tUserName = "";
+                     var tScreenName = "";
+                     var profileImg = "";
+
+					var loopArr = [];
+
+					for ( var k = 0; k < displayVal.length; k++) {
+
+						if (data[displayVal[k]].urlEntities != null) {
+							t1 = parseURLEntities(data[displayVal[k]].text,
+									data[displayVal[k]].urlEntities);
+						} else {
+							t1 = (data[displayVal[k]].text)
+									.parseURL();
+						}
+
+						//End Tweets Links
+
+						// Check Re-tweeted Status
+                       retweeted = data[displayVal[k]].retweet;
+
+						if(retweeted)
+						{
+                           RetScreenName = data[displayVal[k]].rtScreenName ;
+						   RetUserName = data[displayVal[k]].rtUserName;
+						   profileImg = data[displayVal[k]].rtProfileImageURL;
+						}
+						else
+						{
+                           RetScreenName = data[displayVal[k]].screenName ;
+						   RetUserName = data[displayVal[k]].userName;
+						   profileImg = data[displayVal[k]].profileImageURLHttps;
+						}
+
+						// Widget contents
+
+						jQuery('.twit_container')
+								.append(
+										 '<div class="single_tweet">'
+     									+ '<div id="twit_avatar" class="twit_avatar">'
+										+ '<img border="0" src="'
+										+ profileImg
+										+ '" width="40" height="40" style="border-radius:5px;"/></div>'
+
+										+ '<div class="twit_content"><div class ="twit_userinfo">'
+										+ '<a class="twit_realname" id="twit_realname" href="https://twitter.com/'
+										+ RetScreenName
+										+ '" target="_blank">'
+										+ RetUserName
+										+ '</a><br/>'
+										+ '<a id="twit_username" href="https://twitter.com/'
+										+ RetScreenName
+										+ '" target="_blank">@'
+										+ RetScreenName
+										+ '</a></div>'
+										+ '<div class ="timestamp"><a href="https://twitter.com/'
+										+ RetScreenName
+										+ '/status/'
+										+ data[displayVal[k]].id
+										+ '" target="_blank">'
+										+ relative_time(data[displayVal[k]].createdAt)
+									    + '</a></div>'
+										+ '<div class="clear"></div></div>'
+										+ '<div class="clear"></div>'
+
+                                        + '<div id="twit_text" class="twit_text">'
+												+ t1.parseUsername()
+														.parseHashtag()
+												+ '</div>'
+
+												//Retweeted Content
+												+ '<div class="re-tweet"><div class="retweet_img"><span class="retweet_badge"><a href="" class="retweeted_icon"></a><span class="retweet_text"> Retweeted By <a class="rtwit" href="https://twitter.com/'
+												+ data[displayVal[k]].screenName
+												+ '" target="_blank">'
+												+ data[displayVal[k]].userName
+												+ '</a></span></span></div></div>'
+
+												+ '<div class ="twit_actions">'
+
+												+ '<a class="twit_reply" href = "https://twitter.com/intent/tweet?in_reply_to='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+ '<a class="twit_retweet" href = "https://twitter.com/intent/retweet?tweet_id='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+ '<a class ="twit_favorite" href = "https://twitter.com/intent/favorite?tweet_id='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+'<span class="twit_follow"><a href="https://twitter.com/intent/follow?screen_name='
+												+ data[displayVal[k]].screenName
+												+ '" target="_blank"></a></span>'
+
+												+ '<div class ="clear"></div>'
+												+ '</div></div></div>');
+
+
+
+
+					// Retweeted Status Show/Hide
+					if (retweeted) {
+							jQuery(".re-tweet").eq(k).css("display", "inline");
+						} else {
+							jQuery(".re-tweet").eq(k).css("display", "none");
+						}
+
+
+	}
+
+					//End Widget Contents
+
+
+                // To sort and match properly
+	            jQuery('div.twit_container').find('.single_tweet:eq(0)').clone().appendTo('.twit_container');
+
+				// Metrics for each tweet <--link id to group links in each tweet content--->
+				// cdc.util.addMetricsRule('.single_tweet a[href]', {lid: '" + @twittusername+ "'});
+
+				jQuery(".single_tweet").each(function(i){
+				    var user = jQuery(this).find('#twit_username').text();
+				    var links = jQuery(".single_tweet:eq("+i+") a[href]").get();
+				    cdc.util.addMetricsRule(links, {lid: user });
+				});
+
+					// Loop Through Tweets
+					jQuery('.topContainer').css('display','block');
+					elems = jQuery('.single_tweet').hide().get();
+
+					(function loop() {
+						var i = 0, pointer = jQuery(elems).filter(':visible:last')[0]
+								|| jQuery(elems).last()[0];
+
+						jQuery(elems).hide();
+
+						while (i < 3) {
+							pointer = jQuery(pointer).next()[0]
+									|| jQuery(elems).first()[0];
+							jQuery(pointer).show();
+							i += 1;
+						}
+
+						setTimeout(loop, 12000); // 12 seconds 120000
+					})();
+
+				//End of looping three tweets
+
+
+
+});
+
+		// End of Reply/Retweet/Fav link mouse over/out
+
+		req
+				.error(function(msg) {
+					console.log("In Error of rate limit exception: " + msg);
+					//alert("Rate Limit Exceeded: Please Check after some time.Thank you for your patience. ");
+
+				});
+
+
+	} catch (err) {
+		txt = "There was an error on this page.\n\n";
+		txt += "Error description: " + err.message + "\n\n";
+		txt += "Click OK to continue.\n\n";
+		alert(txt);
+	}
+}
+</script>
+    <li id="blogroll">
+      <ul id="blogroll_links">
+        <!--update the line below to change title for services page.-->
+        <li class="roll_heading">What We're Reading</li>
+        <li><b>General</b></li>
+                    <li><a href="http://www.lightreading.com/archives.asp?blogs=yes" target="_blank">Light Reading</a></li>
+                      <li><a href="http://www.telco2.net/blog/" target="_blank">Telco 2.0</a></li>
+                      <li><a href="http://telcommunicator.blogspot.com/" target="_blank">Tim Poulus</a></li>
+                  <li><b>Video</b></li>
+                    <li><a href="http://blog.streamingmedia.com/" target="_blank">The Business of Online Video</a></li>
+                      <li><a href="http://newteevee.com/" target="_blank">New TeeVee</a></li>
+                      <li><a href="http://www.videonuze.com/blogs/" target="_blank">VideoNuze</a></li>
+                      <li><a href="http://www.v-net.tv/" target="_blank">VideoNet</a></li>
+                  <li><b>Mobility</b></li>
+                    <li><a href="http://www.opengardensblog.futuretext.com/" target="_blank">Open Gardens</a></li>
+                      <li><a href="http://mobilesociety.typepad.com/mobile_life/" target="_blank">WirelessMoves</a></li>
+                      <li><a href="http://mobileopportunity.blogspot.com/" target="_blank">Mobile Opportunity</a></li>
+                  <li><b>Data Center</b></li>
+                    <li><a href="http://www.ideationcloud.com/" target="_blank">Avastu</a></li>
+                      <li><a href="http://gregness.wordpress.com/" target="_blank">Archimedius</a></li>
+                      <li><a href="http://www.infra20.com/" target="_blank">Infrastructure 2.0</a></li>
+                      <li><a href="http://chucksblog.emc.com/chucks_blog/" target="_blank">Chuck Hollis</a></li>
+                      <li><a href="http://news.cnet.com/wisdom-of-clouds/" target="_blank">The Wisdom of Clouds</a></li>
+          
+      </ul>
+      <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="http://www.cisco.com/en/US/netsol/ns973/networking_solutions_market_segment_solution.html" target="_blank">Mobile Internet</a></li>
+                        <li><a href="http://www.cisco.com/c/en/us/solutions/service-provider/network-infrastructure/index.html" target="_blank">Network Infrastructure</a></li>
+                        <li><a href="http://www.cisco.com/c/en/us/solutions/service-provider/index.html" target="_blank">Service Provider Solutions</a></li>
+                        <li><a href="http://www.cisco.com/c/en/us/solutions/data-center-virtualization/solution-listing.html" target="_blank">SP Data Center & Virtualization</a></li>
+                        <li><a href="http://www.cisco.com/c/en/us/solutions/service-provider/videoscape/index.html" target="_blank">Video & Content Delivery</a></li>
+                        <li><a href="http://www.cisco.com/c/en/us/solutions/service-provider/visual-networking-index-vni/index.html" target="_blank">Visual Networking Index</a></li>
+                  </ul>
+    </li>
+    </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscosp360'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://www.twitter.com/ciscosp360'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/100804265176498970877'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 193838;
+			var orig_count = 2;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=https://blogs.cisco.com/sp/streaming-telemetry-with-google-protocol-buffers&text=Drill+down+on+specific+design+choices+when+streaming+telemetry+with+Google+Protocol+Buffers%3A&via=CiscoSP360" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/sp/streaming-telemetry-with-google-protocol-buffers&title=Streaming Telemetry with Google Protocol Buffers" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/sp/streaming-telemetry-with-google-protocol-buffers" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/sp/streaming-telemetry-with-google-protocol-buffers" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Streaming Telemetry with Google Protocol Buffers&body=I saw this post on Cisco SP360: Service Provider blog and thought you might like to read it.%0A%0AStreaming Telemetry with Google Protocol Buffers%0A%0Ahttps://blogs.cisco.com/sp/streaming-telemetry-with-google-protocol-buffers%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

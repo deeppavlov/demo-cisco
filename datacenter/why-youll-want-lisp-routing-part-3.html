@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Why You’ll Want LISP Routing – Part 3</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; Why You’ll Want LISP Routing – Part 3 Comments Feed" href="https://blogs.cisco.com/datacenter/why-youll-want-lisp-routing-part-3/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"92436"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='SAP TechEd Madrid Wrap-Up' href='https://blogs.cisco.com/datacenter/sap-teched-madrid-wrap-up' />
+<link rel='next' title='Smooth Traveling Experience – Even Without 1K Status' href='https://blogs.cisco.com/wireless/smooth-traveling-experience-even-without-1k-status' />
+
+<link rel="canonical" href="https://blogs.cisco.com/datacenter/why-youll-want-lisp-routing-part-3" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=92436' />
+<meta property="og:image" content="http://i.ytimg.com/vi/OqZTumKsjZo/default.jpg" />
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Why You’ll Want LISP Routing – Part 3"/>
+  <meta property="og:url" content="https://blogs.cisco.com/datacenter/why-youll-want-lisp-routing-part-3"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2012-11-19T00:03:02+00:00"/>
+  <meta property="article:modified_time" content="2012-11-26T08:25:06+00:00" />
+  <meta property="og:updated_time" content="2012-11-26T08:25:06+00:00" />
+  <meta property="article:section" content="Data Center"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Why You’ll Want LISP Routing – Part 3"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/datacenter/why-youll-want-lisp-routing-part-3"/>
+  <meta name="twitter:description" content="Now that we covered how LISP Routing works in Part 1 and Part 2 of this series, let dig into some of the things you can do with it. I would suggest you go back and read the first two posts if you are new to LISP since I am not going to cover that material again. So, lets look at three of the most po"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:creator" content="@http://twitter.com/omarsultan"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521453915";
+		var sig = "79dc77b8a20b5c53b82b4d40f4c39e96";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1FaY5ya&text=Why You’ll Want LISP Routing – Part 3&via=CiscoDC" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/datacenter/why-youll-want-lisp-routing-part-3&title=Why You’ll Want LISP Routing – Part 3" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/datacenter/why-youll-want-lisp-routing-part-3" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/datacenter/why-youll-want-lisp-routing-part-3" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Why You’ll Want LISP Routing – Part 3&body=I saw this post on Cisco Data Center blog and thought you might like to read it.%0A%0AWhy You’ll Want LISP Routing – Part 3%0A%0Ahttps://blogs.cisco.com/datacenter/why-youll-want-lisp-routing-part-3%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/datacenter/'>Data Center</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category5.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Data Center  						</span>
+						<h1 id="post-92436" class="kindle_title title">Why You’ll Want LISP Routing – Part 3</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/OmarSultan.thumbnail.4e719a3c410ce.jpg"></div><div class="author_rewards_box">			<ul class = "nitro_author92436 bunchballAwards">
+		<li>
+			<div class = "nitro_badge badgenitro_author92436">
+			</div>
+			<div class = "nitro_points pointsnitro_author92436">
+			</div>
+		</li>
+		<script>
+var nitroName = 'osultan';
+var sessionKey = '';
+
+
+nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "postBadges", "nitro_author92436");</script>
+
+		</ul>
+		</ul>
+	<div class = "clear"></div>
+</div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/omarsultan" title="Posts by Omar Sultan" rel="author">Omar Sultan</a> - November 19, 2012 - 2 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p>Now that we covered how <a href="http://datatracker.ietf.org/wg/lisp/charter/" target="_blank"><font color="red">LISP</font> Routing</a> works in <a href="http://blogs.cisco.com/datacenter/why-youll-want-lisp-routing-part-1/" target="_blank">Part 1</a> and <a href="http://blogs.cisco.com/datacenter/why-youll-want-lisp-routing-part-2/" target="_blank">Part 2</a> of this series, let dig into some of the things you can do with it. I would suggest you go back and read the first two posts if you are new to <font color="red">LISP</font> since I am not going to cover that material again. So, lets look at three of the most popular <font color="red">use cases</font>: 1) <font color="red">VM</font> <font color="red">mobility</font>, 2) <font color="red">IPv6</font> migration, and 3) smarter multi-homing.  I am going to cover the generic <font color="red">use cases</font>, then wrap with some real-world customer <font color="red">use cases</font>.</p>
+<p><em><font color="red">VM</font> <font color="red">Mobility</font></em></p>
+<p>Since it seems to be the hottest topic, let start with the <font color="red">mobility</font> solution. From a networking perspective, there are a couple of things that are important with a live migration (ex. VMotion): we want to try and preserve TCP sessions (note: this does <strong>not</strong> mean “<font color="red">packets</font> don’t get dropped”) and we want to maintain optimal routing (note to <font color="red">server</font> folks: you too care about these things).  We would also like global <font color="red">mobility</font>—basically the <font color="red">server</font> admin should be able to move her <font color="red">VM</font> wherever she want and not be constrained by <font color="red">IP</font> addressing considerations.</p>
+<p>Let’s build on the scenario we have been using in the prior posts, where we have a host 192.168.1.12 is chatting with a <font color="red">VM</font> 172.16.4.7.  Assume that we have gone through the whole map-request/map-reply process, so we have something that looks like this:</p>
+<p><img class="size-full wp-image-92438 aligncenter" title="LISP3-1" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/LISP3-1.jpg" alt="" width="576" height="347" /></p>
+<p><span id="more-92436"></span></p>
+<p>Now there are a couple of flavors of <font color="red">VM</font> migration.  Live or hot migration is where you move the <font color="red">VM</font> while it is still running.  Neither the <font color="red">VM</font> knows it moved nor does the host accessing it.  For this to work, the source and destination <font color="red">servers</font> need <font color="red">L2</font> adjacency, so you need some sort of <font color="red">L2</font> extension technology like <a href="http://www.cisco.com/en/US/netsol/ns1153/index.html" target="_blank"><font color="red">OTV</font></a> or <a href="http://blogs.cisco.com/datacenter/introducing-vxlan/" target="_blank"><font color="red">VXLAN</font></a> and there is also usually some distance limitation involved because of this. Cold migration simply means you are shutting the <font color="red">VM</font> down, moving it and bringing it up somewhere else.  You are not concerned with maintaining connections to existing hosts, but the virtual <font color="red">server</font> still does not know its moved.  The other caveat in this is that you need set up your <font color="red">VMs</font> to use a well-known <font color="red">MAC address</font> to identify its <font color="red">default gateway</font>, so, regardless of where a <font color="red">VM</font> ends up, it does not need to ARP to find its <font color="red">default gateway</font>.</p>
+<p>In, this case lets have our <font color="red">VM</font> 172.16.4.7 live migrate to a new segment on a different subnet. Normally, as soon as the <font color="red">VM</font> tried to send traffic, it would fail a <a href="http://www.cisco.com/web/about/security/intelligence/unicast-rpf.html" target="_blank">uRPF</a> check by 10.200.7.42, since its address should not be found on the interface its now using.  However, since 10.200.7.42 is a <font color="red">LISP</font> <font color="red">router</font>, its configured with dynamic-EID range of addresses that are OK to move.  This gets around the uRPF check, but also protects from random <font color="red">IP</font> addresses connecting into the <font color="red">router</font> and gaining access to the network.</p>
+<p><img class="size-full wp-image-92441 aligncenter" title="LISP3-2" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/LISP3-2.jpg" alt="" width="576" height="356" /></p>
+<p>Once 10.200.7.42 notices it has a new <font color="red">server</font> to take care of, it installs a specific /32 address in its routing table and registers the /32 address with a map-register message with the map <font color="red">server</font>.  Note in this case, this would not impact the aggregated route that the MS propagates into the ALT.</p>
+<p>The MS now sends a map-notify message back to 10.100.19.21 and lets it know its no longer responsible for 172.16.4.7.  The 10.100.19.21 then installs a “null0” destination in its routing table for the specific /32 address.</p>
+<p><img class="size-full wp-image-92442 aligncenter" title="<font color="red">LISP</font>3-3" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/<font color="red">LISP</font>3-3.jpg" alt="" width="575" height="332" /></p>
+<p>Remember, LISP uses a “pull” approach to information propagation and there is no sync mechanism, so we now need to get everyone back in sync.</p>
+<p>Any brand new conversations destined for 172.16.4.7 are easy, they will go through the normal LISP map-request/map-reply process, so pretty simple on that front.</p>
+<p>Now if 172.16.4.7 initiates traffic back to 192.168.1.12, the <font color="red">router</font> 10.200.7.42 (the xTR serving 172.16.4.7) will send a solicit-map-request message to 10.10.1.1 (the xTR serving 192.168.1.12) telling it to send out a map-request message for 172.16.4.7, even thought it thinks it already has a valid <font color="red">RLOC</font> for that address.  10.10.1.1 will send out a new map-request for 172.16.4.7 which results in 10.200.7.42 sending a map-reply back which then leads 10.10.1.1 to install the /32 EID/RLOC info in its map cache.</p>
+<p><img class="size-full wp-image-92444 aligncenter" title="LISP3-4" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/LISP3-4.jpg" alt="" width="600" height="366" /></p>
+<p>Now, if 172.16.4.7 and 192.168.1.12 don’t chat all that often, we may run into a scenario where 10.10.1.1 has stale <font color="red">data</font> in its map cache.  In this case, 10.10.1.1 continues to forward traffic for 172.16.4.7 to 10.100.19.21.  That <font color="red">router</font> knows it no longer has 172.16.4.7 courtesy of the map-notify message it got when 172.16.4.7 initially moved.  As a result, it sends a solicit-map-request message back to 10.10.1.1, which will then initiate to map-request/map-reply process to get updated map <font color="red">data</font>.</p>
+<p><img class="size-full wp-image-92445 aligncenter" title="<font color="red">LISP</font>3-5" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/LISP3-5.jpg" alt="" width="600" height="364" /></p>
+<p>So, that should give you a good idea of how LISP can (and should) be part of your <font color="red">VM</font> <font color="red">mobility</font> strategy and why <font color="red">L2</font> extension, by itself is not sufficient..  Now, the reality is that <font color="red">mobility</font> is a much broader concept.  With <font color="red">LISP</font> we can move entire topologies by simply updating the <font color="red">RLOC</font> in the map database.  You can fail over your <font color="red">data center</font> to a DR site, leave everything alone, and simply update the <font color="red">RLOC</font>.  Or, if you deploy containerized <font color="red">data centers</font>, you can drop your <font color="red">data center</font> wherever you want and again, simply update the map database with the new <font color="red">RLOC</font>.  And then there is the end <font color="red">node</font>.  There is actually a lot of cool work going on with <font color="red">LISP</font> and end <font color="red">node</font> <font color="red">mobility</font>, but its something I am going to have to tackle in a subsequent post.  If you are curious, check out the draft for <a href="http://tools.ietf.org/html/draft-meyer-lisp-mn-06" target="_blank"><font color="red">LISP</font> Mobile <font color="red">Node</font></a>.</p>
+<p><em><font color="red">IPv6</font> Migration</em></p>
+<p>Next, lets take a look at various <font color="red">IPv6</font> scenarios.  Let’s start with the fact that the Internet core is still <font color="red">IPv4</font> and does not seem to be changing anytime soon.  Let’s also assume we don’t want to do translation&#8211;I know this is a topic of passionate debate, which I am not going near, at least for this post. 🙂</p>
+<p><img class="size-full wp-image-92448 aligncenter" title="LISP3-7" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/LISP3-7.jpg" alt="" width="575" height="311" /></p>
+<p>If we look at the following scenarios:</p>
+<ol>
+<li>This is pretty basic—two <font color="red">IPv6</font> <font color="red">LISP</font> sites wanted to use the <font color="red">IPv4</font> core, so you would see traffic being exchanged with an <font color="red">IPv4</font> outer address and an <font color="red">IPv6</font> inner address</li>
+<li>In the second scenario, we have an <font color="red">IPv6</font> <font color="red">LISP</font> site with an <font color="red">IPv4</font> <font color="red">ISP</font> communicating to a dual stack non-L<font color="red">ISP</font> site with an dual stack ISP.  In this case the PxTR acts as an intermediary, with a tunneled <font color="red">IPv4</font> path between the source and PxTR (<font color="red">IPv4</font> outer address, <font color="red">IPv6</font> inner address), followed with a natively forwarded <font color="red">IPv6</font> path between the PxTR between the destination site.</li>
+<li>The final flow is similar example, where we need to use the PxTR because the destination site is not in the mapping database.</li>
+</ol>
+<p>Along those lines, the inverse is also true: we can have an <font color="red">IPv6</font> core (say a cable <font color="red">provider</font> or a university campus) connecting islands of <font color="red">IPv4</font>. With <font color="red">LISP</font>, we can still connect islands of <font color="red">IPv4</font> and we can connect <font color="red">LISP</font> with non-LISP sites using PxTRs as an intermediary.</p>
+<p><em><font color="red">Traffic Engineering</font> </em></p>
+<p>Finally, lets look at <font color="red">traffic engineering</font> with regards to multi-homing.  With the increasing depending on <font color="red">Internet connectivity</font>, multi-homing has almost become a de facto design practice, but not without some challenges for both the enterprise and the <font color="red">service provider</font>. In my first post, I mentioned that the map-reply message actually includes some policy info, so lets take a closer look at that. Within the map-reply message, for each EID-prefix, you get one or more <font color="red">RLOCs</font> and each <font color="red">RLOC</font> has an associated priority and weighting.</p>
+<p><img class="size-full wp-image-92449 aligncenter" title="LISP3-6" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/LISP3-6.jpg" alt="" width="600" height="290" /></p>
+<p>This allows me to do a couple of things.  With the priority value, I can set up load-sharing as well as set up primary and back-up <font color="red">RLOCs</font>.  With the weighting, I can control how my inbound links are utilized.  In the example above, I have the traffic equally split, but I may want to split it 70/30 between the two links.  Why would I want to do this?  I might have different <font color="red">service providers</font> with different cost structure, I might be looking to protect bandwidth to maintain SLAs, I might have certain links optimized for certain types of traffic.  The <font color="red">use cases</font> vary but the key point is that it’s relatively straightforward to do this.  Up to this point, ingress <font color="red">traffic engineering</font> has been tricky—you end up have to do things like manipulating <font color="red">BGP</font> or disaggregating and leaking addresses across links or <font color="red">providers</font>.  With <font color="red">LISP</font>, it becomes pretty straightforward to implement and will benefit enterprises and <font color="red">service providers</font> alike.  This mechanism lets you easily set-up active/active multi-homing without having to reconfigure <font color="red">BGP</font>.  This and the weighting priority lets enterprises make the most of the bandwidth they have paid for.  Finally it makes it easier to change <font color="red">ISPs</font>. For <font color="red">service providers</font>, <font color="red">LISP</font> can greatly simplify the routes they must maintain, which is very desirable.  It also lower the barrier for switching <font color="red">ISPs</font>&#8211;kinda like number portability with cell phones. You’ll see some more examples of <font color="red">traffic engineering</font> in the customer examples below.</p>
+<p><strong>User Case Studies</strong></p>
+<p>So, lets wrap up by taking a look at what customers are doing with <font color="red">LISP</font> in the real world:</p>
+<p><em>Qualcomm shares their experiences with <font color="red">LISP</font> for DCI and <font color="red">VM</font> <font color="red">Mobility</font></em></p>
+<div class = "video_player">
+<div id="OqZTumKsjZo" class = "youTubePlay"></div>
+<p><script type = 'text/javascript'>
+	<font color="red">var tag</font> = document.createElement('<font color="red">script</font>');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    <font color="red">var firstScriptTag</font> = document.getElementsByTagName('<font color="red">script</font>')[0];
+    firstScriptTag.parentNode.insertBefore(<font color="red">tag</font>, <font color="red">firstScriptTag</font>);
+    <font color="red">var player</font>;
+    <font color="red">function onYouTubeIframeAPIReady</font>() { 
+    	<font color="red">jQuery</font>('.<font color="red">youTubePlay</font>').each(<font color="red">function</font>() {
+    		<font color="red">var iframeID</font> = <font color="red">jQuery</font>(this).<font color="red">attr</font>('<font color="red">id</font>');
+    		<font color="red">player</font> = new YT.Player(<font color="red">iframeID</font>, { 
+    		 	<font color="red">height</font>: '390',
+          		<font color="red">width</font>: '640',
+    			<font color="red">videoId</font>: <font color="red">iframeID</font>, 	
+          		events: {         
+            		'<font color="red">onStateChange</font>': <font color="red">onPlayerStateChange</font>
+        		}      
+    		});
+    	});
+      }   
+      <font color="red">function onPlayerStateChange</font>(event) {
+        if (event.data == 0) {
+          <font color="red">sendVideo</font>();
+          cdc_event_tracker("View Video");
+        }
+      }
+</script>
+</div>
+<p><em>Lufthansa Airlines  explains how they use <font color="red">LISP</font> <font color="red">mobility</font> features to keep their planes internet connected and they circle the globe</em></p>
+<div class = "video_player">
+<div id="N194Vlx3iXo" class = "youTubePlay"></div>
+<p><script type = 'text/javascript'>
+	<font color="red">var tag</font> = document.createElement('<font color="red">script</font>');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    <font color="red">var firstScriptTag</font> = document.getElementsByTagName('<font color="red">script</font>')[0];
+    firstScriptTag.parentNode.insertBefore(<font color="red">tag</font>, <font color="red">firstScriptTag</font>);
+    <font color="red">var player</font>;
+    <font color="red">function onYouTubeIframeAPIReady</font>() { 
+    	<font color="red">jQuery</font>('.<font color="red">youTubePlay</font>').each(<font color="red">function</font>() {
+    		<font color="red">var iframeID</font> = <font color="red">jQuery</font>(this).<font color="red">attr</font>('<font color="red">id</font>');
+    		<font color="red">player</font> = new YT.Player(<font color="red">iframeID</font>, { 
+    		 	<font color="red">height</font>: '390',
+          		<font color="red">width</font>: '640',
+    			<font color="red">videoId</font>: <font color="red">iframeID</font>, 	
+          		events: {         
+            		'<font color="red">onStateChange</font>': <font color="red">onPlayerStateChange</font>
+        		}      
+    		});
+    	});
+      }   
+      <font color="red">function onPlayerStateChange</font>(event) {
+        if (event.data == 0) {
+          <font color="red">sendVideo</font>();
+          cdc_event_tracker("View Video");
+        }
+      }
+</script>
+</div>
+<p><em>NJEDge discusses their deployment of <font color="red">LISP</font> for <font color="red">traffic engineering</font> across their state-wide educational network</em></p>
+<div class = "video_player">
+<div id="ckwXKAsy_00" class = "youTubePlay"></div>
+<p><script type = 'text/javascript'>
+	<font color="red">var tag</font> = document.createElement('<font color="red">script</font>');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    <font color="red">var firstScriptTag</font> = document.getElementsByTagName('<font color="red">script</font>')[0];
+    firstScriptTag.parentNode.insertBefore(<font color="red">tag</font>, <font color="red">firstScriptTag</font>);
+    <font color="red">var player</font>;
+    <font color="red">function onYouTubeIframeAPIReady</font>() { 
+    	<font color="red">jQuery</font>('.<font color="red">youTubePlay</font>').each(<font color="red">function</font>() {
+    		<font color="red">var iframeID</font> = <font color="red">jQuery</font>(this).<font color="red">attr</font>('<font color="red">id</font>');
+    		<font color="red">player</font> = new YT.Player(<font color="red">iframeID</font>, { 
+    		 	<font color="red">height</font>: '390',
+          		<font color="red">width</font>: '640',
+    			<font color="red">videoId</font>: <font color="red">iframeID</font>, 	
+          		events: {         
+            		'<font color="red">onStateChange</font>': <font color="red">onPlayerStateChange</font>
+        		}      
+    		});
+    	});
+      }   
+      <font color="red">function onPlayerStateChange</font>(event) {
+        if (event.data == 0) {
+          <font color="red">sendVideo</font>();
+          cdc_event_tracker("View Video");
+        }
+      }
+</script>
+</div>
+<p>Here is an additional write-up on NJEDge:  <a href="http://www.cisco.com/en/US/solutions/collateral/ns340/ns517/ns224/njed_case_study.pdf" target="_blank"><img class="alignnone size-full wp-image-92460" title="njed_case_study" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/njed_case_study.jpg" alt="" width="150" height="194" /></a></p>
+<p>VXNet relates experiences as a LISP-based <font color="red">service provider</font></p>
+<div class = "video_player">
+<div id="eV76UpyVl5c" class = "youTubePlay"></div>
+<p><script type = 'text/javascript'>
+	<font color="red">var tag</font> = document.createElement('<font color="red">script</font>');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    <font color="red">var firstScriptTag</font> = document.getElementsByTagName('<font color="red">script</font>')[0];
+    firstScriptTag.parentNode.insertBefore(<font color="red">tag</font>, <font color="red">firstScriptTag</font>);
+    <font color="red">var player</font>;
+    <font color="red">function onYouTubeIframeAPIReady</font>() { 
+    	<font color="red">jQuery</font>('.<font color="red">youTubePlay</font>').each(<font color="red">function</font>() {
+    		<font color="red">var iframeID</font> = <font color="red">jQuery</font>(this).<font color="red">attr</font>('<font color="red">id</font>');
+    		<font color="red">player</font> = new YT.Player(<font color="red">iframeID</font>, { 
+    		 	<font color="red">height</font>: '390',
+          		<font color="red">width</font>: '640',
+    			<font color="red">videoId</font>: <font color="red">iframeID</font>, 	
+          		events: {         
+            		'<font color="red">onStateChange</font>': <font color="red">onPlayerStateChange</font>
+        		}      
+    		});
+    	});
+      }   
+      <font color="red">function onPlayerStateChange</font>(event) {
+        if (event.data == 0) {
+          <font color="red">sendVideo</font>();
+          cdc_event_tracker("View Video");
+        }
+      }
+</script>
+</div>
+<p>Finally, here is a write-up one of the <font color="red">use cases</font> I did not touch on&#8211;a European <font color="red">service provider</font>, InTouch NV, that has created an innovative, high-scale <font color="red">VPN</font> service.</p>
+<p><a href="http://www.cisco.com/en/US/solutions/collateral/ns340/ns517/ns224/intouch_casestudy.pdf" target="_blank"><img class="alignnone size-full wp-image-92461" title="intouch_casestudy" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/intouch_casestudy.jpg" alt="" width="150" height="212" /></a></p>
+<p>One more thing, I want to give a plug to <a href="https://www.ciscolive365.com/connect/publicDashboard.ww" target="_blank">CiscoLive365</a>. The videos were excerpts above from the <font color="red">LISP</font> panel at last summer&#8217;s CiscoLive. If you have not checked out CiscoLive365, you should&#8211;it&#8217;s is a great resource for folks&#8211;it has free access to most of the content from CiscoLive events as well as other useful stuff.</p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=cisco-one">Cisco ONE</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=lisp">LISP</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=lufthansa">Lufthansa</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=open-network-environment">Open Network Environment</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=overlay-networks">Overlay Networks</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=qualcomm">Qualcomm</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=traffic-engineering">Traffic Engineering</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">2 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+			<li>
+			<div id="comment-697055">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						bishop (First Name)						</span>
+						<br />
+						<span class="comment-meta commentmetadata">November 23, 2012 at 2:57 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>&gt; The MS now sends a map-notify message back to 10.100.10.21 and lets it know its no longer responsible for 172.16.4.7.
+
+
+
+May be 10.100.19.21 instead 10.100.10.21?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike697055" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li class="comment byuser comment-author-omarsultan bypostauthor even depth-2" id="li-comment-697080">
+				<div id="comment-697080">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/OmarSultan.thumbnail.4e719a3c410ce.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/omarsultan'>Omar Sultan</a></span>
+							<br />
+							<span class="comment-meta commentmetadata">November 26, 2012 at 8:26 am</span>
+
+						</div>
+						<div class="comment_text">
+							<p>You are correct--good catch.  Thanks,
+
+
+
+Omar</p>						</div>
+						<div class = "roblike">
+					<a  href = "#" id = "clickLike697080" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+						<div class="reply">
+													</div>
+
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+			</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Data Center:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogDataCenterNetworks', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogDataCenterNetworks" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Data Center</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscodc"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/CiscoDC"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco-data-center-and-cloud?trk=biz-brand-tree-co-name"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/114381144808300038585/posts"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/Ciscodatacenter/presentations"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://www.youtube.com/user/Cisco/videos?sort=dd&view=46&tag_id=UCEWiIE6Htd8mvlOR6YQez1g.3.data-center-virtualization"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogDataCenterNetworks"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+
+	<li id ="twitter_widget" class="widget">
+
+	<!-- white background -->
+	<div class="topContainer">
+	 <div class="twit_container">
+
+		<div id="twit_req">
+
+			<span class="widgetheading">
+				Tweets
+			</span>
+
+			<a href="https://twitter.com/" target="_blank"><span class="twit_logo"></span></a>
+							<div class="clear"></div>
+							</div>
+			<!-- <span class="twit_logo" href="#"></span> -->
+			<div class="clear"></div>
+		</div></div>
+		</li>
+
+<br class="clear" />
+
+<script type = "text/javascript">
+
+jQuery(document).ready(function() {
+ //Calling Twitter Widget
+var url = "https://tts-prod.cloudapps.cisco.com/ciscotweetsapp/api/v1/gettweets/ciscodc/response.jsonp";
+
+		loadSpotlightTweet(url);
+
+		//Metrics for each reply retweet and favorites(loop for each tweet)
+		cdc.util.addMetricsRule(".twit_reply", {linktext: "reply"});
+		cdc.util.addMetricsRule(".twit_retweet", {linktext: " retweet "});
+		cdc.util.addMetricsRule(".twit_favorite", {linktext: " favorite "});
+
+	   //lpos for all clicks inside twitter_widget
+		cdc.util.addMetricsRule("#twitter_widget a[href]", {lpos: "tweets"});
+
+});
+
+String.prototype.parseURL = function() {
+	var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+	return this.replace(exp, "<a href='$1' target='_blank'>$1</a>");
+};
+
+String.prototype.parseUsername = function() {
+	return this.replace(/[@]+[A-Za-z0-9-_]+/g, function(u) {
+		var username = u.replace("@", "");
+		// return u.link("http://twitter.com/" + username);
+		return '<a target="_blank" href="https://twitter.com/' + username
+				+ '">' + u + '</a>';
+		// return u.link(window.open('http://www.google.com', '_blank',
+		// 'toolbar=0,location=0,menubar=0'));
+	});
+
+};
+
+String.prototype.parseHashtag = function() {
+	return this.replace(/[#]+[A-Za-z0-9-_]+/g, function(t) {
+		var tag = t.replace("#", "%23");
+		// tag = tag.replace(tag,"<a href='$1' target='_blank'>$1</a>");
+		// return t.link("https://twitter.com/search?q=" + tag +
+		// "&src=hash");//https://twitter.com/search?q=%23retail&src=hash
+		return '<a target="_blank" href="https://twitter.com/search?q=' + tag
+				+ '&src=hash">' + t + '</a>';
+	});
+
+};
+
+function parseURLEntities(t, arg) {
+	for ( var j = 0; j < arg.length; j++) {
+		t = t.replace(arg[j].url, '<a target="_blank" href="' + arg[j].url
+				+ '">' + arg[j].displayURL + '</a>');
+	}
+	return t;
+}
+
+
+function parseDate(str) {
+	var v = str.split(' ');
+	return new Date(Date.parse(v[1] + " " + v[2] + ", " + v[5] + " " + v[3]
+			+ " UTC"));
+}
+
+function selectDay() {
+	var d = new Date();
+	var weekday = new Array(7);
+	weekday[0] = "Sun";
+	weekday[1] = "Mon";
+	weekday[2] = "Tue";
+	weekday[3] = "Wed";
+	weekday[4] = "Thu";
+	weekday[5] = "Fri";
+	weekday[6] = "Sat";
+
+	var n = weekday[d.getDay()];
+
+	return n;
+}
+
+
+var checkIE = function () {
+    var a = navigator.userAgent;
+    return {
+        ie: a.match(/MSIE\s([^;]*)/)
+    };
+}();
+
+
+function relative_time(time_value) {
+	//time_value is in millisecond (GMT)
+
+	var d = new Date(time_value);//converting to our local PST default Date Format
+	//console.log('PST : ' + d);
+
+	var values = d.toString().split(" ");
+	var time_value_format = values[1] + " " + values[2] + ", " + values[3] + " " + values[4];
+//	console.log(time_value_format);
+
+	var parsed_date = Date.parse(time_value_format);
+    var relative_to = (arguments.length > 1) ? arguments[1] : new Date();
+//    console.log(relative_to.getTime());
+    var delta = parseInt((relative_to.getTime() - parsed_date) / 1000);
+    //delta = delta + (relative_to.getTimezoneOffset() * 60); 	//Not Required: converting into GMT since we are getting in GMT Format
+
+   	if (delta < 60) {
+		return delta + 's';
+	} else if (delta < 120) {
+		return '1m';
+	} else if (delta < (60 * 60)) {
+		return (parseInt(delta / 60)).toString() + 'm';
+	} else if (delta < (120 * 60)) {
+		return '1h';
+	} else if (delta < (24 * 60 * 60)) {
+		return (parseInt(delta / 3600)).toString() + 'h';
+	} else if (delta < (48 * 60 * 60)) {
+		return values[2] + " " + values[1];
+	} else {
+		return values[2] + " " + values[1];
+	}
+
+}
+
+
+	function loadSpotlightTweet(tweetsURL)
+	{
+
+	try {
+		var req = jQuery.ajax({
+			url: tweetsURL,
+			async: false,
+			dataType : "jsonp",
+			timeout : 1000,
+
+		});
+
+			req
+				.success(function(data) {
+			var metricsUser= "";
+
+				  if(data == "")
+					  return;
+
+					var arr1 = [];
+					var displayVal = [];
+
+					for ( var i = data.length-1; i >= 0; i -= 1) {
+
+						arr1.push(data[i].createdAt);
+
+					}
+
+					arr1.sort();
+
+                // Sorting for tweets based on Time
+				for ( var i = arr1.length - 1; i >= 0; i -=1) {
+
+						for ( var j = 0; j < data.length; j++) {
+
+							if (arr1[i] == (data[j].createdAt)) {
+								displayVal.push(j);
+
+							}
+						}
+					}
+
+					//Tweets Multiple Display URL Links
+					var t1 = "";
+					var screen_Name = "";
+					var retweeted = "";
+
+					 // Retweets User/Screen Names.
+					 var RetScreenName = "";
+					 var RetUserName = "" ;
+					 var tUserName = "";
+                     var tScreenName = "";
+                     var profileImg = "";
+
+					var loopArr = [];
+
+					for ( var k = 0; k < displayVal.length; k++) {
+
+						if (data[displayVal[k]].urlEntities != null) {
+							t1 = parseURLEntities(data[displayVal[k]].text,
+									data[displayVal[k]].urlEntities);
+						} else {
+							t1 = (data[displayVal[k]].text)
+									.parseURL();
+						}
+
+						//End Tweets Links
+
+						// Check Re-tweeted Status
+                       retweeted = data[displayVal[k]].retweet;
+
+						if(retweeted)
+						{
+                           RetScreenName = data[displayVal[k]].rtScreenName ;
+						   RetUserName = data[displayVal[k]].rtUserName;
+						   profileImg = data[displayVal[k]].rtProfileImageURL;
+						}
+						else
+						{
+                           RetScreenName = data[displayVal[k]].screenName ;
+						   RetUserName = data[displayVal[k]].userName;
+						   profileImg = data[displayVal[k]].profileImageURLHttps;
+						}
+
+						// Widget contents
+
+						jQuery('.twit_container')
+								.append(
+										 '<div class="single_tweet">'
+     									+ '<div id="twit_avatar" class="twit_avatar">'
+										+ '<img border="0" src="'
+										+ profileImg
+										+ '" width="40" height="40" style="border-radius:5px;"/></div>'
+
+										+ '<div class="twit_content"><div class ="twit_userinfo">'
+										+ '<a class="twit_realname" id="twit_realname" href="https://twitter.com/'
+										+ RetScreenName
+										+ '" target="_blank">'
+										+ RetUserName
+										+ '</a><br/>'
+										+ '<a id="twit_username" href="https://twitter.com/'
+										+ RetScreenName
+										+ '" target="_blank">@'
+										+ RetScreenName
+										+ '</a></div>'
+										+ '<div class ="timestamp"><a href="https://twitter.com/'
+										+ RetScreenName
+										+ '/status/'
+										+ data[displayVal[k]].id
+										+ '" target="_blank">'
+										+ relative_time(data[displayVal[k]].createdAt)
+									    + '</a></div>'
+										+ '<div class="clear"></div></div>'
+										+ '<div class="clear"></div>'
+
+                                        + '<div id="twit_text" class="twit_text">'
+												+ t1.parseUsername()
+														.parseHashtag()
+												+ '</div>'
+
+												//Retweeted Content
+												+ '<div class="re-tweet"><div class="retweet_img"><span class="retweet_badge"><a href="" class="retweeted_icon"></a><span class="retweet_text"> Retweeted By <a class="rtwit" href="https://twitter.com/'
+												+ data[displayVal[k]].screenName
+												+ '" target="_blank">'
+												+ data[displayVal[k]].userName
+												+ '</a></span></span></div></div>'
+
+												+ '<div class ="twit_actions">'
+
+												+ '<a class="twit_reply" href = "https://twitter.com/intent/tweet?in_reply_to='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+ '<a class="twit_retweet" href = "https://twitter.com/intent/retweet?tweet_id='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+ '<a class ="twit_favorite" href = "https://twitter.com/intent/favorite?tweet_id='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+'<span class="twit_follow"><a href="https://twitter.com/intent/follow?screen_name='
+												+ data[displayVal[k]].screenName
+												+ '" target="_blank"></a></span>'
+
+												+ '<div class ="clear"></div>'
+												+ '</div></div></div>');
+
+
+
+
+					// Retweeted Status Show/Hide
+					if (retweeted) {
+							jQuery(".re-tweet").eq(k).css("display", "inline");
+						} else {
+							jQuery(".re-tweet").eq(k).css("display", "none");
+						}
+
+
+	}
+
+					//End Widget Contents
+
+
+                // To sort and match properly
+	            jQuery('div.twit_container').find('.single_tweet:eq(0)').clone().appendTo('.twit_container');
+
+				// Metrics for each tweet <--link id to group links in each tweet content--->
+				// cdc.util.addMetricsRule('.single_tweet a[href]', {lid: '" + @twittusername+ "'});
+
+				jQuery(".single_tweet").each(function(i){
+				    var user = jQuery(this).find('#twit_username').text();
+				    var links = jQuery(".single_tweet:eq("+i+") a[href]").get();
+				    cdc.util.addMetricsRule(links, {lid: user });
+				});
+
+					// Loop Through Tweets
+					jQuery('.topContainer').css('display','block');
+					elems = jQuery('.single_tweet').hide().get();
+
+					(function loop() {
+						var i = 0, pointer = jQuery(elems).filter(':visible:last')[0]
+								|| jQuery(elems).last()[0];
+
+						jQuery(elems).hide();
+
+						while (i < 3) {
+							pointer = jQuery(pointer).next()[0]
+									|| jQuery(elems).first()[0];
+							jQuery(pointer).show();
+							i += 1;
+						}
+
+						setTimeout(loop, 12000); // 12 seconds 120000
+					})();
+
+				//End of looping three tweets
+
+
+
+});
+
+		// End of Reply/Retweet/Fav link mouse over/out
+
+		req
+				.error(function(msg) {
+					console.log("In Error of rate limit exception: " + msg);
+					//alert("Rate Limit Exceeded: Please Check after some time.Thank you for your patience. ");
+
+				});
+
+
+	} catch (err) {
+		txt = "There was an error on this page.\n\n";
+		txt += "Error description: " + err.message + "\n\n";
+		txt += "Click OK to continue.\n\n";
+		alert(txt);
+	}
+}
+</script>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.bladewatch.com/" target="_blank">Blade Watch</a></li>
+                      <li><a href="http://www.infoworld.com/?source=nav_BLOGS" target="_blank">InfoWorld</a></li>
+                      <li><a href="http://www.networkworld.com/blogs/" target="_blank">Network World</a></li>
+                      <li><a href="http://blogs.techrepublic.com.com/" target="_blank">TechRepublic</a></li>
+                      <li><a href="http://datacenterjournal.com/index.php" target="_blank">The Data Center Journal</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscodc'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/CiscoDC'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco-data-center-and-cloud?trk=biz-brand-tree-co-name'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/114381144808300038585/posts'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 92436;
+			var orig_count = 0;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1FaY5ya&text=Why You’ll Want LISP Routing – Part 3&via=CiscoDC" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/datacenter/why-youll-want-lisp-routing-part-3&title=Why You’ll Want LISP Routing – Part 3" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/datacenter/why-youll-want-lisp-routing-part-3" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/datacenter/why-youll-want-lisp-routing-part-3" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Why You’ll Want LISP Routing – Part 3&body=I saw this post on Cisco Data Center blog and thought you might like to read it.%0A%0AWhy You’ll Want LISP Routing – Part 3%0A%0Ahttps://blogs.cisco.com/datacenter/why-youll-want-lisp-routing-part-3%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

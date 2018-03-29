@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Fake Volume License Trojan Targets Corporate Users and Evades Sandboxes</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; Fake Volume License Trojan Targets Corporate Users and Evades Sandboxes Comments Feed" href="https://blogs.cisco.com/security/fake-volume-license-trojan-targets-corporate-users-and-evades-sandboxes/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"162914"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Beyond the Internet of Things (IoT): A Commentary' href='https://blogs.cisco.com/government/beyond-the-internet-of-things-iot-a-commentary' />
+<link rel='next' title='Cryptowall 3.0: Back to the Basics' href='https://blogs.cisco.com/security/talos/cryptowall-3-0' />
+
+<link rel="canonical" href="https://blogs.cisco.com/security/fake-volume-license-trojan-targets-corporate-users-and-evades-sandboxes" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=162914' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Fake Volume License Trojan Targets Corporate Users and Evades Sandboxes"/>
+  <meta property="og:url" content="https://blogs.cisco.com/security/fake-volume-license-trojan-targets-corporate-users-and-evades-sandboxes"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2015-02-09T09:00:57+00:00"/>
+  <meta property="article:modified_time" content="2015-02-08T20:54:38+00:00" />
+  <meta property="og:updated_time" content="2015-02-08T20:54:38+00:00" />
+  <meta property="article:section" content="Security"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Fake Volume License Trojan Targets Corporate Users and Evades Sandboxes"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/security/fake-volume-license-trojan-targets-corporate-users-and-evades-sandboxes"/>
+  <meta name="twitter:description" content="Two weeks ago, multiple Cisco Managed Threat Defense (MTD) customers received an email that appeared to come from the Microsoft Volume Licensing Service Center (VLSC).  The email shown below is very similar to the real email Microsoft sends.  It had a personalized welcome line and appears to contain"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:creator" content="@https://www.twitter.com/thirdhalf"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521512973";
+		var sig = "c93b5011ebef924bb664a9d311e1a751";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1FaOzet&text=Fake Volume License Trojan Targets Corporate Users and Evades Sandboxes&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/fake-volume-license-trojan-targets-corporate-users-and-evades-sandboxes&title=Fake Volume License Trojan Targets Corporate Users and Evades Sandboxes" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/fake-volume-license-trojan-targets-corporate-users-and-evades-sandboxes" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/fake-volume-license-trojan-targets-corporate-users-and-evades-sandboxes" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Fake Volume License Trojan Targets Corporate Users and Evades Sandboxes&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0AFake Volume License Trojan Targets Corporate Users and Evades Sandboxes%0A%0Ahttps://blogs.cisco.com/security/fake-volume-license-trojan-targets-corporate-users-and-evades-sandboxes%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/security/'>Security</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category50.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Security  						</span>
+						<h1 id="post-162914" class="kindle_title title">Fake Volume License Trojan Targets Corporate Users and Evades Sandboxes</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1433470916-bpthumb.jpg"></div><div class="author_rewards_box">			<ul class = "nitro_author162914 bunchballAwards">
+		<li>
+			<div class = "nitro_badge badgenitro_author162914">
+			</div>
+			<div class = "nitro_points pointsnitro_author162914">
+			</div>
+		</li>
+		<script>
+var nitroName = 'diddly';
+var sessionKey = '';
+
+
+nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "postBadges", "nitro_author162914");</script>
+
+		</ul>
+		</ul>
+	<div class = "clear"></div>
+</div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/martinnystrom" title="Posts by Martin Nystrom" rel="author">Martin Nystrom</a> - February 9, 2015 - 12 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p>Two weeks ago, multiple <font color="red">Cisco</font> <a href="http://www.cisco.com/c/en/us/products/security/service-listing.html">Managed <font color="red">Threat Defense</font> (<font color="red">MTD</font>)</a> <font color="red">customers</font> received an email that appeared to come from the Microsoft Volume Licensing <font color="red">Service</font> Center (VLSC).  The email shown below is very similar to the real email Microsoft sends.  It had a personalized welcome line and appears to contain a link to login to the Volume Licensing <font color="red">Service</font> Center:</p>
+<div id="attachment_162918" style="max-width: 560px" class="wp-caption aligncenter"><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/MS_Licensing-550x5371.png"><img class="size-full wp-image-162918" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/MS_Licensing-550x5371.png" alt="The phish email supposedly from Microsoft Volume Licensing" width="550" height="537" /></a><p class="wp-caption-text">The phish email supposedly from Microsoft Volume Licensing</p></div>
+<p><span id="more-162914"></span></p>
+<p>The email address of the recipient was in the fake Microsoft.com link to make it look more credible.  The real link, that was visible if you hovered with the mouse over the link, went to one of the following <font color="red">domains</font>:</p>
+<ul>
+<li>livihome[.]pl</li>
+<li>tirillycompagnie[.]com</li>
+<li>redwoodrecycling[.]com</li>
+<li>gdc[.]travel</li>
+</ul>
+<h1><font color="red">Attack</font> Targeted at Corporate Users</h1>
+<p>Analysis of what these <font color="red">domains</font> have in common found that they are all compromised WordPress <font color="red">servers</font>.  Hackers added extra pages to the legitimate ones at a location like:</p>
+<p>http://tirillycompagnie[.]com/wp-content/tinymce-advanced/mc/searchreplace/1.php</p>
+<p>Microsoft licenses products like Windows and Office in volume to corporate <font color="red">customers</font>.  The VLSC is where <font color="red">customers</font> login to get their licenses, usually in the form of an activation code.  If a user clicks on the link in the email, they would see the screenshot below:</p>
+<p>&nbsp;</p>
+<p>Clicking on the link ending in 1.php runs a function that uses Javascript to display the real Microsoft Volume License Center login page and starts a download of the fake volume license <font color="red">trojan</font> as a .zip file.  If you look closely in the download window for the .Zip file, the source of the download is <strong>from: http://tirillycompagnie[.]com</strong>, but most users would not notice this and instead believe they were downloading something from Microsoft.com.</p>
+<div id="attachment_162920" style="max-width: 513px" class="wp-caption aligncenter"><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/vlsc1.png"><img class="size-full wp-image-162920" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/vlsc1.png" alt="The Microsoft VLSC site overlaid by the <font color="red">malware</font> download" width="503" height="355" /></a><p class="wp-caption-text">The Microsoft VLSC site overlaid by the malware download</p></div>
+<h1>Analyst Alerted by a Wonky File</h1>
+<p><font color="red">MTD</font> security analysts were first alerted to this <font color="red">attack</font> by <font color="red">Sourcefire</font> file events for a file named 1.php:</p>
+<div id="attachment_162919" style="max-width: 560px" class="wp-caption aligncenter"><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/Pasted_Image_1_31_15__8_18_PM-550x891.png"><img class="size-full wp-image-162919" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/Pasted_Image_1_31_15__8_18_PM-550x891.png" alt="<font color="red">Sourcefire</font> alerts were for a wonky 1.php file, which contained the JavaScript to overlay the download against the Microsoft.com site" width="550" height="89" /></a><p class="wp-caption-text">Sourcefire alerts were for a wonky 1.php file, which contained the JavaScript to overlay the download against the Microsoft.com site</p></div>
+<p>To discover the nature of the <font color="red">threat</font>, the analyst grabbed the .ZIP file.  Our <font color="blue">malware analysis</font> determined that if opened, the .ZIP contained a Windows executable with .SCR extension named, Volume_Licensing_Service_Center_details_7834892334.scr</p>
+<p>The file had the following hashes and size:</p>
+<pre>MD5: 1b147fc9d5342ca0fa59207d366ec4fb</pre>
+<pre>SHA256: 53365e66e87a46fe8c2838aed30f099b275a816129af0c3e9bce4dcc0d58fdd0</pre>
+<pre>File Size: 51.9541 KB
+
+
+
+</pre>
+<h1><font color="red">Sandbox</font> Evaluation Failed</h1>
+<p>Initially, the <font color="red">detection</font> by antivirus software was a low 9 out of 57 antivirus programs.</p>
+<p><font color="red">MTD</font> investigators turned to <font color="red">sandbox analysis</font> for the file. Detonating the <font color="red">malware</font> on three commercial and one <font color="red">open source</font> <font color="red">sandbox</font> solution yielded no success.  The <font color="red">malware</font> seemed to know it was being analyzed and exited after 20 seconds without doing anything.  The name given by antivirus programs was &#8220;<a href="http://research.zscaler.com/2015/01/chanitor-downloader-actively-installing.html">Chanitor</a>&#8221; which is used to download other <font color="red">malware</font>.  This downloader has been used in many <font color="red">attacks</font> such as fake fax, fake <font color="red">voicemail</font>, fake invoice and fake purchase order email <font color="red">attacks</font>.</p>
+<h1>Investigator Used Debugger for Analysis</h1>
+<p>To analyze the <font color="red">malware</font> completely and determine what command and control <font color="red">servers</font> it connected to, investigators ran the <font color="red">malware</font> on real hardware with <font color="red">network</font> capture, memory capture and file system monitoring software installed. The analysis clearly revealed programmatic delays to prevent the <font color="red">sandbox</font> from detonating the <font color="red">malware</font>.</p>
+<div id="attachment_162917" style="max-width: 560px" class="wp-caption aligncenter"><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/debugger-api-call-seq2-550x3931.png"><img class="size-full wp-image-162917" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/debugger-api-call-seq2-550x3931.png" alt="Running the <font color="red">malware</font> in a debugger revealed the programmatic delays to evade detonation" width="550" height="393" /></a><p class="wp-caption-text">Running the malware in a debugger revealed the programmatic delays to evade detonation</p></div>
+<p>This produced better results and revealed one of the anti-forensics measures in this variant of Chanitor.  This variant of Chanitor goes to sleep for a total of over 30 minutes when first run.  Upon execution,  Volume_Licensing_Service_Center_details_7834892334.scr unpacks and decodes itself and then starts a process called winlogin.exe.  winlogin.exe goes to sleep many times for the times in <font color="red">milliseconds</font> shown below:</p>
+<h3>winlogin.exe delays execution by calling the <em>sleep</em> function over and over</h3>
+<pre> "winlogin.exe" sleep "00313623" <font color="red">milliseconds</font>
+
+ "winlogin.exe" sleep "00301713" <font color="red">milliseconds</font>
+
+ "winlogin.exe" sleep "00289634" <font color="red">milliseconds</font>
+
+ "winlogin.exe" sleep "00326947" <font color="red">milliseconds</font>
+
+ "winlogin.exe" sleep "00319869" <font color="red">milliseconds</font>
+
+ "winlogin.exe" sleep "00290436" <font color="red">milliseconds</font>
+
+ "winlogin.exe" sleep "00304573" <font color="red">milliseconds</font>
+
+ "winlogin.exe" sleep "00300983" <font color="red">milliseconds</font>
+
+ "winlogin.exe" sleep "00300131" <font color="red">milliseconds</font>
+
+ "winlogin.exe" sleep "00305685" <font color="red">milliseconds</font></pre>
+<p>winlogin.exe sleeps to wait out automatic <font color="red">sandbox analysis</font> before starting to communicate on the internet.  The program displays no output, but the metadata indicated that it was compiled on a computer using English for output.  When launched, the <font color="red">malware</font> creates several files as shown below:</p>
+<h3><strong>Created Files and Types</strong></h3>
+<ul>
+<li>agmas.dll &#8211; PE32 executable (DLL) (<font color="red">GUI</font>) <font color="red">Intel</font> 80386, for MS Windows</li>
+<li>agmas.msy &#8211; binary <font color="red">data</font></li>
+<li>winlogin.exe &#8211; PE32 executable (<font color="red">GUI</font>) <font color="red">Intel</font> 80386, for MS Windows, self-extracting archive</li>
+</ul>
+<p>This <font color="red">trojan</font> downloader also copies itself to another file on the disk and then renames that file back to <em>winlogin.exe</em> using the commands shown here:</p>
+<p><em>cmd /D /R type &#8220;C:\Users\PSPUBWS\AppData\<font color="red">Roaming</font>\Windows\winlogin.exe&#8221; &gt; ___ &amp;&amp; move /Y ___ &#8220;C:\Users\PSPUBWS\AppData\<font color="red">Roaming</font>\Windows\winlogin.exe&#8221;</em></p>
+<p>This is done to cause some <font color="red">sandbox analysis</font> systems to fail.</p>
+<h1>Investigator Discovered C2 <font color="red">Servers</font> And Method</h1>
+<p>Monitoring the <font color="red">network</font> activity of Volume_Licensing_Service_Center_details_7834892334.scr found that the following <font color="red">domains</font> are looked up after the winlogin.exe process wakes up:</p>
+<p><strong>DNS queries and <font color="red">IP</font> used at the time of analysis:</strong></p>
+<ul>
+<li><font color="red">api</font>[.]ipify[.]org &#8211; 50.16.221.126, 54.225.211.214, 54.235.186.52</li>
+<li>o3qz25zwu4or5mak[.]tor2web[.]org &#8211; 194.150.168.70, 38.229.70.4</li>
+<li>o3qz25zwu4or5mak[.]tor2web[.]ru &#8211; 166.78.144.80</li>
+</ul>
+<p><font color="red">api</font>[.]ipify[.]org is an online <font color="red">service</font> with an <font color="red">API</font> for allowing applications to learn their <font color="red">IP</font> address.</p>
+<p>After the <font color="red">DNS</font> queries,  the Chanitor <font color="red">trojan</font> connects to <font color="red">api</font>[.]ipify[.]org first and learns its <font color="red">IP</font> address:</p>
+<h3><strong><font color="red">TCP connections</font></strong></h3>
+<p>&#8211;&gt; 50.16.221.126:443          <font color="red">api</font>[.]ipify[.]org                               learns its <font color="red">IP</font></p>
+<p>Next, the <font color="red">malware</font> determines if it can connect to the Tor anonymizing <font color="red">network</font>:</p>
+<div id="attachment_162916" style="max-width: 560px" class="wp-caption aligncenter"><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/chanitor-xor-decrypt-550x2381.png"><img class="size-full wp-image-162916" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/chanitor-xor-decrypt-550x2381.png" alt="<font color="red">Forensic analysis</font> revealed <font color="red">service</font> for C2 translation" width="550" height="238" /></a><p class="wp-caption-text">Forensic analysis revealed service for C2 translation</p></div>
+<h3><strong><font color="red">TCP connections</font></strong></h3>
+<p>&#8211;&gt; 194.150.168.70:443               o3qz25zwu4or5mak[.]tor2web[.]org   Len=0</p>
+<p>&#8211;&gt; 166.78.144.80:443                  o3qz25zwu4or5mak[.]tor2web[.]ru    Len=0</p>
+<p>Notice the length of the payload for these connections is 0 since it is just a test.</p>
+<h1>Investigator Searched <font color="red">NetFlow</font> for C2 and <font color="red">Exfiltration</font></h1>
+<p><font color="red">MTD</font> investigators checked the <font color="red">NetFlow</font> <font color="red">data</font> for connections to the <font color="red">IP</font> addresses found in the <font color="blue">malware analysis</font> and were able to determine that, although several <font color="red">customers</font> had downloaded the fake Volume License <font color="red">trojan</font>, no <font color="red">customer</font> systems had opened it and been compromised. Here&#8217;s a rundown of the investigations we opened for <font color="red">customers</font> during the early <font color="red">attack</font>.</p>
+<h3>Investigations Opened</h3>
+<p>1 investigation where two hosts downloaded the <font color="red">trojan</font> from:</p>
+<p>http://redwoodrecycling[.]com/wp-content/themes/redwood2/fonts/Droid-Sans-fontfacekit/1.php</p>
+<p>4 investigations where 1 host had downloaded the <font color="red">trojan</font> from:</p>
+<p>http://livihome[.]pl/wp-includes/js/tinymce/plugins/wpeditimage/1.php</p>
+<p>and 3 hosts had downloaded the <font color="red">trojan</font> from:</p>
+<p>http://tirillycompagnie[.]com/wp-content/tinymce-advanced/mc/searchreplace/1.php</p>
+<p>The four websites distributing this <font color="red">malware</font> were online for approximately 6 days.  <font color="red">MTD</font> investigators advised <font color="red">customers</font> to block the <font color="red">domains</font>.  During that time, <font color="red">MTD</font> continued to monitor for new connections to these <font color="red">domains</font> and the <font color="red">IPs</font> used if the Chanitor <font color="red">trojan</font> was executed.</p>
+<h1>Conclusion</h1>
+<p>This <font color="red">malware</font> exemplifies three trends:</p>
+<ol>
+<li><font color="red">Attackers</font> are targeting corporate users via improved phishing techniques.</li>
+<li><font color="red">Attackers</font> are building <font color="red">sandbox</font> evasion into their <font color="red">malware</font>; as such you need skilled investigators and a rich security toolbox to catch it.</li>
+<li><a href="https://www.torproject.org/docs/hidden-services.html.en">Tor</a> is growing more commonplace as a means of c2 and <font color="red">exfiltration</font>.</li>
+</ol>
+<p>Are you seeing similar trends? How effective do you believe <font color="red">malware</font> authors are in evading <font color="red">sandboxes</font> today?</p>
+<p>&nbsp;</p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=managed-threat-defense">Managed Threat Defense</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=mtd">MTD</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=security-2">security</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">12 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+<li>
+			<div id="comment-2282551">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/photo_1422871046.jpg' width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+							<a href = "https://blogs.cisco.com/rewards-profile/169">Gabriel Agatiello</a>
+						</span>
+						<br />
+						<span class="comment-meta commentmetadata">March 9, 2015 at 5:04 am</span>
+
+					</div>
+				<div class="comment_text">
+					<ul class = "comment_id2282551 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'gagatiel';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2282551");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2282551">
+								</div>
+								<div class = "nitro_points pointscomment_id2282551">
+								</div>
+							</li>
+							</ul>
+					<div class = "clear"></div> <p>Guys, do you remember the old attacks using fakes AV? :-)
+
+
+
+Legacy threats with new GUI... and most users are still vulnerables. 
+
+
+
+Education is another great tool we need to use.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2282551" class = "commentLikeButton commentlike" data-nitro =gagatiel>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2279618">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://telasera.com' rel='external nofollow' class='url'>Telasera</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">March 3, 2015 at 9:30 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>It appears that some of the new malware can detect they are being run inside a virtual machine and stop there infection.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2279618" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+<li>
+			<div id="comment-2274909">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg' width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+							<a href = "https://blogs.cisco.com/rewards-profile/615">Rich Davidson</a>
+						</span>
+						<br />
+						<span class="comment-meta commentmetadata">February 18, 2015 at 4:11 pm</span>
+
+					</div>
+				<div class="comment_text">
+					<ul class = "comment_id2274909 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'richd0001';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2274909");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2274909">
+								</div>
+								<div class = "nitro_points pointscomment_id2274909">
+								</div>
+							</li>
+							</ul>
+					<div class = "clear"></div> <p>Know what makes me a bit upset?  Those who keep taking the victim stance and doing nothing to protect their sites and the ultimate victims - you and me!
+
+
+
+It's our money that's being stolen and the Chase banks, Targets, local hospitals and businesses don't seem to care.  The rules have been published everywhere and we still hear how, yet another, major hack has taken place with nearly a billion dollars stolen!
+
+
+
+Worse yet, the latest has been in "cultivation" for years and only during harvesting did an IT worker discover his credentials being used for something he was not doing.  That made it apparent they had been hacked!  All because a few users clicked an attachment in their email.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2274909" class = "commentLikeButton commentlike" data-nitro =richd0001 >2 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li class="comment byuser comment-author-martinnystrom bypostauthor even depth-2" id="li-comment-2275586">
+				<div id="comment-2275586">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1433470916-bpthumb.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/martinnystrom'>Martin Nystrom</a></span><br />
+							<span class="comment-meta commentmetadata">February 20, 2015 at 11:44 am</span>
+
+						</div>
+						<div class="comment_text">
+							<ul class = "comment_id2275586 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'diddly';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2275586");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2275586">
+								</div>
+								<div class = "nitro_points pointscomment_id2275586">
+								</div>
+							</li>
+							</ul>
+							<div class = "clear"></div>
+							<p>Hi Rich - I agree with you that we, as consumers and as defenders, need to improve our vigilance. Still, it's clear that the adversary has a strong financial motive to advance attacks. There's an entire ecosystem of cyber criminals working constantly to improve their techniques; we must advance our own defensive and investigative tactics to stay in the game.</p>						</div>
+
+							<div class = "roblike">
+					<a  href = "#" id = "clickLike2275586" class = "commentLikeButton commentlike" data-nitro =diddly >2 likes</a>				</div>
+				<div class="reply">
+															</div>
+							<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2274570">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://www.golighthouse.com' rel='external nofollow' class='url'>Rich Davidson</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">February 17, 2015 at 2:33 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>As Jennifer stated, it is very disturbing how sophisticated these hackers have become but even more disturbing is how slow others have been to respond to and train against phishing attacks.  They just keep going, like a bunny we know.  
+
+
+
+When are the Targets and Anthems of the world going to learn that the breaches are happening through their users and train them to STOP clicking through and on the links provided?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2274570" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li class="comment byuser comment-author-martinnystrom bypostauthor odd alt depth-2" id="li-comment-2274817">
+				<div id="comment-2274817">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1433470916-bpthumb.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/martinnystrom'>Martin Nystrom</a></span><br />
+							<span class="comment-meta commentmetadata">February 18, 2015 at 8:41 am</span>
+
+						</div>
+						<div class="comment_text">
+							<ul class = "comment_id2274817 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'diddly';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2274817");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2274817">
+								</div>
+								<div class = "nitro_points pointscomment_id2274817">
+								</div>
+							</li>
+							</ul>
+							<div class = "clear"></div>
+							<p>Great callout on phishing training. I've seen some really useful guidance from Corning Industries that I liked:
+
+
+
+1. Avoid strangers (be alert to senders you don't know)
+
+2. Don't rush (be suspicious of emails that require urgent attention)
+
+3. Notice the recipient list (look for recipients that don't make sense)
+
+4. Appreciate personal touches (not vague greetings)
+
+5. Don't be lured by dangled temptations
+
+6. Keep sensitive data to yourself
+
+7. Double-check links and attachments (run cursor over links)</p>						</div>
+
+							<div class = "roblike">
+					<a  href = "#" id = "clickLike2274817" class = "commentLikeButton commentlike" data-nitro =diddly >6 likes</a>				</div>
+				<div class="reply">
+															</div>
+							<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+			<li class="comment even thread-even depth-1" id="li-comment-2274112">
+				<div id="comment-2274112">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/jenniferbarr.thumbnail.jpeg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/jenniferbarr'>Jennifer Barr</a></span><br />
+							<span class="comment-meta commentmetadata">February 16, 2015 at 11:02 am</span>
+
+						</div>
+						<div class="comment_text">
+							<ul class = "comment_id2274112 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'jenbarr';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2274112");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2274112">
+								</div>
+								<div class = "nitro_points pointscomment_id2274112">
+								</div>
+							</li>
+							</ul>
+							<div class = "clear"></div>
+							<p>Its disturbing how sophisticated hackers are getting these days.  Thanks for sharing the details of this.  I think its only through experience that users can learn to identify more accurately potential threats.</p>						</div>
+
+							<div class = "roblike">
+					<a  href = "#" id = "clickLike2274112" class = "commentLikeButton commentlike" data-nitro =jenbarr >3 likes</a>				</div>
+				<div class="reply">
+															</div>
+							<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+	<ul class="children">
+
+			<li class="comment byuser comment-author-martinnystrom bypostauthor odd alt depth-2" id="li-comment-2274814">
+				<div id="comment-2274814">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1433470916-bpthumb.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/martinnystrom'>Martin Nystrom</a></span><br />
+							<span class="comment-meta commentmetadata">February 18, 2015 at 8:36 am</span>
+
+						</div>
+						<div class="comment_text">
+							<ul class = "comment_id2274814 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'diddly';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2274814");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2274814">
+								</div>
+								<div class = "nitro_points pointscomment_id2274814">
+								</div>
+							</li>
+							</ul>
+							<div class = "clear"></div>
+							<p>Agree Jennifer - what I find very interesting is the sophisticated phishing plus the Tor network for control and exfiltration.</p>						</div>
+
+							<div class = "roblike">
+					<a  href = "#" id = "clickLike2274814" class = "commentLikeButton commentlike" data-nitro =diddly >2 likes</a>				</div>
+				<div class="reply">
+															</div>
+							<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+<li>
+			<div id="comment-2271781">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg' width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+							<a href = "https://blogs.cisco.com/rewards-profile/472">Brett Ellis</a>
+						</span>
+						<br />
+						<span class="comment-meta commentmetadata">February 10, 2015 at 10:50 am</span>
+
+					</div>
+				<div class="comment_text">
+					<ul class = "comment_id2271781 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'breellis';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2271781");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2271781">
+								</div>
+								<div class = "nitro_points pointscomment_id2271781">
+								</div>
+							</li>
+							</ul>
+					<div class = "clear"></div> <p>Great work!</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2271781" class = "commentLikeButton commentlike" data-nitro =breellis>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+<li>
+			<div id="comment-2271771">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/' width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+							<a href = "https://blogs.cisco.com/rewards-profile/162">David Chao</a>
+						</span>
+						<br />
+						<span class="comment-meta commentmetadata">February 10, 2015 at 10:30 am</span>
+
+					</div>
+				<div class="comment_text">
+					<ul class = "comment_id2271771 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'davidchaonexusis';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2271771");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2271771">
+								</div>
+								<div class = "nitro_points pointscomment_id2271771">
+								</div>
+							</li>
+							</ul>
+					<div class = "clear"></div> <p>This takes phishing to a whole new level especially at the corporate level. Scary to think that this is becoming a trend.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2271771" class = "commentLikeButton commentlike" data-nitro =davidchaonexusis >4 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+<li>
+			<div id="comment-2271191">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg' width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+							<a href = "https://blogs.cisco.com/rewards-profile/359">Murilo Rocha</a>
+						</span>
+						<br />
+						<span class="comment-meta commentmetadata">February 9, 2015 at 1:24 pm</span>
+
+					</div>
+				<div class="comment_text">
+					<ul class = "comment_id2271191 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'muca';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2271191");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2271191">
+								</div>
+								<div class = "nitro_points pointscomment_id2271191">
+								</div>
+							</li>
+							</ul>
+					<div class = "clear"></div> <p>Great article. Any chance you guys can let me know what memory capture and file system monitoring softwares were used during the threat analysis?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2271191" class = "commentLikeButton commentlike" data-nitro =muca >2 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li class="comment byuser comment-author-martinnystrom bypostauthor even depth-2" id="li-comment-2271879">
+				<div id="comment-2271879">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1433470916-bpthumb.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/martinnystrom'>Martin Nystrom</a></span><br />
+							<span class="comment-meta commentmetadata">February 10, 2015 at 2:22 pm</span>
+
+						</div>
+						<div class="comment_text">
+							<ul class = "comment_id2271879 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'diddly';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2271879");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2271879">
+								</div>
+								<div class = "nitro_points pointscomment_id2271879">
+								</div>
+							</li>
+							</ul>
+							<div class = "clear"></div>
+							<p>Hi Murilo, our investigator used FTK Imager for memory dumping and Sysinternals Process Monitor to monitor the files created.</p>						</div>
+
+							<div class = "roblike">
+					<a  href = "#" id = "clickLike2271879" class = "commentLikeButton commentlike" data-nitro =diddly >6 likes</a>				</div>
+				<div class="reply">
+															</div>
+							<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Security:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogSecurity', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogSecurity" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Security</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscosecurity?ref=nf"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/ciscosecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://youtubecisco.com/security"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogSecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.cert.org/blogs/vuls/" target="_blank">CERT Vulnerability Analysis</a></li>
+                      <li><a href="http://blogs.technet.com/b/srd/" target="_blank">Microsoft Security Research & Defense</a></li>
+                      <li><a href="http://isc.sans.edu/index.html" target="_blank">SANS Internet Storm Center</a></li>
+                      <li><a href="http://www.schneier.com/" target="_blank">Schneier on Security</a></li>
+                  </ul>
+              <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="http://www.cisco.com/en/US/products/products_security_advisories_listing.html" target="_blank">Advisories and Responses</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/cyberRiskReport.x" target="_blank">Cyber Risk Reports</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/intelliPapers.x?i=55" target="_blank">Security Best Practices</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/home.x" target="_blank">Security Intelligence Operations</a></li>
+                        <li><a href="http://www.cisco.com/en/US/products/hw/vpndevc/index.html" target="_blank">Security Products</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscosecurity?ref=nf'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/ciscosecurity'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 162914;
+			var orig_count = 0;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1FaOzet&text=Fake Volume License Trojan Targets Corporate Users and Evades Sandboxes&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/fake-volume-license-trojan-targets-corporate-users-and-evades-sandboxes&title=Fake Volume License Trojan Targets Corporate Users and Evades Sandboxes" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/fake-volume-license-trojan-targets-corporate-users-and-evades-sandboxes" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/fake-volume-license-trojan-targets-corporate-users-and-evades-sandboxes" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Fake Volume License Trojan Targets Corporate Users and Evades Sandboxes&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0AFake Volume License Trojan Targets Corporate Users and Evades Sandboxes%0A%0Ahttps://blogs.cisco.com/security/fake-volume-license-trojan-targets-corporate-users-and-evades-sandboxes%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

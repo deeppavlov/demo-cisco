@@ -1,0 +1,1747 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  To Tell the Truth: Multihop FCoE</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; To Tell the Truth: Multihop FCoE Comments Feed" href="https://blogs.cisco.com/datacenter/to-tell-the-truth-multihop-fcoe/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"23167"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Partners Reflect on Partner Summit 2011, Plus Our Favorite Quotes' href='https://blogs.cisco.com/partner/partners-reflect-on-partner-summit-2011-plus-our-favorite-quotes' />
+<link rel='next' title='No Voice? No Problem' href='https://blogs.cisco.com/collaboration/no-voice-no-problem' />
+
+<link rel="canonical" href="https://blogs.cisco.com/datacenter/to-tell-the-truth-multihop-fcoe" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=23167' />
+<meta property="og:image" content="http://i.ytimg.com/vi/l8j8SECzULw/default.jpg" />
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="To Tell the Truth: Multihop FCoE"/>
+  <meta property="og:url" content="https://blogs.cisco.com/datacenter/to-tell-the-truth-multihop-fcoe"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2011-03-11T09:40:57+00:00"/>
+  <meta property="article:modified_time" content="2011-03-11T13:49:30+00:00" />
+  <meta property="og:updated_time" content="2011-03-11T13:49:30+00:00" />
+  <meta property="article:section" content="Data Center"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="To Tell the Truth: Multihop FCoE"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/datacenter/to-tell-the-truth-multihop-fcoe"/>
+  <meta name="twitter:description" content="In the old television show, &quot;To Tell The Truth,&quot; celebrity panelists would attempt to decipher the true identity of one of three people, two of which were imposters.
+
+
+
+Sure, they looked alike, sounded alike, and had very similar characteristics, but there was only one genuine article.
+
+
+
+
+
+
+
+As we"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:creator" content="@http:/twitter.com/drjmetz"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521455518";
+		var sig = "df8ecb963f1c8695776849d882662795";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1zVeVR9&text=To Tell the Truth: Multihop FCoE&via=CiscoDC" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/datacenter/to-tell-the-truth-multihop-fcoe&title=To Tell the Truth: Multihop FCoE" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/datacenter/to-tell-the-truth-multihop-fcoe" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/datacenter/to-tell-the-truth-multihop-fcoe" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: To Tell the Truth: Multihop FCoE&body=I saw this post on Cisco Data Center blog and thought you might like to read it.%0A%0ATo Tell the Truth: Multihop FCoE%0A%0Ahttps://blogs.cisco.com/datacenter/to-tell-the-truth-multihop-fcoe%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/datacenter/'>Data Center</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category5.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Data Center  						</span>
+						<h1 id="post-23167" class="kindle_title title">To Tell the Truth: Multihop FCoE</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/JMichelMetz.thumbnail.jpg"></div><div class="author_rewards_box"></div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/jmichelmetz" title="Posts by J Metz" rel="author">J Metz</a> - March 11, 2011 - 11 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p>In the old television show, <a href="http://www.youtube.com/watch?v=l8j8SECzULw&amp;feature=related">&#8220;To Tell The Truth,&#8221;</a> celebrity panelists would attempt to decipher the true identity of one of three people, two of which were imposters.</p>
+<p>Sure, they looked alike, sounded alike, and had very similar characteristics, but there was only one genuine article.</p>
+<p><a rel="attachment wp-att-23141" href="http://blogs.cisco.com/datacenter/this-is-a-test/attachment/i-am-multihop-fcoe/"><img class="size-full wp-image-23141 alignnone" title="I Am Multihop <font color="red">FCoE</font>" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/I-Am-Multihop-FCoE.png" alt="" width="521" height="366" /></a></p>
+<p>As we move deeper into the capabilities of FCoE, it&#8217;s now starting to become obvious that people are starting to become more sophisticated about what happens beyond the first <font color="red">switch</font>. Not surprising, we start getting a lot of possibilities that look and sound alike, but are not really bona fide <font color="red">multihop</font> <font color="red">FCoE</font>.<span id="more-23167"></span></p>
+<p>Let&#8217;s start off with making something as clear as I can: there is nothing inherently <em>wrong</em> with any of these multitiering <font color="red">solutions</font>. The question is really only whether or not the <font color="red">solution</font> is appropriate for <em>your</em> <font color="red">data center</font>.</p>
+<p>It&#8217;s a little long as blogs go so I apologize in advance, and if I get a little too geeky, at least pretty pictures are included. Grab a cup of coffee, but I promise by the end it will make much more sense. (For you <font color="red">FC</font> people, this may seem a bit remedial at times, so please bear with me as I try to reach out to our non-storage brothers and sisters.)</p>
+<h3>What is Mutli<em>tiering</em>?</h3>
+<p>Put simply, for our purposes multi<em>tiering</em> means that the <font color="red">data center</font> is broken down into layers, and each layer is a tier. For example, we have the layer (often referred to &#8220;access&#8221; or &#8220;edge&#8221;) where the <font color="red">servers</font> connect to the first <font color="red">switch</font>, which makes one tier. In turn, those <font color="red">switches</font> move back farther into the <font color="red">data center</font>, into an &#8220;<font color="red">aggregation</font>&#8221; or &#8220;core&#8221; layer, or &#8220;tier.&#8221;</p>
+<p>Each layer has specific design considerations and have different roles to play in the <font color="red">data center</font>. This is true whether we&#8217;re talking about <font color="red">ethernet</font> or <font color="red">storage networks</font>.</p>
+<p>So, when we&#8217;re talking moving between these layers, or tiers, we are using mutt<em>tiering</em>.</p>
+<p>What gets confusing is that from both an Ethernet/LAN perspective <em>and</em> a <font color="red">Fibre</font> Chanel/SAN perspective, we often refer to these <font color="red">switches</font> as &#8220;hops.&#8221; The downside is that when you get into the nuts-and-bolts, they don&#8217;t actually mean <em>exactly</em> the same thing.</p>
+<h3>What is Multi<em>hop</em></h3>
+<p>While it would be valuable to go into all the possible meanings of what a &#8220;hop&#8221; is in data center terms, space and respect for your time prevents me from doing this (as it is, I may be pushing it a bit).</p>
+<p><a rel="attachment wp-att-23145" href="http://blogs.cisco.com/datacenter/this-is-a-test/attachment/totellthetruth/"><img class="alignleft size-full wp-image-23145" title="totellthetruth" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/totellthetruth.jpg" alt="" width="192" height="144" /></a>However, because FCoE is Fibre Channel, it behaves according to Fibre Channel rules to what a &#8220;hop&#8221; is. For that reason, there are two ways to determine if you have a FCoE &#8220;hop,&#8221; and what would constitute a &#8220;multihop&#8221; scenario.</p>
+<p>First, in Fibre Channel a &#8220;hop&#8221; is what happens when you move switch-to-switch and Domain IDs change. If you&#8217;re not familiar with Fibre Channel, and are used to the Ethernet way of understanding hops, each FC switch (generally speaking, by default) is a single domain, which identifies the switch in a FC fabric.</p>
+<blockquote><p><em>Because FCoE is Fibre Channel, it behaves according to Fibre Channel rules as to what a &#8220;hop&#8221; is.</em></p></blockquote>
+<p>For the storage administrator, this is important because the Domain ID is critical in being able to provide proper security (e.g., zoning) and run Fibre Channel-related services to each device connected to it.</p>
+<p>In FCoE, an actual Fibre Channel switch (called a Fibre Channel Forwarder, or FCF) exists inside of the Ethernet switch. This means that each FCF has its own Domain ID, enabling the storage admin to have control of the SAN wherever there is a FCF.</p>
+<p>When your FC switches talk to each other, they are connected by an Inter-Switch Link (ISL), and each time you connect Domain IDs in FC, you have what&#8217;s called a &#8220;hop.&#8221; Therefore, in FCoE (which is FC), every time you connect Domain IDs, you have a &#8220;hop.&#8221;</p>
+<p>The second way you can determine whether or not a switch falls into a &#8220;multihop&#8221; scenario is how much visibility the switch has into the FC portion of the payload for forwarding decisions. In other words, in order to keep the storage traffic engineering, an FCoE &#8220;multihop&#8221; switch needs to be able to maintain the appropriate forwarding mechanisms used by Fibre Channel (such as FSPF).</p>
+<p>Generally speaking then, a &#8220;<font color="red">Multihop</font> FCoE&#8221; switch is one that continues to subscribe to the appropriate FC traffic engineering, domain creation, and forwarding.</p>
+<h3>A Port in Any Storm</h3>
+<p>In Fibre Channel what makes something a hop is also determined by not just <em>what</em> is connected, but <em>how.</em></p>
+<p>At its most basic, a host/server uses a &#8220;Node Port&#8221;, or &#8220;N_Port&#8221; to connect to a fibre channel switch&#8217;s Fabric, or &#8220;F_Port.&#8221;</p>
+<p><a rel="attachment wp-att-23142" href="http://blogs.cisco.com/datacenter/this-is-a-test/attachment/n_port-to-f_port/"><img class="size-full wp-image-23142  alignnone" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/N_port-to-F_Port.png" alt="" width="283" height="96" /></a></p>
+<p>In the same way, an FCoE switch uses what&#8217;s called a &#8220;Virtual N_Port&#8221; ( &#8220;VN_Port&#8221;) connected to a &#8220;Virtual F_Port&#8221; (VF_Port) on a switch. (The reason why it&#8217;s called &#8220;Virtual&#8221; is because the physical port itself can be used for multiple purposes)</p>
+<p><a rel="attachment wp-att-23143" href="http://blogs.cisco.com/datacenter/this-is-a-test/attachment/vn_port-to-vf_port/"><img class="size-full wp-image-23143 alignnone" title="VN_Port to VF_Port" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/VN_Port-to-VF_Port.png" alt="" width="284" height="97" /></a></p>
+<p>When two switches communicate, they use what&#8217;s called an &#8220;Expansion Port,&#8221; or &#8220;E_Port.&#8221; In FCoE &#8211; you guessed it &#8211; those ports are called &#8220;VE_Ports.&#8221;</p>
+<p><a rel="attachment wp-att-23144" href="http://blogs.cisco.com/datacenter/this-is-a-test/attachment/ve_port-to-ve_port/"><img class="size-full wp-image-23144 alignnone" title="VE_Port to VE_Port" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/VE_Port-to-VE_Port.png" alt="" width="283" height="103" /></a></p>
+<p style="text-align: left;">It&#8217;s the presence of these &#8220;VE_Ports&#8221; that makes a &#8220;hop&#8221;, because it&#8217;s what makes an ISL between two Fibre Channel Domain IDs.</p>
+<p style="text-align: left;">The issue for understanding comes from if you put something in-between the FCFs, which you can do when you place Ethernet switches in-between.</p>
+<blockquote style="text-align: left;"><p><em>For Fibre Channel, an ISL is one of the ways it makes a &#8220;Hop.&#8221;</em></p></blockquote>
+<p>So, with respect to &#8220;To Tell The Truth,&#8221; let&#8217;s meet our contestants, each of whom claim: &#8220;I am a Multihop FCoE switch.&#8221;</p>
+<h3>Contestant #1: DCB Lossless Switch</h3>
+<p>From an Ethernet perspective, it &#8220;ain&#8217;t nuttin&#8217; but a thang&#8221; to add on additional switches, which can help provide more access to hosts and servers. To build on our simplified models, it looks something like this:</p>
+<p style="text-align: center;">
+<p><a rel="attachment wp-att-23146" href="http://blogs.cisco.com/datacenter/this-is-a-test/attachment/multitier-dcb-lossless-bridge/"><img class="size-full wp-image-23146  alignnone" title="Multitier - DCB Lossless Bridge" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/Multitier-DCB-Lossless-Bridge.png" alt="" width="480" height="182" /></a></p>
+<p>Generally speaking, this type of design tunnels FCoE traffic through &#8220;SAN unaware&#8221; switches that have no knowledge or understanding of the packet type. In other words, no Fibre Channel protocol-related activity is applied to the traffic between the host and the FCF fabric.</p>
+<p>Of course, this is perfectly &#8220;legal&#8221; according to the FC-BB-5 standard document. Hosts get access to FCoE storage, and if the FCF resides in a switch that can talk directly to FC storage, hosts can get access to those as well. One of the advantages of this is that it expands the fabric size without expanding Domain IDs.</p>
+<p>From a storage/SAN perspective, though, there are some significant drawbacks, namely from a security perspective. Because the SAN admin has no visibility to what goes on in the DCB lossless switch, the design can become susceptible to &#8220;man-in-the middle&#8221; attacks, where a rogue server can pretend to be a FC (FCF) switch and insert itself into the FC fabric where it&#8217;s not wanted.</p>
+<p>This method also prevents the ability to use FC forwarding or deterministic multipathing technology, and must rely on Ethernet Layer 2 solutions. This can further complicate troubleshooting and load-balancing in the storage network, especially if the number of DCB switches increase between the &#8220;VN_&#8221; and &#8220;VF_Ports.&#8221;</p>
+<p>If you happen to be a storage admin, this approach completely prevents the standard practice of &#8220;SAN A/SAN B&#8221; separation for redundancy. For <a href="http://community.brocade.com/message/14750#14750">some vendors, the solution to this is to create an entirely separate Ethernet fabric</a>, but LAN admins will tell you that isolating Ethernet traffic from half of the <font color="red">data center</font> may not be a workable solution.</p>
+<p>Really? <a href="http://ethernetfabric.com/2011/03/the-value-of-applying-wisdom-to-new-technology/">Creating two Ethernet fabrics that can&#8217;t talk to each other in order to preserve storage SAN separations?</a> Perhaps I should simply leave the possibility open for the sake of having options, but I have a hard time imagining this being put into practice.</p>
+<p>Not surprisingly, as Cisco works to support SAN operations end-to-end in the Data Center, this type of solution is not something we recommend from a storage-centric perspective.</p>
+<h3>Contestant #2: FIP Snooping Bridges</h3>
+<p>Unlike the lossless DCB bridge, which has no knowledge whatsoever about the <font color="red">FCoE</font> traffic flowing on its links, the FIP snooping bridge offers the ability to assist the FC fabric by helping with the login process (as servers come online, they need to &#8220;login&#8221; to the FC fabric).</p>
+<p style="text-align: center;">
+<p><a rel="attachment wp-att-23147" href="http://blogs.cisco.com/datacenter/this-is-a-test/attachment/multitier-fip-snooping/"><img class="size-full wp-image-23147  alignnone" title="Multitier - FIP Snooping" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/Multitier-FIP-Snooping.png" alt="" width="480" height="170" /></a></p>
+<p>While the switch doesn&#8217;t apply FC protocol services (such as multipathing, e.g.) to the traffic, it does inspect the packets and applies the routing policies to those frames. The FIP snooping bridge uses dynamic ACLs to enforce the FC rules within the DCB network. While a deep-dive is beyond the scope of this blog, let me point you to Joe Onisick&#8217;s fantastic <a href="http://www.definethecloud.net/fcoe-initialization-protocol-fip-deep-dive">exploration</a> of the subject.</p>
+<p>Generally, this improves upon the DCB lossless switch design because it prevents nodes from seeing or communicating with other nodes without first going through an FCF. The end result of this is that it enhances the FCoE security, preventing FCoE MAC spoofing, and creates natural FC point-to-point links within Ethernet LAN. One of the other advantages is that it expands the fabric size without expanding the Domain IDs.</p>
+<p>Cisco&#8217;s <a href="http://www.cisco.com/en/US/products/ps10596/index.html"> Nexus 4000 Series switches</a> work under this principle.</p>
+<p>Now, this is where people often get confused about whether this is a &#8220;hop&#8221; or not &#8211; and let&#8217;s call a spade a spade: even Cisco has introduced this as a &#8220;multihop&#8221; environment, when in fact it&#8217;s a multi<em>tiering</em> environment.</p>
+<p>While it&#8217;s understandable on one level (after all, how many people have you heard try to introduce <em>another</em> concept &#8211; multitiering &#8211; in order to <em>simplify</em> a conversation!?), it really is misleading as it doesn&#8217;t address the definition of <font color="red">Fibre Channel</font> ISLs, VE_Port to VE_Ports, or visibility into the FC payload. So, from a design perspective, it&#8217;s not actually multi<strong>hop</strong>.</p>
+<p>Why? Because the SAN admin doesn&#8217;t have <em>total</em> visibility into the fabric. Typically, <font color="red">Fibre Channel</font> tools don&#8217;t see FIP snooping bridges, and FIP snooping bridges don&#8217;t track discovery attempts or login failures.</p>
+<p>When a CNA failure occurs, admins must rely on CNA tools for troubleshooting, and there are potential load-balancing and SAN A/SAN B separation issues when these deployments start to scale.</p>
+<p>All of this means that while FIP-snooping bridges can be a good idea for <em>some</em> designs, there may be other considerations at play. It also means that when you add FIP snooping bridges to your data center they are not <font color="red">FCoE</font> &#8220;hops.&#8221;</p>
+<h3>Contestant #3: Multihop FCoE &#8211; NPV Switches</h3>
+<p>Now, even for those of you with some FCoE experience, FCoE NPV switches might be new. It&#8217;s an enhanced FCoE pass-through switch that acts like a server, performing multiple logins to the FCF Fabric:</p>
+<p style="text-align: center;"><a rel="attachment wp-att-23148" href="http://blogs.cisco.com/datacenter/this-is-a-test/attachment/multitier-npv/"><img class="alignnone size-full wp-image-23148" title="Multitier - NPV" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/Multitier-NPV.png" alt="" width="479" height="187" /></a></p>
+<p>(Actually, technically speaking the port facing the FCF is called a <em>VNP_Port</em>, but that&#8217;s not the point nor really important right now).</p>
+<p>In this case, the switch behaves the same way that a server does, performing multiple logins into the fabric. The advantage here is that it provides load balancing, traffic engineering, while simultaneously maintaining FCoE security and the the Fibre Channel operational SAN model.</p>
+<p>Moreover, it addresses FC Domain ID &#8220;sprawl,&#8221; which is something that larger deployments always have to contend with.</p>
+<p><a href="http://blog.scottlowe.org/2009/11/27/understanding-npiv-and-npv/">NPV is a technology that is used with great success in the Fibre Channel SAN world</a>, and is quite popular when data centers grow. It allows very familiar management and troubleshooting to SAN admins and provides the same benefits as FC switches doing NPIV logins.</p>
+<p>Not only does it not use a Domain ID, but it doesn&#8217;t lose visibility into the Fibre Channel domains and keeps the zoning infrastructure intact.</p>
+<p>Overall, when compared to FIP-snooping, it offers much greater traffic engineering options for the storage administrator.</p>
+<h3>Contestant #4: Multihop FCoE &#8211; VE_Port ISL Switches</h3>
+<p>So, now we have our final contestant. Using the exact same model as Fibre Channel networks today, switches that communicate with each other as peers, using FCF-to-FCF (switch-to-switch) communication, meets all our requirements for a Fibre Channel &#8220;hop:&#8221;</p>
+<p style="text-align: center;">
+<p><a rel="attachment wp-att-23149" href="http://blogs.cisco.com/datacenter/this-is-a-test/attachment/multitier-<font color="red">multihop</font>/"><img class="size-full wp-image-23149 alignnone" title="Multitier - Multihop" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/Multitier-Multihop.png" alt="" width="476" height="184" /></a></p>
+<p>In this case, the design is consistent with <font color="red">Fibre Channel</font> &#8220;hop&#8221; rules and &#8211; surprise! surprise! &#8211; is defined in the <a href="http://fcoe.com/09-056v5.pdf">FC-BB-5 standard</a> for switch-to-switch interoperability (as I&#8217;ve mentioned <a href="http://blogs.cisco.com/datacenter/will_the_real_fcoe_standards_please_stand_up/">before</a>).</p>
+<p>Since we&#8217;re looking at this from a <font color="red">Fibre Channel</font> perspective, it&#8217;s important to make some observations here.</p>
+<p>First, this gives SAN admins the most control and most visibility into all aspects of SAN traffic.</p>
+<p>Second, as you can see there is no extra &#8220;special sauce&#8221; needed in order to run multihop FCoE. You <a href="http://blogs.cisco.com/datacenter/understanding-fcoe-and-trill-the-easy-way/">don&#8217;t need TRILL,</a> or any other <font color="red">Ethernet</font> Layer 2 technology.</p>
+<h3>Will the Real Multihop <font color="red">FC</font>oE Please Stand Up?</h3>
+<p>There it is, plain as day, a complete storage solution, providing SAN A/B separation, fully standardized (and published!), and consistent with the existing models of storage networks that exist today. This makes it much easier to &#8220;bolt-on&#8221; FCoE technology into existing environments and maintain current best practices.</p>
+<p>It&#8217;s important to note that I am not saying &#8211; nor have I <em>ever</em> said &#8211; that any one solution is better than any other. Because each of the various designs I&#8217;ve mentioned here are built using the same building blocks, you may find yourself in an environment where your traffic engineering needs mean a little of this, a little of that, a little of something else.</p>
+<p>What&#8217;s key is that you understand what each of these terms mean. It should also help you when someone says that they have &#8220;multihop FCoE,&#8221; you are able to understand if they are talking from a storage perspective:</p>
+<ul>
+<li><strong>Does it have &#8220;VE_Ports?&#8221; No?</strong> Then it doesn&#8217;t maintain consistency within well-understood FC Inter-<font color="red">switch</font> storage links (ISLs).</li>
+<li><strong>Does it have visibility into the FC payload to make routing/forwarding decisions? No?</strong> Then it misses the other criteria for making an FCoE hop.</li>
+<li><strong>Does the <font color="red">switch</font> make the traffic invisible to <font color="red">FC</font> tools for troubleshooting purposes? Yes?</strong>Then it breaks the FC storage model.</li>
+<li><strong>Does it provide SAN A/B separation while maintaining LAN coherence? No?</strong>Then it isn&#8217;t a truly converged network.</li>
+</ul>
+<p>Again, depending on the purpose of the implementation, these may be desirable outcomes. But how can you possibly know unless you first understand <em>what</em> the differences between them are?</p>
+<p style="text-align: left;">If you made it this far, congratulations! With luck this (extremely long) blog cleared up some of the confusion regarding &#8220;Multihop <font color="red">FCoE</font>&#8221; and you have some better understanding of how to examine some of the products that are available that make the claim.</p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=dcb-lossless">DCB Lossless</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=fcoe"><font color="red">FCoE</font></a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=fip-snooping">FIP-Snooping</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=<font color="red">multihop</font>"><font color="red">Multihop</font></a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=multitiering">Multitiering</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=ve_ports">VE_Ports</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">11 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+			<li>
+			<div id="comment-140182">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Scott King						</span>
+						<br />
+						<span class="comment-meta commentmetadata">March 31, 2011 at 10:10 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>I'm not a bit surprised to hear that the deployment rate for FCoE is low; we're at the front end of the adoption curve. One thing that I think has held a lot of people up is waiting for a true multihop implementation, and Cisco's announcement yesterday should help alleviate that. Another hold up has been management's collective ignorance about the protocol and its advantages, and once they learn more about it we'll see FCoE mandated as a cost-saving measure. I'm sure there are a dozen objections to the technology ( just as there were for MPLS and any number of other technologies) but that won't stop it from becoming a cornerstone of future data centers. 
+
+
+
+Name a widely-accepted technology that didn't have objections leveled at it when it first showed up.
+
+
+
+We're just coming out of the "early adopter" stage of acceptance, and I think the industry will see a sudden surge of deployments as we move into the next phase very soon. Time marches on, and FCoE is nothing but another milestone in the progress of the data center. Railing against it is simply spitting into the wind.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike140182" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-139243">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://www.brasstacksblog.typepad.com' rel='external nofollow' class='url'>Erik Smith</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">March 28, 2011 at 5:39 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Great post J.  Brook and Juan, SAN management tools (ours included) have tended to lag behind the "state of the art".  One example (only recently being addressed) has to do with the lack of visibility into N_Port Virtualizers (Brocade AG mode / Cisco NPV mode).  Despite the management concerns introduced by these devices, they have proven to be very popular with our Customers because they solve a number of problems (e.g., the max Domain ID limitation and the FC-SW interop problem).  The same could be said about FCoE today.  A "single pane of glass" management tool that will allow one administrator to manage both LAN and SAN would be nice to have.  However, seeing as how the majority of our Customers are still trying to come to grips with the business and organizational implications a converged network presents, I think the most important areas to focus on have to do with basic converged network topologies and features.  In this area, FCoE is accelerating at a nearly overwhelming pace.
+
+
+
+In regards to the discussion about the "air gap requirement", as with any new (and potentially disruptive) technology, you have to evaluate it from a risk/reward point of view.  15 years ago, when open systems host connectivity consisted of direct attached SCSI, the idea of doing block I/O over a fabric was anathema to many in the industry.  Statements like "if you lose a switch, you'll lose connectivity to storage from all of your servers" were commonplace.  However, over time, these same people came to see the value a fabric provides and concepts like "air gap" (SAN A / SAN B) topologies were introduced to address our customers concerns and to remove some of the risk from moving to a fabric topology.  Over the years, the types of problems prevented by the SAN A / SAN B topology have proven to be "logical" in nature and not "physical".  By this I mean it is far more likely that a user will accidentally cause a loss of connectivity than a single switch will misbehave and take out an entire SAN.  In those rare cases where I have seen a software bug take down a SAN, the problem has been isolated to that SAN and has not been propagated through something like a SAN Router (e.g., IVR/FCR).  With all of this in mind, I think it is clear we need to maintain the SAN A / SAN B approach from a logical point of view.  From a physical point of view, due to the availability of features like vPC and MCT, and given how attractive our customers find the concepts of active/active teaming/bonding enabled by vPC and MCT, I think it makes sense to make topologies available that collapse the air gap at the access layer while allowing for a logical SAN A / SAN B topology to exist.  Will these topologies be appropriate for all environments?  The answer is "of course not"!  At the end of the day, we need to allow the customers to choose whichever topology best fits their needs.  In this regard, I agree with all of the comments I have seen on this post so far.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike139243" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-136914">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://bradhedlund.com' rel='external nofollow' class='url'>Brad Hedlund</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">March 21, 2011 at 9:01 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>FCoE is about convergence.  Fewer adapters, fewer switches, fewer cables, lower cost, doing more with less.  The cheese has moved and these things take time to get sorted out, I fully understand that.
+
+
+
+If you've been the traditional FC switch vendor for a long time, it makes perfect sense that you would want to keep the cheese where its always been; the same separate FC(oE) network that you can continue to sell, and the same separate Ethernet network somebody else can sell.
+
+
+
+Other vendors however have been leaders in both FC and Ethernet networking for quite some time and are perfectly positioned to guide the customer through the evolution to convergence.
+
+
+
+The difference is clear.
+
+
+
+Cheers,
+
+Brad</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike136914" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-136657">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://www.brocade.com' rel='external nofollow' class='url'>BrooK Reams</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">March 20, 2011 at 5:12 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Folks,
+
+
+
+I, for one, have been troubled by the lack of market traction for FCoE solutions.  Analysts report continued customre reliance on and growth of Fibre Channel for block storage SANs as each quarters sales data rolls in.  I think we should ask "Why?" Shouting louder doesn't alter the facts, it just makes it harder to hear.
+
+
+
+My hypothesis is that the early marketing hype that FCoE required a converged physical network is a likely reason.  Said differently, if the customers spending the most money on traditional Fiber Channel aren't buying the converged network story, maybe there's a reason, and discussing an alternative FCoE deployment option makes sense.
+
+
+
+On the topic of NFS and dual networks, you will find storage admins who deploy the block storage network to the disk farm on a separate physical network from the TCP/IP file server network connected to the clients.  There are good reasons for that decision.  Likewise those who insist that the management network is "air gapped" from the TCP/IP network.  There are good reasons for that.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike136657" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li>
+			<div id="comment-136712">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://twitter.com/jtarrioBRCD' rel='external nofollow' class='url'>Juan Tarrio</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">March 20, 2011 at 7:57 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Not to mention that best practices from most major iSCSI storage vendors require a completely separate (air-gapped) network for iSCSI storage. There are also good reasons for that.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike136712" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-136458">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://twitter.com/jtarrioBRCD' rel='external nofollow' class='url'>Juan Tarrio</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">March 19, 2011 at 11:27 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>For some reason my comment got posted out of order... Sorry for the confusion this might cause. :)</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike136458" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-135982">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://bradhedlund.com' rel='external nofollow' class='url'>Brad Hedlund</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">March 18, 2011 at 8:22 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>The convergence train has left the station and it doesn't look like everyone made it on board.
+
+
+
+You can't have an "air gap" for FCoE without building two completely separate back end networks just for FCoE, in addition to the IP network.  That's three 10GE networks and lots of 10GE adapters required in the server.  At that point, why even bother with FCoE?  Just stick with gold old FC.. oh, wait.. maybe that's the path somebody is trying to keep their customers on.. ;-)
+
+
+
+Are customers deploying "air gaps" for NFS? How about 10GE iSCSI? No? Why not? Why should FCoE be any different?
+
+
+
+The fact is, it is possible to provide SAN A/B isolation for FCoE in one converged infrastructure.  Cisco's FCoE platforms are capable of this and the FCoE best practice deployment guides show customers exactly how to do this.  Furthermore, Tier 1 storage manufacturers (EMC, NetApp, HP, etc.) have sold and supported these designs for quite some time now.
+
+
+
+Cheers,
+
+Brad</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike135982" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-135843">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://www.brocade.com' rel='external nofollow' class='url'>BrooK Reams</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">March 18, 2011 at 2:39 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Hi J,
+
+
+
+Just a couple of additional observations.
+
+
+
+I think storage management tools have matured so that visibility to traffic in SAN A and SAN B networks is quite good, as evidenced by EMC, IBM, HP, HDS tool sets. So I think that's not an enormous problem compared to the risk of pilot error and Mr. Murphy when making design decisions.  I suggest that the same tools will apply equally well to a SAN A and SAN B fabric architecture when using FCoE as they do when using Fibre Channel.  
+
+
+
+Much of the intelligence needed about data flows, congestion, frame corruption and hardware health for a Fibre Channel switch still apply to one handling FCoE traffic.  As Chip mentions, one needs to look at that and take it into consideration. Some tools may not work as well as others with FCoE which is still maturing, so that will affect the decision of when and if to use FCoE vs Fibre Channel.
+
+
+
+I agree with your observation about conflation of FCoE and TRILL, and as far as that goes, conflation with DCB. Sometimes the industry analysts and commentators don't always help on that score. So, it's important to talk about all the technical details and implications as you and Chip are trying to do.  It's a good thing.
+
+
+
+I wasn't sure what you meant by this comment:
+
+"Once we start relying on Ethernet forwarding rather than storage forwarding ..."
+
+
+
+What did you mean by "storage forwarding" and how is that different from "Ethernet forwarding"?
+
+
+
+Regarding the comment about taking the great any-to-any communication capability of the LAN and eliminating it, sometimes the fact you can do something doesn't mean you should, and certainly not blindly.  That's the point Chip and I were making.  Any-to-any communication has value, but not if using it reduces the availability and reliability of existing storage networks.  No customer would want that to happen.
+
+
+
+One last comment, it isn't necessary to conclude that since Chip and I talk about options, that means we are forcing anyone to any conclusion.  We aren't.  Instead, we want customers to be thoughtful and consider the implications of their choices.  For all our customers, storage networks carry the life-blood of the enterprise, their data, so thoughtful design is critical to the business.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike135843" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li>
+			<div id="comment-136432">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://twitter.com/jtarrio' rel='external nofollow' class='url'>Juan Tarrio</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">March 19, 2011 at 8:10 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Disclosure: I work for Brocade. Opinions are my own.
+
+
+
+[J Metz] "I mean, sure, it’s great if you’re running FCoE (1 wire) instead of having FC *and* Ethernet (2 wires), but then you go back to creating an “air gap” (2 wires) but you don’t even have the connectivity between LAN segments that you had before you converged."
+
+
+
+I just want to clarify the fact that FC today is already 2 wires, since 100% of customers deploy dual-redundant SAN fabrics (air-gap design) and dual-home all their servers with two (or multiples of two) HBAs, as well as their storage devices. The only exception is tape backup traffic since there is no such thing as multipathing for tape. So your "FC and Ethernet" scenario is really 3 wires and not 2, and by going to a dual-fabric design for FCoE you would still be reducing the number of wires by 33%.
+
+
+
+[Brook] "For all our customers, storage networks carry the life-blood of the enterprise, their data, so thoughtful design is critical to the business."
+
+
+
+Exactly. Customers deploy dual-redundant SAN fabrics for a very good reason today: they're betting their businesses on the reliable access of their applications to their data. Just ask any customer to deploy their mission critical applications in a single fabric, regardless how many 9s of availability each individual piece of hardware has or how resilient you build your fabric. You know what the answer to that is going to be. Why would you think they'd give a different answer with FCoE?
+
+
+
+[Brad Hedlund] "Are customers deploying “air gaps” for NFS? How about 10GE iSCSI? No? Why not? Why should FCoE be any different?"
+
+
+
+How many customers are running their top tier applications, those that, if they go down, mean many millions of dollars of losses, or even going out of business, on these protocols? How many of the largest mainframes supporting the operations of some of the largest financial institutions in the world are running on iSCSI?
+
+
+
+Oh wait...
+
+
+
+[Brad Hedlund] "The fact is, it is possible to provide SAN A/B isolation for FCoE in one converged infrastructure."
+
+
+
+It's not about what's possible from a technology point of view, because today it is perfectly possible to deploy a single fabric SAN and everything would work just fine. Or even provide SAN A/B "isolation" in a single fabric, using VSANs or Virtual Fabrics. How many customers are running those mission critical applications I just described earlier that way? Why do you honestly think they will be willing to sacrifice the ultimate isolation (the physical one) when going to FCoE?
+
+
+
+Other than that, I fully agree with you and Brook that choice is a good thing for customers, and that you've done an awesome job at clarifying the different approaches to multi-hop FCoE or even to what can be understood by the term multi-hop.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike136432" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+			<li class="comment byuser comment-author-jmichelmetz bypostauthor even thread-even depth-1" id="li-comment-135827">
+				<div id="comment-135827">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/JMichelMetz.thumbnail.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/jmichelmetz'>J Metz</a></span>
+							<br />
+							<span class="comment-meta commentmetadata">March 18, 2011 at 2:03 pm</span>
+
+						</div>
+						<div class="comment_text">
+							<p>Hi Brook,
+
+
+
+I appreciate you providing some clarification on both Chip's comments as well as your own. Having read through both pieces, it's entirely possible (even probable :) that I may miss some of the goals of what Brocade's strategy about Ethernet/Converged Fabrics are, and what they mean. 
+
+
+
+Part of the confusion (for me) comes from some of the criticism I read in your (yours and Chip's) that entertain what "some people/vendors" are saying, but without attribution to any specific claim or link. Sadly this means that I have to try to fill in the blanks.
+
+
+
+The good news here is that we both agree that customer choice is a good thing, locking down deployments based upon technology *types* is one of the things that we are trying to avoid through this new technology. It appears we also agree that your examples of "acceptable loss" within a data stream.
+
+
+
+What's not clear to me in what you write, however, is how the implementation of an "air gap fabric" on Ethernet side as described on your community forums and blogs actually works in practice. 
+
+
+
+See, in order to run multiple DCB lossless Ethernet switches in a row, the element of SAN A/B separation prevents the visibility for the SAN admin into the traffic flow (as described here). As you point out, it's of critical important to storage administrators, but it's also one of the main PITAs when designing SANs (let's face it!). Meanwhile, the same source hosts do not have that separation, or "air gaps" on the Ethernet side.
+
+
+
+It seems to me that you are taking the great any-to-any communication ability of a LAN and eliminating it, forcing a traffic duplication approach on the LAN side that, quite frankly, shouldn't be necessary. That seems like 1 Data Center for the price of 2, with none of the actual advantages of using a converged network in the first place.
+
+
+
+I mean, sure, it's great if you're running FCoE (1 wire) instead of having FC *and* Ethernet (2 wires), but then you go back to creating an "air gap" (2 wires) but you don't even have the connectivity between LAN segments that you had before you converged.
+
+
+
+In other words, it seems like you've just forklifted everything to a new architecture and *lost* functionality. Perhaps I'm just missing something obvious, but that's what it sounds like at the moment.
+
+
+
+With respect to TRILL, there is a difference between "requiring" the technology and "using" the technology. Some of the misinformation regarding FCoE (I'm sure you've seen this too) seems to conflate the two. FCoE does not have a requirement for TRILL, nor does Multihop FCoE. The only time TRILL can come into play is when you have something in-between FCFs. In fact, in an Option #4 environment, TRILL is entirely irrelevant.
+
+
+
+TRILL's use comes from an Ethernet implementation, which falls far more in line with Options 1 and 2 (1 primarily). For environments that rely very heavily on Ethernet mechanisms (and less on FC), Ethernet forwarding technologies will become relied upon more and more. However, there is a trade-off there as well, notably in the SAN visibility (mentioned above).
+
+
+
+Once we start relying on Ethernet forwarding rather than storage forwarding, we have a hard time justifying using FC/Storage-based "hop" approaches, so I refer to solutions that would use TRILL as "multitiering FCoE" over "multihop." It's not just splitting hairs; the design implications should hopefully be clearer based upon the reasons listed here.
+
+
+
+Again, the adherence to taxonomy is to help cut through some of the clutter and to let people understand that when I (personally) speak of "multihop FCoE" they understand what I am and am not referring to. It's certainly not a value judgment placed on any solution - customers should be able to have what works for their given situation, which I believe we are still in agreement with. :)
+
+
+
+Thanks for taking the time to read and comment, Brook. I really appreciate the input and insight.</p>						</div>
+						<div class = "roblike">
+					<a  href = "#" id = "clickLike135827" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+						<div class="reply">
+													</div>
+
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+			</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-135807">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://www.brocade.com' rel='external nofollow' class='url'>BrooK Reams</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">March 18, 2011 at 1:03 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Hi J. This is a good summary of the various approaches to supporting FCoE traffic in an Ethernet network.  Thanks for taking the time to identify the various options vendors are talking about.
+
+
+
+But, I wanted to call attention to a few comments you made where I think some clarification maybe in order.
+
+
+
+You wrote: “For some vendors, the solution to this is to create an entirely separate Ethernet fabric …” which links to a blog post by Dr. Chip Copper on the community.brocade.com site.  I think the sentence isn’t accurate. In that post, Chip said in part:
+
+
+
+“The biggest point here is that for each individual situation, there needs to be a discussion. Unfortunately, today there is a lot of buzz in the network industry implying that there is only one solution that fits all situations.
+
+
+
+I think you and Chip are in agreement about having multiple options and looking at the implications of each when deciding how to support FCoE traffic in an Ethernet network.  As Chip pointed out, you have to consider the topology options as well as the equipment and protocol used in the data path. You have to consider the management model, available tools and failure/disaster recovery requirements.  And, as I know you are well aware, TCP/IP traffic over Ethernet has very different expectations about the transport than SCSI traffic over Ethernet, so when you combine them those differences have to be carefully considered in the network design. 
+
+
+
+For the majority of existing Fibre Channel SAN environments, customers follow storage vendor best practices when they deploy two independent SAN fabrics, aka “air gap fabrics”. Those best practices don’t change just because the network transport protocol changed because those best practices were created for other reasons. Loosing data flow to a petabyte database application resulting in rebuilding it for the next several hours has a different degree of impact on the business than a lost syllable in VoIP call, or having to refresh a browser when connected to a web site.  That’s what Chip was talking about.  You have to consider the business requirements and then design the network to meet them. Chip agrees with yyou point out that having options and choices are a good thing.
+
+
+
+Next, you said:
+
+“Really? Creating two Ethernet fabrics that can’t talk to each other in order to preserve storage SAN separations ...”.
+
+
+
+with the embedded link pointing to a blog I posted at www.ethernetfabric.com.  Again, my post points out that existing physical air gap SANs are designed for a reason and in fact are best practice for many SAN customers and recommended by storage OEMs. An FCoE design that eliminates that air gap won’t be acceptable to someone who believes in it. As I point out, there is a design choice when using FCoE, which is in agreement with your observations that choices in how customers support FCoE traffic on an Ethernet network are valuable. I just pointed out that folks can use FCoE in an air-gap architecture and I think it’s a good idea to talk about that as one of the options. So I was agreeing with you J, it’s not a good idea to pretend there is only one option. 
+
+
+
+One other point your make in Option #4, “You don’t need TRILL, or any other Ethernet Layer 2 technology.”  I maybe misinterpreting this statement, but one way to read it is there are solutions that support FCoE without the “E” being used on any of the inter-switch links. That seems like almost an oxymoron, but, that’s not the point I wanted to make.  I want to point out that among the options for multi-hop FCoE traffic designs, TRILL is a viable choice and has much to recommend it. That’s one of the reasons Brocade uses TRILL in our VCS Ethernet Fabric.  It isn’t the only way to meet the stringent network requirements for block storage traffic, but it’s a very good choice when you want to use a lossless Ethernet network for the inter-switch links carrying FCoE traffic (aka, multi-hop FCoE). 
+
+
+
+J, thanks for putting the time into this blog and allowing me to provide some clarifications.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike135807" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Data Center:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogDataCenterNetworks', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogDataCenterNetworks" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Data Center</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscodc"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/CiscoDC"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco-data-center-and-cloud?trk=biz-brand-tree-co-name"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/114381144808300038585/posts"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/Ciscodatacenter/presentations"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://www.youtube.com/user/Cisco/videos?sort=dd&view=46&tag_id=UCEWiIE6Htd8mvlOR6YQez1g.3.data-center-virtualization"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogDataCenterNetworks"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+
+	<li id ="twitter_widget" class="widget">
+
+	<!-- white background -->
+	<div class="topContainer">
+	 <div class="twit_container">
+
+		<div id="twit_req">
+
+			<span class="widgetheading">
+				Tweets
+			</span>
+
+			<a href="https://twitter.com/" target="_blank"><span class="twit_logo"></span></a>
+							<div class="clear"></div>
+							</div>
+			<!-- <span class="twit_logo" href="#"></span> -->
+			<div class="clear"></div>
+		</div></div>
+		</li>
+
+<br class="clear" />
+
+<script type = "text/javascript">
+
+jQuery(document).ready(function() {
+ //Calling Twitter Widget
+var url = "https://tts-prod.cloudapps.cisco.com/ciscotweetsapp/api/v1/gettweets/ciscodc/response.jsonp";
+
+		loadSpotlightTweet(url);
+
+		//Metrics for each reply retweet and favorites(loop for each tweet)
+		cdc.util.addMetricsRule(".twit_reply", {linktext: "reply"});
+		cdc.util.addMetricsRule(".twit_retweet", {linktext: " retweet "});
+		cdc.util.addMetricsRule(".twit_favorite", {linktext: " favorite "});
+
+	   //lpos for all clicks inside twitter_widget
+		cdc.util.addMetricsRule("#twitter_widget a[href]", {lpos: "tweets"});
+
+});
+
+String.prototype.parseURL = function() {
+	var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+	return this.replace(exp, "<a href='$1' target='_blank'>$1</a>");
+};
+
+String.prototype.parseUsername = function() {
+	return this.replace(/[@]+[A-Za-z0-9-_]+/g, function(u) {
+		var username = u.replace("@", "");
+		// return u.link("http://twitter.com/" + username);
+		return '<a target="_blank" href="https://twitter.com/' + username
+				+ '">' + u + '</a>';
+		// return u.link(window.open('http://www.google.com', '_blank',
+		// 'toolbar=0,location=0,menubar=0'));
+	});
+
+};
+
+String.prototype.parseHashtag = function() {
+	return this.replace(/[#]+[A-Za-z0-9-_]+/g, function(t) {
+		var tag = t.replace("#", "%23");
+		// tag = tag.replace(tag,"<a href='$1' target='_blank'>$1</a>");
+		// return t.link("https://twitter.com/search?q=" + tag +
+		// "&src=hash");//https://twitter.com/search?q=%23retail&src=hash
+		return '<a target="_blank" href="https://twitter.com/search?q=' + tag
+				+ '&src=hash">' + t + '</a>';
+	});
+
+};
+
+function parseURLEntities(t, arg) {
+	for ( var j = 0; j < arg.length; j++) {
+		t = t.replace(arg[j].url, '<a target="_blank" href="' + arg[j].url
+				+ '">' + arg[j].displayURL + '</a>');
+	}
+	return t;
+}
+
+
+function parseDate(str) {
+	var v = str.split(' ');
+	return new Date(Date.parse(v[1] + " " + v[2] + ", " + v[5] + " " + v[3]
+			+ " UTC"));
+}
+
+function selectDay() {
+	var d = new Date();
+	var weekday = new Array(7);
+	weekday[0] = "Sun";
+	weekday[1] = "Mon";
+	weekday[2] = "Tue";
+	weekday[3] = "Wed";
+	weekday[4] = "Thu";
+	weekday[5] = "Fri";
+	weekday[6] = "Sat";
+
+	var n = weekday[d.getDay()];
+
+	return n;
+}
+
+
+var checkIE = function () {
+    var a = navigator.userAgent;
+    return {
+        ie: a.match(/MSIE\s([^;]*)/)
+    };
+}();
+
+
+function relative_time(time_value) {
+	//time_value is in millisecond (GMT)
+
+	var d = new Date(time_value);//converting to our local PST default Date Format
+	//console.log('PST : ' + d);
+
+	var values = d.toString().split(" ");
+	var time_value_format = values[1] + " " + values[2] + ", " + values[3] + " " + values[4];
+//	console.log(time_value_format);
+
+	var parsed_date = Date.parse(time_value_format);
+    var relative_to = (arguments.length > 1) ? arguments[1] : new Date();
+//    console.log(relative_to.getTime());
+    var delta = parseInt((relative_to.getTime() - parsed_date) / 1000);
+    //delta = delta + (relative_to.getTimezoneOffset() * 60); 	//Not Required: converting into GMT since we are getting in GMT Format
+
+   	if (delta < 60) {
+		return delta + 's';
+	} else if (delta < 120) {
+		return '1m';
+	} else if (delta < (60 * 60)) {
+		return (parseInt(delta / 60)).toString() + 'm';
+	} else if (delta < (120 * 60)) {
+		return '1h';
+	} else if (delta < (24 * 60 * 60)) {
+		return (parseInt(delta / 3600)).toString() + 'h';
+	} else if (delta < (48 * 60 * 60)) {
+		return values[2] + " " + values[1];
+	} else {
+		return values[2] + " " + values[1];
+	}
+
+}
+
+
+	function loadSpotlightTweet(tweetsURL)
+	{
+
+	try {
+		var req = jQuery.ajax({
+			url: tweetsURL,
+			async: false,
+			dataType : "jsonp",
+			timeout : 1000,
+
+		});
+
+			req
+				.success(function(data) {
+			var metricsUser= "";
+
+				  if(data == "")
+					  return;
+
+					var arr1 = [];
+					var displayVal = [];
+
+					for ( var i = data.length-1; i >= 0; i -= 1) {
+
+						arr1.push(data[i].createdAt);
+
+					}
+
+					arr1.sort();
+
+                // Sorting for tweets based on Time
+				for ( var i = arr1.length - 1; i >= 0; i -=1) {
+
+						for ( var j = 0; j < data.length; j++) {
+
+							if (arr1[i] == (data[j].createdAt)) {
+								displayVal.push(j);
+
+							}
+						}
+					}
+
+					//Tweets Multiple Display URL Links
+					var t1 = "";
+					var screen_Name = "";
+					var retweeted = "";
+
+					 // Retweets User/Screen Names.
+					 var RetScreenName = "";
+					 var RetUserName = "" ;
+					 var tUserName = "";
+                     var tScreenName = "";
+                     var profileImg = "";
+
+					var loopArr = [];
+
+					for ( var k = 0; k < displayVal.length; k++) {
+
+						if (data[displayVal[k]].urlEntities != null) {
+							t1 = parseURLEntities(data[displayVal[k]].text,
+									data[displayVal[k]].urlEntities);
+						} else {
+							t1 = (data[displayVal[k]].text)
+									.parseURL();
+						}
+
+						//End Tweets Links
+
+						// Check Re-tweeted Status
+                       retweeted = data[displayVal[k]].retweet;
+
+						if(retweeted)
+						{
+                           RetScreenName = data[displayVal[k]].rtScreenName ;
+						   RetUserName = data[displayVal[k]].rtUserName;
+						   profileImg = data[displayVal[k]].rtProfileImageURL;
+						}
+						else
+						{
+                           RetScreenName = data[displayVal[k]].screenName ;
+						   RetUserName = data[displayVal[k]].userName;
+						   profileImg = data[displayVal[k]].profileImageURLHttps;
+						}
+
+						// Widget contents
+
+						jQuery('.twit_container')
+								.append(
+										 '<div class="single_tweet">'
+     									+ '<div id="twit_avatar" class="twit_avatar">'
+										+ '<img border="0" src="'
+										+ profileImg
+										+ '" width="40" height="40" style="border-radius:5px;"/></div>'
+
+										+ '<div class="twit_content"><div class ="twit_userinfo">'
+										+ '<a class="twit_realname" id="twit_realname" href="https://twitter.com/'
+										+ RetScreenName
+										+ '" target="_blank">'
+										+ RetUserName
+										+ '</a><br/>'
+										+ '<a id="twit_username" href="https://twitter.com/'
+										+ RetScreenName
+										+ '" target="_blank">@'
+										+ RetScreenName
+										+ '</a></div>'
+										+ '<div class ="timestamp"><a href="https://twitter.com/'
+										+ RetScreenName
+										+ '/status/'
+										+ data[displayVal[k]].id
+										+ '" target="_blank">'
+										+ relative_time(data[displayVal[k]].createdAt)
+									    + '</a></div>'
+										+ '<div class="clear"></div></div>'
+										+ '<div class="clear"></div>'
+
+                                        + '<div id="twit_text" class="twit_text">'
+												+ t1.parseUsername()
+														.parseHashtag()
+												+ '</div>'
+
+												//Retweeted Content
+												+ '<div class="re-tweet"><div class="retweet_img"><span class="retweet_badge"><a href="" class="retweeted_icon"></a><span class="retweet_text"> Retweeted By <a class="rtwit" href="https://twitter.com/'
+												+ data[displayVal[k]].screenName
+												+ '" target="_blank">'
+												+ data[displayVal[k]].userName
+												+ '</a></span></span></div></div>'
+
+												+ '<div class ="twit_actions">'
+
+												+ '<a class="twit_reply" href = "https://twitter.com/intent/tweet?in_reply_to='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+ '<a class="twit_retweet" href = "https://twitter.com/intent/retweet?tweet_id='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+ '<a class ="twit_favorite" href = "https://twitter.com/intent/favorite?tweet_id='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+'<span class="twit_follow"><a href="https://twitter.com/intent/follow?screen_name='
+												+ data[displayVal[k]].screenName
+												+ '" target="_blank"></a></span>'
+
+												+ '<div class ="clear"></div>'
+												+ '</div></div></div>');
+
+
+
+
+					// Retweeted Status Show/Hide
+					if (retweeted) {
+							jQuery(".re-tweet").eq(k).css("display", "inline");
+						} else {
+							jQuery(".re-tweet").eq(k).css("display", "none");
+						}
+
+
+	}
+
+					//End Widget Contents
+
+
+                // To sort and match properly
+	            jQuery('div.twit_container').find('.single_tweet:eq(0)').clone().appendTo('.twit_container');
+
+				// Metrics for each tweet <--link id to group links in each tweet content--->
+				// cdc.util.addMetricsRule('.single_tweet a[href]', {lid: '" + @twittusername+ "'});
+
+				jQuery(".single_tweet").each(function(i){
+				    var user = jQuery(this).find('#twit_username').text();
+				    var links = jQuery(".single_tweet:eq("+i+") a[href]").get();
+				    cdc.util.addMetricsRule(links, {lid: user });
+				});
+
+					// Loop Through Tweets
+					jQuery('.topContainer').css('display','block');
+					elems = jQuery('.single_tweet').hide().get();
+
+					(function loop() {
+						var i = 0, pointer = jQuery(elems).filter(':visible:last')[0]
+								|| jQuery(elems).last()[0];
+
+						jQuery(elems).hide();
+
+						while (i < 3) {
+							pointer = jQuery(pointer).next()[0]
+									|| jQuery(elems).first()[0];
+							jQuery(pointer).show();
+							i += 1;
+						}
+
+						setTimeout(loop, 12000); // 12 seconds 120000
+					})();
+
+				//End of looping three tweets
+
+
+
+});
+
+		// End of Reply/Retweet/Fav link mouse over/out
+
+		req
+				.error(function(msg) {
+					console.log("In Error of rate limit exception: " + msg);
+					//alert("Rate Limit Exceeded: Please Check after some time.Thank you for your patience. ");
+
+				});
+
+
+	} catch (err) {
+		txt = "There was an error on this page.\n\n";
+		txt += "Error description: " + err.message + "\n\n";
+		txt += "Click OK to continue.\n\n";
+		alert(txt);
+	}
+}
+</script>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.bladewatch.com/" target="_blank">Blade Watch</a></li>
+                      <li><a href="http://www.infoworld.com/?source=nav_BLOGS" target="_blank">InfoWorld</a></li>
+                      <li><a href="http://www.networkworld.com/blogs/" target="_blank">Network World</a></li>
+                      <li><a href="http://blogs.techrepublic.com.com/" target="_blank">TechRepublic</a></li>
+                      <li><a href="http://datacenterjournal.com/index.php" target="_blank">The Data Center Journal</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscodc'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/CiscoDC'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco-data-center-and-cloud?trk=biz-brand-tree-co-name'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/114381144808300038585/posts'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 23167;
+			var orig_count = 0;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1zVeVR9&text=To Tell the Truth: Multihop FCoE&via=CiscoDC" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/datacenter/to-tell-the-truth-multihop-fcoe&title=To Tell the Truth: Multihop FCoE" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/datacenter/to-tell-the-truth-multihop-fcoe" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/datacenter/to-tell-the-truth-multihop-fcoe" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: To Tell the Truth: Multihop FCoE&body=I saw this post on Cisco Data Center blog and thought you might like to read it.%0A%0ATo Tell the Truth: Multihop FCoE%0A%0Ahttps://blogs.cisco.com/datacenter/to-tell-the-truth-multihop-fcoe%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

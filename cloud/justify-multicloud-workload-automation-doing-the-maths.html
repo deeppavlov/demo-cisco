@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Justify Multicloud Workload Automation – Doing the Maths</title>
+
+	<meta property="og:image" content="https://alln-extcloud-storage.cisco.com/ciscoblogs/59ff16d7c633c-460x230.jpg"/><meta property="og:description" content="A multicloud management platform like Cisco CloudCenter can demonstrate real value when you are automating application deployment and management across different datacenter, private and public cloud environments."/><meta name="description" content="A multicloud management platform like Cisco CloudCenter can demonstrate real value when you are automating application deployment and management across different datacenter, private and public cloud environments."/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"237633"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Stealthwatch Cloud: Securing the public cloud, without undercutting it' href='https://blogs.cisco.com/security/stealthwatch-cloud-securing-the-public-cloud-without-undercutting-it' />
+<link rel='next' title='Glimpsing the Evolution of Cable Networks at This Year’s Cable-Tec Expo' href='https://blogs.cisco.com/sp/glimpsing-the-evolution-of-cable-networks-at-this-years-cable-tec-expo' />
+
+<link rel="canonical" href="https://blogs.cisco.com/cloud/justify-multicloud-workload-automation-doing-the-maths" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=237633' />
+<meta property="og:image" content="http://i.ytimg.com/vi/h-WbiPWCLEs/default.jpg" />
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Justify Multicloud Workload Automation – Doing the Maths"/>
+  <meta property="og:url" content="https://blogs.cisco.com/cloud/justify-multicloud-workload-automation-doing-the-maths"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2017-11-06T05:50:05+00:00"/>
+  <meta property="article:modified_time" content="2017-11-11T08:11:38+00:00" />
+  <meta property="og:updated_time" content="2017-11-11T08:11:38+00:00" />
+  <meta property="article:section" content="Cloud"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Justify Multicloud Workload Automation – Doing the Maths"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/cloud/justify-multicloud-workload-automation-doing-the-maths"/>
+  <meta name="twitter:description" content="A multicloud management platform like Cisco CloudCenter can demonstrate real value when you are automating application deployment and management across different datacenter, private and public cloud environments."/>
+  <meta name="twitter:image" content="https://alln-extcloud-storage.cisco.com/ciscoblogs/59ff16d7c633c.jpg"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:creator" content="@@kurtmilne"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521514662";
+		var sig = "bea5aa9ea3048e2be569e40655b632a3";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/2hLg1JV&text=Justify+%23multicloud+workload+automation+with+a+simple+model+%40kurtmilne+%40DJJerGuthrie+shows+you+how&via=CiscoCloud" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/cloud/justify-multicloud-workload-automation-doing-the-maths&title=Justify Multicloud Workload Automation – Doing the Maths" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/cloud/justify-multicloud-workload-automation-doing-the-maths" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/cloud/justify-multicloud-workload-automation-doing-the-maths" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Justify Multicloud Workload Automation – Doing the Maths&body=I saw this post on Cisco Cloud blog and thought you might like to read it.%0A%0AJustify Multicloud Workload Automation – Doing the Maths%0A%0Ahttps://blogs.cisco.com/cloud/justify-multicloud-workload-automation-doing-the-maths%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/cloud/'>Cloud</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/59ff16d7c633c-460x230.jpg">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Cloud  						</span>
+						<h1 id="post-237633" class="kindle_title title">Justify Multicloud Workload Automation – Doing the Maths</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1472059134-bpthumb.jpg"></div><div class="author_rewards_box">			<ul class = "nitro_author237633 bunchballAwards">
+		<li>
+			<div class = "nitro_badge badgenitro_author237633">
+			</div>
+			<div class = "nitro_points pointsnitro_author237633">
+			</div>
+		</li>
+		<script>
+var nitroName = 'kumilne';
+var sessionKey = '';
+
+
+nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "postBadges", "nitro_author237633");</script>
+
+		</ul>
+		</ul>
+	<div class = "clear"></div>
+</div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/kurtmilne" title="Posts by Kurt Milne" rel="author">Kurt Milne</a> - November 6, 2017 - 0 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p>How many times have you wondered:</p>
+<ul>
+<li>Should I automate this task? What about the end-to-end process?</li>
+<li>How many times do I need to use the <font color="red">automation</font> to justify the work needed to set it up and maintain it?</li>
+</ul>
+<p>As an <font color="red">engineer</font> myself, I have asked these question many times. Can I write a <font color="red">script</font> to do repetitive work? What if I only plan to run the <font color="red">script</font> 10 times this year? Or should I just perform the task manually? Again?</p>
+<p>Both individuals and organizations need to understand how to answer these questions. Typically, it is the individual (administrators, operators, architects, developers, etc.) who understands the technical tasks required; and it is the organization (multi-function teams, IT operations, <font color="red">datacenter</font> <font color="red">engineer</font>, systems reliability <font color="red">engineer</font>) that understands the <font color="red">business processes</font> impact, and funds strategic initiatives such as increased <font color="red">automation</font>.</p>
+<p>Generally, it makes sense to automate an IT task or process if:</p>
+<p>a) You can run the <font color="red">automation</font> enough times to spread out the cost of creating the <font color="red">automation</font> capability (hours of development, testing, and   ongoing maintenance).</p>
+<p>Pattern &#8211; “I’m going to do this task X times in the next year and it will take me a couple hours of writing, testing, and updating a <font color="red">script</font> to add to my  bag of tools.&#8221;</p>
+<p>b) Each automated execution has a lower cost than performing the work manually.</p>
+<p>Anti-Pattern &#8211; every time I run the <font color="red">automation</font> I end up spending more time tweaking things because the environment or process keeps changing.</p>
+<p><strong>The Maths</strong></p>
+<p>I built a simple model to help methodically evaluate your decision, based on work originally developed by Brown and Hellersten at the IBM Thomas Watson Research. With a mathematic model, you “tweak the knobs” and consider the impact of different variables on your decision. A main consideration is your investment of time and effort as a quantifiable cost. Time is money, right?</p>
+<p>The model compares the fixed and <font color="red">variable costs</font> of manual task or process versus the automated version of the same. The cost calculation is based on the variable N, which represents the number of times the automated process will be executed.</p>
+<p><img class="aligncenter wp-image-237667" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/59ff15afe906d.jpg" alt="" width="672" height="181" /></p>
+<p><strong>Consider 4 key variables</strong></p>
+<p><strong> </strong><strong>1 &#8211; Manual fixed costs &#8211; </strong>cost of developing the <font color="blue">manual process</font>. How much does it cost to produce a box of ball bearings? 1<sup>st</sup> you need a factory (manual fixed cost) then you need some steel rod and 5 minutes of labor (manual <font color="red">variable cost</font>). Do not spend too much time on defining the “factory cost” because it is a foundational requirement for both the manual and automated processes, and thus it drops out of your final decision calculation. (If you are thinking “Yeah, but I can do things with <font color="red">automation</font> I can’t do manually” you are on the right track – see footnote)</p>
+<p><strong>2 &#8211; Manual <font color="red">variable costs</font></strong> – the amount of time and effort involved each time you do the work manually. Think of this is the pain you are trying to eliminate. Every time X lands on your task queue– you are about to experience manual <font color="red">variable cost</font>.</p>
+<p><strong>3 &#8211; Automated fixed costs – </strong>this is the cost of the tools used for multiple processes, and time and effort to build and maintain <font color="red">automation</font> artifacts per <font color="red">workload</font>, task, or process you automate. Python or Perl = fun little programming effort. <font color="red">Orchestration</font> tool or <font color="red">cloud management platform</font> = need to get PO approved. Key – if you are automating <font color="red">deployments</font> to 3x environments and have 3x <font color="red">automation</font> artifacts to build and maintain – that automated fixed cost multiplier works against you.</p>
+<p><strong>4 &#8211; Automated <font color="red">variable costs</font></strong> – the amount of time and effort involved in automated execution. Ideally it is close to zero if task or process is fully automated. But <font color="red">automation</font> does not always work so you may have to consider what percent of automated deploy fail, and include the cost of manually debugging and reworking exceptions or failures.</p>
+<p><strong>Calculate all of the things</strong></p>
+<p>We can then solve for N<sub>T</sub> which we call the <font color="red">Automation</font> Tipping Point. This represents the cross over point at which it becomes cost effective to automate the process. <em>Keep reading. This will get interesting.</em></p>
+<p>As seen below, <font color="red">automation</font> is justified when N<sub>T</sub> is greater than the ratio of <font color="red">automation</font> fixed costs divided by manual <font color="red">variable costs</font> minus automated <font color="red">variable costs</font>.</p>
+<p><img class="aligncenter wp-image-237668 " src="https://alln-extcloud-storage.cisco.com/ciscoblogs/59ff16007891e.jpg" alt="" width="669" height="164" /></p>
+<p><strong>Tweaking the knobs </strong></p>
+<p>If you could wave a magic wand and create an “<font color="red">easy button</font>” for everything you do, then N<sub>T </sub>would be 1. However, consider the impact of your reality on this ratio. <u>IF</u> the numerator goes down (<font color="red">automation</font> fixed costs) <u>THEN</u> the <font color="red">tipping point</font> goes down and it is easier to justify <font color="red">automation</font>. IF the denominator goes down (manual is easy, or <font color="red">automation</font> has lots of errors) &#8211; <u>THEN</u> the <font color="red">tipping point</font> goes up e.g. harder to justify. Things you can tweak include:</p>
+<ul>
+<li><strong><font color="red">Automation</font> fixed costs</strong> – if the cost of <font color="red">automation platform</font> goes down, then you can more easily spread that cost out and justify automating a specific task. If you automate many different <font color="red">workloads</font>, the cost is also spread across all those <font color="red">deployment</font> processes.</li>
+<li><strong>Manual <font color="red">variable costs</font></strong> – if performing tasks manually is becoming increasingly more difficult, i.e. a need for specific and deep skills in a particular <a href="http://www.cisco.com/web/solutions/trends/cloud/build-public-cloud.html" title="<font color="blue">cloud provider</font>" target="_blank" class="seoal-link">cloud provider</a> (<font color="red">AWS</font>, GCP, <font color="red">Azure</font>), then you can more easily justify the cost of automating that task.</li>
+<li><strong>Automated <font color="red">variable costs</font> </strong>– if your <font color="red">automation</font> artifact is effective across multiple environments, then you achieve consistency, predictability, and repeatability that also reduces expensive errors. That is good.</li>
+</ul>
+<p><strong>Applied to <font color="red">Multicloud</font> <font color="red">Workload</font> <font color="red">Deployment</font> </strong></p>
+<p>When applying this to decision to the automated <font color="red">deployment</font> of applications in a <font color="red">multicloud</font> <font color="red">cloud management</font> scenario, you should assume:</p>
+<ul>
+<li>The person who creates the <font color="red">automation</font> is not necessarily the user of the <font color="red">automation</font>. If you want to scale, one person does the <font color="red">automation</font> work to build an <font color="red">easy button</font>, and many persons use the <font color="red">easy button</font>. So, the <font color="red">automation</font> requires guardrails to control the <font color="red">automation</font> which raises <font color="red">automation</font> fixed costs, and thus can raise the <font color="red">tipping point</font> (Someone has to determine policy, implement governance rules that guide user decisions).</li>
+<li>Different environments may require unique <font color="red">automation</font> tools. This reality drives up automated fixed costs even further, and likewise raises the <font color="red">tipping point</font>.</li>
+<li>Different environments may require multiple environment specific <font color="red">automation</font> artifacts. If you have multiple <font color="red">automation</font> artifacts that are environment specific (e.g. a <font color="red">script</font> for <font color="red">workload</font> 1 in <font color="red">vSphere</font> and another <font color="red">script</font> for <font color="red">workload</font> 1 in <font color="red">AWS</font>), fixed costs go up. More is worse. Configuration tools help here.</li>
+<li><font color="red">Automation</font> should drive consistency, predictability, and repeatability that also reduces expensive errors. The variability of different <font color="red">datacenter</font> and <font color="red">cloud environments</font> may result in variation and exceptions that increase the number of exceptions that need to be handled manually, which also raises the <font color="red">tipping point</font> significantly.</li>
+</ul>
+<p><strong>Footnote: Thoughts from <font color="red">Automation</font> Guru Jeremy Guthrie</strong></p>
+<p>Jeremy Guthrie, Technical Architect for <font color="red">Orchestration</font> at CDW has some has three tips for success for <font color="red">automation</font> projects in <a href="https://www.youtube.com/watch?v=h-WbiPWCLEs&amp;index=19">this 3 min video</a>.</p>
+<p>He approaches <font color="red">automation</font> with his customers from a different angle, and offers these additional considerations:</p>
+<ol>
+<li><strong>Error checking</strong> &#8211; <font color="red">automation</font> allows error checking to be built in.  <font color="red">Manual processes</font> never have that option.  I might be building a process that runs 10-12 times per year but it really needs to work and/or recover.  Unit testing <font color="red">scripts</font> can be built early on or later, but their value is immense in assuring that after upgrades, systems are working as planned.  e.g. Amazon upgrades and promotes new code every 11 minutes because that unit testing is central to their velocity.</li>
+<li><strong>Don’t over think it</strong> – don’t get too hung up on calculating all of the things [above]. If you try to model all the costs and benefits, you will get overwhelmed and not know where to start. Instead, just start by automating something, get familiar, and as you gain some successes, then you can start to strategize on what&#8217;s next and what&#8217;s worth it.</li>
+<li><strong>Don’t focus on the dollars </strong>– as a <font color="red">datacenter</font> <font color="red">engineer</font> working on <font color="red">automation</font>, you need operations and developer buy-in.  It has to look attractive on multiple fronts (easy to use, reliable, makes work faster) or else my experience is that Ops or Dev are both capable of burying the project.</li>
+</ol>
+<p>Wise words of advice!</p>
+<p><strong>Bottom line</strong></p>
+<p>A <font color="red">multicloud</font> <font color="red">management platform</font> like <a href="https://www.cisco.com/go/cloudcenter"><font color="red">Cisco</font> <font color="red">CloudCenter</font></a> can demonstrate real value when you are automating <font color="red">application deployment</font> and management across different <font color="red">datacenter</font>, private and <font color="blue">public cloud</font> environments.</p>
+<p>Request a demo <a href="https://engage2demand.cisco.com/CloudCenterDemoCLQ">here</a>.</p>
+<p>&nbsp;</p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=cisco-cloud">Cisco cloud</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=cloud2">cloud</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=cloudcenter">CloudCenter</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=multicloud">multicloud</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=workload-automation">workload automation</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+		</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Cloud:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogCloud', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogCloud" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Cloud</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/CiscoCloud"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/CiscoCloud"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://www.youtube.com/Cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogCloud"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+</ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/CiscoCloud'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/CiscoCloud'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 237633;
+			var orig_count = 14;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/2hLg1JV&text=Justify+%23multicloud+workload+automation+with+a+simple+model+%40kurtmilne+%40DJJerGuthrie+shows+you+how&via=CiscoCloud" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/cloud/justify-multicloud-workload-automation-doing-the-maths&title=Justify Multicloud Workload Automation – Doing the Maths" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/cloud/justify-multicloud-workload-automation-doing-the-maths" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/cloud/justify-multicloud-workload-automation-doing-the-maths" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Justify Multicloud Workload Automation – Doing the Maths&body=I saw this post on Cisco Cloud blog and thought you might like to read it.%0A%0AJustify Multicloud Workload Automation – Doing the Maths%0A%0Ahttps://blogs.cisco.com/cloud/justify-multicloud-workload-automation-doing-the-maths%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Thoughts and Observations: Software Defined Storage</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; Thoughts and Observations: Software Defined Storage Comments Feed" href="https://blogs.cisco.com/datacenter/thoughts-and-observations-software-defined-storage/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"127300"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Realizing the Promise of Safety and Security for Businesses, Governments and People, Everywhere' href='https://blogs.cisco.com/video/realizing-the-promise-of-safety-and-security-for-businesses-governments-and-people-everywhere' />
+<link rel='next' title='Cisco Tops CDP Global and U.S. Carbon Rankings' href='https://blogs.cisco.com/csr/cisco-tops-cdp-global-and-u-s-carbon-rankings-2' />
+
+<link rel="canonical" href="https://blogs.cisco.com/datacenter/thoughts-and-observations-software-defined-storage" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=127300' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Thoughts and Observations: Software Defined Storage"/>
+  <meta property="og:url" content="https://blogs.cisco.com/datacenter/thoughts-and-observations-software-defined-storage"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2013-09-24T07:09:15+00:00"/>
+  <meta property="article:modified_time" content="2013-09-28T13:24:35+00:00" />
+  <meta property="og:updated_time" content="2013-09-28T13:24:35+00:00" />
+  <meta property="article:section" content="Data Center"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Thoughts and Observations: Software Defined Storage"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/datacenter/thoughts-and-observations-software-defined-storage"/>
+  <meta name="twitter:description" content="Last week I had the rare pleasure of being able to attend a storage conference (rare in the sense that I usually am one of the speakers, rather than one of the attendees). It was SNIA&#039;s Storage Developer&#039;s Conference, and like most events there were both things that were interesting and worthwhile,"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:creator" content="@http:/twitter.com/drjmetz"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521452939";
+		var sig = "10aa02cdb7ef6e18bfa2f30a8fb991c6";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://cs.co/9003w2LR&text=Some+observations+and+musings+about+Software+Defined+Storage.&via=drjmetz" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/datacenter/thoughts-and-observations-software-defined-storage&title=Thoughts and Observations: Software Defined Storage" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/datacenter/thoughts-and-observations-software-defined-storage" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/datacenter/thoughts-and-observations-software-defined-storage" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Thoughts and Observations: Software Defined Storage&body=I saw this post on Cisco Data Center blog and thought you might like to read it.%0A%0AThoughts and Observations: Software Defined Storage%0A%0Ahttps://blogs.cisco.com/datacenter/thoughts-and-observations-software-defined-storage%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/datacenter/'>Data Center</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category5.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Data Center  						</span>
+						<h1 id="post-127300" class="kindle_title title">Thoughts and Observations: Software Defined Storage</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/JMichelMetz.thumbnail.jpg"></div><div class="author_rewards_box"></div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/jmichelmetz" title="Posts by J Metz" rel="author">J Metz</a> - September 24, 2013 - 4 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p>Last week I had the rare pleasure of being able to attend a <font color="red">storage</font> conference (rare in the sense that I usually am one of the speakers, rather than one of the <font color="red">attendees</font>). It was <a href="http://www.snia.org/about/calendar/2013-storage-developer-conference">SNIA&#8217;s <font color="red">Storage</font> <font color="red">Developer</font>&#8217;s Conference</a>, and like most events there were both things that were <a href="http://jmichelmetz.wordpress.com/2013/09/19/snia-storage-developers-conference-observations-part-i/" target="_blank">interesting and worthwhile</a>, and things that left <a href="http://jmichelmetz.wordpress.com/2013/09/19/snia-sdc-observations-part-ii-the-not-so-good/" target="_blank">something to be desired</a>.</p>
+<p><img class="alignright  wp-image-127305" alt="Confusion" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/Confusion.jpg" width="210" height="209" />The lasting impression that I walked away with, however, was something that went beyond any one particular conversation, presentation, or technology. Indeed, the thoughts that have been rattling around in my brain for the past week made me realize that, if we (those of us in the industry) aren&#8217;t careful, the future looks extremely convoluted and confusing. At worst we may actually wind up mismatching <font color="red">solutions</font> to problems, taking giant steps backwards, locking us into a perpetual game of &#8216;catch-up&#8217; as we struggle to accomplish what we can do today using <font color="red">traditional storage</font> methodology and equipment<span id="more-127300"></span></p>
+<h3>The Polysemic of <font color="red">Storage</font></h3>
+<p>&#8220;Polysemic&#8221; means, essentially, &#8220;having multiple meanings.&#8221; and the <font color="red">storage industry</font> is rife with them.</p>
+<p>As brilliant as some of the sessions were, or as disappointing as some of them turned out to be, there was one major perspective that permeated all of them: there was only one definition of <font color="red">storage</font> &#8211; the speakers&#8217;, That is, if you happened to come from a different area of the <font color="red">storage industry</font>, well, you didn&#8217;t just not count, <em>you didn&#8217;t exist </em>in their world<em>.</em></p>
+<p>Sure, we all have strong biases in whatever technology we choose to work within:</p>
+<ul>
+<li><font color="red">Storage</font> manufacturers, whether they be in SSDs, Flash, or &#8220;Spinning Rust,&#8221; (as traditional hard drives are now pejoratively called), all see themselves as working in &#8220;<font color="red">storage</font>&#8221;</li>
+<li>Similarly, manufacturers of <font color="red">storage networks</font> (including <font color="red">Cisco</font>) tend to take a somewhat more holistic view, but treat the traffic that is passed from host to target as &#8220;<font color="red">storage</font>,&#8221; which means the <font color="red">network</font> is a critical part of the meaning</li>
+<li><font color="red">Developers</font>, like those at the conference, tend to work more on the calls to and from disks, and see the usage of that <font color="red">data</font> as &#8220;<font color="red">storage</font>,&#8221; because it&#8217;s where the <font color="red">data</font> is often turned into useful information</li>
+<li>Creators of file systems and access protocols, like the <font color="red">presenters</font> who focus on <font color="red">Hadoop</font>, Ceph, SMB3 or NFS4 variants (yes, I&#8217;m deliberately lumping these together to prove a point) define <font color="red">storage</font> as a means of access and <font color="red">mobility</font></li>
+</ul>
+<p>If you are not in the <font color="red">storage industry</font>, you may take a look at all of these perspectives (and these are just four, there are many more terms and definitions that are in use) and see that all of them can be considered a part of &#8220;<font color="red">storage</font>,&#8221; which necessarily becomes more nebulous and poorly-constrained the more elements are added to the mix.</p>
+<p>Inside the <font color="red">storage industry</font>, however, it was amazing just how much each of these groups are isolated from one another. What I mean is that there appears to be a willful ignorance of many very intelligent people about the nature of the entire <font color="red">storage</font> <font color="red">ecosystem</font>. Even in the <font color="red">SMB</font> track, which I thoroughly enjoyed, there was a nonchalance about the effect of running increased <font color="red">SCSI</font> traffic over the <font color="red">network</font> to enable improved clustering capabilities in Hyper-V.</p>
+<div id="attachment_127308" style="max-width: 560px" class="wp-caption aligncenter"><img class="size-large wp-image-127308" alt="Sailing as if they're the only ship in the ocean..." src="https://alln-extcloud-storage.cisco.com/ciscoblogs/Screen-Shot-2013-09-24-at-8.56.48-AM-550x145.png" width="550" height="145" /><p class="wp-caption-text"><em>Sailing as if they&#8217;re the only ship in the ocean&#8230;</em></p></div>
+<p>Okay, if that sounds like Greek to you, here&#8217;s the bottom line: the <font color="red">developers</font> who are creating these technologies seemed to be unconcerned about the ripple-effect consequences of throwing more <font color="red">data</font> onto a <font color="red">network</font>. In other words, at all times they assumed a reliable, stable <font color="red">network</font> with enough capacity is just going to &#8220;be there.&#8221;</p>
+<p><img class="alignright  wp-image-127313" alt="shut-up-because-it-s-not-my-problem" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/shut-up-because-it-s-not-my-problem-300x350.png" width="180" height="210" />I think the thing that was very troubling to me was that when asked directly about the <font color="red">networking</font> concerns, the response that came back was that &#8220;it didn&#8217;t matter, we&#8217;re using RoCE (RDMA over Converged <font color="red">Ethernet</font>)&#8221; In other words, &#8220;hey, once it leaves my <font color="red">server</font>, it&#8217;s not my problem.&#8221;</p>
+<p>I had a very hard time getting my head around this &#8211; it seems intuitive (to me, at least) that if you&#8217;re going to throw exponentially increasing amounts of <font color="red">data</font> onto a <font color="red">network</font> there may be, uh, consequences. As I&#8217;ve noted before, whenever you use a lossless <font color="red">network</font>, like RoCE, you&#8217;re going to have to <a href="http://blogs.cisco.com/datacenter/the-napkin-dialogues-lossless-iscsi/" target="_blank">architect for that type of <font color="red">solution</font></a>.</p>
+<p>To these <font color="red">developers</font>, however, it seemed as if they were only caring about what happened inside the <font color="red">server</font>; once a <font color="red">packet</font> left the <font color="red">server</font> it was no longer their problem, and it didn&#8217;t exist as their problem until it hit the end <font color="red">storage</font> target.</p>
+<p>This is all well and good, until you start getting into the question of <font color="red">Software-Defined Storage</font>.</p>
+<h3>Software-Defined, or Software-Implemented <font color="red">Storage</font>?</h3>
+<p><a href="http://snia.org/events/storage-developer2013/speakers#Yoder" target="_blank">Alan Yoder</a> of Huawei had an excellent observation during a conversation with <a href="http://snia.org/events/storage-developer2013/speakers#Vekiarides" target="_blank">Lazarus</a> Vekiarides. In a casual discussion regarding <font color="red">SDS</font>, Alan pointed out that much of the characteristics of most <font color="red">SDS</font> wishlists appears to be more of an <font color="red">implementation</font> of <font color="red">storage</font>, rather than a definition of <font color="red">storage</font>. I have to confess, this distinction really spun me for a loop precisely because it underscored the very problem with semantics I was having.</p>
+<p>[Update: September 28, 2013: Laz <a href="http://processoverhead.blogspot.com/2013/09/software-defined-storage-zombie-box.html?spref=tw" target="_blank">wrote a blog</a> about his thoughts on this as well.]</p>
+<p>Why? Because he&#8217;s absolutely right. There is a huge difference between creating a system which merely connects the dots and implements a <font color="red">storage system</font>, and one that <em>defines the <font color="red">storage</font> paradigm</em>.</p>
+<p>There are management programs which already exist that implement <font color="red">storage</font> and ease the stress of provisioning. <a href="http://www.cisco.com/en/US/products/ps13050/index.html" target="_blank"><font color="red">UCS</font> Director</a> (née Cloupia), for instance, does this. Software like this allows you to identify a <font color="red">server</font> and <font color="red">storage</font> instance and allows you to identify how much <font color="red">storage</font> you need, how many CPUs to use, and even how long you want the instance to exist. I think (this is outside my wheelhouse, so I admit I&#8217;m not as confident as this claim) that there are competitors who have similar types of <font color="red">software solutions</font> as well.</p>
+<blockquote>
+<p style="text-align: center"><strong>There&#8217;s a huge difference between creating a system which merely connects the dots and implements a <font color="red">storage system</font>, and one that <em>defines the <font color="red">storage</font> paradigm</em></strong></p>
+</blockquote>
+<p>None of these <font color="red">solutions</font> <em><strong>define</strong></em> the <font color="red">storage network</font>, however. There is no (to my knowledge; if I am wrong I will happily correct my assumptions) dynamic observation of the <font color="red">bandwidth</font> of a <font color="red">network</font> and re-allocation of resources based upon usage to alter minimum ETS (Enhanced Transmission Selection, which is what is used to guarantee <font color="red">bandwidth</font> groups in an <font color="red">Ethernet</font> <font color="red">network</font>) capacity.</p>
+<p>Why is this important? Because without these types of capabilities this means that you are confining your software to a very, very limited subset of compatible <font color="red">storage protocols</font> and hardware. In this case, you&#8217;re relegated to the types of <font color="red">storage solutions</font> that rely on the lowest common denominator of compatibility. In fact, you can go too far: all the <font color="red">high performance</font> of SSDs won&#8217;t save you from the layers upon layers of <font color="red">virtualization</font> necessary to make it all work. For many <font color="red">storage</font> <font color="red">applications</font> this means we&#8217;ve taken a huge step backwards.</p>
+<p>Think of it like this: the game of Football has many meanings, depending upon who you ask. An <em><font color="red">implementation</font></em> of football can consist of choosing one of many plays.</p>
+<div id="attachment_127316" style="max-width: 510px" class="wp-caption aligncenter"><img class="size-full wp-image-127316" alt="An <font color="red">implementation</font> of a football play." src="https://alln-extcloud-storage.cisco.com/ciscoblogs/peterson-stretch-1.jpg" width="500" height="284" /><p class="wp-caption-text"><em>An <font color="red">implementation</font> of a football play.</em> <em><a href="http://downfieldpass.wordpress.com/category/college-football/" target="_blank">Source</a></em>.</p></div>
+<p>However, if you ask someone else about what they consider to be the best plays for football, their idea may look something like this:</p>
+<div id="attachment_127317" style="max-width: 472px" class="wp-caption aligncenter"><img class="size-full wp-image-127317" alt="An implementation of a football play." src="https://alln-extcloud-storage.cisco.com/ciscoblogs/soccer-offensive-tactics-4.jpg" width="462" height="350" /><p class="wp-caption-text"><em>An implementation of a football play.</em> <em><a href="http://www.soccer-training-guide.com/offensive-soccer-tactics.html#.UkGUlLxORFM" target="_blank">Source</a></em>.</p></div>
+<p>You can create a software program to create and implement plays all day long, <em>but it does not define the game of football.</em> To extend the (imperfect) analogy, if Football were <font color="red">Storage</font>, we still do not have any means of being able to <em>define </em>which type of <font color="red">Storage</font> we want to play with, and thus have a clue as to the best way to implement it!</p>
+<h3>Defining Software-Defined</h3>
+<p>There are a lot of opinions and projects going on in the industry that have the name &#8220;<font color="red">Software-Defined Storage</font>&#8221; attached to them. We know, for instance, that <a href="http://www.emc.com/data-center-management/vipr/index.htm" target="_blank">EMC has its VIPR program</a> (which always makes me think of the TSA, sadly), and <a href="http://www.vmware.com/products/virtual-san/" target="_blank"><font color="red">VMware</font> has dipped its toe into (the malappropiately named) VSAN </a>(which is more of a virtual DAS system, but that&#8217;s a topic for another day). The <a href="https://wiki.openstack.org/wiki/Cinder" target="_blank"><font color="red">OpenStack</font> project is working on including <font color="red">block storage</font> (e.g., <font color="red">Fibre</font> Channel) into its Cinder release</a>, and of course SNIA&#8217;s <font color="red">Storage</font> <font color="red">Developer</font>&#8217;s Conference had numerous <font color="red">vendors</font> who claimed to have <font color="red">solutions</font> that fit into this &#8220;<font color="red">software-defined storage</font>&#8221; category as well (e.g., Cloudbyte, Cleversafe, Jeda Networks).</p>
+<p>In fact, it seems like nearly everyone and anyone has a &#8220;<font color="red">software-defined storage</font>&#8221; offering that &#8220;<a href="http://www.dabcc.com/article.aspx?id=26163" target="_blank">prevents <font color="red">vendor</font> lock-in</a>&#8221; as DataCore puts it. [September 26, 2013 Update: In the four days since I first posted this blog, <font color="red">vendors</font> <a href="https://community.emc.com/community/connect/advanced-software" target="_blank">EMC</a>, <a href="http://www.channelpro.co.uk/opinion/8023/getting-ready-software-defined-storage" target="_blank">Nexenta</a>, <a href="http://www.businesspress24.com/pressrelease1267430.html?utm_source=dlvr.it&amp;utm_medium=twitter" target="_blank">Gridstore</a>, <a href="http://www.hpcwire.com/hpcwire/2013-09-24/stackiq_announces_softwaredefined_automation_for_red_hat_storage.html" target="_blank">RedHat</a>, <a href="http://h30507.www3.hp.com/t5/Around-the-Storage-Block-Blog/Customers-speak-about-software-defined-storage/ba-p/146391" target="_blank">HP</a>, <a href="http://chucksblog.emc.com/chucks_blog/2013/08/the-vmware-view-of-software-defined-storage.html?sthash.zmbtAZbF.mjjo" target="_blank"><font color="red">VMware</font></a>, <a href="http://sanbolic.com/it-business-edge-sanbolic-sees-software-defined-storage-driving-commodity-market/" target="_blank">Sanbolic</a> and analysts <a href="http://www.networkcomputing.com/storage-networking-management/defining-software-defined-storage/240161408" target="_blank">Howard Marks</a>, 451 Research, have all been running a full-court press on the subject. I wouldn&#8217;t hold my breath that they&#8217;re all referring to the same thing, though. Someone with more time than I have should probably create some sort of compatibility matrix to figure out just how much of the Venn diagram is covered.]</p>
+<p>It seems to me, though, that each of these <font color="red">solutions</font> fails to actually accomplish what they claim to do &#8211; <strong>define</strong> the <font color="red">storage solution</font> holistically. In other words, they either are taking one of the <font color="red">small subsets</font> of <font color="red">storage</font> discussed above and embellishing it, or attempting to implement a better mousetrap for <font color="red">storage access</font> and <font color="red">mobility</font>. Or, to continue the football analogy, many <font color="red">solutions</font> choose a game and then try to figure out how to implement the plays.</p>
+<p>None of this should be considered a bad thing, mind you! I&#8217;m a big proponent of trying to make <font color="red">storage solutions</font> more coherent and approachable.</p>
+<p>I suppose I get concerned, however, when I see that the <font color="red">solutions</font> appear to root us more firmly in any one particular paradigm and lock us out of <font color="red">solutions</font> that hinder us from the flexibility of performance and breadth of <font color="red">storage</font> options that exist today. Isn&#8217;t that, after all, what &#8220;software-defined&#8221; is supposed to liberate us from?</p>
+<div id="attachment_127324" style="max-width: 560px" class="wp-caption aligncenter"><img class="size-large wp-image-127324" alt="Decisions, Decisions..." src="https://alln-extcloud-storage.cisco.com/ciscoblogs/one-way-two-way-550x163.jpg" width="550" height="163" /><p class="wp-caption-text"><em>Decisions, Decisions&#8230;</em></p></div>
+<h3>My Thoughts</h3>
+<p>This is the part where I make the standard disclaimer &#8211; these are my thoughts and mine alone, so you should judge them as my mere observations rather than any &#8216;official&#8217; claim or direction from <font color="red">Cisco</font> or my colleagues. Your mileage may vary, all rights reserved, no animals were harmed in the making of this blog. Don&#8217;t read anything strategic into this &#8211; these are just my own feverish musings.</p>
+<p>In my warped little mind I see a &#8220;<font color="red">Software-Defined Storage</font>&#8221; environment as one that is longitudinal and holistic. That is to say, the software dynamically adapts to <font color="red">storage</font> characteristics over time, from <font color="red">server</font> through the <font color="red">network</font> to the <font color="red">storage</font> targets. This would mean the definition of each OSI layer to be able to handle optimized <font color="red">storage solutions</font> as per <font color="red">application</font> requirements.</p>
+<p>Here&#8217;s a pie-in-the-sky example: <font color="red">Data centers</font> have multiple <font color="red">applications</font> that are being run on a variety of <font color="red">storage protocols</font>. Some of these <font color="red">applications</font> require server-to-server communication (such as the <font color="red">SCSI</font> over <font color="red">SMB</font> I described above), some require dedicated <font color="red">bandwidth capacity</font> for low-latency, low-oversubscription connectivity (such as database <font color="red">applications</font>), and some require lower-priority, best-effort availability (such as NFS-mounts).</p>
+<p>From a systems and <font color="red">networking</font> perspective, we&#8217;re talking about the entire OSI stack, from the physical all the way up to <font color="red">application layer</font>. Each of these have their own best practices and configuration requirements. A <font color="red">software-defined storage</font> <font color="red">solution</font> should be able to access each of these layers and modify the system-as-a-whole to get the best possible performance, rather than shoe-horning all <font color="red">applications</font> into, say, <font color="red">SCSI</font> over <font color="red">SMB</font> because it&#8217;s &#8220;easiest at layer 4&#8221; and most applicable for Hyper-V clustering. (That&#8217;s just an example).</p>
+<blockquote>
+<p style="text-align: center"><em><strong><font color="red">Software-Defined Storage</font> implies a <font color="red">Data Center</font> that can change the definition of <font color="red">storage</font> relationships over time, not just tweak attributes</strong></em></p>
+</blockquote>
+<p>Imagine, though, if you could initiate an <font color="red">application</font> in such a way that the software monitors the <font color="red">data</font> over time and recognizes capacity and <font color="red">bandwidth</font> hotspots, evaluating <font color="red">latency</font>, oversubscription ratios, ETS <font color="red">QoS</font>, and even protocol/layer inefficiencies (like running lossless <font color="red">iSCSI</font> when TCP/IP over a lossy <font color="red">network</font> would actually be more efficient). Take the advances in Flash, SSDs and server-side caching as well as the virtualized <font color="red">storage solutions</font> already well-proven, and provide longitudinal metrics and re-evaluation.</p>
+<p>Need more capacity for your mission-critical <font color="red">applications</font>? A finely-tuned <font color="red">SDS</font> would dynamically allocate additional guaranteed <font color="red">bandwidth</font> at Layer 2. <font color="red">Network topologies</font> creating unacceptable <font color="red">iSCSI</font> performance? Change from lossy to lossless, or vice versa. Have a choice between various types of block protocols (e.g., <font color="red">iSCSI</font>, <font color="red">FCoE</font>, Object), have the system do an impact analysis and choose the best definition of that <font color="red">storage solution</font>.</p>
+<p>(<font color="red">Ethernet</font>, of course, provides a great basis for this. It&#8217;s one of the few media that allow for such diverse modification and alteration for so many <font color="red">applications</font>. There really is no other medium that can allow you to move from lossy to lossless and vice-versa. Just an observation, of course.)</p>
+<p>Of course, If this scares you, perhaps &#8220;software defined <font color="red">storage</font>&#8221; may not be the right way to go. 🙂 There is absolutely nothing wrong with sticking with tried-and-true.</p>
+<h3>Next Thoughts</h3>
+<p>I admit that there is more &#8220;science fiction&#8221; than &#8220;<font color="red">data center</font> fact&#8221; in what I&#8217;ve described. That would be a fair criticism, I believe. However, I think it&#8217;s also a fair criticism to make the observation that any proponent of &#8220;<font color="red">software-defined storage</font>&#8221; that glosses over the entire <font color="red">storage</font> <font color="red">ecosystem</font>, or relies heavily on the <font color="red">silos</font> within which they work as the sole component for <font color="red">SDS</font> breakthroughs, is limited in scope. Either that, or my imagination is far too unlimited. 🙂</p>
+<p>As I said, I have no special knowledge or grand design into Software-Defined <em>anything</em>, and I&#8217;m still in a &#8220;sponge-mode&#8221; learning zone, so it would be foolhardy to read too deep into my musings. I do think, however, that this is a subject that deserves open and clear discussion so as to avoid the accusation that &#8220;Emperor <font color="red">SDS</font> has no clothes.&#8221; I also think it&#8217;s the only way If we are to avoid the &#8220;buzzword bingo&#8221; problem when it comes to <font color="red">storage</font>.</p>
+<p>Personally, I think that would be a shame if it wound up that way. The <font color="red">storage industry</font> as a whole &#8211; as an adaptive <font color="red">ecosystem</font> &#8211; has a real opportunity to do some interesting things and create a true paradigm shift in the way it all works. <font color="red">Storage</font> administrators and consumers are not the most adventurous bunch, of course, but that doesn&#8217;t mean that we can afford to think of reliable access to <font color="red">data</font> the same way over the next ten or twenty years.</p>
+<p>Ultimately, I think the answer lies in thinking bigger and more expansive, with the true big picture in mind. We miss a unique and potentially revolutionary opportunity if we merely attempt to create a Franken-storage system out of patchwork software <font color="red">implementation</font> <font color="red">silos</font> that think the rest of the <font color="red">ecosystem</font> is &#8220;all things created equal.&#8221;</p>
+<p>Nevertheless, I believe the topic deserves better consideration than it&#8217;s been given. I welcome and encourage all thoughts, ruminations, pontifications, elaborations, meditations, and reflections. In other words, tell me what you think. 🙂</p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=software-defined-storage">software defined storage</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=storage">Storage</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">4 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+			<li>
+			<div id="comment-868077">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://pl.atyp.us' rel='external nofollow' class='url'>Jeff Darcy</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">September 27, 2013 at 6:47 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Your vision of software-defined storage seems a bit network-centric to me.  No surprise, I guess, given where we're each coming from.  ;)  Here's the thing.  Data has an inertia that neither computation nor networking do.  It's *really* expensive to rearrange where data is stored.  We're not talking seconds, which is still an eternity in many computing domains.  We're talking hours.  Days.  Even weeks.  If you want to change replication levels, it's going to take a while.  If you want to enable or disable encryption, it's going to take a while.  If you want to add or remove storage and have the system migrate data so that your disks and servers are all equally utilized . . . you get the idea.  Changing protocols or tweaking layer-two attributes is kind of missing all the problems that storage people actually need to worry about.
+
+
+
+Software-defined storage is about changing the "shape" of data as it sits at rest, more than it's about changing the way that you access it.  How much durability?  How many aggregate IOPS (not MB/s)?  What ratio of raw to usable space?  Give me storage with these characteristics and *poof* it's there, but now it needs to persist far longer than any network connection (and through more kinds of failures).  It's not "holistic" to ignore everything that needs to happen on the other side of the servers' NICs or HCAs.  If there needs to be more synergy between SDS reconfiguring the storage and SDN reconfiguring acccess to it then great, but neither should be looking down their nose at the other for failing to do it all.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike868077" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li class="comment byuser comment-author-jmichelmetz bypostauthor even depth-2" id="li-comment-868145">
+				<div id="comment-868145">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/JMichelMetz.thumbnail.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/jmichelmetz'>J Metz</a></span>
+							<br />
+							<span class="comment-meta commentmetadata">September 27, 2013 at 7:19 pm</span>
+
+						</div>
+						<div class="comment_text">
+							<p>These are <em>excellent</em> comments, Jeff. I agree with everything you've said here. My 'network centric' focus is there for 2 specific reasons (3, if you count that this is the area I'm the most familiar ;):
+
+First, in the conversations of SDS, both the storage-side approaches and the application/compute-side approaches neglect the storage network. Either it's a complete omission (as in the case of Microsoft) or treat it like a hypothetical. Remember high school physics class? Where you're supposed to "assume a frictionless environment?" It's a lot like that, where you "assume a reliable storage network." I wanted to ensure that people realize that the storage component is more than where the data is, but also how the data gets from one place to the other.
+
+Second, I really do think that there is a major difference between <em>defining</em> a storage system and merely implementing one. We have management systems in place for the re-arranging of bits on a wire, just like we have management systems for access to those bits. Those are all 'software managed,' which doesn't even get us to the realm of 'software-implemented,' let alone 'software-defined.' I think that by ignoring any of the various links in the chain we risk doing ourselves a disservice. 
+
+For that reason I agree with you 100% that "changing protocols or tweaking layer-two attributes is missing all the problems that storage people need to worry about." The network piece is just one of several moving parts, and without question cannot be seen as either the lynchpin or superfluous. Instead, it's part of an ecosystem.
+
+That being said, i think you are spot-on with your inclusion of the various elements of timing (microseconds v. seconds. v. days v. weeks, etc.). This is the longitudinal element that I was discussing as well (but didn't go into it very much; brevity was not on my side for this post as it was!).
+
+I do believe there is potential for true change in the paradigm, here. It's for that reason that I'm glad that we're opening up the dialogue beyond just the marketing terminology to ask whether or not we are really accomplishing anything or just adding on another block to the Rube Goldberg design of 'software-defined-<em>X</em>'. 
+
+Thanks for writing!</p>						</div>
+						<div class = "roblike">
+					<a  href = "#" id = "clickLike868145" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+						<div class="reply">
+													</div>
+
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+			</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-865797">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Pete Welcher						</span>
+						<br />
+						<span class="comment-meta commentmetadata">September 27, 2013 at 5:05 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Good article, some very good points I've also noticed as a critical observer.
+
+
+
+1) Among other things, I do Cisco SAN, as in network side of storage. I'm amazed that no EMC tech I've ever talked to at a site knows what a FLOGI is or why it might be relevant. "Nothing but the GUI."
+
+
+
+2) Microsoft was (still is) an early denier of network being less than perfect. File shares cause BSOD when the network is down. Worse, dragging a file across the Explorer for a file share (or the CD drive) causes a 10-20 second delay while the file system is accessed or something. That's just lame programming only tested on a fast LAN. 
+
+
+
+3) So to put one of your thoughts briefly, maybe SDS should allow us to specify ancillary configuration items, which depend on the specified characteristics (degree of reliability, redundancy, speed) we ask the SDS for?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike865797" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li class="comment byuser comment-author-jmichelmetz bypostauthor odd alt depth-2" id="li-comment-866147">
+				<div id="comment-866147">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/JMichelMetz.thumbnail.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/jmichelmetz'>J Metz</a></span>
+							<br />
+							<span class="comment-meta commentmetadata">September 27, 2013 at 7:37 am</span>
+
+						</div>
+						<div class="comment_text">
+							<p>Some really good points. I will say that I've known quite a few EMC people who understood what a FLOGI is, though, to be fair. :)
+
+I really like your suggestion in 3). I think that anything that is "Software-Defined" worth its salt should alloe the capability of having the kind of 'nerd knobs' for performance tweaking, of course. But what you're talking about seems to be a few steps beyond that. For example, "reliability" itself is a category within which there are several criteria. Something defined by software should definitely be able to adhere to and monitor those types of criteria, without question. 
+
+Thanks for the reply!</p>						</div>
+						<div class = "roblike">
+					<a  href = "#" id = "clickLike866147" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+						<div class="reply">
+													</div>
+
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+			</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Data Center:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogDataCenterNetworks', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogDataCenterNetworks" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Data Center</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscodc"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/CiscoDC"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco-data-center-and-cloud?trk=biz-brand-tree-co-name"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/114381144808300038585/posts"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/Ciscodatacenter/presentations"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://www.youtube.com/user/Cisco/videos?sort=dd&view=46&tag_id=UCEWiIE6Htd8mvlOR6YQez1g.3.data-center-virtualization"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogDataCenterNetworks"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+
+	<li id ="twitter_widget" class="widget">
+
+	<!-- white background -->
+	<div class="topContainer">
+	 <div class="twit_container">
+
+		<div id="twit_req">
+
+			<span class="widgetheading">
+				Tweets
+			</span>
+
+			<a href="https://twitter.com/" target="_blank"><span class="twit_logo"></span></a>
+							<div class="clear"></div>
+							</div>
+			<!-- <span class="twit_logo" href="#"></span> -->
+			<div class="clear"></div>
+		</div></div>
+		</li>
+
+<br class="clear" />
+
+<script type = "text/javascript">
+
+jQuery(document).ready(function() {
+ //Calling Twitter Widget
+var url = "https://tts-prod.cloudapps.cisco.com/ciscotweetsapp/api/v1/gettweets/ciscodc/response.jsonp";
+
+		loadSpotlightTweet(url);
+
+		//Metrics for each reply retweet and favorites(loop for each tweet)
+		cdc.util.addMetricsRule(".twit_reply", {linktext: "reply"});
+		cdc.util.addMetricsRule(".twit_retweet", {linktext: " retweet "});
+		cdc.util.addMetricsRule(".twit_favorite", {linktext: " favorite "});
+
+	   //lpos for all clicks inside twitter_widget
+		cdc.util.addMetricsRule("#twitter_widget a[href]", {lpos: "tweets"});
+
+});
+
+String.prototype.parseURL = function() {
+	var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+	return this.replace(exp, "<a href='$1' target='_blank'>$1</a>");
+};
+
+String.prototype.parseUsername = function() {
+	return this.replace(/[@]+[A-Za-z0-9-_]+/g, function(u) {
+		var username = u.replace("@", "");
+		// return u.link("http://twitter.com/" + username);
+		return '<a target="_blank" href="https://twitter.com/' + username
+				+ '">' + u + '</a>';
+		// return u.link(window.open('http://www.google.com', '_blank',
+		// 'toolbar=0,location=0,menubar=0'));
+	});
+
+};
+
+String.prototype.parseHashtag = function() {
+	return this.replace(/[#]+[A-Za-z0-9-_]+/g, function(t) {
+		var tag = t.replace("#", "%23");
+		// tag = tag.replace(tag,"<a href='$1' target='_blank'>$1</a>");
+		// return t.link("https://twitter.com/search?q=" + tag +
+		// "&src=hash");//https://twitter.com/search?q=%23retail&src=hash
+		return '<a target="_blank" href="https://twitter.com/search?q=' + tag
+				+ '&src=hash">' + t + '</a>';
+	});
+
+};
+
+function parseURLEntities(t, arg) {
+	for ( var j = 0; j < arg.length; j++) {
+		t = t.replace(arg[j].url, '<a target="_blank" href="' + arg[j].url
+				+ '">' + arg[j].displayURL + '</a>');
+	}
+	return t;
+}
+
+
+function parseDate(str) {
+	var v = str.split(' ');
+	return new Date(Date.parse(v[1] + " " + v[2] + ", " + v[5] + " " + v[3]
+			+ " UTC"));
+}
+
+function selectDay() {
+	var d = new Date();
+	var weekday = new Array(7);
+	weekday[0] = "Sun";
+	weekday[1] = "Mon";
+	weekday[2] = "Tue";
+	weekday[3] = "Wed";
+	weekday[4] = "Thu";
+	weekday[5] = "Fri";
+	weekday[6] = "Sat";
+
+	var n = weekday[d.getDay()];
+
+	return n;
+}
+
+
+var checkIE = function () {
+    var a = navigator.userAgent;
+    return {
+        ie: a.match(/MSIE\s([^;]*)/)
+    };
+}();
+
+
+function relative_time(time_value) {
+	//time_value is in millisecond (GMT)
+
+	var d = new Date(time_value);//converting to our local PST default Date Format
+	//console.log('PST : ' + d);
+
+	var values = d.toString().split(" ");
+	var time_value_format = values[1] + " " + values[2] + ", " + values[3] + " " + values[4];
+//	console.log(time_value_format);
+
+	var parsed_date = Date.parse(time_value_format);
+    var relative_to = (arguments.length > 1) ? arguments[1] : new Date();
+//    console.log(relative_to.getTime());
+    var delta = parseInt((relative_to.getTime() - parsed_date) / 1000);
+    //delta = delta + (relative_to.getTimezoneOffset() * 60); 	//Not Required: converting into GMT since we are getting in GMT Format
+
+   	if (delta < 60) {
+		return delta + 's';
+	} else if (delta < 120) {
+		return '1m';
+	} else if (delta < (60 * 60)) {
+		return (parseInt(delta / 60)).toString() + 'm';
+	} else if (delta < (120 * 60)) {
+		return '1h';
+	} else if (delta < (24 * 60 * 60)) {
+		return (parseInt(delta / 3600)).toString() + 'h';
+	} else if (delta < (48 * 60 * 60)) {
+		return values[2] + " " + values[1];
+	} else {
+		return values[2] + " " + values[1];
+	}
+
+}
+
+
+	function loadSpotlightTweet(tweetsURL)
+	{
+
+	try {
+		var req = jQuery.ajax({
+			url: tweetsURL,
+			async: false,
+			dataType : "jsonp",
+			timeout : 1000,
+
+		});
+
+			req
+				.success(function(data) {
+			var metricsUser= "";
+
+				  if(data == "")
+					  return;
+
+					var arr1 = [];
+					var displayVal = [];
+
+					for ( var i = data.length-1; i >= 0; i -= 1) {
+
+						arr1.push(data[i].createdAt);
+
+					}
+
+					arr1.sort();
+
+                // Sorting for tweets based on Time
+				for ( var i = arr1.length - 1; i >= 0; i -=1) {
+
+						for ( var j = 0; j < data.length; j++) {
+
+							if (arr1[i] == (data[j].createdAt)) {
+								displayVal.push(j);
+
+							}
+						}
+					}
+
+					//Tweets Multiple Display URL Links
+					var t1 = "";
+					var screen_Name = "";
+					var retweeted = "";
+
+					 // Retweets User/Screen Names.
+					 var RetScreenName = "";
+					 var RetUserName = "" ;
+					 var tUserName = "";
+                     var tScreenName = "";
+                     var profileImg = "";
+
+					var loopArr = [];
+
+					for ( var k = 0; k < displayVal.length; k++) {
+
+						if (data[displayVal[k]].urlEntities != null) {
+							t1 = parseURLEntities(data[displayVal[k]].text,
+									data[displayVal[k]].urlEntities);
+						} else {
+							t1 = (data[displayVal[k]].text)
+									.parseURL();
+						}
+
+						//End Tweets Links
+
+						// Check Re-tweeted Status
+                       retweeted = data[displayVal[k]].retweet;
+
+						if(retweeted)
+						{
+                           RetScreenName = data[displayVal[k]].rtScreenName ;
+						   RetUserName = data[displayVal[k]].rtUserName;
+						   profileImg = data[displayVal[k]].rtProfileImageURL;
+						}
+						else
+						{
+                           RetScreenName = data[displayVal[k]].screenName ;
+						   RetUserName = data[displayVal[k]].userName;
+						   profileImg = data[displayVal[k]].profileImageURLHttps;
+						}
+
+						// Widget contents
+
+						jQuery('.twit_container')
+								.append(
+										 '<div class="single_tweet">'
+     									+ '<div id="twit_avatar" class="twit_avatar">'
+										+ '<img border="0" src="'
+										+ profileImg
+										+ '" width="40" height="40" style="border-radius:5px;"/></div>'
+
+										+ '<div class="twit_content"><div class ="twit_userinfo">'
+										+ '<a class="twit_realname" id="twit_realname" href="https://twitter.com/'
+										+ RetScreenName
+										+ '" target="_blank">'
+										+ RetUserName
+										+ '</a><br/>'
+										+ '<a id="twit_username" href="https://twitter.com/'
+										+ RetScreenName
+										+ '" target="_blank">@'
+										+ RetScreenName
+										+ '</a></div>'
+										+ '<div class ="timestamp"><a href="https://twitter.com/'
+										+ RetScreenName
+										+ '/status/'
+										+ data[displayVal[k]].id
+										+ '" target="_blank">'
+										+ relative_time(data[displayVal[k]].createdAt)
+									    + '</a></div>'
+										+ '<div class="clear"></div></div>'
+										+ '<div class="clear"></div>'
+
+                                        + '<div id="twit_text" class="twit_text">'
+												+ t1.parseUsername()
+														.parseHashtag()
+												+ '</div>'
+
+												//Retweeted Content
+												+ '<div class="re-tweet"><div class="retweet_img"><span class="retweet_badge"><a href="" class="retweeted_icon"></a><span class="retweet_text"> Retweeted By <a class="rtwit" href="https://twitter.com/'
+												+ data[displayVal[k]].screenName
+												+ '" target="_blank">'
+												+ data[displayVal[k]].userName
+												+ '</a></span></span></div></div>'
+
+												+ '<div class ="twit_actions">'
+
+												+ '<a class="twit_reply" href = "https://twitter.com/intent/tweet?in_reply_to='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+ '<a class="twit_retweet" href = "https://twitter.com/intent/retweet?tweet_id='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+ '<a class ="twit_favorite" href = "https://twitter.com/intent/favorite?tweet_id='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+'<span class="twit_follow"><a href="https://twitter.com/intent/follow?screen_name='
+												+ data[displayVal[k]].screenName
+												+ '" target="_blank"></a></span>'
+
+												+ '<div class ="clear"></div>'
+												+ '</div></div></div>');
+
+
+
+
+					// Retweeted Status Show/Hide
+					if (retweeted) {
+							jQuery(".re-tweet").eq(k).css("display", "inline");
+						} else {
+							jQuery(".re-tweet").eq(k).css("display", "none");
+						}
+
+
+	}
+
+					//End Widget Contents
+
+
+                // To sort and match properly
+	            jQuery('div.twit_container').find('.single_tweet:eq(0)').clone().appendTo('.twit_container');
+
+				// Metrics for each tweet <--link id to group links in each tweet content--->
+				// cdc.util.addMetricsRule('.single_tweet a[href]', {lid: '" + @twittusername+ "'});
+
+				jQuery(".single_tweet").each(function(i){
+				    var user = jQuery(this).find('#twit_username').text();
+				    var links = jQuery(".single_tweet:eq("+i+") a[href]").get();
+				    cdc.util.addMetricsRule(links, {lid: user });
+				});
+
+					// Loop Through Tweets
+					jQuery('.topContainer').css('display','block');
+					elems = jQuery('.single_tweet').hide().get();
+
+					(function loop() {
+						var i = 0, pointer = jQuery(elems).filter(':visible:last')[0]
+								|| jQuery(elems).last()[0];
+
+						jQuery(elems).hide();
+
+						while (i < 3) {
+							pointer = jQuery(pointer).next()[0]
+									|| jQuery(elems).first()[0];
+							jQuery(pointer).show();
+							i += 1;
+						}
+
+						setTimeout(loop, 12000); // 12 seconds 120000
+					})();
+
+				//End of looping three tweets
+
+
+
+});
+
+		// End of Reply/Retweet/Fav link mouse over/out
+
+		req
+				.error(function(msg) {
+					console.log("In Error of rate limit exception: " + msg);
+					//alert("Rate Limit Exceeded: Please Check after some time.Thank you for your patience. ");
+
+				});
+
+
+	} catch (err) {
+		txt = "There was an error on this page.\n\n";
+		txt += "Error description: " + err.message + "\n\n";
+		txt += "Click OK to continue.\n\n";
+		alert(txt);
+	}
+}
+</script>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.bladewatch.com/" target="_blank">Blade Watch</a></li>
+                      <li><a href="http://www.infoworld.com/?source=nav_BLOGS" target="_blank">InfoWorld</a></li>
+                      <li><a href="http://www.networkworld.com/blogs/" target="_blank">Network World</a></li>
+                      <li><a href="http://blogs.techrepublic.com.com/" target="_blank">TechRepublic</a></li>
+                      <li><a href="http://datacenterjournal.com/index.php" target="_blank">The Data Center Journal</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscodc'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/CiscoDC'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco-data-center-and-cloud?trk=biz-brand-tree-co-name'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/114381144808300038585/posts'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 127300;
+			var orig_count = 0;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://cs.co/9003w2LR&text=Some+observations+and+musings+about+Software+Defined+Storage.&via=drjmetz" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/datacenter/thoughts-and-observations-software-defined-storage&title=Thoughts and Observations: Software Defined Storage" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/datacenter/thoughts-and-observations-software-defined-storage" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/datacenter/thoughts-and-observations-software-defined-storage" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Thoughts and Observations: Software Defined Storage&body=I saw this post on Cisco Data Center blog and thought you might like to read it.%0A%0AThoughts and Observations: Software Defined Storage%0A%0Ahttps://blogs.cisco.com/datacenter/thoughts-and-observations-software-defined-storage%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

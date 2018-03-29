@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Solving Manufacturing Complexities through Data Analytics: Part Two &#8211; Implementing Data Analytics</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; Solving Manufacturing Complexities through Data Analytics: Part Two &#8211; Implementing Data Analytics Comments Feed" href="https://blogs.cisco.com/manufacturing/solving-manufacturing-complexities-through-data-analytics-part-two-implementing-data-analytics/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"165979"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='How Telecommuting Simplifies My Workday' href='https://blogs.cisco.com/collaboration/how-telecommuting-simplifies-my-workday' />
+<link rel='next' title='Let’s stop talking about STEM' href='https://blogs.cisco.com/diversity/lets-stop-talking-about-stem' />
+
+<link rel="canonical" href="https://blogs.cisco.com/manufacturing/solving-manufacturing-complexities-through-data-analytics-part-two-implementing-data-analytics" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=165979' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Solving Manufacturing Complexities through Data Analytics: Part Two - Implementing Data Analytics"/>
+  <meta property="og:url" content="https://blogs.cisco.com/manufacturing/solving-manufacturing-complexities-through-data-analytics-part-two-implementing-data-analytics"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2015-03-23T15:03:53+00:00"/>
+  <meta property="article:modified_time" content="2015-03-23T15:03:53+00:00" />
+  <meta property="og:updated_time" content="2015-03-23T15:03:53+00:00" />
+  <meta property="article:section" content="Manufacturing"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Solving Manufacturing Complexities through Data Analytics: Part Two - Implementing Data Analytics"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/manufacturing/solving-manufacturing-complexities-through-data-analytics-part-two-implementing-data-analytics"/>
+  <meta name="twitter:description" content="Data analytics has been an integral part of manufacturing management for most of its history. However, analytics has undergone both evolutionary and revolutionary changes over the decades with the advent of information technology and digital data gathering and analysis. In Part One of this series, I"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521437935";
+		var sig = "daa8c7dc172bbaeb45eeeb07719fb633";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1FaMWx7&text=%23Manufacturers+should+implement+analytics+tools+to+tackle+%23BigData.+Find+out+in+Rangan+Nandakumar%E2%80%99s+blog%3A+&via=CiscoMFG" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/manufacturing/solving-manufacturing-complexities-through-data-analytics-part-two-implementing-data-analytics&title=Solving Manufacturing Complexities through Data Analytics: Part Two &#8211; Implementing Data Analytics" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/manufacturing/solving-manufacturing-complexities-through-data-analytics-part-two-implementing-data-analytics" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/manufacturing/solving-manufacturing-complexities-through-data-analytics-part-two-implementing-data-analytics" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Solving Manufacturing Complexities through Data Analytics: Part Two &#8211; Implementing Data Analytics&body=I saw this post on Cisco Manufacturing blog and thought you might like to read it.%0A%0ASolving Manufacturing Complexities through Data Analytics: Part Two &#8211; Implementing Data Analytics%0A%0Ahttps://blogs.cisco.com/manufacturing/solving-manufacturing-complexities-through-data-analytics-part-two-implementing-data-analytics%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/manufacturing/'>Manufacturing</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category2051.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Manufacturing  						</span>
+						<h1 id="post-165979" class="kindle_title title">Solving Manufacturing Complexities through Data Analytics: Part Two &#8211; Implementing Data Analytics</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1983.thumbnail.542b3a54dc306.jpg"></div><div class="author_rewards_box"></div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/rangannandakumar" title="Posts by Rangan Nandakumar" rel="author">Rangan Nandakumar</a> - March 23, 2015 - 2 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p><font color="red">Data</font> <font color="red">analytics</font> has been an integral part of manufacturing management for most of its history. However, <font color="red">analytics</font> has undergone both evolutionary and revolutionary changes over the decades with the advent of information technology and digital <font color="red">data</font> gathering and analysis. In <a href="http://blogs.cisco.com/manufacturing/solving-manufacturing-complexities-through-<font color="red">data</font>-<font color="red">analytics</font>" target="_blank">Part One</a> of this series, I took a look at the evolution behind data analytics and applications in <font color="red">Manufacturing</font>. Part Two provides insights into <font color="red">implementation</font> of <font color="red">analytics</font> in <font color="red">manufacturing</font>.</p>
+<p><strong>Part Two: Implementing <font color="red">Data</font> Analytics in <font color="red">Manufacturing</font><br />
+</strong></p>
+<p><strong>Acquiring <font color="red">Data</font></strong></p>
+<p>The first step for <font color="red">data</font> <font color="red">analytics</font> in <font color="red">manufacturing</font> should be to implement <font color="red">solutions</font> that connect <font color="red">manufacturing</font> equipment, <font color="red">sensors</font> and controllers to a converged <font color="red">network</font> so <font color="red">data</font> can be captured, moved and stored for analysis in an appropriate manner. While manual <font color="red">data</font> entry is common and will probably continue to some extent, automation is critical to ensure that <font color="red">data</font> is captured in <font color="red">real time</font>, accurately and in the right format to enable <font color="red">analytics</font> and <font color="red">decision making</font>.</p>
+<p>The amount of <font color="red">data</font> available on the <font color="red">manufacturing</font> <font color="red">plant floor</font> has increased by many orders of magnitude over the past decade, however analysis and application of such <font color="red">data</font> in <font color="red">decision making</font> has not kept pace. It is this space of <font color="red">analytics</font> that is now driving adoption of ‘Internet of Things’ (<font color="red">IoT</font>) technologies such that <font color="red">IoT</font> and <font color="red">analytics</font> have now become intricately linked to each other.</p>
+<p>Going beyond just analyzing <font color="red">data</font> from <font color="red">IoT</font> and expanding it to include the impact of this <font color="red">data</font> on the people, skills, <font color="red">business processes</font> and linking all of these disparate elements into a single business-focused system is referred to as the ‘Internet of Everything’ (<font color="red">IoE</font>). Manufacturers are only now just starting to take this wider perspective to <font color="red">analytics</font> and the application of <font color="red">analytics</font> in <font color="red">manufacturing</font>. As manufacturers begin to rely more on <font color="red">data</font> for analysis into <font color="red">business processes</font>, they must also consider some challenges that may arise during <font color="red">implementation</font>.</p>
+<p><strong>Virtualizing the <font color="red">Data</font> </strong></p>
+<p>Today’s manufacturers need the ability to integrate all <font color="red">data</font> from various departments/locations, which has proven to be difficult in the past. The old approach consisted of building a <font color="red">data warehouse</font> where <font color="red">data</font> was extracted from multiple sources, transformed (normalized, processed, condensed) and loaded on a periodic basis into a central <font color="red">data warehouse</font>. Today’s manufacturers need <font color="red">data</font> that can be used in real-time to make decisions, not <font color="red">data</font> stored in a warehouse for historical analysis. A steep increase in the use of <font color="red">cloud</font> storage for such <font color="red">data warehouses</font> has led to <font color="red">data</font> being stored across different <font color="red">clouds</font> (mix of public and private) on different platforms. Bringing all of this together to yield meaningful results without moving all the <font color="red">data</font> physically into one <font color="red">data warehouse</font> has been a challenge. <font color="red">Data</font> virtualization <font color="red">solutions</font> now enable accessing <font color="red">data</font> that is physically in different databases and geographic locations as if it were physically in a single <font color="red">data warehouse</font>. This has becomes even more critical with the large volumes of big that are typically unstructured and not easily amenable to traditional <font color="red">data</font> warehousing approaches.</p>
+<p><strong>Integrating <font color="red">analytics</font> into <font color="red">business processes</font></strong></p>
+<p><font color="red">Data</font> <font color="red">analytics</font> cannot be a standalone activity done in a <font color="red">data center</font> by a team of experts. It has to be integrated into the <font color="red">key business</font> processes such that <font color="red">analytics</font> are focused only in areas that provide <font color="red">business value</font> and are available to decision makers at the right time in the right place. Important questions to be considered when implementing <font color="red">analytics</font> <font color="red">solutions</font> are:</p>
+<ul>
+<li>How will the <font color="red">data</font> be used?</li>
+<li>Who will use it and how often?</li>
+<li>What kind of analysis is needed?</li>
+</ul>
+<p>Responses to these questions will define your strategy and dictate how <font color="red">analytics</font> are integrated into the business. <font color="red">Implementation</font> models could include</p>
+<ul>
+<li><font color="red">Data</font> <font color="red">acquisition</font> from <font color="red">sensors</font> and <font color="red">analytics</font> at the ‘Edge’ to feed-back to control system or human operator. The <font color="red">data</font> is acquired and moved to a <font color="red">computing platform</font> on the switch (in the <font color="red">manufacturing</font> cell <font color="red">network</font>) or to a <font color="red">data center</font> in the <font color="red">manufacturing</font> plant where it is processed and the result is used to drive the <font color="red">manufacturing</font> process through control signals or visual / audio signals through the Human Machine Interface (HMI). Example would be a high definition camera taking 3D images of the product and comparing it to standards to identify quality defects in <font color="red">real time</font> to eject the defective product or stop the machine or just sound an alarm via the HMI for the operator to take action.</li>
+<li><font color="red">Data</font> capture from <font color="red">sensors</font> and equipment for periodic reporting. The <font color="red">data</font> is acquired, moved to a <font color="red">data center</font> and analysis / reporting is done in conjunction with other <font color="red">data</font>bases on a periodic basis. Application would be machine uptime and speed data acquired in <font color="red">real time</font> and used to report Overall Equipment Effectiveness (OEE) in conjunction with <font color="red">data</font> like product mix, raw material / packaging source etc to identify performance issues and improve OEE.</li>
+<li>Adhoc analysis of <font color="red">data</font> acquired from <font color="red">sensors</font>, done offline, after <font color="red">data</font> has been normalized and moved to a <font color="red">data center</font>. Typical <font color="red">use case</font> would be analysis in support of six sigma/quality improvement projects where <font color="red">data</font> gathered from the machine / production system is analyzed to support (or reject) hypotheses for problem resolution by <font color="red">shop floor</font> employees.</li>
+<li><font color="red">Data</font> capture and streaming out to equipment vendor in <font color="red">real time</font> (machine as a service) where the machine vendor monitors performance of the machine parts and is able to take remote corrective action or schedule <font color="red">predictive maintenance</font> or bring in appropriate spares just-in-time to ensure machine up-time and performance per contractually agreed levels. In such cases, security becomes a key issue too.</li>
+</ul>
+<p><strong><font color="red">Implementation</font> challenges</strong></p>
+<p><font color="red">Implementation</font> of <font color="red">data</font> <font color="red">analytics</font> should consider the following:</p>
+<ol>
+<li>Appropriate <font color="red">manufacturing</font> cell and zone <font color="red">network</font> to ensure high speed, quality of service and reliability. This is absolutely critical and is a huge challenge for manufacturers give the proliferation of standards and protocols in use on the <font color="red">shop floor</font> and the lack of convergence of the <font color="red">networks</font>.</li>
+</ol>
+<ol start="2">
+<li>Moving and storage of <font color="red">data</font> and location of the <font color="red">data center</font>. This becomes very critical when handling <font color="red">big data</font> in large volumes and high velocity and the decision on whether <font color="red">data center</font> should be co-located in the <font color="red">manufacturing</font> plant or remote/cloud can drive performance and cost of the <font color="red">solution</font>.</li>
+</ol>
+<ol start="2">
+<li>A comprehensive strategy and <font color="red">implementation</font> approach focused on the <font color="red">entire data</font> chain and not just on the final <font color="red">analytics</font> and visualization. Typically <font color="red">analytics</font> is seen as using algorithms on <font color="red">data</font> and developing reports/visualization with little focus on <font color="red">acquisition</font>, movement, storage and organization of the <font color="red">data</font>. What appears in the user interface is the most visible but not necessarily the most important or most challenging aspect of <font color="red">implementation</font>.</li>
+</ol>
+<p>How can <font color="red">Cisco</font> help your <font color="red">manufacturing</font> organization improve efficiencies and gain valuable insight through <font color="red">data</font>? Visit our <font color="red">solutions</font> <a href="http://www.cisco.com/web/strategy/manufacturing/index.html" target="_blank">page</a> to find out more and share your thoughts with us in the <font color="red">comments section</font> below. Stayed tuned for Part Three of this series where I will share experiences in <font color="red">implementation</font> and detail how <font color="red">analytics</font> and <font color="red">IoT</font> are working together to bring results in <font color="red">manufacturing</font>.</p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=mfg">#MFG</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=cisco">Cisco</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=internet-of-everything">Internet of Everything</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=ioe3">IoE</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=manufacturing">Manufacturing</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=operations">operations</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=real-time-location-system">Real-Time Location System</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=rtls">rtls</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">2 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+			<li>
+			<div id="comment-2292706">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://www.3dcs.com' rel='external nofollow' class='url'>Donald Jasurda</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">March 28, 2015 at 5:56 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>As a QMS solution provider I agree with the analytics benefits you present. The challenge our clients encounter is linking the benefits to tangible business  value.
+
+
+
+I would appreciate you insights on this topic.
+
+
+
+Regards,
+
+
+
+Don Jasurda
+
+DCS</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2292706" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li>
+			<div id="comment-2294313">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Rangan Nandakumar						</span>
+						<br />
+						<span class="comment-meta commentmetadata">March 31, 2015 at 5:54 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Donald, indeed evaluating tangible business benefits before starting an implementation is critical. Typically such justification is required to gain funds for investment and also sustain momentum and measure benefits once implementation is completed.
+
+Some benefit areas that I have seen at clients are
+
+1. Reduction quality defects / rework / scrap due to improved process control, early identification of out-of-control situations
+
+2. Improved throughput due to reduced number of stoppages etc
+
+3. Reduced cost of maintenance through implementing predictive maintenance
+
+4. Reduced manpower through elimination of a number of data handling activities
+
+Cant get into details in this response but will try to write them up and post them in my next post if possible. Thank you for your question</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2294313" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Manufacturing:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogManufacturing', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogManufacturing" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Manufacturing</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/Cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/CiscoMFG"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="https://www.linkedin.com/groups/3836381"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="https://www.youtube.com/playlist?list=PLAAF67A702C266F9E"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogManufacturing"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.arcweb.com/industries" target="_blank">ARC Advisory Group</a></li>
+                      <li><a href="http://www.gartner.com/technology/research/content/manufacturing.jsp" target="_blank">Food Manufacturing</a></li>
+                      <li><a href="http://www.gartner.com/technology/research/content/manufacturing.jsp" target="_blank">Gartner</a></li>
+                      <li><a href="http://www.idc.com/prodserv/insights/manufacturing/index.jsp" target="_blank">IDC Manufacturing Insights</a></li>
+                      <li><a href="http://www.industrial-ip.org/en" target="_blank">Industrial IP Advantage</a></li>
+                      <li><a href="http://www.industryweek.com/" target="_blank">Industry Week</a></li>
+                      <li><a href="http://www.lnsresearch.com/" target="_blank">LNS Research</a></li>
+                      <li><a href="http://manufacturing.net" target="_blank">Manufacturing.net</a></li>
+                  </ul>
+              <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="http://www.cisco.com/web/strategy/automotive/automotive.html" target="_blank">Automotive Solutions</a></li>
+                        <li><a href="http://www.cisco.com/go/connectedfactory" target="_blank">Cisco Connected Factory</a></li>
+                        <li><a href="http://www.cisco.com/web/strategy/manufacturing/index.html" target="_blank">Cisco Manufacturing Solutions</a></li>
+                        <li><a href="http://www.cisco.com/web/strategy/manufacturing/cisco-rockwell_automation.html" target="_blank">Cisco Partnership with Rockwell Automation</a></li>
+                        <li><a href="http://www.cisco.com/web/strategy/cpg/index.html" target="_blank">Consumer Packaged Goods Solutions</a></li>
+                        <li><a href="http://cisco.com/go/industrial" target="_blank">Industrial Networking</a></li>
+                        <li><a href="http://www.cisco.com/web/solutions/trends/iot/overview.html?CAMPAIGN=Internet+of+Things&COUNTRY_SITE=us&POSITION=vanity&REFERRING_SITE=vanity&CREATIVE=iot" target="_blank">Internet of Things</a></li>
+                        <li><a href="http://www.cisco.com/c/en/us/solutions/industries/life-sciences.html" target="_blank">Life Sciences</a></li>
+                        <li><a href="http://www.cisco.com/c/en/us/solutions/industries/manufacturing/connected-supply-chain.html" target="_blank">Manufacturing Thought Leadership</a></li>
+                        <li><a href="http://www.cisco.com/web/strategy/materials-mining/index.html" target="_blank">Materials and Mining Solutions</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/Cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/CiscoMFG'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='https://www.linkedin.com/groups/3836381'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 165979;
+			var orig_count = 0;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1FaMWx7&text=%23Manufacturers+should+implement+analytics+tools+to+tackle+%23BigData.+Find+out+in+Rangan+Nandakumar%E2%80%99s+blog%3A+&via=CiscoMFG" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/manufacturing/solving-manufacturing-complexities-through-data-analytics-part-two-implementing-data-analytics&title=Solving Manufacturing Complexities through Data Analytics: Part Two &#8211; Implementing Data Analytics" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/manufacturing/solving-manufacturing-complexities-through-data-analytics-part-two-implementing-data-analytics" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/manufacturing/solving-manufacturing-complexities-through-data-analytics-part-two-implementing-data-analytics" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Solving Manufacturing Complexities through Data Analytics: Part Two &#8211; Implementing Data Analytics&body=I saw this post on Cisco Manufacturing blog and thought you might like to read it.%0A%0ASolving Manufacturing Complexities through Data Analytics: Part Two &#8211; Implementing Data Analytics%0A%0Ahttps://blogs.cisco.com/manufacturing/solving-manufacturing-complexities-through-data-analytics-part-two-implementing-data-analytics%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Tips and Tricks: Nmap is still relevant</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content="This post provides an overview of the Nmap scanning tool, specifically the improvements made to Nmap version 6.25, and covers three tips to help users unlock some of the benefits of Nmap 6.25: automating the scanner,  identifying and discovering vulnerable services on your networkk, and good old-fashioned plain vanilla scanning.  "/><meta name="description" content="This post provides an overview of the Nmap scanning tool, specifically the improvements made to Nmap version 6.25, and covers three tips to help users unlock some of the benefits of Nmap 6.25: automating the scanner,  identifying and discovering vulnerable services on your networkk, and good old-fashioned plain vanilla scanning.  "/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; Tips and Tricks: Nmap is still relevant Comments Feed" href="https://blogs.cisco.com/security/tips-and-tricks-nmap-is-still-relevant/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"109273"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='A New Paradigm for Desktop Collaboration' href='https://blogs.cisco.com/collaboration/a-new-paradigm-for-desktop-collaboration' />
+<link rel='next' title='Complimentary Access to TEDMED Live 2013' href='https://blogs.cisco.com/healthcare/complimentary-access-to-tedmed-live-2013' />
+
+<link rel="canonical" href="https://blogs.cisco.com/security/tips-and-tricks-nmap-is-still-relevant" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=109273' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Tips and Tricks: Nmap is still relevant"/>
+  <meta property="og:url" content="https://blogs.cisco.com/security/tips-and-tricks-nmap-is-still-relevant"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2013-04-09T06:00:45+00:00"/>
+  <meta property="article:modified_time" content="2013-04-09T03:32:17+00:00" />
+  <meta property="og:updated_time" content="2013-04-09T03:32:17+00:00" />
+  <meta property="article:section" content="Security"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Tips and Tricks: Nmap is still relevant"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/security/tips-and-tricks-nmap-is-still-relevant"/>
+  <meta name="twitter:description" content="This post provides an overview of the Nmap scanning tool, specifically the improvements made to Nmap version 6.25, and covers three tips to help users unlock some of the benefits of Nmap 6.25: automating the scanner,  identifying and discovering vulnerable services on your networkk, and good old-fas"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521513612";
+		var sig = "cfcd4b442459b3bdf0d5af576360412c";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1JDVmwL&text=Tips and Tricks: Nmap is still relevant&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/tips-and-tricks-nmap-is-still-relevant&title=Tips and Tricks: Nmap is still relevant" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/tips-and-tricks-nmap-is-still-relevant" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/tips-and-tricks-nmap-is-still-relevant" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Tips and Tricks: Nmap is still relevant&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0ATips and Tricks: Nmap is still relevant%0A%0Ahttps://blogs.cisco.com/security/tips-and-tricks-nmap-is-still-relevant%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/security/'>Security</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category50.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Security  						</span>
+						<h1 id="post-109273" class="kindle_title title">Tips and Tricks: Nmap is still relevant</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/moseshernandez.thumbnail.51547c8fd5c19.jpg"></div><div class="author_rewards_box"></div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/moseshernandez" title="Posts by Moses Hernandez" rel="author">Moses Hernandez</a> - April 9, 2013 - 2 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p>Anecdotally, it would take about a week for a single machine to ping sweep the Internet. That would be approximately 4 billion <font color="red">IP</font> addresses, essentially the whole Internet. In theory, this includes every single military address, every single <font color="red">ISP</font>, every home user, and every mobile <font color="red">device</font>. Such a port sweep does not include all options, <font color="red">UDP</font>, and <font color="red">Nmap</font> Scripts, as that would take too long. But what if I want to run the same scan to my home <font color="red">IPv6</font> range? <a href="http://www.comcast6.net/index.php/8-ipv6-trial-news-and-information/80-ipv6-offers-many-more-ip-addresses">It will have a /64 allocated to it</a>, or about 18 quintillion addresses. Let’s compare a sweep of the entire Internet with my home <font color="red">IPv6</font> range:</p>
+<ul>
+<li>The Internet: 2^32 = 4,294,967,296 [<a href="https://www.google.com/search?q=2%5E32">1</a>]</li>
+<li>The home range from my <font color="red">ISP</font>: 2^64 = 18,446,744,073,709,551,616 [<a href="http://www.comcast6.net/index.php/8-ipv6-trial-news-and-information/80-ipv6-offers-many-more-ip-addresses">2</a>]</li>
+</ul>
+<p>A stark difference! So, how will I scan this? Is that just one <font color="red">network</font>? I am Moses Hernandez, and this is one of my tips and tricks in this series. This post is about the venerable <a href="http://www.nmap.org/"><font color="red">Nmap</font></a>.<span id="more-109273"></span></p>
+<p>Late last year, <a href="http://seclists.org/nmap-announce/2012/4"><font color="red">Nmap</font> 6.25 was released</a>. To those who haven&#8217;t seen <font color="red">Nmap</font> since version 5, which was released in 2009, much has changed. <font color="red">Nmap</font> now comes with approximately 433 <a href="http://nmap.org/"><font color="red">NSE</font></a> <font color="red">scripts</font>, 3500 fingerprints, and more <font color="red">IPv6 support</font>, and yet it’s still a low impact installation on most systems and a very powerful tool. In this post, I’ll address three key items that will help you automate, discover, and identify hosts and even <font color="red">vulnerabilities</font>.</p>
+<p><em>Disclaimer: The examples used in this post are taken from my installation using</em><em> </em><a href="http://mxcl.github.com/homebrew/"><em>Homebrew</em></a><em> </em><em>on OSX as the installation method for my <font color="red">Nmap</font>. (&#8216;mosherna-mac moses$ brew install <font color="red">nmap</font>&#8217;)</em></p>
+<p><strong>Automating the Scanner</strong></p>
+<p>The first item I’ll address is automating the scanner. Starting with a simple <font color="red">Nmap</font> scan, I can build an excellent <font color="red">Nmap</font> pipeline for managing <font color="red">network</font> scans. Below is an example of a simple <font color="red">Nmap</font> scan.</p>
+<p>&nbsp;</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/<font color="red">nmap</font>13.png"><img class="aligncenter size-large wp-image-109276" alt="nmap13" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/nmap13-550x437.png" width="550" height="437" /></a></p>
+<p>For the uninitiated, the command run is &#8216;nmap -p 80 www.moses.io&#8217;. This is a simple <font color="red">Nmap</font> scan on TCP port 80 to my site. The output is the standard <font color="red">Nmap</font> format. <font color="red">Nmap</font> and the bash shell can be a powerful thing. The -oG <font color="red">switch</font> is <font color="red">Nmap</font> in output grepable format. This allows us to better parse the data, a requirement that makes <font color="red">scripting</font> easier. There’s an xml format as well, which may prove useful to some. The -iL <font color="red">switch</font> will allow a file to be loaded a fed to <font color="red">Nmap</font>. Building a simple output like the following will display the power of <font color="red">Nmap</font> scripting:</p>
+<blockquote><p><span style="font-family: Consolas, Monaco, monospace; font-size: 12px; line-height: 18px;">$ echo &#8220;your.internal.site&#8221; &gt;&gt; iplist.txt</span></p>
+<p><span style="font-family: Consolas, Monaco, monospace; font-size: 12px; line-height: 18px;">$ <font color="red">nmap</font> iL iplist.txt -p 80 -oG &#8211;</span></p>
+<p><span style="font-family: Consolas, Monaco, monospace; font-size: 12px; line-height: 18px;"># <font color="red">Nmap</font> 6.25 scan initiated Mon March 18 19:23:20 2013 as <font color="red">nmap</font> -p 80 -oG &#8211; www.moses.io</span></p>
+<p><span style="font-family: Consolas, Monaco, monospace; font-size: 12px; line-height: 18px;">Host: 1.2.3.4 () Status: Up</span></p>
+<p><span style="font-family: Consolas, Monaco, monospace; font-size: 12px; line-height: 18px;">Host: 1.2.3.4 () Ports: 80/open/tcp//http//</span></p>
+<p><span style="font-family: Consolas, Monaco, monospace; font-size: 12px; line-height: 18px;"># <font color="red">Nmap</font> done at Mon Mar 18 19;23:24 2013 &#8212; 1 <font color="red">IP</font> addresses (1 host up) scanned in 3.69 seconds</span></p></blockquote>
+<p>The commands above will form the beginning of our chain. With tools like grep, awk, and bash, <font color="red">automation</font> of the pipeline is easy and will allow for other tools to be used in the chain. One of these tools could be <a href="http://www.cirt.net/Nikto2">Nikto</a>. Nikto is a handy, yet rudimentary scanner, that can found at <a href="http://www.cirt.net/Nikto2">www.cirt.net</a>. It’s one of the first freely available web scanners, but not the most robust. For simple operations, Nikto is extremely useful. Here’s how I can use it in our pipeline:</p>
+<blockquote><p><span style="font-family: Consolas, Monaco, monospace; font-size: 12px; line-height: 18px;">$ <font color="red">nmap</font> iL iplist.txt -p 80 -oG &#8211; | grep open | awk &#8216;{ print $2 }&#8217; | nikto/nikto.pl -host &#8211;</span></p>
+<p><span style="font-family: Consolas, Monaco, monospace; font-size: 12px; line-height: 18px;">&#8211; Nikto v2.1.5</span></p>
+<p>&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;-</p>
+<p><span style="font-family: Consolas, Monaco, monospace; font-size: 12px; line-height: 18px;">+ Target <font color="red">IP</font>: 1.2.3.4</span></p>
+<p><span style="font-family: Consolas, Monaco, monospace; font-size: 12px; line-height: 18px;">+ Target <font color="red">Hostname</font>: 1.2.3.4</span></p></blockquote>
+<p><em>Note: To do this, you must pass <font color="red">IP</font> addresses into Nikto. If your website is dependent on a <font color="red">hostname</font>, you may not get the results you expect as an <font color="red">IP</font> is being passed to Nikto and not a <font color="red">hostname</font>. <font color="red">Hostname</font> resolution will not be present; therefore, the correct pages may not load.</em><em></em></p>
+<p><a href="http://nmap.org/book/man-nse.html"><font color="red">NSE</font></a> is the <font color="red">Nmap</font> scripting engine. The <font color="red">Nmap</font> scripting engine leverages a language called <a href="http://www.lua.org/">Lua</a> to help further automate scans in <font color="red">Nmap</font>. <font color="red">NSE</font> <font color="red">scripts</font> run after the port scanning and OS <font color="red">detection</font> or general <font color="red">Nmap</font> scans are run. To understand the power of the <font color="red">Nmap</font> scripting engine you can run the following command to port scan on port TCP/80 and run all http-based <font color="red">NSE</font> <font color="red">scripts</font> in the <font color="red">NSE</font> directory against any open web servers in the environment.</p>
+<blockquote><p><span style="font-family: Consolas, Monaco, monospace; font-size: 12px; line-height: 18px;">$ <font color="red">nmap</font> -p 80 -iL iplist.txt &#8211;<font color="red">script</font>=&#8221;http-*&#8221; -oG &#8211;</span></p></blockquote>
+<p>This command will run through all the <font color="red">NSE</font> <font color="red">scripts</font> in the <font color="red">NSE</font> database that start with &#8216;http.&#8217; The <font color="red">NSE</font> database is found in two locations 1) on your disk, probably in /usr/local/share/nmap/scripts and 2) in an <a href="http://nmap.org/nsedoc/">online version</a> of the documentation section of <font color="red">Nmap</font>. The only version running is your local version. To keep <font color="red">NSE</font> updated run the following:</p>
+<blockquote><p><span style="font-family: Consolas, Monaco, monospace; font-size: 12px; line-height: 18px;">$ <font color="red">nmap</font> &#8211;script-updatedb</span></p></blockquote>
+<p>This command would pull the latest version of the <font color="red">NSE</font> library. For true <font color="red">automation</font>, consider using the power of Bash, Python, or what I use day to day, Ruby. A great little gem is <a href="http://ruby<font color="red">nmap</font>.sourceforge.net/">nmap::parser</a>.</p>
+<p><strong>Identify and Discover Vulnerable Services</strong></p>
+<p>The second item on the list of <font color="red">Nmap</font> tips and tricks is the ability to identify and discover vulnerable <font color="red">services</font> in your <font color="red">network</font> with speed. This is critical given today’s <font color="blue">threat landscape</font>, so let’s take a real-time example of such a <font color="red">threat</font>. A few months ago there was talk about a large <a href="http://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20130129-upnp"><font color="red">UPNP</font> <font color="red">vulnerability</font></a>. Normally <font color="red">UPNP</font> is a difficult protocol to discover and , at times, disable. <font color="red">UPNP</font> will not respond correctly unless a well-formed <font color="red">packet</font> is created; it’s also a UDP-based <font color="red">service</font>. The <font color="red">vulnerability</font> in question spanned almost all <font color="red">network devices</font> and hosts. This posed a problem with identification of potential <font color="red">vulnerabilities</font>. <font color="red">UPNP</font> was potentially open and available externally as well. Based on what we know about <font color="red">Nmap</font> <font color="red">automation</font> from the preceding paragraphs, how can we discover vulnerable <font color="red">UPNP</font> based <font color="red">devices</font>? . Looking at the availability of a <font color="red">UPNP</font> <font color="red">NSE</font> <font color="red">script</font> would be a good first pass. Luckily, <a href="http://nmap.org/<font color="red">nse</font>doc/scripts/upnp-info.html">upnp-info.nse</a> provides information about a UPNP-enabled <font color="red">device</font>. The trick to this scan? <font color="red">Nmap</font> will not scan <font color="red">UDP</font> by default and will not scan it without root-level privileges. The following command will work on all *nix systems with sudo:</p>
+<blockquote><p><span style="font-family: Consolas, Monaco, monospace; font-size: 12px; line-height: 18px;">$ sudo <font color="red">nmap</font> 192.168.1.0/24 -p 1900 -sU &#8211;<font color="red">script</font> &#8220;<font color="red">upnp</font>-*&#8221;</span></p></blockquote>
+<p>With the addition of the ‘—<font color="red">script</font>’ directive and “<font color="red">upnp</font>-*” to the end of the command will allow <font color="red">Nmap</font> to look through its lists of <font color="red">NSE</font> <font color="red">scripts</font> for all <font color="red">scripts</font> that begin with ‘<font color="red">upnp</font>-‘. <font color="red">Nmap</font> will run those <font color="red">NSE</font> <font color="red">scripts</font> when it encounters a <font color="red">device</font> with <font color="red">UPNP</font> open on it. In this manner, I can leverage the power of <font color="red">Nmap</font> and its <font color="red">NSE</font> <font color="red">scripts</font> to discover vulnerable <font color="red">services</font> on the <font color="red">network</font> and rectify issues. Another example would be to scan your <font color="red">network</font> for open non-authenticated or guest Windows shares. Many NAS <font color="red">devices</font> will scan by default using <font color="red">NSE</font> <font color="red">scripts</font> such as smb-enum-shares.<font color="red">nse</font>. For Apple File Protocol (AFP), there are plenty of AFP-based <font color="red">NSE</font> <font color="red">scripts</font> to find Apple File Shares. These are powerful <font color="red">scripts</font> that are freely available to the community in a very fast scanner to help stay secure.</p>
+<p><strong>Back to Basics with a Scanning Refresh</strong></p>
+<p><strong></strong>The third and final thing I want to dive into is old fashion scanning. This is one of the topics that people don’t realize is still valid and <font color="red">important today</font>. <font color="red">Nmap</font> by default will scan using regular TCP style patterns. When testing <font color="red">Firewalls</font>, <font color="red">IPS</font>, and other <font color="red">network</font> and security <font color="red">devices</font>, you’ll want to test how these <font color="red">devices</font> handle malformed TCP sequences. A few things to test for include:</p>
+<p>TCP ACK scan. This will start the conversation assuming that a SYN has already been sent.</p>
+<blockquote><p><span style="font-family: Consolas, Monaco, monospace; font-size: 12px; line-height: 18px;">$<font color="red">nmap</font> -sA 192.168.1.0/24</span></p>
+<p>TCP Null Scan. No flags are set in the TCP header, causing invisible <font color="red">firewalls</font> to show themselves.</p>
+<p><span style="font-family: Consolas, Monaco, monospace; font-size: 12px; line-height: 18px;">$<font color="red">nmap</font> -sN 192.168.1.0/24</span></p>
+<p>TCP Fin Scan. Sets the FIN bit to elicit a <font color="red">firewall</font> response</p>
+<p><span style="font-family: Consolas, Monaco, monospace; font-size: 12px; line-height: 18px;">$<font color="red">nmap</font> -sF 192.168.1.0/24</span></p>
+<p>Fragment Scans. Instructs <font color="red">Nmap</font> to fragment even ICMP messages. This is very brutal to <font color="red">devices</font>, sub 64K fragmenting.</p>
+<p><span style="font-family: Consolas, Monaco, monospace; font-size: 12px; line-height: 18px;">$map -f 192.168.1.0/24</span></p></blockquote>
+<p>BadSums. A favorite of mine, sends incorrect <font color="red">checksums</font> deliberately. Why the incorrect <font color="red">checksums</font>? <font color="red">Firewalls</font> don’t have the ability, due to constraints on speed, to check and ensure that <font color="red">checksums</font> are correct. This odd behavior allows <font color="red">Nmap</font> to fingerprint <font color="red">firewall</font> <font color="red">devices</font>.</p>
+<blockquote><p><span style="font-family: Consolas, Monaco, monospace; font-size: 12px; line-height: 18px;">$<font color="red">nmap</font> &#8211;badsum 192.168.1.0/24</span></p></blockquote>
+<p>The <font color="red">Nmap</font> command that I normally use on a <font color="red">LAN</font> would be the <font color="red">NSE</font> <font color="red">scripts</font> for <font color="red">Broadcast</font>. Many <font color="red">network services</font> are <font color="red">broadcasting</font> and very vocal about what is available and provided on the local <font color="red">LANs</font> you’re on. If you issue the following command, you’ll gain a great deal of knowledge about the hosts on your <font color="red">network</font>.</p>
+<blockquote><p><span style="font-family: Consolas, Monaco, monospace; font-size: 12px; line-height: 18px;">$<font color="red">nmap</font> -e en0 &#8211;<font color="red">script</font> &#8220;<font color="red">broadcast</font>-*&#8221; 192.168.1.0/24</span></p></blockquote>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/nmap23.png"><img class="aligncenter size-large wp-image-109277" alt="nmap23" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/nmap23-550x482.png" width="550" height="482" /></a></p>
+<p><strong>Note:</strong> I use the -e command in this <font color="red">Nmap</font> command due to issues with my <font color="red">VMware</font> <font color="red">network</font> adapter and <font color="red">Nmap</font>. To decrease the noise with <font color="red">pcaps</font>, I state the particular interface I plan to use. Use the <font color="red">nmap</font> &#8211;iflist command to find what interfaces are available to you.<em></em></p>
+<p>Did you find this post informative and compelling enough to run a nightly cronjob that emails you the results of your <font color="red">Nmap</font> scans? I invite you to comment below and provide feedback or share your own <font color="red">Nmap</font> tips and tricks.</p>
+<p>Thanks and look forward to hearing from you!</p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=network-scanners">network scanners</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=nmap">NMAP</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=security-2">security</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=tools">tools</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">2 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+			<li>
+			<div id="comment-716750">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://www.cisco.com' rel='external nofollow' class='url'>Moses Hernandez</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">April 10, 2013 at 3:50 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Paulino, 
+
+  I am very happy that you liked the article. I love the ability to have (k,d,ba,a)sh parse and change the ability to comb through the different script options. Thanks for your tip. Many people may not be aware of the ability to have a shell sort through files like this. 
+
+
+
+  I think http-enum is an excellent script. NSE has really grown over the last few years and I am so happy to see it expand. Nikto has some signatures that I had hoped would have been expanded on by now. One of the nicest features, which I find useful at times, is a fingerprint database of favicon's to try and identify specific rev-levels of things like WordPress or Cpanel.
+
+
+
+  I do want to highlight however that I was trying to highlight the ability of the Unix pipeline to extend and enhance what Nmap is finding. 
+
+
+
+Moses</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike716750" class = "commentLikeButton commentlike" data-nitro = >2 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-716710">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://nmap-cookbook.com' rel='external nofollow' class='url'>Paulino Calderon</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">April 10, 2013 at 3:05 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Hi,
+
+
+
+Good article. I'd like to add that script selection comes in handy when running several scripts. For example:
+
+
+
+nmap -p80 --script "http-* and (not(http-brute or http-slowloris))" 
+
+
+
+I recommend running http-enum if working with web servers. The signatures are more up to date than nikto's.
+
+
+
+Cheers.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike716710" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Security:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogSecurity', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogSecurity" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Security</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscosecurity?ref=nf"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/ciscosecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://youtubecisco.com/security"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogSecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.cert.org/blogs/vuls/" target="_blank">CERT Vulnerability Analysis</a></li>
+                      <li><a href="http://blogs.technet.com/b/srd/" target="_blank">Microsoft Security Research & Defense</a></li>
+                      <li><a href="http://isc.sans.edu/index.html" target="_blank">SANS Internet Storm Center</a></li>
+                      <li><a href="http://www.schneier.com/" target="_blank">Schneier on Security</a></li>
+                  </ul>
+              <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="http://www.cisco.com/en/US/products/products_security_advisories_listing.html" target="_blank">Advisories and Responses</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/cyberRiskReport.x" target="_blank">Cyber Risk Reports</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/intelliPapers.x?i=55" target="_blank">Security Best Practices</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/home.x" target="_blank">Security Intelligence Operations</a></li>
+                        <li><a href="http://www.cisco.com/en/US/products/hw/vpndevc/index.html" target="_blank">Security Products</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscosecurity?ref=nf'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/ciscosecurity'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 109273;
+			var orig_count = 0;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1JDVmwL&text=Tips and Tricks: Nmap is still relevant&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/tips-and-tricks-nmap-is-still-relevant&title=Tips and Tricks: Nmap is still relevant" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/tips-and-tricks-nmap-is-still-relevant" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/tips-and-tricks-nmap-is-still-relevant" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Tips and Tricks: Nmap is still relevant&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0ATips and Tricks: Nmap is still relevant%0A%0Ahttps://blogs.cisco.com/security/tips-and-tricks-nmap-is-still-relevant%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

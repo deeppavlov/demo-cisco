@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  SPAN Packet Duplication: Problem and Solution</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content="This short blog article will talk about how packet duplication happens, how we prevented it from reoccurring, and a unique solution that was employed to remove the duplicate packets from all of the affected pcap files."/><meta name="description" content="This short blog article will talk about how packet duplication happens, how we prevented it from reoccurring, and a unique solution that was employed to remove the duplicate packets from all of the affected pcap files."/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; SPAN Packet Duplication: Problem and Solution Comments Feed" href="https://blogs.cisco.com/security/span-packet-duplication-problem-and-solution/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"85863"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Unified Data Center IQ :1st week contest ends up today at midnight PST –Time to answer !' href='https://blogs.cisco.com/datacenter/unified-data-center-iq-1st-week-contest-ends-up-today-at-midnight-pst-time-to-answer' />
+<link rel='next' title='Public Relations 101 for Partners—and How to Get Started' href='https://blogs.cisco.com/partner/public-relations-101-for-partners-and-how-to-get-started-2' />
+
+<link rel="canonical" href="https://blogs.cisco.com/security/span-packet-duplication-problem-and-solution" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=85863' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="SPAN Packet Duplication: Problem and Solution"/>
+  <meta property="og:url" content="https://blogs.cisco.com/security/span-packet-duplication-problem-and-solution"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2012-10-04T11:41:58+00:00"/>
+  <meta property="article:modified_time" content="2012-10-08T12:47:07+00:00" />
+  <meta property="og:updated_time" content="2012-10-08T12:47:07+00:00" />
+  <meta property="article:section" content="Security"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="SPAN Packet Duplication: Problem and Solution"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/security/span-packet-duplication-problem-and-solution"/>
+  <meta name="twitter:description" content="This short blog article will talk about how packet duplication happens, how we prevented it from reoccurring, and a unique solution that was employed to remove the duplicate packets from all of the affected pcap files."/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521513791";
+		var sig = "1b7ed0ef5e1915e520bc28f12ead22a3";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1IvhxIw&text=SPAN Packet Duplication: Problem and Solution&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/span-packet-duplication-problem-and-solution&title=SPAN Packet Duplication: Problem and Solution" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/span-packet-duplication-problem-and-solution" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/span-packet-duplication-problem-and-solution" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: SPAN Packet Duplication: Problem and Solution&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0ASPAN Packet Duplication: Problem and Solution%0A%0Ahttps://blogs.cisco.com/security/span-packet-duplication-problem-and-solution%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/security/'>Security</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category50.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Security  						</span>
+						<h1 id="post-85863" class="kindle_title title">SPAN Packet Duplication: Problem and Solution</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/MikeSchiffman.thumbnail.4cb4c4a1b2f7b.jpg"></div><div class="author_rewards_box"></div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/MikeSchiffman" title="Posts by Mike Schiffman" rel="author">Mike Schiffman</a> - October 4, 2012 - 4 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p><em>In the spirit of National <font color="red">Cyber Security</font> Awareness Month (NCSAM) I offer up a recent tale of intrigue and mystery from an ongoing <font color="red">Cisco</font> <font color="red">Security Research</font> project&#8230;</em></p>
+<h2>Prologue</h2>
+<p>One of <font color="red">Cisco</font> <font color="red">Security Research</font> and Operation&#8217;s ongoing projects is to oversee a massive infrastructure of several high-volume Internet POPs that send large amounts of <font color="red">network</font> traffic into one of our research labs. We are collecting <font color="red">NetFlow</font> and <font color="red">packet</font> dumps from a geographically distributed sensor <font color="red">network</font>. These <font color="red">pcap files</font> each contain several million <font color="red">packets</font>, but due to a configuration error in the <font color="red">packet capture</font> process, there was some amount of <font color="red">packet</font> duplication. This short blog article will talk about why the duplication happened, how we prevented it from reoccurring, and a unique solution that was employed to remove the duplicate <font color="red">packets</font> from all of the affected <font color="red">pcap files</font>.<span id="more-85863"></span></p>
+<h3>A Love Story: The Hub, The <font color="red">Switch</font>, <font color="red">Packet</font> Sniffing, and <font color="red">Cisco</font> SPAN</h3>
+<p>Before there were <font color="red">network</font> <font color="red">switches</font>, there were <font color="red">network</font> hubs. The hub was a wonderful little creature that dutifully forwarded every <font color="red">packet</font> it saw to every other <font color="red">port</font> on its body. This was a wonderful situation for the <font color="red">packet sniffer</font> who wanted nothing more than to siphon up every <font color="red">packet</font> on the <font color="red">network</font>. He simply had to be plugged in to the hub on any <font color="red">port</font> and immediately all the beautiful <font color="red">packets</font> became available for consumption. <font color="red">Packet sniffer</font> loves hub. Enter the brutally efficient <font color="red">switch</font>. After the <font color="red">switch</font> boots, it begins to build a very selfish layer 2 <font color="red">forwarding</font> table (the <a title="Cam Table" href="http://en.wikipedia.org/wiki/CAM_Table" target="_blank">CAM table</a>) that maps <font color="red">switch ports</font> with <font color="red">MAC addresses</font>. After it learns what comes whence and what goes where, it then forwards or &#8220;<font color="red">switches</font>&#8221; traffic only to the corresponding <font color="red">port</font>. What a disaster for the <font color="red">packet sniffer</font>! Now, the <font color="red">packet sniffer</font> could only see traffic destined for the <font color="red">MAC address</font> tha is registered to its <font color="red">port</font>. Next comes <a title="<font color="red">Cisco</font> SPAN" href="http://www.cisco.com/en/US/products/hw/switches/ps708/products_tech_note09186a008015c612.shtml#intro" target="_blank">Cisco SPAN</a> (Switched <font color="red">Port</font> Analyzer). SPAN is a feature on <font color="red">Cisco</font> <font color="red">switches</font> that provides a capability for <font color="red">packet sniffers</font> to see some or all <font color="red">packets</font> on a <font color="red">switch</font> or <a title="<font color="red">VLAN</font>" href="http://www.cisco.com/en/US/tech/tk389/tk689/technologies_configuration_example09186a008009478e.shtml" target="_blank">VLAN</a> (A Virtual <font color="red">Local Area Network</font> where a <font color="red">physical network</font> is partitioned into multiple smaller <font color="red">networks</font>). To be clear, the <font color="red">switch</font> is not simply <font color="red">forwarding</font> each <font color="red">packet</font> so that the <font color="red">sniffer</font> can see them, in fact the <font color="red">switch</font> is actually making a copy of each <font color="red">packet</font> and <font color="red">forwarding</font> it to the <font color="red">packet sniffer</font>. Essentially, by configuring SPAN on a <font color="red">Cisco</font> <font color="red">switch</font>, the <font color="red">packet sniffer</font> can now happily gobble up all of the <font color="red">packets</font> on a <font color="red">network</font>.</p>
+<h3>Duplicate <font color="red">Packets</font></h3>
+<p>Given the above Switch/Packet Sniffer/SPAN love triangle, a common side effect of <font color="red">packet capturing</font> on SPAN <font color="red">ports</font> is duplicate <font color="red">packets</font>. Duplicate <font color="red">packets</font> most often occur when the <font color="red">packet capture</font> source that is specified is a <font color="red">VLAN</font> or <a href="http://www.cisco.com/en/US/docs/switches/datacenter/nexus5000/sw/configuration/guide/cli/EtherChannel.html"><font color="red">port</font> channel</a> (a bundle of <font color="red">interfaces</font> used to provide increased bandwidth and redundancy).</p>
+<div style="width: 600px; background-color: #ededed; overflow-x: scroll;">
+<pre><font color="red">Cisco4948</font>#<span style="font-weight: bold;">configure terminal</span> Enter configuration commands, one per line. End with CNTL/Z.
+
+<font color="red">Cisco4948</font>(<font color="red">config</font>)#<span style="font-weight: bold;">monitor <font color="red">session</font> 1 source <font color="red">interface</font> <font color="red">vlan</font> 5</span>
+
+<span style="color: #0000ff;">!--- This configures <font color="red">vlan</font> 5 as the <font color="red">source port</font>.</span>
+
+<font color="red">Cisco4948</font>(<font color="red">config</font>)#<span style="font-weight: bold;">monitor <font color="red">session</font> 1 destination <font color="red">interface</font> fastethernet 0/3</span>
+
+<span style="color: #0000ff;">!--- The configures <font color="red">interface</font> Fast <font color="red">Ethernet</font> 0/3 as the destination <font color="red">port</font>.</span>
+
+
+
+<font color="red">Cisco4948</font>#<span style="font-weight: bold;">show monitor <font color="red">session</font> 1</span>
+
+<font color="red">Session</font> 1
+
+---------
+
+Type : Local <font color="red">Session</font>
+
+<font color="red">Source Ports</font> :
+
+Both : <font color="red">vlan</font> 5
+
+Destination <font color="red">Ports</font> : Fa0/3
+
+<font color="red">Cisco4948</font>#</pre>
+</div>
+<p>Moreover it becomes increasingly convoluted when capturing bi-directional traffic. The simplest and most proper solution is to alter the source of the SPAN configuration and make the source a specified <font color="red">interface</font>, for example “<font color="red">interface</font> FastEthernet 0/0”:</p>
+<div style="width: 600px; background-color: #ededed; overflow-x: scroll;">
+<pre><font color="red">Cisco4948</font>#configure terminal Enter configuration commands, one per line. End with CNTL/Z.
+
+<font color="red">Cisco4948</font>(<font color="red">config</font>)#<span style="font-weight: bold;">monitor <font color="red">session</font> 1 source <font color="red">interface</font> fastethernet 0/0</span>
+
+<span style="color: #0000ff;">!--- This configures <font color="red">interface</font> Fast <font color="red">Ethernet</font> 0/0 as the <font color="red">source port</font>.</span>
+
+<font color="red">Cisco4948</font>(<font color="red">config</font>)#<span style="font-weight: bold;">monitor <font color="red">session</font> 1 destination <font color="red">interface</font> fastethernet 0/3</span>
+
+<span style="color: #0000ff;">!--- The configures <font color="red">interface</font> Fast <font color="red">Ethernet</font> 0/3 as the destination <font color="red">port</font>.</span>
+
+
+
+<font color="red">Cisco4948</font>#<span style="font-weight: bold;">show monitor <font color="red">session</font> 1</span>
+
+<font color="red">Session</font> 1
+
+---------
+
+Type : Local <font color="red">Session</font>
+
+<font color="red">Source Ports</font> :
+
+Both : Fa0/0
+
+Destination <font color="red">Ports</font> : Fa0/3
+
+<font color="red">Cisco4948</font>#</pre>
+</div>
+<p>We were fortunate in our scenario to have done exactly as seen above; we changed the source of our SPAN from a <font color="red">VLAN</font> to an <font color="red">interface</font>. So let’s say you encounter a situation where it is not possible to change the source of your SPAN. Perhaps based on the environment and architecture your only option that allows you to see the necessary <font color="red">data</font> flow is to have the source SPAN on a <font color="red">port</font> channel or <font color="red">VLAN</font>. If this is the case, duplicate <font color="red">packets</font> are going to show up due to the SPAN source.</p>
+<p>While we were indeed fortunate enough to resolve our SPAN issue in the most effective manner possible, we were still left with many <font color="red">pcap files</font> consisting of billions of <font color="red">packets</font> across thousands of files with some level of duplication. See for yourself!</p>
+<div style="width: 600px; background-color: #ededed; overflow-x: scroll;">
+<pre>[<font color="red">snarkbox</font>:~/Projects] mike% <span style="font-weight: bold;">capinfos -csd sample-02.pcap.gz</span>
+
+File name:           sample-02.pcap.gz
+
+Number of <font color="red">packets</font>:   2928239
+
+File size:           109090270 <font color="red">bytes</font>
+
+<font color="red">Data</font> size:           1953148233 <font color="red">bytes</font></pre>
+</div>
+<p>Needless to say, we needed a tool to remedy the situation.</p>
+<h3>The Solution</h3>
+<p>We didn&#8217;t need something production quality, we just needed a stopgap tool that worked to remove the duplicate <font color="red">packets</font>. <font color="red">Python</font>, as it happens, is perfect for such <a href="http://en.wikipedia.org/wiki/Software_prototyping#Throwaway_prototyping">rapid prototyping</a>. A quick game-plan was drawn with the following requirements:</p>
+<ul>
+<li>Open a specified input <font color="red">pcap file</font> (optionally gzip compressed)</li>
+<li>Open output file (optionally user specified)</li>
+<li>Descend into event loop:
+<ul>
+<li>Read a <font color="red">packet</font> from the input file</li>
+<li>Determine if the <font color="red">packet</font> has already been seen within some defined interval and:
+<ul>
+<li>If it has been seen: discard <font color="red">packet</font> (increment duplicate counter)</li>
+<li>If it has not been seen: write the <font color="red">packet</font>, including <font color="red">pcap header</font></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>When the end of the input pcap file is reached, close the output file and report the results to the user</li>
+</ul>
+<h4>pdd.py: Pcap De-duplicator</h4>
+<p>The fruit of that labor was a 101 line Python program named pdd.py (that&#8217;s right pdd = pcap de-duplicator). Note the program is only 80 lines without <a href="http://www.python.org/dev/peps/pep-0257/">docstrings</a>. It has the following calling conventions:</p>
+<div style="width: 600px; background-color: #ededed; overflow-x: scroll;">
+<pre>[snarkbox:~/Projects] mike% <span style="font-weight: bold;">./pdd/pdd.py -h</span>
+
+usage: pdd.py [-h] -f INFILE_NAME [-w WINDOW_SIZE] [-v] [-o OUTFILE_NAME] [-z]
+
+parse a pcap file and remove duplicate <font color="red">packet</font>s, accepts gzip'd pcap files
+
+
+
+optional arguments:
+
+  -h, --help            show this help message and exit
+
+  -f INFILE_NAME, --file INFILE_NAME
+
+                        pcap file to sift through
+
+  -w WINDOW_SIZE, --window_size WINDOW_SIZE
+
+                        size of the sliding <font color="red">packet</font> window, a larger window may
+
+                        find more duplicate <font color="red">packet</font>s but will increase run-
+
+                        time, default is 12
+
+  -v, --verbose         be more verbose when reporting, -vv be even more
+
+                        verbose
+
+  -o OUTFILE_NAME, --outfile OUTFILE_NAME
+
+                        output filename
+
+  -z, --gzip            gzip the output file</pre>
+</div>
+<p>A sample invocation shown against a smaller pcap file:</p>
+<div style="width: 600px; background-color: #ededed; overflow-x: scroll;">
+<pre>[snarkbox:~/Projects] mike% <span style="font-weight: bold;">./pdd.py -f sample-01.pcap.gz -o sample-01.pdd.pcap -vv</span>
+
+Using a window of 12, writing non-duplicates to sample-01.pdd.pcap
+
+dup: 60 byte <font color="red">packet</font> at 2010-04-30 16:43:41.859558 and 2010-04-30 16:43:41.859554: Ethernet(src='\x00\x1aK\x00\x02\x1a', dst='\x00\x1d\xa1\xea\xec\x1b', data=IP(src='redacted', off=16384, dst='redacted', sum=44674, len=40, p=6, data=TCP(seq=3825337896, win=0, sum=45839, flags=4, dport=443, sport=33949)))
+
+dup: 60 byte <font color="red">packet</font> at 2010-04-30 16:45:42.830688 and 2010-04-30 16:45:42.830685: Ethernet(src='\x00\x1aK\x00\x02\x1a', dst='\x00\x1d\xa1\xea\xec\x1b', data=IP(src='redacted', off=16384, dst='redacted', sum=44674, len=40, p=6, data=TCP(seq=1440424076, win=0, sum=3534, flags=4, dport=443, sport=40354)))
+
+dup: 60 byte <font color="red">packet</font> at 2010-04-30 16:47:43.831652 and 2010-04-30 16:47:43.831559: Ethernet(src='\x00\x1aK\x00\x02\x1a', dst='\x00\x1d\xa1\xea\xec\x1b', data=IP(src='redacted', off=16384, dst='redacted', sum=44674, len=40, p=6, data=TCP(seq=3325172995, win=0, sum=41214, flags=4, dport=443, sport=40355)))
+
+dup: 60 byte packet at 2010-04-30 16:48:55.308183 and 2010-04-30 16:48:55.308180: Ethernet(src='\x00\x1d\xa1\xea\xec\x1b', dst='\x00PV\x8e?@', data=IP(src='redacted', off=16384, dst='redacted', sum=18987, len=40, p=6, ttl=43, data=TCP(seq=1751296284, win=0, sum=36867, flags=4, dport=2153, sport=80)))
+
+dup: 60 byte packet at 2010-04-30 16:48:55.332592 and 2010-04-30 16:48:55.332588: Ethernet(src='\x00\x1d\xa1\xea\xec\x1b', dst='\x00PV\x8e?@', data=IP(src='redacted', off=16384, dst='redacted', sum=18991, len=40, p=6, ttl=43, data=TCP(seq=275966928, win=0, sum=42310, flags=4, dport=2150, sport=80)))
+
+dup: 60 byte packet at 2010-04-30 16:49:44.832697 and 2010-04-30 16:49:44.832693: Ethernet(src='\x00\x1aK\x00\x02\x1a', dst='\x00\x1d\xa1\xea\xec\x1b', data=IP(src='redacted', off=16384, dst='redacted', sum=44674, len=40, p=6, data=TCP(seq=924029966, win=0, sum=47376, flags=4, dport=443, sport=40357)))
+
+dup: 60 byte packet at 2010-04-30 16:51:45.833485 and 2010-04-30 16:51:45.833481: Ethernet(src='\x00\x1aK\x00\x02\x1a', dst='\x00\x1d\xa1\xea\xec\x1b', data=IP(src='redacted', off=16384, dst='redacted', sum=44674, len=40, p=6, data=TCP(seq=2836595558, win=0, sum=58154, flags=4, dport=443, sport=37427)))
+
+dup: 60 byte packet at 2010-04-30 16:53:46.834433 and 2010-04-30 16:53:46.834430: Ethernet(src='\x00\x1aK\x00\x02\x1a', dst='\x00\x1d\xa1\xea\xec\x1b', data=IP(src='redacted', off=16384, dst='redacted', sum=44674, len=40, p=6, data=TCP(seq=434232427, win=0, sum=39254, flags=4, dport=443, sport=37428)))
+
+Of 163831 total packets, I wrote 163823 and found 8 duplicates</pre>
+</div>
+<p>Another invocation, this time against a large file:</p>
+<div style="width: 600px; background-color: #ededed; overflow-x: scroll;">
+<pre>[snarkbox:~/Projects] mike% <span style="font-weight: bold;">./pdd.py -f sample-02.pcap.gz</span>
+
+Using a window of 12, writing non-duplicates to sample-02.pcap.gz.pdd.22213
+
+Of 2928239 total packets, I wrote 1467450 and found 1460789 duplicates</pre>
+</div>
+<p>&nbsp;</p>
+<h4>The Special Sauce</h4>
+<p>The real work of detecting duplicate packets inside <em>pdd.py</em> is accomplished by implementing a simple sliding window across the input stream of packets. Many readers will be familiar with the <a href="http://en.wikipedia.org/wiki/Sliding_window_protocol">sliding window protocol</a> used with TCP. As <em>pdd.py</em> starts, it will check each packet against entries already in its window. If the packet does not already exist in the window (not a duplicate) it is written to the output file and appended to the left side of the window. If the window is already full, the oldest packet is popped off and thrown away. For <em>pdd.py</em>, the sliding window was implemented using python&#8217;s <em><a href="http://docs.python.org/library/collections.html#collections.deque">collections.deque()</a></em> object. This object was chosen since it supports efficient push and pop operations against both ends of the queue. The built-in python <em><a href="http://docs.python.org/tutorial/datastructures.html">list()</a></em> object does support pushes and pops from both ends; however, it suffers a serious performance penalty when making changes to the head of the list. This whole process is depicted below in Figure 1.</p>
+<div id="attachment_85871" style="max-width: 560px" class="wp-caption aligncenter"><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/dup-packets21.jpg"><img class="size-large wp-image-85871" title="dup-packets2" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/dup-packets21-550x295.jpg" alt="" width="550" height="295" /></a><p class="wp-caption-text">Figure 1</p></div>
+<p>The Python function employing the deque is shown below:</p>
+<div style="width: 600px; background-color: #ededed; overflow-x: scroll;">
+<pre><span style="color: #ff00ff;">def</span> <span style="color: #009900;">deduplicate_pcap</span>(infile, outfile, pcap, window_size, verbosity):
+
+<span style="color: #0000ff;"> """Uses a sliding window of recently seen packets to remove duplicates. infile: original <font color="red">pcap file</font> outfile: newly created output file obeying the dpkt.pcap interface window_size: size of the sliding window of packets that get compared verbosity: level of verbosity as specified by the user """</span>
+
+    sliding_window = deque()
+
+    tot_count = <span style="color: #ff6600;">0</span>
+
+    pkt_count = <span style="color: #ff6600;">0</span>
+
+    dup_count = <span style="color: #ff6600;">0</span>
+
+
+
+    <span style="color: #ff00ff;">for</span> ts, pkt <span style="color: #ff00ff;">in</span> pcap:
+
+        tot_count += <span style="color: #ff6600;">1</span>
+
+        <span style="color: #ff00ff;">for</span> stored_pkt, stored_ts <span style="color: #ff00ff;">in</span> sliding_window:
+
+            <span style="color: #ff00ff;">if</span> pkt == stored_pkt:
+
+                dup_count += <span style="color: #ff6600;">1</span>
+
+                found_dup(pkt, ts, stored_ts, verbosity)
+
+                <span style="color: #ff00ff;">break</span>
+
+        <span style="color: #ff00ff;">else</span>:
+
+            outfile.writepkt(pkt, ts)
+
+            pkt_count += <span style="color: #ff6600;">1</span>
+
+            <span style="color: #ff00ff;">if</span> <span style="color: #009900;">len</span>(sliding_window) &gt;= window_size:
+
+                <span style="color: #0000ff;"># once deque is full pop off the rightmost (oldest) item</span>
+
+                sliding_window.pop()
+
+            <span style="color: #0000ff;"># add a new entry to the left side of the packet deque</span>
+
+            sliding_window.appendleft((pkt, ts))
+
+    <span style="color: #009900;">print</span> &gt;&gt; sys.stderr, <span style="color: #009900;">"Of %d total packets, I wrote %d and found %d duplicates"</span> % (tot_count, pkt_count, dup_count)</pre>
+</div>
+<p>&nbsp;</p>
+<h5>What Size Window?</h5>
+<p>Certainly there is some magic in choosing a window size. Clearly the larger the window size, the longer the execution time of <em>pdd.py</em>. <a href="http://en.wikipedia.org/wiki/Big_O_notation">Big O</a> running time of searching the deque is always <a href="http://en.wikipedia.org/wiki/Linear_time#Linear_time">linear</a>, meaning that it scales with the size of the window and <em>pdd.py</em> will iterate over the entire window for packets that aren&#8217;t duplicated. Therefore, the user should choose the smallest effective window size. However, if too small of a size is chosen, duplicate packets could be missed. An optimal value should probably hinge upon the number of packets captured and the network topology as it relates to the expected number of duplicates. We&#8217;re not really concerned with the packet rate or speed of the network since we&#8217;re using an absolute packet window and not a time-based window. If the cause for duplication is a layer 2 configuration issue, the duplicates are likely to be laid out very tightly (in some cases sequentially). In this case, a smaller window will suffice. If something is causing the duplicate packets to be delayed before the sniffer sees them, then they might be more sparsely populated throughout the pcap file. As a default, we chose 12. It seemed to be a good compromise between speed and efficacy.</p>
+<h3>Another Option: Wireshark&#8217;s editcap</h3>
+<p>At the time of the project, unbeknownst to the SR&amp;O team, there existed prior art. As it so often happens in the byzantine world of computer security, someone else had encountered and solved our problem before we did. Inside the <a href="http://www.wireshark.org">Wireshark</a> suite exists a cache of command line tools including one called <em><a href="http://www.wireshark.org/docs/man-pages/editcap.html">editcap</a></em>. This handy tool allows a user to edit or translate the contents of a pcap file—including the ability to remove duplicate packets. As validation that indeed we were on the right track, <em>editcap</em> also employs a user-defined sliding window (and also offers the option to use a time-based window).</p>
+<h3>Conclusion</h3>
+<p>There&#8217;s no doubt that other tools and options may also exist to resolve packet duplication issues, but we hope we have provided you with not only a few options/solutions from our own experiences, but also a clear understanding of the root cause and the effective solutions.</p>
+<p>There are several key takeaways here:</p>
+<ul>
+<li>Know and understand the nature of your switching infrastructure – this helps with understanding where to place packet sniffers and ultimately the source and destination of the SPANs</li>
+<li>Know and understand the devices that are connected to these infrastructures – while we may not have discussed it, it is also important to know if servers have multiple/redundant connections to switches, how the keep alives and heartbeats are propogated, and so on, in order to understand the nature of packet flow and if you will see multiple/potentially duplicate packets on the same switch</li>
+<li>Use SPAN source interfaces vs port channels or VLANs where possible</li>
+<li>There is usually more than one way to skin a cat – sometimes it makes sense to find an existing solution while sometimes solving a problem on your own is a fun and rewarding exercise</li>
+</ul>
+<h3>Special Thanks</h3>
+<p><a href="http://www.linkedin.com/pub/andrae-middleton/a/406/64a">Andrae Middleton</a> actually co-wrote this blog with me. He wrote all of the switch configurations. Additionally, I could never have gotten anywhere in life without being under the tutelage of esteemed programming leviathans <a href="http://www.linkedin.com/in/williammcvey">William McVey</a> and <a href="http://stackoverflow.com/users/210613/synthesizerpatel">Nathan Ramella</a>. From them, I learned the wonderful <font color="red">Python</font> programming language.</p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=cyber-security-month-2012">cyber-security-month-2012</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=<font color="red">data</font>-telemetry"><font color="red">data</font> telemetry</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=<font color="red">security</font>-2">security</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">4 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+			<li>
+			<div id="comment-680475">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Jhon						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 16, 2012 at 9:42 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Another tool serving the same purpose from an old colleauge. Couldn't resist to promoto it :)
+
+http://myoss.belgoline.com/despan</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike680475" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-675932">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Dr. Jose A. Wong - Perez						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 5, 2012 at 9:44 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Just a very detailed explanation...really enjoy it and indeed enhances my class's security presentations...</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike675932" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-675713">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						tk						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 5, 2012 at 12:40 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>packet de/duplication is a serious issue when deploying IDS
+
+sometimes one might be abe to get around by using combinations of VACL &amp; RSPAN</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike675713" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-675479">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://www.constellationsecurity.com/' rel='external nofollow' class='url'>Greg MacPherson</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 4, 2012 at 1:38 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>As always, Mike is out on the bleeding edge doing what he does best - digging into the details and coming up with valuable nuggets.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike675479" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Security:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogSecurity', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogSecurity" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Security</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscosecurity?ref=nf"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/ciscosecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://youtubecisco.com/security"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogSecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.cert.org/blogs/vuls/" target="_blank">CERT Vulnerability Analysis</a></li>
+                      <li><a href="http://blogs.technet.com/b/srd/" target="_blank">Microsoft Security Research & Defense</a></li>
+                      <li><a href="http://isc.sans.edu/index.html" target="_blank">SANS Internet Storm Center</a></li>
+                      <li><a href="http://www.schneier.com/" target="_blank">Schneier on Security</a></li>
+                  </ul>
+              <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="http://www.cisco.com/en/US/products/products_security_advisories_listing.html" target="_blank">Advisories and Responses</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/cyberRiskReport.x" target="_blank">Cyber Risk Reports</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/intelliPapers.x?i=55" target="_blank">Security Best Practices</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/home.x" target="_blank">Security Intelligence Operations</a></li>
+                        <li><a href="http://www.cisco.com/en/US/products/hw/vpndevc/index.html" target="_blank">Security Products</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscosecurity?ref=nf'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/ciscosecurity'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 85863;
+			var orig_count = 3;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1IvhxIw&text=SPAN Packet Duplication: Problem and Solution&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/span-packet-duplication-problem-and-solution&title=SPAN Packet Duplication: Problem and Solution" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/span-packet-duplication-problem-and-solution" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/span-packet-duplication-problem-and-solution" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: SPAN Packet Duplication: Problem and Solution&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0ASPAN Packet Duplication: Problem and Solution%0A%0Ahttps://blogs.cisco.com/security/span-packet-duplication-problem-and-solution%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

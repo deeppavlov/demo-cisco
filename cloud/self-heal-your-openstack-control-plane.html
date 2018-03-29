@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Self-Heal Your OpenStack Control Plane</title>
+
+	<meta property="og:image" content="https://alln-extcloud-storage.cisco.com/ciscoblogs/IMG_3175-460x230.jpg"/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"193481"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Feel the Love!' href='https://blogs.cisco.com/datacenter/feel-the-love' />
+<link rel='next' title='Cisco Nexus Fabric Manager Wins Best of Interop 2016 Data Center Award!' href='https://blogs.cisco.com/datacenter/cisco-nexus-fabric-manager-wins-best-of-interop-2016-data-center-award' />
+
+<link rel="canonical" href="https://blogs.cisco.com/cloud/self-heal-your-openstack-control-plane" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=193481' />
+<meta property="og:image" content="http://i.ytimg.com/vi/ObOCQrtHK3M/default.jpg" />
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Self-Heal Your OpenStack Control Plane"/>
+  <meta property="og:url" content="https://blogs.cisco.com/cloud/self-heal-your-openstack-control-plane"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2016-05-05T13:15:34+00:00"/>
+  <meta property="article:modified_time" content="2016-05-05T13:17:43+00:00" />
+  <meta property="og:updated_time" content="2016-05-05T13:17:43+00:00" />
+  <meta property="article:section" content="Cloud"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Self-Heal Your OpenStack Control Plane"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/cloud/self-heal-your-openstack-control-plane"/>
+  <meta name="twitter:description" content="We went to Austin for BBQ, and an OpenStack Summit broke out...
+
+
+
+...OK, maybe that&#039;s not entirely true, but the BBQ was good.
+
+
+
+When we started this journey less than 5 weeks ago in preparation for the Austin OpenStack Summit, we&#039;d already collectively had many OpenStack deployments under our bel"/>
+  <meta name="twitter:image" content="https://alln-extcloud-storage.cisco.com/ciscoblogs/IMG_3175.jpg"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521514998";
+		var sig = "e4878d046baf46804b3bf458fef6909e";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1T1d6Ix&text=%23Openstack+Summit%3A+Self-Heal+Your+Openstack+Control+Plane&via=CiscoCloud" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/cloud/self-heal-your-openstack-control-plane&title=Self-Heal Your OpenStack Control Plane" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/cloud/self-heal-your-openstack-control-plane" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/cloud/self-heal-your-openstack-control-plane" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Self-Heal Your OpenStack Control Plane&body=I saw this post on Cisco Cloud blog and thought you might like to read it.%0A%0ASelf-Heal Your OpenStack Control Plane%0A%0Ahttps://blogs.cisco.com/cloud/self-heal-your-openstack-control-plane%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/cloud/'>Cloud</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/IMG_3175-460x230.jpg">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Cloud  						</span>
+						<h1 id="post-193481" class="kindle_title title">Self-Heal Your OpenStack Control Plane</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1462467699-bpthumb.jpg"></div><div class="author_rewards_box"></div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/randytuttle" title="Posts by Randy Tuttle" rel="author">Randy Tuttle</a> - May 5, 2016 - 0 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p>We went to Austin for BBQ, and an <font color="red">OpenStack</font> <font color="red">Summit</font> broke out&#8230;</p>
+<p>&#8230;OK, maybe that&#8217;s not entirely true, but the BBQ was good.</p>
+<p>When we started this journey less than 5 weeks ago in preparation for the Austin <font color="red">OpenStack</font> <font color="red">Summit</font>, we&#8217;d already collectively had many <font color="red">OpenStack</font> <font color="red">deployments</font> under our belts, both manually deployed and through the use of <font color="red">automation</font>, for example through the use of <font color="red">automation tools</font> like <font color="red">Ansible</font>. We went from days and weeks to deploy, down to hours. We experienced a lot of pain each time, even as we&#8217;d done our Nth <font color="red">deployment</font>. But we somehow felt that, even with <font color="red">automation</font>, it was not good enough. Some capabilities were still missing from the final product.</p>
+<p>With CI/CD so pervasive now, coupled with <font color="red">DevOps</font>, we thought that there must be a better, faster way to commoditize the spin up of an <font color="red">OpenStack</font> <font color="red">cloud</font>. In other words, could we make it available to the masses. To plot our course, we needed a vision of what a good <font color="red">deployment</font> might look like.</p>
+<h2><strong>Our Vision</strong></h2>
+<p>So what was our vision when we talk about the <font color="red">OpenStack</font> <font color="red">control plane</font>? Ideally, it would have some of the following characteristics:</p>
+<ul>
+<li><strong>Easily Deployed: </strong>With minimal steps, I have a functional <font color="red">OpenStack</font> environment, spending fewer man-hours, and requiring minimal expertise, especially around configuration and troubleshooting.</li>
+<li><strong>Consistent &amp; Repeatable</strong>: Any <font color="red">deployment</font> should be repeatable and easily replicated across organizations with consistent outcomes. We want to spend less time troubleshooting when we have consistent outcomes.</li>
+<li><strong>Quickly Operationalized</strong>: In many <font color="red">OpenStack</font> <font color="red">deployments</font>, we need to <font color="red">overlay</font> an Operations stack to effectively monitor the <font color="red">OpenStack</font> <font color="red">deployments</font>. This takes a specific set of engineering skills. Ideally, I would like have an operational, fully functioning stack in 5-10 minutes, including monitoring its behaviors and the ability for straightforward, in-service upgrades.</li>
+<li><strong>Customizations</strong>: Should be able to quickly and easily drop in value-added features and <font color="red">services</font>.</li>
+<li><strong>Scalability</strong>: Ideally, this would be mostly “hands-off”, and should expand to a maximum <font color="red">scale</font> to meet demand, but then retract to a minimum “guaranteed” <font color="red">scale</font> when demand subsides.</li>
+<li><strong>Self-Healing</strong>: Any solution should also self-heal upon failure. In other words, let’s put our primary focus on maximizing <font color="red">availability</font> and secondarily addressing the cause of failure.</li>
+<li><strong>Improved <font color="red">Service Level</font> Agreements</strong>: With more <font color="red">uptime</font>, and confirmation that <font color="red">services</font> are performing at the level that is expected, we expect improved <font color="red">SLAs</font>.</li>
+</ul>
+<p>The focus of this blog post is to give attention to addressing a solution that is <span style="text-decoration: underline;">Easily Deployed</span>, <span style="text-decoration: underline;">Quickly Operationalized</span>, be <span style="text-decoration: underline;">Consistent</span> and <span style="text-decoration: underline;">Repeatable</span> across <span style="text-decoration: underline;"><font color="red">DevOps</font></span>, and finally, <span style="text-decoration: underline;">Self-Healed</span>, with our primary focus on <font color="red">availability</font>.</p>
+<h2>The Pain</h2>
+<p>Pain is a great motivator, and as previously mentioned, we experienced a lot of it during our <font color="red">deployments</font> of <font color="red">OpenStack</font>. Here are three areas where we&#8217;ve experienced some pain, which were key motivators driving our thoughts.</p>
+<p><font color="red"><strong>Deployment</strong></font></p>
+<p>Everybody wants it fast (or yesterday)!! When we talk about “fast”, it’s usually synonymous with <font color="red">automation</font>. And furthermore, most people would agree that <font color="red">automation</font> is table stakes in <font color="red">DevOps</font>. Some <font color="red">automation tools</font> are now available using <font color="red">Ansible</font>, Chef, Puppet, etc. These have emerged to aid and speed <font color="red">deployment</font>, some of which a few <font color="red">OpenStack</font> projects utilize (e.g., Kolla). But these have the appearance of being adjunct to the core of <font color="red">OpenStack</font>, and are still time consuming to setup.</p>
+<p>Despite improvements in <font color="red">OpenStack</font> documentation, they are still targeted to more of a generalized <font color="red">deployment</font> approach, with indications of what knobs to tweak for added flexibility. And while <font color="red">OpenStack</font> is quite flexible, it is this flexibility that organizations struggle to overcome when adapting to their <font color="red">deployment</font> <font color="red">architecture</font>. Enterprises are left with a &#8220;do it yourself&#8221; approach or utilizing one of many vendor turn-key solutions.</p>
+<p><strong>Inconsistencies in build and <font color="red">deployment</font> environments</strong></p>
+<p>What worked last week no longer works this week!!!! Differing dependencies between development, staging and <font color="red">production environments</font> can lead to breakage at any point along the way (e.g., packages, libraries, operating systems distros, kernel version). Some of this may be attributable to complicated organizational processes, which tend to have many moving parts, with many points of failure and opportunities for miscommunication.</p>
+<p><strong>Operationalization</strong></p>
+<p>First off, we need to engineer what our system should be capable of handling. That is, what is the appropriate <font color="red">scale</font>, or how big should we make it to meet our anticipated demand? This <font color="red">capacity planning</font> and <font color="red">scale</font> testing adds significant, up-front man-hours, which can delay time-to-market. And yet, even with such planning, systems still tend to be over-provisioned because no one really knows what demand will be. Furthermore, when additional capacity is needed, expanding a system may result in more capacity than needed. We then must &#8220;stitch in&#8221; that added capacity into our system. Of course, the other side of this coin is that added capacity is not always removed when it&#8217;s no longer needed, leaving excess capacity stranded. So by having elasticity, we could spend less time with up-front engineering, moving quickly to <font color="red">service deployment</font>, allowing an auto-scaling system to handle elasticity around our pre-determined policies.</p>
+<p>When we talk about operationalization, traditional monitoring tools are not enough anymore; they are more reactive than proactive. We need more advanced tools to collect additional metrics (e.g., U-S-E), metrics that trigger failovers or adapt <font color="red">scale</font> based on demands. Such metrics can also provide teams with solid feedback on where adjustments may be needed. Of course, it is desirable that some of the metrics collected are tied to business outcomes. For example, <font color="red">latency</font> tied to <font color="blue">user experience</font>, because after all, isn&#8217;t <font color="blue">user experience</font> what it&#8217;s all about anyway? But every coin has two sides. More advanced tooling requires specialized engineering skills to standup and monitor.</p>
+<p>As we’ve stated in our vision, our primary focus is <font color="red">service availability</font> first, and failure cause is secondary. We also lack built-in <font color="red">service</font> healing without utilizing <font color="red">overlay</font> <font color="red">automation</font>. Again, self-healing should be the desired end-game, with our attention placed on <font color="red">service availability</font> and, where finding the cause of failures, should be secondary.</p>
+<p><strong>Traditional <font color="red">OpenStack</font> <font color="red">Control Plane</font> Design</strong></p>
+<p>So what makes up an HA <font color="red">control plane</font>, and where do some of our <font color="red">pain points</font> manifest? We know that the goals of an HA <font color="red">control plane</font> design are to eliminate single points of failure. We have multiple compute instances, of course. We lay in our networking and <font color="red">controllers</font>, replicate as needed, and glue it altogether using tools like keepalived and load-balancers. Finally, we throw in some fixed scaling decisions, and, viola!!, we have our HA stack.</p>
+<p><img class="aligncenter size-large wp-image-193485" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/OSCP-HA-Arch-550x367.png" alt="OSCP HA Arch" width="550" height="367" /></p>
+<p>In its traditional form, this type of design has some <font color="red">pain points</font>. Generally, when a <font color="red">service</font> is created, expanded, or contracted, the load-balancing function must be updated to reflect the changes in the <font color="red">service</font>. This can be a tedious, error-prone, manual process, or may require an <font color="red">overlay</font> of <font color="red">orchestration</font> to complete. We’d prefer if these load-balancing updates are handled behind the scenes, without our intervention.</p>
+<p><font color="red">Control plane</font> components are HA as we note, were the redundant <font color="red">services</font> are distributed across various <font color="red">controller</font> instances. This works well under optimal conditions, such as, where demand is at or near “engineered” levels or under single fault conditions. But when a fault occurs, HA may be lost on multiple <font color="red">services</font> because those replicated <font color="red">services</font> tend to be bunched together. With demand at or near engineered levels, this may be tolerable. But under higher load, perhaps not so much. Moreover, we may invest several man-hours trying to determine where the failure cause lies. We’d like to have a self-healing <font color="red">control plane</font>, and know with confidence that a <font color="red">service</font> would function with maximum <font color="red">availability</font>.</p>
+<p>When we build out a traditional <font color="red">control plane</font>, we tend to take our best-guess estimate, or even utilize some empirical data, to predict anticipated demand. While imperfect, it can lead to over or under-engineered systems. These issues may manifest as poor <font color="blue">user experience</font> (e.g., due to high <font color="red">latencies</font>) or underutilized capacity. Over-utilization results in either a rebuild to expand capacity or requires additional <font color="red">nodes</font>. This may then lead to idle / unused capacity during low demand periods. It becomes challenging to find the right balance, and operationally it becomes onerous to manage. It became clear that we&#8217;d much rather prefer if our system can <font color="red">scale</font> up or down to meet demand, operating within a minimum or maximum range, with <font color="red">workloads</font> placed when and where needed.</p>
+<p><strong>Enter Kubernetes: A light in a sea of darkness</strong></p>
+<p>When considering the key aspects of our Vision mentioned previously, we think about many of Kubernetes&#8217; attributes, and the attributes of <font color="red">containers</font> in general, and how these can accommodate many of our needs. Let&#8217;s quickly review some of those.</p>
+<p><strong><font color="red">Kubernetes</font>&#8217; advantages</strong></p>
+<ul>
+<li><strong>Declarative</strong> &#8211; Allows your <font color="red">applications</font> to be deployed quickly and predictably. Kubernetes works to monitor the current state of <font color="red">services</font> and synchronizes it with the desired state as defined by you. This means that if an <font color="red">application</font> <font color="red">container</font> temporarily goes down, and you have declared that you need three copies of that <font color="red">application</font>, it is the responsibility of Kubernetes to start up another <font color="red">container</font>.</li>
+<li><font color="red"><strong>Scale</strong></font> &#8211; <font color="red">applications</font> are <font color="red">scaled</font> on demand instead of requiring resources to be allocated statically. The current version of Kubernetes can <font color="red">scale</font> up to 1,000 <font color="red">nodes</font> and 30,000 <font color="red">containers</font> per <font color="red">cluster</font>.</li>
+<li><strong>Easy to Build and Update</strong> &#8211; You can build a fully functional, self-healing <font color="red">control plane</font> in as little as 5 minutes. You can seamlessly roll out new features to existing <font color="red">deployments</font> without the need for downtime.</li>
+<li><strong>Efficient</strong> &#8211; Use only the resources you need, avoiding over provisioning and increasing your average <font color="red">server</font> utilization rate.</li>
+</ul>
+<p><strong>Why Kubernetes has value in an <font color="red">OpenStack</font> <font color="red">control plane</font></strong></p>
+<p>Some of the nicest features about Kubernetes, and why it gets our attention, is its self-healing attributes; namely, auto-restart, auto-scale, auto-replication. Those are features that are needed now, not tomorrow.</p>
+<p>It&#8217;s consistent with your build and your resources. You pragmatically and efficiently use only the resources you need&#8230;on demand.</p>
+<p>It has built-in <font color="red">API</font> health checks (specifically, <font color="red">application</font>- or service-centric health checking) as well as the afore-mentioned self-healing <font color="red">services</font> help lead to greater <font color="red">uptime</font> of <font color="red">services</font>. And more up-time is always a good thing, right?</p>
+<p><strong>Redesigning our <font color="red">OpenStack</font> <font color="red">control plane</font></strong></p>
+<p>Reviewing our previously discussed HA <font color="red">control plane</font> <font color="red">architecture</font>, and then updating it with the proposed <font color="red">architecture</font>, we replace the HAProxy instances with kube-proxy. Each <font color="red">service</font> is built out separately, and managed and monitored via Kubernetes. We achieve failover by having multiple copies of each <font color="red">service</font>, that we <font color="red">scale</font> up or down based off of need. The <font color="red">load balancing</font> that we found to be tedious to update with HAProxy, is updated in unison, without the need to reconfigure manually or through a separate layer of <font color="red">automation</font>.</p>
+<p><img class="aligncenter size-large wp-image-193484" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/OSCP-on-Kube-550x261.png" alt="OSCP on Kube" width="550" height="261" /></p>
+<p>The <font color="red">architecture</font> looks similar to the tradition HA <font color="red">control plane</font> from an exposed <font color="red">service</font> perspective, but in the next section you’ll see how we’ve built, <font color="red">scaled</font>, and monitored our <font color="red">control plane</font> within Kubernetes.</p>
+<p>Self Healed <font color="red">OpenStack</font> <font color="red">Control Plane</font></p>
+<ul>
+<li>First, we build each <font color="red">OpenStack</font> <font color="red">service</font> (in this case glance-api) from a corresponding Dockerfile, matching our defined standard (version, packages, volumes, and config)</li>
+<li>Containers are built as replicated <font color="red">services</font>, grouped together as pods, and exposed via kube-proxy as an <font color="red">OpenStack</font> <font color="red">service</font> port.</li>
+<li>Health check probes, which are native to the build process and managed by the kubelet, are added to each pod configuration to perform pre-build readiness checks as well as the check the health of the pod post-build.</li>
+<li>In the instance of a pod failure (and provided you’ve declared more than one replica in your build), then a copy is rebuilt, making the <font color="red">service</font> ‘self heal’.</li>
+<li>And then we leverage <font color="red">Kubernetes</font> built-in monitoring to detect <font color="red">service</font> disruption/repair as well as customizing our resource utilization.</li>
+</ul>
+<p><img class="aligncenter size-large wp-image-193486" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/OSCP-on-Kube-self-heal-550x243.png" alt="OSCP on Kube self-heal" width="550" height="243" /></p>
+<h2>Why We Selected <font color="red">Kubernetes</font>?</h2>
+<p><strong>Provisioning and <font color="red">Orchestration</font></strong></p>
+<p>What we like about Kubernetes is that it&#8217;s a complete, automated <font color="red">container</font> platform. With it, we can have a fully functional, self-healed <font color="red">control plane</font> in about than 5 mins, thus spending less time on the installation/configuration and more time customizing it to fit our needs. It&#8217;s also easier to provision and orchestrate new or existing <font color="red">applications</font>, as pods can start in seconds versus the minutes it takes <font color="red">VMs</font> to startup. Finally, it allows us to eliminate the need to worry about over/under provisioning, reducing the time needed for additional <font color="red">capacity planning</font>.</p>
+<p><strong>CI/CD Consistency</strong></p>
+<p>First off, it’s easy to deploy and maintain <font color="red">applications</font>. Since Kubernetes leverages <font color="red">Docker</font> as the build and <font color="red">deployment</font> artifact, we gain a portable and sharable package in which a company can deploy their software to almost any infrastructure stack. Anyone who can build a Dockerfile can build a replicated <font color="red">service</font> <font color="red">application</font> in Kubernetes.</p>
+<p>We also like that Kubernetes provides fully-integrated <font color="red">deployment</font> options like rolling updates (for version or security purposes as an example), greenfield/brownfield <font color="red">deployments</font>, and A/B testing. We found upgrading to no longer be a disruptive procedure, but a productive one.</p>
+<p><font color="red"><strong>Scaling</strong></font></p>
+<p>Benefit of the Kube-Service is its ability to maintain connectivity to the the underlying <font color="red">service</font> <font color="red">aggregation</font> even when it is rescheduled to a different <font color="red">node</font> after failing and/or if the Pod&#8217;s <font color="red">IP</font> address changes. A key benefit for us is that it wasn’t a necessary to spend additional time to reconfigure a <font color="red">load balancer</font> due to change….<font color="red">Kubernetes</font> does it for you.</p>
+<p>We also like that there&#8217;s significant cost reduction by increasing your average <font color="red">server</font> utilization rate and therefore reducing your <font color="red">server</font> footprint. Many environments run their <font color="red">VM</font>’s with a low utilization rate (sometimes as low as 10%) while <font color="red">applications</font> in a Kubernetes <font color="red">cluster</font> can see a much higher utilization rate (often as high as 70%).</p>
+<p><strong>Self-healing</strong></p>
+<p>Kubernetes has built in self-healing mechanisms, such as auto-restarting, re-scheduling, and replicating <font color="red">containers</font>. As a user, you just define the state and Kubernetes ensures that the state is met at all times on the <font color="red">cluster</font>. We’ve all had issues troubleshooting <font color="red">OpenStack</font> <font color="red">services</font>, whether it&#8217;s in the pre-build <font color="red">architecture</font> or post build <font color="red">service</font> failure. With the ability to maintain <font color="red">service</font> <font color="red">uptime</font>, you replace the “what happened?” with “well, it self-corrected.”</p>
+<p>I’d like to reiterate the point that **maximizing <font color="red">service availability</font> should always take priority** to finding the cause of failure. Not to ignore the cause, but up-time is king to maintaining any guarantees on your <font color="red">SLA</font>.</p>
+<h2>Closing Thoughts</h2>
+<p><strong><font color="red">OpenStack</font> <font color="red">deployment</font> can be easy and fast</strong></p>
+<p>With manual installation/configurations of the ancient age, we talked about days of work to bring up an <font color="red">OpenStack</font> <font color="red">cluster</font> with tons of &#8220;Layer 8 errors&#8221; and months chaos. With the advent of <font color="red">automation tools</font> such as <font color="red">Ansible</font>, we brought it down to hours; however, that was still not good enough.  As we <a href="https://www.youtube.com/watch?v=ObOCQrtHK3M" target="_blank">demonstrated at the Austin <font color="red">OpenStack</font> <font color="red">Summit</font></a>, it is possible to have a fully-automated approach to having a functional, self-healed <font color="red">OpenStack</font> <font color="red">control plane</font> in 5 mins. For our friends in <font color="red">Service</font> team and Q/A team, we would love to hand it over to you so you can spend less time on installation/configuration, and MORE time to make your customer happy, or develop/execute automated test suite to ensure the code is always in deployable state.</p>
+<p><strong>CI/CD is quite feasible</strong></p>
+<p>Throughout the cycle of Continuous Integration, <font color="red">Continuous Delivery</font>, Continuous <font color="red">Deployment</font>, we anticipate small batch sizes of work flowing through Dev, to Q/A, to Operation teams. The original thinking is to dramatically increase the productivity by creating an environment on demand, limiting WIF, and build a system which is safe to change. However, in reality, quite often that is not the case. It causes more delay due to inconsistency between Development environment (for unit and functional testing), and Staging environment (to test business logic, find design issues and corner cases in the <font color="red">scale</font> testing), and <font color="red">Production environment</font>, which is the counter to the ultimate goals for any business. Given the nature of <font color="red">container</font> to packaging your apps and its dependencies such as library and binaries, we can create a virtual isolation on top of your <font color="red">physical servers</font> to avoid the conflicts; Don’t forget that Kubernetes provides <font color="red">lifecycle management</font>, so creating an env on demand is quite feasible. When your Developers needs an env, we can bring it up in secs; When she doesn’t need it, we can remove it within secs. It’s never been so easy before.</p>
+<p><strong>Operations will become more challenging&#8230;but still achievable</strong></p>
+<p>For our friends from the Operation teams, please don’t feel that you are being left out. With all of this good news for the Dev, Q/A teams, we have a bit of bad news for you. When you get paged 2 in the morning, you may already have felt the pain of <font color="red">OpenStack</font> <font color="red">control plane</font>. Now with at least three replicas, the <font color="red">complexity</font> level is at least multiplied by 3. To make the matters worse, the <font color="red">container</font> names can be changed due to self-healing and the number of <font color="red">containers</font> can be quite dynamic triggered by autoscaling; Considering the 10+ <font color="red">deployments</font> every day, the <font color="red">complexity</font> level will be exponential. However, we firmly believe a solid operational solution is still achievable, and perhaps, we can make this the talk of a future post.</p>
+<p><strong>It is all about improving efficiency</strong></p>
+<p>For the Decision Makers, we can summarize this article in one word: <span style="text-decoration: underline;"><strong>EFFICIENCY</strong></span>. It is all about improving the efficiency (sales and sales velocity), isn’t it? What has been discussed is a new way of applying a technology, developed outside of <font color="red">OpenStack</font> community, onto the <font color="red">OpenStack</font> <font color="red">cloud</font> itself. The <font color="red">business value</font> is quite obvious. It drives down the cost and increases the usability of your <font color="red">OpenStack</font> <font color="red">cloud</font> by a significant factor. If you are willing to shift cost-performance curve even further, then join us in Barcelona and we will show you more.</p>
+<p><a href="https://www.youtube.com/watch?v=ObOCQrtHK3M" target="_blank">Check out our session at <font color="red">OpenStack</font> <font color="red">Summit</font>!</a></p>
+<p><i>A special thanks to Derek Chamorro, Shixiong Shang who were both extremely instrumental in pulling this entire effort together.</i></p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=cloud-orchestration">cloud orchestration</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=containers">containers</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=docker">docker</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=kubernetes">Kubernetes</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=openstack">OpenStack</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+		</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Cloud:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogCloud', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogCloud" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Cloud</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/CiscoCloud"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/CiscoCloud"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://www.youtube.com/Cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogCloud"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+</ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/CiscoCloud'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/CiscoCloud'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 193481;
+			var orig_count = 0;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1T1d6Ix&text=%23Openstack+Summit%3A+Self-Heal+Your+Openstack+Control+Plane&via=CiscoCloud" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/cloud/self-heal-your-openstack-control-plane&title=Self-Heal Your OpenStack Control Plane" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/cloud/self-heal-your-openstack-control-plane" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/cloud/self-heal-your-openstack-control-plane" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Self-Heal Your OpenStack Control Plane&body=I saw this post on Cisco Cloud blog and thought you might like to read it.%0A%0ASelf-Heal Your OpenStack Control Plane%0A%0Ahttps://blogs.cisco.com/cloud/self-heal-your-openstack-control-plane%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

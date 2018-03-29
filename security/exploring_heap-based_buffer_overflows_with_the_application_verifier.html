@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Exploring Heap-Based Buffer Overflows with the Application Verifier</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; Exploring Heap-Based Buffer Overflows with the Application Verifier Comments Feed" href="https://blogs.cisco.com/security/exploring_heap-based_buffer_overflows_with_the_application_verifier/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"8723"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Cisco ASR 1000 celebrates 2nd anniversary, wins Best of Test Award for 2010' href='https://blogs.cisco.com/enterprise/cisco_asr_1000_celebrates_2nd_anniversary_wins_best_of_test_award_for_2010' />
+<link rel='next' title='5 Ways Financial Service Companies are Using Video Conferencing' href='https://blogs.cisco.com/video/5-ways-financial-service-companies-are-using-video-conferencing' />
+
+<link rel="canonical" href="https://blogs.cisco.com/security/exploring_heap-based_buffer_overflows_with_the_application_verifier" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=8723' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Exploring Heap-Based Buffer Overflows with the Application Verifier"/>
+  <meta property="og:url" content="https://blogs.cisco.com/security/exploring_heap-based_buffer_overflows_with_the_application_verifier"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2010-03-29T12:00:00+00:00"/>
+  <meta property="article:modified_time" content="2011-03-23T10:49:56+00:00" />
+  <meta property="og:updated_time" content="2011-03-23T10:49:56+00:00" />
+  <meta property="article:section" content="Security"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Exploring Heap-Based Buffer Overflows with the Application Verifier"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/security/exploring_heap-based_buffer_overflows_with_the_application_verifier"/>
+  <meta name="twitter:description" content="Isolating the root cause of a heap-based buffer overflow can be tricky at best. Thankfully, Microsoft provides a great tool called the Application verifier, which makes the process significantly gentler.In this post, we will look at how to use the Application Verifier to pinpoint the source of a hea"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521514398";
+		var sig = "07e2069585b6adba16d067687cb2a935";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1crWokJ&text=Exploring Heap-Based Buffer Overflows with the Application Verifier&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/exploring_heap-based_buffer_overflows_with_the_application_verifier&title=Exploring Heap-Based Buffer Overflows with the Application Verifier" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/exploring_heap-based_buffer_overflows_with_the_application_verifier" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/exploring_heap-based_buffer_overflows_with_the_application_verifier" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Exploring Heap-Based Buffer Overflows with the Application Verifier&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0AExploring Heap-Based Buffer Overflows with the Application Verifier%0A%0Ahttps://blogs.cisco.com/security/exploring_heap-based_buffer_overflows_with_the_application_verifier%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/security/'>Security</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category50.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Security  						</span>
+						<h1 id="post-8723" class="kindle_title title">Exploring Heap-Based Buffer Overflows with the Application Verifier</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/NeilArchibald.thumbnail.4cb6284c187bb.jpg"></div><div class="author_rewards_box"></div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/NeilArchibald" title="Posts by Neil Archibald" rel="author">Neil Archibald</a> - March 29, 2010 - 1 Comment      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p>Isolating the root cause of a heap-based buffer overflow can be tricky at best. Thankfully, Microsoft provides a great tool called the <a href="http://www.microsoft.com/DownLoads/details.aspx?familyid=C4A25AB9-649D-4A1B-B4A7-C9D8B095DF18&amp;displaylang=en" target="_blank"><font color="red">Application</font> verifier</a>, which makes the process significantly gentler.</p>
+<p>In this post, we will look at how to use the <font color="red">Application</font> Verifier to pinpoint the source of a heap overflow in a binary. Due to the fact that it is difficult to find a publicly available and easy-to-trigger heap overflow <font color="red">vulnerability</font> in an <font color="red">application</font> whose EULA does not prevent <font color="red">reverse engineering</font>, I have created a small sample <font color="red">application</font> that contains a heap overflow for this purpose.</p>
+<p><span id="more-8723"></span></p>
+<p>The sample <font color="red">application</font> (<font color="red">contactsheap</font>) simply parses a custom &ldquo;contact&rdquo; file (.ct) and displays it neatly. This trivial file format was designed for the specific purpose of this post and is not (to my knowledge) used anywhere.</p>
+<p>The output below shows a sample run of the <font color="red">application</font> on a contact file (phil.ct).</p>
+<p><div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp;C:UsersuserDesktop<font color="red">contactsheap</font>contactsheapDebug&amp;gt;contactsheap.exe phil.ct&lt;br /&gt; -----[ contactsheap ]-------&lt;br /&gt; 2010 <font color="red">Cisco</font> Systems&lt;br /&gt; ----------------------------&lt;br /&gt; [+] Contact:&lt;br /&gt; Name: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Mr Phil Dangerfield&lt;br /&gt; Age: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;35&lt;br /&gt; Location: &nbsp; &nbsp; &nbsp; Austin, TX&lt;br /&gt;</div></div>
+</p>
+<p>As you can see, the contact file in question contains the details for someone called Phil, age 35 from Austin, TX.</p>
+<p>If we use the &ldquo;xxd&rdquo; utility (available from <a href="http://unxutils.sourceforge.net" target="_blank">http://unxutils.sourceforge.net</a>) to dump the contact file in a readable fashion we can already see that the format is quite readable.</p>
+<p><div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp;C:UsersuserDesktopcontactsheapcontactsheapDebug&amp;gt;xxd phil.ct&lt;br /&gt; 0000000: 1100 0000 5068 696c 2044 616e 6765 7266 &nbsp;....Phil Dangerf&lt;br /&gt; 0000010: 6965 6c64 0003 0000 0033 3500 0b00 0000 &nbsp;ield.....35.....&lt;br /&gt; 0000020: 4175 7374 696e 2c20 5458 0003 0000 004d &nbsp;Austin, TX.....M&lt;br /&gt; 0000030: 7200 0d0a &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;r....&lt;br /&gt;</div></div>
+</p>
+<p>For the sake of this post, however, let&#8217;s pretend that we have run a fuzzer against phil.ct and triggered a crash when it is opened with contactsheap.exe. To investigate this crash we can begin by running the <font color="red">application</font> within the cdb debugger. This debugger is part of the Debugging Tools for Windows package, and is basically the command line version of Windbg. The Debugging Tools for Windows package is available <a href="http://www.microsoft.com/whdc/DevTools/Debugging/default.mspx" target="_blank">at Microsoft.com</a>.</p>
+<p><div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp;C:UsersuserDesktop<font color="red">contactsheap</font>contactsheapDebug&amp;gt;cdb contactsheap.exe bad.ct&lt;br /&gt; Microsoft (R) Windows Debugger Version 6.11.0001.404 AMD64&lt;br /&gt; Copyright (c) Microsoft Corporation. All rights reserved.&lt;br /&gt; CommandLine: contactsheap.exe bad.ct&lt;br /&gt; 0:000:x86&amp;gt; g&lt;br /&gt; -----[ contactsheap ]-------&lt;br /&gt; 2010 <font color="red">Cisco</font> Systems&lt;br /&gt; ----------------------------&lt;br /&gt; [+] Contact: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA[additional text removed]&lt;br /&gt; Phil Dangerfield&lt;br /&gt; Age: &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;35&lt;br /&gt; Location: &nbsp; &nbsp; &nbsp; Austin, TX&lt;br /&gt; (23a0.1c4): Access violation - code c0000005 (first chance)&lt;br /&gt; First chance exceptions are reported before any exception handling.&lt;br /&gt; This exception may be expected and handled.&lt;br /&gt; ntdll32!RtlImageNtHeader+0x92f:&lt;br /&gt; 77163913 8b12 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;mov &nbsp; &nbsp; <font color="red">edx</font>,dword ptr [<font color="red">edx</font>] &nbsp;ds:002b:41414141=????????&lt;br /&gt; 0:000:x86&amp;gt;&lt;br /&gt;</div></div>
+</p>
+<p>As you can see, this <font color="red">application</font> is crashing on a read instruction reading from the address 0x41414141 (&ldquo;AAAA&rdquo;). If we use the &ldquo;k&rdquo; command to determine the stack back trace for the running <font color="red">application</font>, we can see that this occurred after ExitProcess() was called. From this we can probably make a guess that the heap was smashed with the repeating &ldquo;A&rdquo; character; however, we don&rsquo;t know the reason why at this stage. This is where the <font color="red">Application</font> Verifier helps us out.</p>
+<p>The <font color="red">Application</font> Verifier (appverif.exe) is a utility created by Microsoft to aid with the investigation of a variety of software bugs. It is available as a <a href="http://www.microsoft.com/DownLoads/details.aspx?familyid=C4A25AB9-649D-4A1B-B4A7-C9D8B095DF18&amp;displaylang=en" target="_blank">small download from the Microsoft website</a>. It provides a variety of options for monitoring different aspects of an <font color="red">application</font> at runtime. However, in order to limit the scope of this post, we will focus on the heap debugging functionality.</p>
+<p>The options for heap debugging present in the <font color="red">Application</font> Verifier are a combination of the gflags and <font color="red">pageheap</font> functionality accessible through one convenient user interface. Essentially, this functionality allows us to force an <font color="red">application</font> to use the <font color="red">pageheap</font> allocator instead of the default memory allocator on Windows. The <font color="red">pageheap</font> allocator will allocate a full page per requested chunk. It then makes sure that the page after the allocation in memory is unmapped. This works as a guard page, and basically means that if memory access takes place outside the boundaries of the allocated chunk it will result in an instant access violation at the exact time of access.</p>
+<p>In order to begin using this functionality we start by running the appverif.exe <font color="red">application</font>, (typically C:WINDOWSSYSTEM32APPVERIF.EXE), right clicking on the <font color="red">Applications</font> field and selecting &ldquo;Add <font color="red">Application</font>&rdquo;.</p>
+<p><img src="https://alln-extcloud-storage.cisco.com/ciscoblogs/image13.jpg" alt="" /></p>
+<p>We can then browse to our contactsheap.exe <font color="red">application</font> and click OK. This adds contactsheap.exe to our <font color="red">Application</font> textbox. The Tests field on the right-hand side of the window allows us to select the various run-time tests we wish to enable for our <font color="red">application</font>. For the sake of this post though, we&#8217;re only interested in the &ldquo;Basics -&gt; Heaps&rdquo; tests. If we right-click on these and select Properties we can fine tune our heap debugging options.</p>
+<p><img src="https://alln-extcloud-storage.cisco.com/ciscoblogs/image24.jpg" alt="" /></p>
+<p>As you can see from the screenshot below, there are a variety of options for configuring our heap tests.</p>
+<p>We will run through a few of the relevant options we need to debug the <font color="red">contactsheap</font> <font color="red">vulnerability</font> mentioned above.  However, the rest of the options are explained in detail in the help file that ships with the <font color="red">Application</font> Verifier.</p>
+<p><img src="https://alln-extcloud-storage.cisco.com/ciscoblogs/image32.jpg" alt="" /></p>
+<p>The first option on our list, &ldquo;Full&rdquo;, toggles between the usage of  &ldquo;normal <font color="red">page heap</font>&rdquo; or &ldquo;full <font color="red">page heap</font>&rdquo;. Full <font color="red">page heap</font> is what was described above with an unmapped guard page after each allocation. For obvious reasons, this is a very slow process, and can cause some <font color="red">applications</font> to be completely unresponsive. In contrast, Normal <font color="red">page heap</font> simply uses &ldquo;cookie&rdquo; values before and after each allocated chunk. When a chunk is HeapFree()&rsquo;ed or HeapAlloc()&rsquo;ed, the integrity of the current heap is checked. This is clearly much less overhead than using the full <font color="red">pageheap</font> method, although it will not be as accurate.</p>
+<p>Another option available if Full <font color="red">page heap</font> is required but the overhead is too great is to specify a size range using the size fields shown above. These fields let you select a range of chunk sizes in which to use the <font color="red">page heap</font>. The rest of the allocations will be allocated using the normal allocator. This results in a faster solution, but has the downside that the approximate size of the chunk you&#8217;re overflowing must be known prior to debugging.</p>
+<p>The Windows memory allocator has been designed in such a way that a different &ldquo;front end allocator&rdquo; can be used in different situations. On Windows XP the default was to use a Look-aside list as the front end allocator; however, on Windows Vista and later the default is now to use the Low Fragmentation Heap (LFH). The option UseLFHGuardPages, shown at the bottom of the panel above, causes guard pages to be inserted in the case that the LFH front-end allocator is being used. This is turned on since I&#8217;m using Windows 7 for this test.</p>
+<p>Once we have selected our options, we can click OK and then Save to apply our settings. This will create registry entries for the <font color="red">Application</font> with the settings so that they will be applied whenever the <font color="red">application</font> is invoked. Now we are ready to once again run contactheap.exe under the cdb debugger.</p>
+<p><div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp;0:000:x86&amp;gt; g&lt;br /&gt; -----[ <font color="red">contactsheap</font> ]-------&lt;br /&gt; 2010 <font color="red">Cisco</font> Systems&lt;br /&gt; ----------------------------&lt;br /&gt; [+] Contact:&lt;br /&gt; (3b9c.3a28): Access violation - code c0000005 (first chance)&lt;br /&gt; First chance exceptions are reported before any exception handling.&lt;br /&gt; This exception may be expected and handled.&lt;br /&gt; MSVCR90D.dll -&lt;br /&gt; MSVCR90D!getc_nolock+0x13c9:&lt;br /&gt; 6944a189 8802 mov <font color="red">byte</font> ptr [<font color="red">edx</font>],al ds:002b: 06e42000 =??&lt;br /&gt;</div></div>
+</p>
+<p>As you can see, once again we have a crash accessing an unmapped memory address. However, this time rather than it being a memory read instruction to 0x41414141 we have a crash on a write instruction, moving one <font color="red">byte</font> into the location 06e42000. The fact that our address is page aligned (0x1000) indicates already that we are probably accessing the start of one of our heap guard pages.  If we use the &ldquo;r&rdquo; command to dump the contents of the <font color="red">eax</font> register we can see that it contains the value 41. We can therefore assume that this instruction is smashing the heap with &ldquo;A&rdquo;s.</p>
+<p><div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp;0:000:x86&amp;gt; r al&lt;br /&gt; al=41&lt;br /&gt;</div></div>
+</p>
+<p>If we once again use the &lsquo;k&rsquo; command to dump the call stack for our <font color="red">application</font> we can get a clearer picture of what is going on.</p>
+<p><div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp;0:000:x86&amp;gt; k&lt;br /&gt; ChildEBP RetAddr&lt;br /&gt; WARNING: Stack unwind information not available. Following frames may be wrong.&lt;br /&gt; 0039f3a8 6944a283 MSVCR90D!getc_nolock+0x13c9&lt;br /&gt; 0039f3c0 69449fba MSVCR90D!getc_nolock+0x14c3&lt;br /&gt; 0039f6f0 6940ca94 MSVCR90D!getc_nolock+0x11fa&lt;br /&gt; 0039f740 011917f5 MSVCR90D!sprintf+0x114&lt;br /&gt; 0039f89c 01191a94 <font color="red">contactsheap</font>!read_record+0x135&lt;br /&gt; 0039fa2c 01192148 contactsheap!wmain+0x144&lt;br /&gt; 0039fa7c 01191f8f contactsheap!__tmainCRTStartup+0x1a8&lt;br /&gt; 0039fa84 75213677 contactsheap!wmainCRTStartup+0xf&lt;br /&gt; 0039fa90 77169d72 kernel32!BaseThreadInitThunk+0x12&lt;br /&gt; 0039fad0 77169d45 ntdll32!RtlInitializeExceptionChain+0x63&lt;br /&gt;</div></div>
+</p>
+<p>Luckily for us, we have debug symbols for this binary.  But even if we didn&#8217;t, the MSVCR and kernel32 <font color="red">functions</font> would still be named correctly. As you can see after the c-runtime finished, the wmain() <font color="red">function</font> was executed. From here, the read_record() <font color="red">function</font> was called. This <font color="red">function</font> called sprintf(), which is a known unsafe <font color="red">function</font>, as it performs no bounds checking when it copies a string.</p>
+<p>If we load the binary (contactsheap.exe) up in IDA Pro and jump to the read_record() <font color="red">function</font> we can very clearly see the call to sprint().</p>
+<p><div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp;mov esi, <font color="red">esp</font>&lt;br /&gt; mov <font color="red">eax</font>, [ebp+var_20]&lt;br /&gt; push <font color="red">eax</font>&lt;br /&gt; mov <font color="red">ecx</font>, [ebp+var_44]&lt;br /&gt; push <font color="red">ecx</font>&lt;br /&gt; push offset aSS ; &quot;%s %s&quot;&lt;br /&gt; mov <font color="red">edx</font>, [ebp+var_14]&lt;br /&gt; push <font color="red">edx</font> ; char *&lt;br /&gt; call ds:__imp__sprintf&lt;br /&gt; add <font color="red">esp</font>, 10h&lt;br /&gt; <font color="red">cmp</font> esi, <font color="red">esp</font>&lt;br /&gt;</div></div>
+</p>
+<p>Here we can see that the sprintf() call used the format string &ldquo;%s %s&rdquo;, so it was concatenating two strings together. But before we can completely understand this <font color="red">vulnerability</font> we must first track down where the destination string was allocated. In some cases, this can be quite difficult, but again the <font color="red">Application</font> Verifier makes our job much easier.</p>
+<p>When the <font color="red">pageheap</font> functionality is enabled for an <font color="red">application</font>, each memory allocation has its callstack logged at the time of allocation. This functionality makes it trivial to discover where an allocation took place at the time of crash.</p>
+<p>This information is easily accessible from within windbg. First, however, we can look at how it&#8217;s stored. When an allocation takes place, <font color="red">pageheap</font> populates a _DPH_BLOCK_INFORMATION structure and stores it directly before the chunk itself. The format of this structure is as follows:</p>
+<p><div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp;typedef struct _DPH_BLOCK_INFORMATION&lt;br /&gt; {&lt;br /&gt; ULONG StartStamp;&lt;br /&gt; PVOID Heap;&lt;br /&gt; ULONG RequestedSize;&lt;br /&gt; ULONG ActualSize;&lt;br /&gt; union&lt;br /&gt; {&lt;br /&gt; LIST_ENTRY FreeQueue;&lt;br /&gt; SINGLE_LIST_ENTRY FreePushList;&lt;br /&gt; WORD TraceIndex;&lt;br /&gt; };&lt;br /&gt; PVOID StackTrace;&lt;br /&gt; ULONG EndStamp;&lt;br /&gt; } DPH_BLOCK_INFORMATION, *PDPH_BLOCK_INFORMATION;&lt;br /&gt;</div></div>
+</p>
+<p>As you can see, this structure is a treasure <font color="red">trove</font> of information for us to use in further investigating our <font color="red">vulnerability</font>. We can see what size was requested by the program, as well as what size was actually allocated after rounding takes place. We can recognize these structures in memory by the Startstamp and EndStamp values in memory. Startstamp is always initialized to the static value 0xabcdaaaa and EndStamp is initialized to 0xdcbaaaaa.</p>
+<p>In order to locate the _DPH_BLOCK_INFORMATION structure for our particular crash, we can use the !heap windbg extension. The &ndash;x command will report information about a particular address. If we pass it the current value of <font color="red">edx</font> minus four it will report the starting address of our structure.</p>
+<p><div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp;0:000&amp;gt; !heap -x edx-4&lt;br /&gt; Entry User Heap Segment Size PrevSize Unused Flags&lt;br /&gt; 06e41fc0 06e41fc8 05d80000 05de1768 40 - b LFH;busy&lt;br /&gt;</div></div>
+</p>
+<p>We can then use this address with the &ldquo;dt&rdquo; (dump type) command to display the <font color="red">bytes</font> at this address in the form of our _DPH_BLOCK_INFORMATION structure.</p>
+<p><div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp;0:000&amp;gt; dt _DPH_BLOCK_INFORMATION 6e41fc8&lt;br /&gt; verifier!_DPH_BLOCK_INFORMATION&lt;br /&gt; +0x000 StartStamp : 0xabcdaaaa&lt;br /&gt; +0x004 Heap : 0x85bb1000&lt;br /&gt; +0x008 RequestedSize : 0x15&lt;br /&gt; +0x00c ActualSize : 0x35&lt;br /&gt; +0x010 Internal : _DPH_BLOCK_INTERNAL_INFORMATION&lt;br /&gt; +0x018 StackTrace : 0x04bcf79c&lt;br /&gt; +0x01c EndStamp : 0xdcbaaaaa&lt;br /&gt;</div></div>
+</p>
+<p>From this information we can see that a 0x15 (21) <font color="red">byte</font> allocation was requested. This was rounded to 0x35 (53) during the allocation process. We can also see that the stack trace information is stored at the address 0x04bcf79c.</p>
+<p>To dump the stack trace in a readable fashion we can use the dds command. This command means &ldquo;dump dwords with symbols&rdquo;, and shows where each address is located.</p>
+<p><div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp;0:000&amp;gt; dds 04bcf79c&lt;br /&gt; 04bcf79c 00000000&lt;br /&gt; 04bcf7a0 00006001&lt;br /&gt; 04bcf7a4 000d0000&lt;br /&gt; 04bcf7a8 6655a6a7 verifier!AVrfpDphNormalHeapAllocate+0xd7&lt;br /&gt; 04bcf7ac 66558f6e verifier!AVrfDebugPageHeapAllocate+0x30e&lt;br /&gt; 04bcf7b0 772002fe ntdll!RtlDebugAllocateHeap+0x30&lt;br /&gt; 04bcf7b4 771bac4b ntdll!RtlpAllocateHeap+0xc4&lt;br /&gt; 04bcf7b8 77163b4e ntdll!RtlAllocateHeap+0x23a&lt;br /&gt; 04bcf7bc 665bfd2c vfbasics!AVrfpRtlAllocateHeap+0xb1&lt;br /&gt; 04bcf7c0 011917a4 <font color="red">contactsheap</font>!read_record+0<font color="red">xe</font>4&lt;br /&gt; 04bcf7c4 01191a94 <font color="red">contactsheap</font>!wmain+0x144&lt;br /&gt; 04bcf7c8 01192148 contactsheap!__tmainCRTStartup+0x1a8&lt;br /&gt; 04bcf7cc 01191f8f contactsheap!wmainCRTStartup+0xf&lt;br /&gt; 04bcf7d0 75213677 kernel32!BaseThreadInitThunk+0xe&lt;br /&gt; 04bcf7d4 77169d72 ntdll!__RtlUserThreadStart+0x70&lt;br /&gt; 04bcf7d8 77169d45 ntdll!_RtlUserThreadStart+0x1b&lt;br /&gt;</div></div>
+</p>
+<p>The most interesting entries in this backtrace for us are those in the contactsheap module itself. We can see that the <font color="red">function</font> directly before the call to RtlAllocateHeap took place was the &ldquo;read_record&rdquo; <font color="red">function</font>. This means that the allocation took place in this <font color="red">function</font>. To get some context on this we can use the &ldquo;ub&rdquo; (unassembled backwards) command in cdb to dump the previous 5 instructions before the call to HeapAlloc.</p>
+<p><div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp;0:000&amp;gt; ub 011917a4 L5&lt;br /&gt; contactsheap!read_record+0xd7:&lt;br /&gt; 01191797 52 push <font color="red">edx</font>&lt;br /&gt; 01191798 6a08 push 8&lt;br /&gt; 0119179a 8b45f8 mov <font color="red">eax</font>,dword ptr [ebp-8]&lt;br /&gt; 0119179d 50 push <font color="red">eax</font>&lt;br /&gt; 0119179e ff15c0811901 call dword ptr [<font color="red">contactsheap</font>!_imp__HeapAlloc (011981c0)]&lt;br /&gt;</div></div>
+</p>
+<p>In order to do further investigation on this we will need to move to static analysis in IDA Pro. Before we go into this, however, I will just mention that exploring the <font color="red">pageheap</font> metadata can also be done using the  &lsquo;!heap&rsquo; extension. To view the options for this, as well as information on the technique described above, you can use the &lsquo;!heap &ndash;p -?&rsquo; command.</p>
+<p>If we browse the section of the binary where our allocation takes place in IDA pro, we can see each argument to HeapAlloc() labeled with its name.</p>
+<p><div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp;.text:0041178B loc_41178B: ; CODE XREF: read_record(int)+C1j&lt;br /&gt; .text:0041178B mov <font color="red">eax</font>, [ebp+var_74]&lt;br /&gt; .text:0041178E mov <font color="red">ecx</font>, [ebp+var_50]&lt;br /&gt; .text:00411791 lea <font color="red">edx</font>, [<font color="red">ecx</font>+<font color="red">eax</font>+5]&lt;br /&gt; .text:00411795 mov esi, <font color="red">esp</font>&lt;br /&gt; .text:00411797 push <font color="red">edx</font> ; dwBytes&lt;br /&gt; .text:00411798 push 8 ; dwFlags&lt;br /&gt; .text:0041179A mov <font color="red">eax</font>, [ebp+hHeap]&lt;br /&gt; .text:0041179D push <font color="red">eax</font> ; hHeap&lt;br /&gt; .text:0041179E call ds:__imp__HeapAlloc@12 ; HeapAlloc(x,x,x)&lt;br /&gt; .text:004117A4 <font color="red">cmp</font> esi, <font color="red">esp</font>&lt;br /&gt;</div></div>
+</p>
+<p>We can see from this listing that the number of <font color="red">bytes</font> allocated by HeapAlloc came from the <font color="red">edx</font> register. Also you may notice that the size is a result of the calculation of <font color="red">ecx</font> + <font color="red">eax</font> + 5. It seems logical that this instruction might be responsible for an <font color="red">integer</font> overflow, as there is no bounds checking performed on the values of <font color="red">eax</font> and <font color="red">ecx</font> prior to this being executed.</p>
+<p>The final step in our exploration is to work out where the values of the variables var_50 and var_75 came from in order to determine the exact criteria that lead to our heap overflow condition. We can do this by investigating the cross references (places in the binary where the variable is used) for each variable in turn. To start this we can click on the var_50 variable and press the &ldquo;X&rdquo; key. This brings up a list of the x-refs for the variable.</p>
+<p><img src="https://alln-extcloud-storage.cisco.com/ciscoblogs/image4.jpg" alt="" /></p>
+<p>Next we select each x-ref in turn and investigate them. Looking at the first x-ref we can see that the result of a <font color="red">function</font> called &ldquo;ReadString&rdquo; is stored in it. We can see from the <font color="red">function</font> prototype that the string takes two arguments, an <font color="red">integer</font> and a (void **).</p>
+<p><div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp;.text:0041170B mov <font color="red">ecx</font>, [ebp+arg_0]&lt;br /&gt; .text:0041170E push <font color="red">ecx</font> ; int&lt;br /&gt; .text:0041170F call j_?ReadString@@YAKHPAPAX@Z ; ReadString(int,void * *)&lt;br /&gt; .text:00411714 add <font color="red">esp</font>, 8&lt;br /&gt; .text:00411717 mov [ebp+var_50], <font color="red">eax</font>&lt;br /&gt; .text:0041171A <font color="red">cmp</font> [ebp+var_50], 0&lt;br /&gt; .text:0041171E jnz short loc_411728&lt;br /&gt;</div></div>
+</p>
+<p>Since we know that the value we&#8217;re looking at is definitely an <font color="red">integer</font> (we know this because it&#8217;s used as the number of <font color="red">bytes</font> to allocate with HeapAlloc), we can make a guess that it&#8217;s probably the length/number of <font color="red">bytes</font> read by the ReadString <font color="red">function</font>. We can investigate this by reversing the <font color="red">function</font> though. For conciseness sake, however, we can assume that this is true (since I wrote the vulnerable <font color="red">application</font>, I&#8217;m pretty sure it&#8217;s a safe bet). Readstring reads a length from the filehandle provided. It then reads that many <font color="red">bytes</font> from the file and stores it in a string. The length that was read in first is then returned by the <font color="red">function</font>.</p>
+<p>Looking at the second variable, var_74, we can see that it is used in exactly the same way, as a size value from ReadString. With this in mind, we can get a high-level overview of the <font color="red">vulnerability</font>. Two length-encoded strings are read in. Their lengths are added together and the result is used to decide how many <font color="red">bytes</font> to allocate. Then the strings are sprintf()&rsquo;ed into the buffer. However, due to a wrap-around condition when calculating the length to allocate, the copy can go well out of the bounds of the allocated buffer.</p>
+<p>With this information in mind we can begin the process of fixing (or exploiting) the <font color="red">vulnerability</font> in question. Hopefully, if you&#8217;ve read up to here you&#8217;ve learned something from all this. If anyone is interested in receiving a copy of the binary mentioned in this post, just email nearchib@cisco.com and let me know.</p>
+<p>For those of you analyzing bugs under platforms other than Windows, similar functionality can be achieved using Valgrind on Linux/BSD/Mac OS X. Also on Mac OS X, a custom <font color="red">pageheap</font> implementation is shipped by default that can be preloaded. This can be used with DYLD_INSERT_LIBRARY=libgmalloc.dylib.</p>
+		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">1 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+			<li>
+			<div id="comment-24356">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Mark						</span>
+						<br />
+						<span class="comment-meta commentmetadata">April 2, 2010 at 3:21 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Instead of !heap -x, you can use !heap -p -a"". Check out the other commands by doing ""!heap -p -?"""^0^1^^^0^0
+
+24357^8711^Vish^vishwadeep02@gmail.com^http://www.indianairlinesbooking.in^122.163.200.48^2010-04-02 21:18:12^2010-04-02 21:18:12^I live in India and I spend 10 hrs each day connected to the Internet. Though Internet is not yet grown fully here but I feel it would be difficult to live without Internet.^0^1^^^0^0
+
+24359^8661^Achim Cristian^positivcriss@gmail.com^^79.119.177.232^2010-04-24 02:38:04^2010-04-24 02:38:04^Thanks, i will try it :)^0^1^^^0^0
+
+24360^8745^Achim Cristian^positivcriss@gmail.com^http://jocuri69.net^79.119.177.232^2010-04-02 14:29:47^2010-04-02 14:29:47^Thanks for tips. Verry usefull.^0^1^^^0^0
+
+24362^8711^Daryl Lau^daryllau@hotmail.com^http://www.articleszoom.org^203.223.138.226^2010-04-02 21:28:42^2010-04-02 21:28:42^"Could you go a day without coffee?""I can't even make it through 6 hrs without one... lol"</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike24356" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Security:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogSecurity', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogSecurity" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Security</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscosecurity?ref=nf"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/ciscosecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://youtubecisco.com/security"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogSecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.cert.org/blogs/vuls/" target="_blank">CERT Vulnerability Analysis</a></li>
+                      <li><a href="http://blogs.technet.com/b/srd/" target="_blank">Microsoft Security Research & Defense</a></li>
+                      <li><a href="http://isc.sans.edu/index.html" target="_blank">SANS Internet Storm Center</a></li>
+                      <li><a href="http://www.schneier.com/" target="_blank">Schneier on Security</a></li>
+                  </ul>
+              <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="http://www.cisco.com/en/US/products/products_security_advisories_listing.html" target="_blank">Advisories and Responses</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/cyberRiskReport.x" target="_blank">Cyber Risk Reports</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/intelliPapers.x?i=55" target="_blank">Security Best Practices</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/home.x" target="_blank">Security Intelligence Operations</a></li>
+                        <li><a href="http://www.cisco.com/en/US/products/hw/vpndevc/index.html" target="_blank">Security Products</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscosecurity?ref=nf'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/ciscosecurity'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 8723;
+			var orig_count = 0;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1crWokJ&text=Exploring Heap-Based Buffer Overflows with the Application Verifier&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/exploring_heap-based_buffer_overflows_with_the_application_verifier&title=Exploring Heap-Based Buffer Overflows with the Application Verifier" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/exploring_heap-based_buffer_overflows_with_the_application_verifier" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/exploring_heap-based_buffer_overflows_with_the_application_verifier" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Exploring Heap-Based Buffer Overflows with the Application Verifier&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0AExploring Heap-Based Buffer Overflows with the Application Verifier%0A%0Ahttps://blogs.cisco.com/security/exploring_heap-based_buffer_overflows_with_the_application_verifier%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

@@ -1,0 +1,1738 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Micro Segmentation and Cisco ACI &#8211; From Theory to Practice</title>
+
+	<meta property="og:image" content="https://alln-extcloud-storage.cisco.com/ciscoblogs/pablo-460x230.png"/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; Micro Segmentation and Cisco ACI &#8211; From Theory to Practice Comments Feed" href="https://blogs.cisco.com/datacenter/micro-segmentation-ciscoaci/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"195579"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='It’s Time to ‘Do or Die’ in the Growing Global Bazaar' href='https://blogs.cisco.com/innovation/its-time-to-do-or-die-in-the-growing-global-bazaar' />
+<link rel='next' title='The Benefits of DOCSIS 3.1' href='https://blogs.cisco.com/sp/the-benefits-of-docsis-3-1' />
+
+<link rel="canonical" href="https://blogs.cisco.com/datacenter/micro-segmentation-ciscoaci" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=195579' />
+<meta property="og:image" content="http://i.ytimg.com/vi/XJCthJZ2AMw/default.jpg" />
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Micro Segmentation and Cisco ACI - From Theory to Practice"/>
+  <meta property="og:url" content="https://blogs.cisco.com/datacenter/micro-segmentation-ciscoaci"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2016-06-08T09:52:23+00:00"/>
+  <meta property="article:modified_time" content="2016-06-08T09:50:15+00:00" />
+  <meta property="og:updated_time" content="2016-06-08T09:50:15+00:00" />
+  <meta property="article:section" content="Data Center"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Micro Segmentation and Cisco ACI - From Theory to Practice"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/datacenter/micro-segmentation-ciscoaci"/>
+  <meta name="twitter:description" content="This is Part I in a four part series of blogs. 
+
+
+
+
+
+
+
+Micro-segmentation has become a buzzword in the networking industry. Leaving the term and the marketing aside, it is easy to understand why customers are interested in the benefits that Micro-segmentation provides.
+
+
+
+The primary advantage of Mi"/>
+  <meta name="twitter:image" content="https://alln-extcloud-storage.cisco.com/ciscoblogs/pablo.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:creator" content="@https://twitter.com/JuanLage"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521450268";
+		var sig = "b6492bd10476f44051e5ab70cf74fa4c";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=https://blogs.cisco.com/datacenter/micro-segmentation-ciscoaci&text=%23CiscoACI+Micro-Segmentation+-+From+Theory+to+Practice+%5BBlog%5D+%40CiscoDC&via=JuanLage" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/datacenter/micro-segmentation-ciscoaci&title=Micro Segmentation and Cisco ACI &#8211; From Theory to Practice" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/datacenter/micro-segmentation-ciscoaci" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/datacenter/micro-segmentation-ciscoaci" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Micro Segmentation and Cisco ACI &#8211; From Theory to Practice&body=I saw this post on Cisco Data Center blog and thought you might like to read it.%0A%0AMicro Segmentation and Cisco ACI &#8211; From Theory to Practice%0A%0Ahttps://blogs.cisco.com/datacenter/micro-segmentation-ciscoaci%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/datacenter/'>Data Center</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/pablo-460x230.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Data Center  						</span>
+						<h1 id="post-195579" class="kindle_title title">Micro Segmentation and Cisco ACI &#8211; From Theory to Practice</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1464013175-bpthumb.jpg"></div><div class="author_rewards_box">			<ul class = "nitro_author195579 bunchballAwards">
+		<li>
+			<div class = "nitro_badge badgenitro_author195579">
+			</div>
+			<div class = "nitro_points pointsnitro_author195579">
+			</div>
+		</li>
+		<script>
+var nitroName = 'jlage';
+var sessionKey = '';
+
+
+nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "postBadges", "nitro_author195579");</script>
+
+		</ul>
+		</ul>
+	<div class = "clear"></div>
+</div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/juanlage" title="Posts by Juan Lage" rel="author">Juan Lage</a> - June 8, 2016 - 15 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p><em>This is Part I in a four part series of blogs. </em></p>
+<p><img class="size-large wp-image-195654 aligncenter" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/pablo-550x275.png" alt="#CiscoACI" width="550" height="275" /></p>
+<p>Micro-segmentation has become a buzzword in the <font color="red">networking</font> industry. Leaving the term and the marketing aside, it is easy to understand why customers are interested in the benefits that Micro-segmentation provides.</p>
+<p>The primary advantage of Micro-segmentation is to reduce the <font color="red">attack surface</font> by minimizing the possibilities for <font color="blue">lateral movement</font> in the event of a <font color="blue">security breach</font>. With <font color="red">traditional networking</font> technologies this is very hard to accomplish. However, <font color="red">SDN</font> technologies enable a new approach, by allowing degrees of flexibility and automation not possible with <font color="red">traditional network</font> management and operations, making <font color="red">Micro Segmentation</font> a distinct possibility.</p>
+<p>I describe <font color="red">ACI</font> <font color="red">Micro Segmentation</font> capabilities in <a href="https://www.youtube.com/watch?v=XJCthJZ2AMw">this short presentation</a> I did at <font color="red">Network</font> Field Day during <font color="red">Cisco</font> Live Berlin.</p>
+<p><span id="more-195579"></span></p>
+<h2>From Theory to Practice</h2>
+<p>This is the first of a series of blogs where we will illustrate how to leverage <font color="red">Cisco</font> <font color="red">ACI</font> to implement <font color="red">Micro Segmentation</font> through various basic but practical examples. We will look at leveraging the <font color="red">ACI</font> <font color="red">EPG</font> and contract-based <font color="red">policy model</font> combined with micro <font color="red">EPGs</font> (<font color="red">uEPGs</font>) and several other <font color="red">ACI</font> features.</p>
+<p>We will be considering a fictitious company &#8211; Acme Co. &#8211; that is implementing <font color="red">ACI</font> and explores how to use some of the <font color="red">fabric</font> capabilities in order to enhance the <font color="blue">security posture</font> inside the perimeter of the DC. Each blog will describe and provide a <font color="red">demo</font> for a specific use case.</p>
+<p>In this blog, we look specifically at how <font color="red">application</font> designers can benefit from the <font color="red">ACI</font> white-list <font color="red">policy model</font> and <font color="red">micro segmentation</font> in order to keep multiple <font color="red">application</font> tiers in a single <font color="red">subnet</font>. We will also see how <font color="red">ACI</font> can be used to automate insertion of L4-7 devices that provide services for these <font color="red">applications</font>. In the <font color="red">demo</font>, we will also introduce the <em><font color="red">ACI</font> <font color="red">vCenter</font> Plugin</em> in order to illustrate how <font color="red">vSphere</font> administrators can configure <font color="red">ACI</font> <font color="red">Micro Segmentation</font> from a tool that is familiar to them.</p>
+<p>In the next blog we will imagine that Acme Co. wants to change that <font color="red">application</font> and will create a development and testing environment. We will see how they can share the same infrastructure for dev/test, and how the administrator can dynamically create a development and testing environment to modify the <font color="red">application</font> described later in this blog. We will see how easy it is to do this in <font color="red">ACI</font>, and show how administrators can change <font color="red">Virtual Machines</font> from one stage to another by simply modifying <font color="red">VM</font> attributes without requiring any <font color="red">fabric</font> or <font color="red">VM</font> <font color="red">network</font> reconfiguration.</p>
+<p>In the third blog we will shift gears to look at using <font color="red">Micro Segmentation</font> to secure the infrastructure on which the <font color="red">applications</font> from the previous examples is running. Acme Co. infrastructure administrators will use <font color="red">ACI</font> to enhance security for the physical <font color="red">server</font> provisioning and the <font color="red">vSphere</font> infrastructure itself.  While we will be using <font color="red">vSphere</font> infrastructure on <font color="red">Cisco</font> <font color="red">UCS</font> for these examples, the principles and configurations are applicable to other <font color="red">virtualization</font> and <font color="red">server</font> environments as well.</p>
+<p>Finally, in the fourth blog of the series we consider Day-2 operations and look how Acme Co. operators can leverage <font color="red">APIC</font> tools to simplify troubleshooting and do root-cause analysis of failure scenarios including link or node failures, configurations human mistakes, etc.</p>
+<p>We hope that through these posts we will help customers and <font color="red">partners</font> get a better idea of how <font color="red">ACI</font> can help them in their organizations. Feedback is welcomed as to whether we achieve that objective or not! 🙂</p>
+<p>&nbsp;</p>
+<h2>Now, on to our first example: Acme Co. implements a new online web shop.</h2>
+<p>In this example we look at how <font color="red">applications</font> can benefit from the <font color="red">ACI</font> <font color="red">policy model</font> and <font color="red">micro segmentation</font> to keep multiple <font color="red">application</font> tiers running in a single <font color="red">subnet</font> with <font color="blue">lateral movement</font> protection implemented through a white-list model for a Zero Trust approach. We will illustrate this with a very basic example with just two-tiers, but the model can expand to any number of tiers.</p>
+<p>Let&#8217;s imagine that Acme Co. is building an online web shop. We will do this with a simple default installation of the open source Joomla Content Management System (CMS) and use one of the sample sites. Joomla is a CMS similar to WordPress, relying on an <font color="red">Apache</font> web <font color="red">server</font> and a SQL database. The <font color="red">apache</font> <font color="red">server</font> has static web content, and the DB maintains dynamic web content. To simplify <font color="red">IP</font> Address Management (IPAM) in order to facilitate automation, the intention is that all <font color="red">servers</font> will share the same <font color="red">subnet</font>.</p>
+<p>The <font color="red">application</font> will be available to external users, and we will protect it by having a perimeter Next Generation <font color="red">Firewall</font> (<font color="red">NGFW</font>) as it is commonly done in Enterprise deployments. We will also use a <font color="red">Load Balancer</font> before the <font color="red">apache</font> <font color="red">servers</font>. The following drawing depicts the high level &#8220;design&#8221; of our [very] basic <font color="red">application</font>, showing the intent of the white-list model allowing only the protocols and ports strictly required.</p>
+<p><img class="aligncenter wp-image-195609 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/5F67FCFB-958B-47EA-A0F9-22BA1CE3A8F7.png" alt="5F67FCFB-958B-47EA-A0F9-22BA1CE3A8F7" width="2224" height="488" /></p>
+<p>With a <font color="red">traditional network</font> design, we would have used one <font color="red">subnet</font> and <font color="red">VLAN</font> for the database, and another <font color="red">subnet</font> and <font color="red">VLAN</font> for the web <font color="red">servers</font>. Very likely, these two <font color="red">subnets</font> would be connected to different interfaces of a <font color="red">firewall</font> where we would open the right ports between them.</p>
+<p>But let&#8217;s forget the traditional approach.</p>
+<p>For Acme Co. engineers, the desired end goal would be something like this, where green arrows indicate allowed communication, red arrows indicate blocked communications:<img class="aligncenter size-full wp-image-195611" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/78F8DBD5-2336-4D7C-8669-612BFC8811B9.png" alt="78F8DBD5-2336-4D7C-8669-612BFC8811B9" width="2486" height="818" /></p>
+<p>The perimeter <font color="red">NGFW</font> would perform <font color="red">application</font> level inspection and probably NAT towards internal addresses, and the <font color="red">load balancer</font> should be able to off load SSL and provide advanced <font color="red">load balancing</font> features. It is definitely very possible that these devices are physical and shared for other <font color="red">applications</font> as well, although in our <font color="red">demo</font> we will use virtual devices.</p>
+<p>The only <font color="red">IP</font> address that needs to be accessible from the outside <font color="red">networks</font> is the <font color="red">VIP</font> programmed on the <font color="red">load balancer</font> for this <font color="red">application</font>. The <font color="red">load balancer</font> should not have access to the database, even if they are on the same segment, but only to the web machines that are part of the load balancing pool. Only the Web <font color="red">servers</font> should have access to the DB, and they do not need to communicate with one another.</p>
+<p>We will set this <font color="red">application</font> with all <font color="red">servers</font> as <font color="red">Virtual Machines</font> running CentOS 7 on <font color="red">vSphere</font> 6.0. We will use a <font color="red">Cisco</font> <font color="red">ASA</font> with <font color="red">SourceFire</font> and an <font color="red">F5</font> <font color="red">load balancer</font>.</p>
+<p>&nbsp;</p>
+<h2>Implementation with <font color="red">ACI</font> <font color="red">Policy Model</font> and <font color="red">Micro Segmentation</font></h2>
+<p>In this post I am not going to go through any basic <font color="red">ACI</font> setup. I will assume the reader already knows how to build an <font color="red">ACI</font> <font color="red">fabric</font> and is familiar with key concepts like VMM Domains, tenants, VRFs, Bridge Domains, <font color="red">EPGs</font> and contracts.</p>
+<p>In this example, I imagine that Acme Co. has created an <font color="red">ACI</font> tenant dedicated to new virtualized <font color="red">applications</font>. In that tenant, we need one VRF and one Bridge Domain. Within that tenant, the <font color="red">fabric</font> administrator or the <font color="red">vSphere</font> administrator (or both) can create an <font color="red">Application</font> <font color="red">Network</font> Profile (ANP) that describes the <font color="red">application</font> from above. The <font color="red">Application Profile</font> will look as follows:</p>
+<p><img class="aligncenter size-full wp-image-195612" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/F508BFE9-71E9-43D2-8FE8-E4CB141D5B2C.png" alt="F508BFE9-71E9-43D2-8FE8-E4CB141D5B2C" width="1254" height="281" />We will be using one <font color="red">EPG</font> and two micro <font color="red">EPGs</font> (<font color="red">uEPGs</font>), initially all in the same Bridge Domain and <font color="red">subnet</font> and all mapped to a <font color="red">vSphere</font> VMM Domain. The <font color="red">uEPG</font> Web-Prod will host the <font color="red">Apache</font> Web <font color="red">servers</font> and the <font color="red">uEPG</font> DB-Prod will be for the MySQL <font color="red">servers</font>.</p>
+<p>Then we have &#8216;JoomlaAppServers&#8217; <font color="red">EPG</font>. This will be what we call our <em><font color="red">base EPG</font></em>. This means that this <font color="red">EPG</font> will generate the configuration of a matching dvPortGroup on the <font color="red">vSphere</font> Distributed Switch of the VMM domain. This can be the native <font color="red">vSphere</font> Distributed Switch (VDS) or the <font color="red">Cisco</font> <font color="red">Application</font> Virtual Switch (AVS).</p>
+<p>We will connect all the <font color="red">Virtual Machines</font> for our Joomla-based <font color="red">application</font> on that dvPortGroup. This means all <font color="red">apache</font> and MySQL <font color="red">servers</font> are on the same dvPortGroup. From this <font color="red">base EPG</font> JoomlaAppServers the <font color="red">Virtual Machines</font> only have access to the provisioning tools. So we just launch CentOS VMs from a template image, connect them to the JoomlaAppServers dvPortGroup and let Ansible provision MySQL, <font color="red">Apache</font>, Joomla, etc.</p>
+<p>Do we need this extra <font color="red">EPG</font>? … Not necessarily. Just like you don&#8217;t really *need* to use <font color="red">uEPGs</font> here. We could have had two normal <font color="red">EPG</font> for Web and DB, or a <font color="red">base EPG</font> for Web and a <font color="red">uEPG</font> for DB … But we are using this <font color="red">base EPG</font> as a <em>staging environment</em> and we will see it&#8217;s useful in following demos/blogs.</p>
+<p>Once a <font color="red">VM</font> has been provisioned for a certain function, we need to change the applied policy to implement our <font color="red">application</font>. This will mean changing the <font color="red">VM</font> to its right <font color="red">uEPG</font>. The <font color="red">uEPGs</font> allow dynamic classification of <font color="red">VMs</font> into different policy environments. To change the <font color="red">VMs</font> into the right <font color="red">uEPG</font>, we configure them with the correct <font color="red">VM</font> attributes so there is no need to change them from one dvPortGroup to another. With <font color="red">vSphere</font>, the idea is to use Custom Attributes to describe the environment and policy that a <font color="red">VM</font> requires. However for the <font color="red">demo</font> you will see below we use the <font color="red">VM</font> name instead, simply because it is easier to edit it directly from the <font color="red">vCenter</font> GUI for <font color="red">demo</font> purposes.</p>
+<p>Once the <font color="red">VM</font> Attributes identify a <font color="red">VM</font> to be part of one <font color="red">uEPG</font> or another, the <font color="red">VM</font> vNIC will remain in the same dvPortGroup, but the <font color="red">VM</font> vNIC as an <font color="red">endpoint</font> now will belong to the <font color="red">uEPG</font>, and have the corresponding policy applied.</p>
+<p>In our example, the VMs in the Web-Prod <font color="red">uEPG</font> can only access the <font color="red">VMs</font> in DB-Prod <font color="red">uEPG</font> and only using TCP/3306. The Web-Prod <font color="red">uEPG</font> is isolated, so the <font color="red">VMs</font> in this group can&#8217;t communicate to one another. The <font color="red">VMs</font> in the DB-Prod <font color="red">uEPG</font> can&#8217;t access anything at all: they can only reply to connections from Web-Prod <font color="red">EPG</font> for TCP/3306.</p>
+<p>&nbsp;</p>
+<h2>What about External <font color="red">Connectivity</font>?</h2>
+<p>North-South <font color="red">connectivity</font> is fundamental for the performance of any web-based <font color="red">application</font>. It is useless to have a <font color="red">high performance</font> backend if the end-user experience is limited by long delays accessing the web front end.</p>
+<p>In <font color="red">ACI</font>, north-south <font color="red">connectivity</font> is accomplished by connecting physical ports of <font color="red">ACI</font> switches to the DC Routers. These ports are configured as L3Out interfaces and can be shared by many <font color="red">applications</font> and tenants, or can be dedicated as well. These ports can be 10GE or 40GE and should be configured with redundancy of course. The L3Out interface will have associated &#8220;external <font color="red">EPGs</font>&#8221; to abstract the representation of external <font color="red">endpoints</font>.</p>
+<p>In our case, we&#8217;ve created an external <font color="red">EPG</font> that represents a &#8220;default&#8221; route to represent all hosts external to our <font color="red">application</font>. A contract between that external <font color="red">EPG</font> (AcmeWAN) and the Web-Prod <font color="red">EPG</font> will enable users to access our <font color="red">application</font>.</p>
+<p>This contract allows any external host to access the <font color="red">VMs</font> in Web-Prod <font color="red">uEPG</font> on port TCP/80 by having the traffic flow before through a <font color="red">NGFW</font> and a LB. These devices are inserted in the path through a Serv<img class="size-full wp-image-195610 alignright" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/8F812E17-B1FB-4A15-A76C-A2627A43F51A.png" alt="8F812E17-B1FB-4A15-A76C-A2627A43F51A" width="454" height="704" />ice Graph. In our <font color="red">demo</font> we use a managed Service Graph, which means that we are also configuring NAT, <font color="red">NGFW</font> rules, LB <font color="red">VIP</font>, etc through the <font color="red">APIC</font>.</p>
+<p>Specifically, we are configuring a <font color="red">VIP</font> on an <font color="red">F5</font> <font color="red">load balancer</font> and a dynamic pool of <font color="red">servers</font> that wi<br />
+ll contain all the <font color="red">VMs</font> that are in Web-Prod <font color="red">uEPG</font>. We are configuring the <font color="red">NGFW</font> to allow only access to the <font color="red">VIP</font> and to inspect TCP/80 traffic.</p>
+<p>It is important to notice that if an external host would attack/scan the <font color="red">VIP</font>, all non-TCP/80 traffic will be dropped (and logged) in hardware by the <font color="red">fabric</font>, therefore not wasting any resources on the <font color="red">NGFW</font>.</p>
+<p>Next to these lines you can see a detailed logical design of the final environment we will show in the <font color="red">demo</font>.</p>
+<p>As an <em>important clarification</em>: in my lab I happened to have easy access to <font color="red">ASA</font> as an <font color="red">NGFW</font> and <font color="red">F5</font> BIG-IP as an ADC. Similarly, I built this using <font color="red">vSphere</font> 6.0 with all <font color="red">servers</font> virtualized in this case. But this <font color="red">demo</font> can be built using other vendors for L4-7 and other hypervisors as well.</p>
+<p>In future blogs I will <font color="red">demo</font> how the same <font color="red">ACI</font> <font color="red">Application Profile</font> can be used if the <font color="red">application</font> from the diagram above is deployed on Microsoft Hyper-V, <font color="red">OpenStack</font>, <font color="red">Docker</font> containers and/or combinations of those and <font color="red">bare metal</font>. No additional licenses are required for <font color="red">ACI</font> to work with one <font color="red">virtualization</font> environment or another, or all of them at once. Clearly, more sophisticated <font color="red">application</font> designs can be accomplished with the same principles discussed here as well.</p>
+<p>And finally, here&#8217;s the <font color="red">demo</font> &#8230; if you read the blog, you can probably fast forward to minute 3:10, where the real <font color="red">demo</font> begins 🙂</p>
+<p><iframe width="500" height="281" src="https://www.youtube.com/embed/noGeZL8pjMw?feature=oembed" frameborder="0" allowfullscreen></iframe></p>
+<p>&nbsp;</p>
+<p>Thanks to Minako Higuchi (<a href="https://twitter.com/mihiguch">@mihiguch</a>) for helping with the <font color="red">demo</font> and early blog reviews 🙂</p>
+<p>&nbsp;</p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=ciscoaci">#CiscoACI</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=micro-segmentation">micro-segmentation</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=sdn">SDN</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">15 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+<li>
+			<div id="comment-2409802">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg' width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+							<a href = "https://blogs.cisco.com/rewards-profile/8583">Amer Fakhar</a>
+						</span>
+						<br />
+						<span class="comment-meta commentmetadata">July 28, 2016 at 6:56 pm</span>
+
+					</div>
+				<div class="comment_text">
+					<ul class = "comment_id2409802 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'afakhar';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2409802");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2409802">
+								</div>
+								<div class = "nitro_points pointscomment_id2409802">
+								</div>
+							</li>
+							</ul>
+					<div class = "clear"></div> <p>VERY HELPFUL. THANK YOU.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2409802" class = "commentLikeButton commentlike" data-nitro =afakhar >2 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2409750">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Salman Naqvi						</span>
+						<br />
+						<span class="comment-meta commentmetadata">July 28, 2016 at 11:36 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Juan, I have seen a number of ACI demos since it's inception over two years ago, and this series of demos (all three), are by far, the most powerful, useful and informative demos I've seen. Simply awesome. The videos are especially just amazing. Keep it up! :)</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2409750" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2406794">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Juan Lage						</span>
+						<br />
+						<span class="comment-meta commentmetadata">July 8, 2016 at 1:43 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Thanks once again for the kind comments.
+
+
+
+@Matt, if you use micro EPGs with DVS having EX series, we program the dvPortGroup to only allow traffic sent to the leaf. At the leaf we classify per vNIC into the right uEPG. So yes, the policy is enforced at the leaf indeed, not the VDS. If you have levels of affinity this is sub-optimal, but even then the actual impact on application performance is usually marginal, and the advantage is that you do not have to install any additional bits on the hypervisor, thus keeping it simpler for all purposes. That said, AVS gives extra advantages so I tend to recommend it.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2406794" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li>
+			<div id="comment-2410520">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Sakshi Saxena						</span>
+						<br />
+						<span class="comment-meta commentmetadata">August 2, 2016 at 12:05 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Hi Juan, thanks for the explanation. Regarding EX leaf switches support for Vmware DVS, what actually gets configured in leaf policy so that traffic always goes to the leaf even when its the same VM port group. When two VMs in the same ESXi on the same port group try to communicate, in a usual scenario, they will be switched through the DVS itself and never go to the leaf. What is so special with ACI managed vmware DVS? Why can't E-series leafs support this?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2410520" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li>
+			<div id="comment-2410521">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Sakshi Saxena						</span>
+						<br />
+						<span class="comment-meta commentmetadata">August 2, 2016 at 12:07 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Hi Juan, in addition to me question above, I am looking at it from microsegmentation perspective.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2410521" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li class="comment even depth-4" id="li-comment-2410529">
+				<div id="comment-2410529">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1464013175-bpthumb.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/juanlage'>Juan Lage</a></span><br />
+							<span class="comment-meta commentmetadata">August 2, 2016 at 12:43 am</span>
+
+						</div>
+						<div class="comment_text">
+							<ul class = "comment_id2410529 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'jlage';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2410529");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2410529">
+								</div>
+								<div class = "nitro_points pointscomment_id2410529">
+								</div>
+							</li>
+							</ul>
+							<div class = "clear"></div>
+							<p>Hello Sakshi, thanks for reading and thanks for the question. We don't need any magic at the VDS dvPortgroup level. When you configure a regular EPG and map it to the VDS-based VMM domain you can now click on "allow micro segmentation". When we do this, we program the dvPortGroup as an isolated PVLAN. This disables VM to to VM communication locally, and all traffic has to flow through the leaf. At the leaf there are various ways we can identify each endpoint of course, so that when you configure a uEPG, we can place the endpoint's MAC traffic under the right uEPG and apply the right policy. A VM in the base EPG and/or on a uEPG may still need to talk to another VM on the same EPG/uEPG on the same hosts, so that means we need to proxy-arp as well. All of this together requires working with EX-based hardware. There are no hardware requirements though if you use the AVS. In the case of the AVS the implementation is clearly very different. I hope this clarifies! :-)</p>						</div>
+
+							<div class = "roblike">
+					<a  href = "#" id = "clickLike2410529" class = "commentLikeButton commentlike" data-nitro =jlage >0 likes</a>				</div>
+				<div class="reply">
+															</div>
+							<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+<li>
+			<div id="comment-2406746">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg' width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+							<a href = "https://blogs.cisco.com/rewards-profile/8228">Jason Kuhne</a>
+						</span>
+						<br />
+						<span class="comment-meta commentmetadata">July 7, 2016 at 3:03 pm</span>
+
+					</div>
+				<div class="comment_text">
+					<ul class = "comment_id2406746 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'jkuhne';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2406746");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2406746">
+								</div>
+								<div class = "nitro_points pointscomment_id2406746">
+								</div>
+							</li>
+							</ul>
+					<div class = "clear"></div> <p>Great job Juan.  Great example, well put together and informative.  I enjoyed reading and watching.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2406746" class = "commentLikeButton commentlike" data-nitro =jkuhne >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+<li>
+			<div id="comment-2401814">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/photo_1510675184.jpg' width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+							<a href = "https://blogs.cisco.com/rewards-profile/6301">Glen Kaufman</a>
+						</span>
+						<br />
+						<span class="comment-meta commentmetadata">June 13, 2016 at 10:27 am</span>
+
+					</div>
+				<div class="comment_text">
+					<ul class = "comment_id2401814 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'glkaufma';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2401814");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2401814">
+								</div>
+								<div class = "nitro_points pointscomment_id2401814">
+								</div>
+							</li>
+							</ul>
+					<div class = "clear"></div> <p>Nicely done!
+
+
+
+I have a lab setup with VMWare 5.5 and ACI 1.2(3c).  I've noticed your vSphere Web client has lot more "ACI tools" in the navigation pane.  I'm not seeing the same tools in my setup.
+
+
+
+Do I need to add "ACI Tools" into the VMWare vSphere application or do I need to upgrade VMWare and\or ACI?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2401814" class = "commentLikeButton commentlike" data-nitro =glkaufma>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li>
+			<div id="comment-2401862">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Juan Lage						</span>
+						<br />
+						<span class="comment-meta commentmetadata">June 13, 2016 at 2:17 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>thanks for the kind words :-)
+
+
+
+@Glen,
+
+
+
+the "ACI Tools" you may be referring to on vCenter are thanks to the ACI vCenter Plugin. This is an optional plugin that I am using as a "preview" in my demos. It will be available on CCO with the ACI 2.0 release in a few weeks, and it will work with vCenter 5.5 as well as 6.0. 
+
+
+
+I hope this helps!</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2401862" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li>
+			<div id="comment-2403968">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Anonymous						</span>
+						<br />
+						<span class="comment-meta commentmetadata">June 19, 2016 at 10:00 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Juan to be clear for you to get VM-attributes you need AVS installed. Just Vmware VDS will not let you group VM's into uSeg EPG's?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2403968" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li>
+			<div id="comment-2404017">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Juan Lage						</span>
+						<br />
+						<span class="comment-meta commentmetadata">June 19, 2016 at 1:44 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Ok just to be very clear: for you to get VM-attributes to group VM into uEPG, you do NOT need AVS. This works also with the VDS since APIC 1.3(1g) with EX model switches as leafs. It is very clear on the release notes: http://www.cisco.com/c/en/us/td/docs/switches/datacenter/aci/apic/sw/1-x/release/notes/apic_rn_131.html#_Toc423506698
+
+Similarly, the vCenter Plugin that I show on the demo works on both AVS and VDS VMM Domains, however this requires APIC 2.0 that will be shipping soon. Hope this clarifies.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2404017" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li>
+			<div id="comment-2404078">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Anonymous						</span>
+						<br />
+						<span class="comment-meta commentmetadata">June 19, 2016 at 5:38 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>got it thanks.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2404078" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2406754">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Matt						</span>
+						<br />
+						<span class="comment-meta commentmetadata">July 7, 2016 at 4:51 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>This was a really helpful blog entry,  thank you!
+
+
+
+Regarding the micro-segmentation support using the EX series and DVS rather than AVS,  where does the policy get enforced in that case?  Is it being enforced by the DVS,  or does the traffic come up to the leaf?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2406754" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+<li>
+			<div id="comment-2400841">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg' width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+							<a href = "https://blogs.cisco.com/rewards-profile/7467">Troy Levin</a>
+						</span>
+						<br />
+						<span class="comment-meta commentmetadata">June 10, 2016 at 7:59 am</span>
+
+					</div>
+				<div class="comment_text">
+					<ul class = "comment_id2400841 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'tlevin';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2400841");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2400841">
+								</div>
+								<div class = "nitro_points pointscomment_id2400841">
+								</div>
+							</li>
+							</ul>
+					<div class = "clear"></div> <p>Great demo Juan - extremely informative!</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2400841" class = "commentLikeButton commentlike" data-nitro =tlevin>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2400364">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Tomi						</span>
+						<br />
+						<span class="comment-meta commentmetadata">June 9, 2016 at 12:07 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Superb! Well done Juan :-)</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2400364" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Data Center:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogDataCenterNetworks', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogDataCenterNetworks" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Data Center</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscodc"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/CiscoDC"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco-data-center-and-cloud?trk=biz-brand-tree-co-name"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/114381144808300038585/posts"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/Ciscodatacenter/presentations"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://www.youtube.com/user/Cisco/videos?sort=dd&view=46&tag_id=UCEWiIE6Htd8mvlOR6YQez1g.3.data-center-virtualization"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogDataCenterNetworks"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+
+	<li id ="twitter_widget" class="widget">
+
+	<!-- white background -->
+	<div class="topContainer">
+	 <div class="twit_container">
+
+		<div id="twit_req">
+
+			<span class="widgetheading">
+				Tweets
+			</span>
+
+			<a href="https://twitter.com/" target="_blank"><span class="twit_logo"></span></a>
+							<div class="clear"></div>
+							</div>
+			<!-- <span class="twit_logo" href="#"></span> -->
+			<div class="clear"></div>
+		</div></div>
+		</li>
+
+<br class="clear" />
+
+<script type = "text/javascript">
+
+jQuery(document).ready(function() {
+ //Calling Twitter Widget
+var url = "https://tts-prod.cloudapps.cisco.com/ciscotweetsapp/api/v1/gettweets/ciscodc/response.jsonp";
+
+		loadSpotlightTweet(url);
+
+		//Metrics for each reply retweet and favorites(loop for each tweet)
+		cdc.util.addMetricsRule(".twit_reply", {linktext: "reply"});
+		cdc.util.addMetricsRule(".twit_retweet", {linktext: " retweet "});
+		cdc.util.addMetricsRule(".twit_favorite", {linktext: " favorite "});
+
+	   //lpos for all clicks inside twitter_widget
+		cdc.util.addMetricsRule("#twitter_widget a[href]", {lpos: "tweets"});
+
+});
+
+String.prototype.parseURL = function() {
+	var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+	return this.replace(exp, "<a href='$1' target='_blank'>$1</a>");
+};
+
+String.prototype.parseUsername = function() {
+	return this.replace(/[@]+[A-Za-z0-9-_]+/g, function(u) {
+		var username = u.replace("@", "");
+		// return u.link("http://twitter.com/" + username);
+		return '<a target="_blank" href="https://twitter.com/' + username
+				+ '">' + u + '</a>';
+		// return u.link(window.open('http://www.google.com', '_blank',
+		// 'toolbar=0,location=0,menubar=0'));
+	});
+
+};
+
+String.prototype.parseHashtag = function() {
+	return this.replace(/[#]+[A-Za-z0-9-_]+/g, function(t) {
+		var tag = t.replace("#", "%23");
+		// tag = tag.replace(tag,"<a href='$1' target='_blank'>$1</a>");
+		// return t.link("https://twitter.com/search?q=" + tag +
+		// "&src=hash");//https://twitter.com/search?q=%23retail&src=hash
+		return '<a target="_blank" href="https://twitter.com/search?q=' + tag
+				+ '&src=hash">' + t + '</a>';
+	});
+
+};
+
+function parseURLEntities(t, arg) {
+	for ( var j = 0; j < arg.length; j++) {
+		t = t.replace(arg[j].url, '<a target="_blank" href="' + arg[j].url
+				+ '">' + arg[j].displayURL + '</a>');
+	}
+	return t;
+}
+
+
+function parseDate(str) {
+	var v = str.split(' ');
+	return new Date(Date.parse(v[1] + " " + v[2] + ", " + v[5] + " " + v[3]
+			+ " UTC"));
+}
+
+function selectDay() {
+	var d = new Date();
+	var weekday = new Array(7);
+	weekday[0] = "Sun";
+	weekday[1] = "Mon";
+	weekday[2] = "Tue";
+	weekday[3] = "Wed";
+	weekday[4] = "Thu";
+	weekday[5] = "Fri";
+	weekday[6] = "Sat";
+
+	var n = weekday[d.getDay()];
+
+	return n;
+}
+
+
+var checkIE = function () {
+    var a = navigator.userAgent;
+    return {
+        ie: a.match(/MSIE\s([^;]*)/)
+    };
+}();
+
+
+function relative_time(time_value) {
+	//time_value is in millisecond (GMT)
+
+	var d = new Date(time_value);//converting to our local PST default Date Format
+	//console.log('PST : ' + d);
+
+	var values = d.toString().split(" ");
+	var time_value_format = values[1] + " " + values[2] + ", " + values[3] + " " + values[4];
+//	console.log(time_value_format);
+
+	var parsed_date = Date.parse(time_value_format);
+    var relative_to = (arguments.length > 1) ? arguments[1] : new Date();
+//    console.log(relative_to.getTime());
+    var delta = parseInt((relative_to.getTime() - parsed_date) / 1000);
+    //delta = delta + (relative_to.getTimezoneOffset() * 60); 	//Not Required: converting into GMT since we are getting in GMT Format
+
+   	if (delta < 60) {
+		return delta + 's';
+	} else if (delta < 120) {
+		return '1m';
+	} else if (delta < (60 * 60)) {
+		return (parseInt(delta / 60)).toString() + 'm';
+	} else if (delta < (120 * 60)) {
+		return '1h';
+	} else if (delta < (24 * 60 * 60)) {
+		return (parseInt(delta / 3600)).toString() + 'h';
+	} else if (delta < (48 * 60 * 60)) {
+		return values[2] + " " + values[1];
+	} else {
+		return values[2] + " " + values[1];
+	}
+
+}
+
+
+	function loadSpotlightTweet(tweetsURL)
+	{
+
+	try {
+		var req = jQuery.ajax({
+			url: tweetsURL,
+			async: false,
+			dataType : "jsonp",
+			timeout : 1000,
+
+		});
+
+			req
+				.success(function(data) {
+			var metricsUser= "";
+
+				  if(data == "")
+					  return;
+
+					var arr1 = [];
+					var displayVal = [];
+
+					for ( var i = data.length-1; i >= 0; i -= 1) {
+
+						arr1.push(data[i].createdAt);
+
+					}
+
+					arr1.sort();
+
+                // Sorting for tweets based on Time
+				for ( var i = arr1.length - 1; i >= 0; i -=1) {
+
+						for ( var j = 0; j < data.length; j++) {
+
+							if (arr1[i] == (data[j].createdAt)) {
+								displayVal.push(j);
+
+							}
+						}
+					}
+
+					//Tweets Multiple Display URL Links
+					var t1 = "";
+					var screen_Name = "";
+					var retweeted = "";
+
+					 // Retweets User/Screen Names.
+					 var RetScreenName = "";
+					 var RetUserName = "" ;
+					 var tUserName = "";
+                     var tScreenName = "";
+                     var profileImg = "";
+
+					var loopArr = [];
+
+					for ( var k = 0; k < displayVal.length; k++) {
+
+						if (data[displayVal[k]].urlEntities != null) {
+							t1 = parseURLEntities(data[displayVal[k]].text,
+									data[displayVal[k]].urlEntities);
+						} else {
+							t1 = (data[displayVal[k]].text)
+									.parseURL();
+						}
+
+						//End Tweets Links
+
+						// Check Re-tweeted Status
+                       retweeted = data[displayVal[k]].retweet;
+
+						if(retweeted)
+						{
+                           RetScreenName = data[displayVal[k]].rtScreenName ;
+						   RetUserName = data[displayVal[k]].rtUserName;
+						   profileImg = data[displayVal[k]].rtProfileImageURL;
+						}
+						else
+						{
+                           RetScreenName = data[displayVal[k]].screenName ;
+						   RetUserName = data[displayVal[k]].userName;
+						   profileImg = data[displayVal[k]].profileImageURLHttps;
+						}
+
+						// Widget contents
+
+						jQuery('.twit_container')
+								.append(
+										 '<div class="single_tweet">'
+     									+ '<div id="twit_avatar" class="twit_avatar">'
+										+ '<img border="0" src="'
+										+ profileImg
+										+ '" width="40" height="40" style="border-radius:5px;"/></div>'
+
+										+ '<div class="twit_content"><div class ="twit_userinfo">'
+										+ '<a class="twit_realname" id="twit_realname" href="https://twitter.com/'
+										+ RetScreenName
+										+ '" target="_blank">'
+										+ RetUserName
+										+ '</a><br/>'
+										+ '<a id="twit_username" href="https://twitter.com/'
+										+ RetScreenName
+										+ '" target="_blank">@'
+										+ RetScreenName
+										+ '</a></div>'
+										+ '<div class ="timestamp"><a href="https://twitter.com/'
+										+ RetScreenName
+										+ '/status/'
+										+ data[displayVal[k]].id
+										+ '" target="_blank">'
+										+ relative_time(data[displayVal[k]].createdAt)
+									    + '</a></div>'
+										+ '<div class="clear"></div></div>'
+										+ '<div class="clear"></div>'
+
+                                        + '<div id="twit_text" class="twit_text">'
+												+ t1.parseUsername()
+														.parseHashtag()
+												+ '</div>'
+
+												//Retweeted Content
+												+ '<div class="re-tweet"><div class="retweet_img"><span class="retweet_badge"><a href="" class="retweeted_icon"></a><span class="retweet_text"> Retweeted By <a class="rtwit" href="https://twitter.com/'
+												+ data[displayVal[k]].screenName
+												+ '" target="_blank">'
+												+ data[displayVal[k]].userName
+												+ '</a></span></span></div></div>'
+
+												+ '<div class ="twit_actions">'
+
+												+ '<a class="twit_reply" href = "https://twitter.com/intent/tweet?in_reply_to='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+ '<a class="twit_retweet" href = "https://twitter.com/intent/retweet?tweet_id='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+ '<a class ="twit_favorite" href = "https://twitter.com/intent/favorite?tweet_id='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+'<span class="twit_follow"><a href="https://twitter.com/intent/follow?screen_name='
+												+ data[displayVal[k]].screenName
+												+ '" target="_blank"></a></span>'
+
+												+ '<div class ="clear"></div>'
+												+ '</div></div></div>');
+
+
+
+
+					// Retweeted Status Show/Hide
+					if (retweeted) {
+							jQuery(".re-tweet").eq(k).css("display", "inline");
+						} else {
+							jQuery(".re-tweet").eq(k).css("display", "none");
+						}
+
+
+	}
+
+					//End Widget Contents
+
+
+                // To sort and match properly
+	            jQuery('div.twit_container').find('.single_tweet:eq(0)').clone().appendTo('.twit_container');
+
+				// Metrics for each tweet <--link id to group links in each tweet content--->
+				// cdc.util.addMetricsRule('.single_tweet a[href]', {lid: '" + @twittusername+ "'});
+
+				jQuery(".single_tweet").each(function(i){
+				    var user = jQuery(this).find('#twit_username').text();
+				    var links = jQuery(".single_tweet:eq("+i+") a[href]").get();
+				    cdc.util.addMetricsRule(links, {lid: user });
+				});
+
+					// Loop Through Tweets
+					jQuery('.topContainer').css('display','block');
+					elems = jQuery('.single_tweet').hide().get();
+
+					(function loop() {
+						var i = 0, pointer = jQuery(elems).filter(':visible:last')[0]
+								|| jQuery(elems).last()[0];
+
+						jQuery(elems).hide();
+
+						while (i < 3) {
+							pointer = jQuery(pointer).next()[0]
+									|| jQuery(elems).first()[0];
+							jQuery(pointer).show();
+							i += 1;
+						}
+
+						setTimeout(loop, 12000); // 12 seconds 120000
+					})();
+
+				//End of looping three tweets
+
+
+
+});
+
+		// End of Reply/Retweet/Fav link mouse over/out
+
+		req
+				.error(function(msg) {
+					console.log("In Error of rate limit exception: " + msg);
+					//alert("Rate Limit Exceeded: Please Check after some time.Thank you for your patience. ");
+
+				});
+
+
+	} catch (err) {
+		txt = "There was an error on this page.\n\n";
+		txt += "Error description: " + err.message + "\n\n";
+		txt += "Click OK to continue.\n\n";
+		alert(txt);
+	}
+}
+</script>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.bladewatch.com/" target="_blank">Blade Watch</a></li>
+                      <li><a href="http://www.infoworld.com/?source=nav_BLOGS" target="_blank">InfoWorld</a></li>
+                      <li><a href="http://www.networkworld.com/blogs/" target="_blank">Network World</a></li>
+                      <li><a href="http://blogs.techrepublic.com.com/" target="_blank">TechRepublic</a></li>
+                      <li><a href="http://datacenterjournal.com/index.php" target="_blank">The Data Center Journal</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscodc'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/CiscoDC'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco-data-center-and-cloud?trk=biz-brand-tree-co-name'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/114381144808300038585/posts'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 195579;
+			var orig_count = 5;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=https://blogs.cisco.com/datacenter/micro-segmentation-ciscoaci&text=%23CiscoACI+Micro-Segmentation+-+From+Theory+to+Practice+%5BBlog%5D+%40CiscoDC&via=JuanLage" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/datacenter/micro-segmentation-ciscoaci&title=Micro Segmentation and Cisco ACI &#8211; From Theory to Practice" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/datacenter/micro-segmentation-ciscoaci" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/datacenter/micro-segmentation-ciscoaci" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Micro Segmentation and Cisco ACI &#8211; From Theory to Practice&body=I saw this post on Cisco Data Center blog and thought you might like to read it.%0A%0AMicro Segmentation and Cisco ACI &#8211; From Theory to Practice%0A%0Ahttps://blogs.cisco.com/datacenter/micro-segmentation-ciscoaci%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

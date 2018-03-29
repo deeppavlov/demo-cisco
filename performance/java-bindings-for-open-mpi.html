@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Java Bindings for Open MPI</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"143142"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='There is No Limit to Innovation' href='https://blogs.cisco.com/news/there-is-no-limit-to-innovation' />
+<link rel='next' title='Unified Gateway: More is better, but sometimes less is more!' href='https://blogs.cisco.com/sp/unified-gateway-more-is-better-but-sometimes-less-is-more' />
+
+<link rel="canonical" href="https://blogs.cisco.com/performance/java-bindings-for-open-mpi" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=143142' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Java Bindings for Open MPI"/>
+  <meta property="og:url" content="https://blogs.cisco.com/performance/java-bindings-for-open-mpi"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2014-04-30T12:10:55+00:00"/>
+  <meta property="article:modified_time" content="2014-05-01T05:23:06+00:00" />
+  <meta property="og:updated_time" content="2014-05-01T05:23:06+00:00" />
+  <meta property="article:section" content="High Performance Computing Networking"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Java Bindings for Open MPI"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/performance/java-bindings-for-open-mpi"/>
+  <meta name="twitter:description" content="Today&#039;s guest blog post is from Oscar Vega-Gisbert and Dr. Jose Roman from the Department of Information Systems and Computing at the Universitat Politècnica de València, Spain.
+
+
+
+We provide an overview of how to use the Java bindings included in Open MPI. The aim is to expose MPI functionality to"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:creator" content="@http://www.twitter.com/jsquyres"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521445142";
+		var sig = "9af71f50b75a619e9b79b797410ee2a3";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://cs.co/9008iB4I&text=Java Bindings for Open MPI&via=Cisco" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/performance/java-bindings-for-open-mpi&title=Java Bindings for Open MPI" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/performance/java-bindings-for-open-mpi" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/performance/java-bindings-for-open-mpi" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Java Bindings for Open MPI&body=I saw this post on Cisco High Performance Computing Networking blog and thought you might like to read it.%0A%0AJava Bindings for Open MPI%0A%0Ahttps://blogs.cisco.com/performance/java-bindings-for-open-mpi%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/performance/'>High Performance Computing Networking</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category51.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							High Performance Computing Networking  						</span>
+						<h1 id="post-143142" class="kindle_title title">Java Bindings for Open MPI</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1442325273-bpthumb.jpg"></div><div class="author_rewards_box">			<ul class = "nitro_author143142 bunchballAwards">
+		<li>
+			<div class = "nitro_badge badgenitro_author143142">
+			</div>
+			<div class = "nitro_points pointsnitro_author143142">
+			</div>
+		</li>
+		<script>
+var nitroName = 'jsquyres';
+var sessionKey = '';
+
+
+nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "postBadges", "nitro_author143142");</script>
+
+		</ul>
+		</ul>
+	<div class = "clear"></div>
+</div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/jeffsquyres" title="Posts by Jeff Squyres" rel="author">Jeff Squyres</a> - April 30, 2014 - 0 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p><em><strong>Today&#8217;s <font color="red">guest blog</font> post is from <a href="https://plus.google.com/102595449454696157294/about" target="_blank">Oscar Vega-Gisbert</a> and <a href="http://users.dsic.upv.es/~jroman/" target="_blank">Dr. Jose Roman</a> from the Department of Information Systems and Computing at the Universitat Politècnica de València, Spain.</strong></em></p>
+<p>We provide an overview of how to use the <font color="red">Java</font> <font color="red">bindings</font> included in Open <font color="red">MPI</font>. The aim is to expose <font color="red">MPI</font> functionality to <font color="red">Java</font> programmers with minimal performance penalties.</p>
+<p><span id="more-143142"></span>Our approach is based on the <font color="red">Java</font> Native Interface (JNI), a mechanism that allows the application programmer to call native subroutines and libraries from <font color="red">Java</font> and vice versa. Native code is typically written in C/C++ and runs directly on the operating system where the <font color="red">Java</font> <font color="red">virtual machine</font> is running. The <font color="red">Java</font> <font color="red">MPI</font> <font color="red">bindings</font> consist of a thin interface on top of the Open <font color="red">MPI</font> C native library, which is invoked via JNI. The Java-JNI layer just performs minimal bookkeeping required for language translation, such as wrapping <font color="red">MPI</font> object handlers with <font color="red">Java</font> objects. Hence, our <font color="red">Java</font> <font color="red">bindings</font> essentially are a 1-to-1 mapping to the <font color="red">MPI</font> C <font color="red">bindings</font>—they are not intended as a class library with higher-level semantics and functionality beyond the <font color="red">MPI</font> specification.</p>
+<p>JNI <font color="red">communication</font> usually takes place in the <font color="red">Java</font>-C direction, that is, a Java method invokes an <font color="red">MPI</font> primitive via JNI and returns the result back to <font color="red">Java</font>. However, we also make provision for <font color="red">communication</font> in the opposite direction, that is, when the <font color="red">MPI</font> C library needs to invoke a method in the <font color="red">Java</font> application code. This is required for callback-based functionality such as performing a reduction with a user-defined operation.</p>
+<p>The following listing illustrates the <font color="red">Java</font> <font color="red">bindings</font> with a simple example.</p>
+<pre>public static void main(String args[]) throws MPIException
+
+{
+
+    MPI.Init(args);
+
+
+
+    <font color="red">int</font> rank = MPI.COMM_WORLD.getRank(),
+
+        size = MPI.COMM_WORLD.getSize(),
+
+        n<font color="red">int</font> = 100; // Intervals.
+
+    double h = 1.0 / (double)nint,
+
+           sum = 0.0;
+
+    for (int i = rank + 1; i &lt;= nint; i += size) {
+
+        double x = h * ((double)i - 0.5);
+
+        sum += (4.0 / (1.0 + x * x));
+
+    }
+
+
+
+    double sBuf[] = { h * sum },
+
+           rBuf[] = new double[1];
+
+
+
+    MPI.COMM_WORLD.reduce(sBuf, rBuf, 1, MPI.DOUBLE, MPI.SUM, 0);
+
+    if (rank == 0) System.out.println("PI: "+ rBuf[0]);
+
+
+
+    MPI.Finalize();
+
+}</pre>
+<p>&nbsp;</p>
+<p>In order to use <font color="red">Java</font> <font color="red">bindings</font> in Open <font color="red">MPI</font>, they must be enabled during configuration. If the JDK can be found in a standard location, the simplest way to do this is:</p>
+<pre><strong>shell$</strong> ./configure --enable-mpi-java ...</pre>
+<p>&nbsp;</p>
+<p>After configuration and compilation, a class file <font color="red">MPI</font>.jar will be created. It will be copied to the destination directory during make install.</p>
+<p>For convenience, an</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">mpijavac</div></div>
+<p>wrapper compiler has been provided for compiling Java-based <font color="red">MPI</font> applications. It ensures that all required MPI libraries and class paths are defined. Once the application has been compiled, the user can run it with the standard <font color="red">mpirun</font> <font color="red">command line</font>:</p>
+<pre><strong>shell$</strong> <font color="red">mpirun</font> &lt;options&gt; <font color="red">java</font> &lt;java-options&gt; &lt;my-app&gt;</pre>
+<p>&nbsp;</p>
+<p>For convenience,</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer"><font color="red">mpirun</font></div></div>
+<p>has been updated to detect the <font color="red">java</font> command and ensure that the required <font color="red">MPI</font> libraries and class paths are defined to support execution. Therefore, it is not necessary to specify the <font color="red">Java</font> library path to the <font color="red">MPI</font> installation, nor the <font color="red">MPI</font> classpath. Any class path definitions required for the application should be specified either on the <font color="red">command line</font> or via the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">CLASSPATH</div></div>
+<p>environmental variable.</p>
+<p><strong>Overall organization</strong></p>
+<p>There is an</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer"><font color="red">mpi</font></div></div>
+<p>package that contains all classes of the <font color="red">MPI</font> <font color="red">Java</font> <font color="red">bindings</font>:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Comm</div></div>
+<p>,</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer"><font color="red">Datatype</font></div></div>
+<p>,</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Request</div></div>
+<p>, etc. Most of these classes have a direct correspondence with classes defined by the <font color="red">MPI</font> standard. <font color="red">MPI</font> primitives are just methods included in these classes. The convention used for naming <font color="red">Java</font> methods and classes is the usual camel-case convention, e.g., the equivalent of</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">MPI_File_set_info(fh,info)</div></div>
+<p>is</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">fh.setInfo(info)</div></div>
+<p>, where</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">fh</div></div>
+<p>is an object of the class</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">File</div></div>
+<p>.</p>
+<p>Apart from the classes, the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer"><font color="red">mpi</font></div></div>
+<p>package contains predefined public attributes under a convenience class called</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer"><font color="red">MPI</font></div></div>
+<p>. Examples are the predefined <font color="red">communicator</font></p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">MPI.COMM_WORLD</div></div>
+<p>or predefined <font color="red">datatypes</font> such as</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer"><font color="red">MPI</font>.DOUBLE</div></div>
+<p>. Also, <font color="red">MPI</font> initialization and finalization are methods of the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer"><font color="red">MPI</font></div></div>
+<p>class and must be invoked by all MPI <font color="red">Java</font> applications; see the example above.</p>
+<p><strong><font color="red">Point-to-point communication</font></strong></p>
+<p><font color="red">Point-to-point communication</font> is realized via methods of the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Comm</div></div>
+<p>class. The standard</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">send()</div></div>
+<p>and</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">recv()</div></div>
+<p>operations take the usual arguments: the message, consisting of the <font color="red">buffer</font>, number of elements and <font color="red">datatype</font>, and the envelope, consisting of the process rank and the <font color="red">tag</font> (the <font color="red">communicator</font> is implicit by the object that effects the method call).</p>
+<p>The following example shows a simple <font color="red">communication</font> between two processes. It also exemplifies the use of the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Status</div></div>
+<p>class returned by the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">recv()</div></div>
+<p>primitive. If status is not required, then it can just be omitted from the call, and hence there is no need for an equivalent to</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">MPI_STATUS_IGNORE</div></div>
+<p>.</p>
+<pre>Comm comm = MPI.COMM_WORLD;
+
+<font color="red">int</font> me = comm.getRank();
+
+
+
+if (me == 0) {
+
+    comm.send(<font color="red">data</font>, 5, MPI.DOUBLE, 1, 1);
+
+} else if (me == 1) {
+
+    Status status = comm.recv(<font color="red">data</font>, 5, MPI.DOUBLE, MPI.ANY_SOURCE, 1);
+
+    <font color="red">int</font> count = status.getCount(MPI.DOUBLE);
+
+    <font color="red">int</font> <font color="red">src</font> = status.getSource();
+
+    System.out.println("Received "+ count +" values from "+ <font color="red">src</font>);
+
+}</pre>
+<p>&nbsp;</p>
+<p>Apart from the standard <font color="red">communication</font> primitives, we can also use the primitives for synchronous, buffered and ready modes, as well as the corresponding non-blocking variants. When invoking a non-blocking method, a</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Request</div></div>
+<p>object is returned, which can be subsequently used to manage the completion of the operation.</p>
+<p><strong>How to specify <font color="red">buffers</font></strong></p>
+<p>In general, in <font color="red">MPI</font> primitives that require a <font color="red">buffer</font> (either send or receive), the <font color="red">Java</font> <font color="red">API</font> admits a <font color="red">Java</font> array. Since <font color="red">Java</font> arrays can be relocated by the <font color="red">Java</font> runtime environment, the <font color="red">MPI</font> <font color="red">Java</font> <font color="red">bindings</font> need to make a copy of the contents of the array to a temporary <font color="red">buffer</font>, then pass the pointer to this <font color="red">buffer</font> to the underlying C implementation. From the practical point of view, this implies an overhead associated to all <font color="red">buffers</font> that are represented by <font color="red">Java</font> arrays. The overhead is small for small <font color="red">buffers</font> but increases for large arrays.</p>
+<p>An alternative is to use <em>direct <font color="red">buffers</font></em> provided by standard classes available in the <font color="red">Java</font> SDK such as</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Byte<font color="red">Buffer</font></div></div>
+<p>. For convenience, we provide a few static methods</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">new[Type]Buffer()</div></div>
+<p>in the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer"><font color="red">MPI</font></div></div>
+<p>class to create direct <font color="red">buffers</font> for a number of basic <font color="red">datatypes</font>. Elements of the direct <font color="red">buffer</font> can be accessed with methods</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">put()</div></div>
+<p>and</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">get()</div></div>
+<p>, and the number of elements in the <font color="red">buffer</font> can be obtained with the method</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">capacity()</div></div>
+<p>. The following example illustrates its use.</p>
+<pre><font color="red">int</font> myself = MPI.COMM_WORLD.getRank();
+
+<font color="red">int</font> tasks = MPI.COMM_WORLD.getSize();
+
+
+
+IntBuffer in = MPI.newIntBuffer(MAXLEN * tasks),
+
+out = MPI.newIntBuffer(MAXLEN);
+
+
+
+for (<font color="red">int</font> i = 0; i &lt; MAXLEN; i++)
+
+    out.put(i, myself); // fill the <font color="red">buffer</font> with the rank
+
+
+
+Request request = MPI.COMM_WORLD.iAllGather(
+
+                  out, MAXLEN, MPI.INT, in, MAXLEN, MPI.INT);
+
+// do other work here
+
+request.waitFor();
+
+request.free();
+
+
+
+for (<font color="red">int</font> i = 0; i &lt; tasks; i++) {
+
+    for (<font color="red">int</font> k = 0; k &lt; MAXLEN; k++) {
+
+        if (in.get(k + i * MAXLEN) != i)
+
+            throw new AssertionError("Unexpected value");
+
+    }
+
+}</pre>
+<p>&nbsp;</p>
+<p>Direct <font color="red">buffers</font> are available for predefined <font color="red">datatypes</font>:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer"><font color="red">BYTE</font></div></div>
+<p>,</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">CHAR</div></div>
+<p>,</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">SHORT</div></div>
+<p>,</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer"><font color="red">INT</font></div></div>
+<p>,</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">LONG</div></div>
+<p>,</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">FLOAT</div></div>
+<p>, and</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">DOUBLE</div></div>
+<p>.</p>
+<p>Direct <font color="red">buffers</font> are not a replacement for arrays because they have higher allocation and deallocation costs compared to arrays. In some cases arrays will be a better choice, typically in small <font color="red">buffers</font>. One can easily convert a direct <font color="red">buffer</font> into an array and vice versa. There is also the possibility of a non-direct</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer"><font color="red">Buffer</font></div></div>
+<p>, that employs an array internally.</p>
+<p>Even though in most cases it is possible to choose between arrays and direct <font color="red">buffers</font>, there are some restrictions in certain operations. All non-blocking methods must use direct <font color="red">buffers</font> and only blocking methods can choose between arrays and <font color="red">buffers</font>. When a method in the <font color="red">API</font> declares the <font color="red">buffer</font> argument as an</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Object</div></div>
+<p>, then it can be either an array or a direct or non-direct <font color="red">buffer</font>.</p>
+<p><font color="red">Buffer</font> arguments must always be either arrays or <font color="red">buffers</font>. If one wants to send or receive a simple variable such as an</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer"><font color="red">int</font></div></div>
+<p>it must be declared as an array:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer"><font color="red">int</font> k[] = { value }</div></div>
+<p>, as in the first example above. In any <font color="red">communication</font> operation, if the <font color="red">buffer</font> argument is an array (or a non-direct <font color="red">buffer</font>), the <font color="red">datatype</font> specified in the call must match the type of the array elements, e.g.,</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">MPI.INT</div></div>
+<p>for</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer"><font color="red">int</font>[]</div></div>
+<p>.</p>
+<p>In a C program, it is common to specify an offset in an array with</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&amp;amp;array[i]</div></div>
+<p>or</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">(array+i)</div></div>
+<p>, for instance to send <font color="red">data</font> starting from a given position in the array. The equivalent form in the <font color="red">Java</font> <font color="red">bindings</font> is to</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">slice()</div></div>
+<p>the <font color="red">buffer</font> to start at an offset, as shown below. Making a</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">slice()</div></div>
+<p>on a <font color="red">buffer</font> is only necessary when the offset is not zero. This slicing mechanism works for both arrays and direct <font color="red">buffers</font>.</p>
+<pre>import static mpi.MPI.slice;
+
+...
+
+<font color="red">int</font> numbers[] = new <font color="red">int</font>[SIZE];
+
+...
+
+MPI.COMM_WORLD.send(slice(numbers, offset), count, MPI.INT, 1, 0);</pre>
+<p>&nbsp;</p>
+<p><strong>Derived <font color="red">datatypes</font></strong></p>
+<p>The <font color="red">Java</font> <font color="red">bindings</font> also allow the definition of derived <font color="red">datatypes</font>, such as contiguous, vector or indexed. The example below uses a derived <font color="red">datatype</font> to send the 3×3 leading block of an N×N matrix that has been stored as a one-dimensional array.</p>
+<pre>
+
+double A[] = new double[N*N]; // flattened 2D matrix
+
+<font color="red">Datatype</font> blk = Datatype.createVector(3, 3, N, MPI.DOUBLE);
+
+blk.commit();
+
+<font color="red">int</font> rank = MPI.COMM_WORLD.getRank();
+
+if (rank == 0) {
+
+    MPI.COMM_WORLD.send(A, 1, blk, 1, 0);
+
+} else if (rank==1) {
+
+    MPI.COMM_WORLD.recv(A, 1, blk, 0, 0);
+
+}
+
+blk.free();
+
+</pre>
+<p>&nbsp;</p>
+<p>We also allow for struct-like derived <font color="red">datatypes</font>, which must be implemented by subclassing the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Struct</div></div>
+<p>class. Although we already have the classes</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">DoubleComplex</div></div>
+<p>and</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">FloatComplex</div></div>
+<p>, the following example shows how to create a struct in order to represent a complex number.</p>
+<pre>
+
+public class Complex extends Struct
+
+{
+
+    // This section defines the offsets of the fields.
+
+    private final <font color="red">int</font> real = addDouble(),
+
+    imag = addDouble();
+
+
+
+    // This method tells the super class how to create a <font color="red">data</font> object.
+
+    @Override protected <font color="red">Data</font> newData() { return <font color="red">new Data</font>(); }
+
+
+
+    public class <font color="red">Data</font> extends Struct.Data
+
+    {
+
+        // These methods read from the <font color="red">buffer</font>:
+
+        public double getReal() { return getDouble(real); }
+
+        public double getImag() { return getDouble(imag); }
+
+
+
+       // These methods write to the <font color="red">buffer</font>:
+
+       public void putReal(double r) { putDouble(real, r); }
+
+       public void putImag(double i) { putDouble(imag, i); }
+
+    } // <font color="red">Data</font>
+
+} // Complex
+
+</pre>
+<p>&nbsp;</p>
+<p>Once the struct has been defined, it can be used to create an object that corresponds to the new type. Below is an example of how to access the elements of an array of complex numbers stored in a direct <font color="red">byte</font> <font color="red">buffer</font>.</p>
+<pre>
+
+Complex type = new Complex();
+
+ByteBuffer <font color="red">buffer</font> = MPI.newByteBuffer(type.getExtent() * count);
+
+
+
+for (<font color="red">int</font> i = 0; i &lt; count; i++) {
+
+    Complex.Data c = type.getData(<font color="red">buffer</font>, i);
+
+    c.putReal(0);
+
+    c.putImag(i * 0.5);
+
+}
+
+
+
+MPI.COMM_WORLD.send(<font color="red">buffer</font>, count, type.getType(), 1, 0);
+
+</pre>
+<p>&nbsp;</p>
+<p>We provide several predefined, composite <font color="red">datatypes</font> such as</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">DOUBLE_INT</div></div>
+<p>, which are implemented with the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Struct</div></div>
+<p>mechanism mentioned above. This allows using the native implementation of the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer"><font color="red">MPI</font>_MAXLOC</div></div>
+<p>and</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">MPI_MINLOC</div></div>
+<p>reduction operations via JNI.</p>
+<p><strong>Other features</strong></p>
+<p>The Open MPI <font color="red">Java</font> <font color="red">bindings</font> also provide the following features:</p>
+<ul>
+<li>Exception handling.</li>
+<li>User-defined operators for reduction operations.</li>
+<li>Collective <font color="red">communication</font> operations, including non-blocking primitives and neighbor <font color="red">communication</font> introduced in MPI-3.</li>
+<li>Support for inter-communicators, including client-server <font color="red">communication</font> schemes.</li>
+<li>Parallel I/O with the File class.</li>
+<li>One-sided <font color="red">communication</font> primitives such as
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">put()</div></div>
+<p>and</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">get()</div></div>
+<p>, operating on an object that has been previously declared with the constructor</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Win()</div></div>
+<p>.</lu>
+</ul>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=hpc">HPC</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=java">java</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=mpi">mpi</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=open-mpi">Open MPI</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+		</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to High Performance Computing Networking:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogHighPerformanceComputingNetworking', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogHighPerformanceComputingNetworking" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with High Performance Computing Networking</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/Cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/Cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://youtube.com/Cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogHighPerformanceComputingNetworking"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.twit.tv/FLOSS" target="_blank">FLOSS Weekly</a></li>
+                      <li><a href="http://www.hpcwire.com/" target="_blank">HPCwire</a></li>
+                      <li><a href="http://insidehpc.com/" target="_blank">insideHPC</a></li>
+                      <li><a href="http://www.rce-cast.com/" target="_blank">RCE-cast</a></li>
+                      <li><a href="http://perilsofparallel.blogspot.com/" target="_blank">The Perils of Parallel</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/Cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/Cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 143142;
+			var orig_count = 0;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://cs.co/9008iB4I&text=Java Bindings for Open MPI&via=Cisco" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/performance/java-bindings-for-open-mpi&title=Java Bindings for Open MPI" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/performance/java-bindings-for-open-mpi" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/performance/java-bindings-for-open-mpi" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Java Bindings for Open MPI&body=I saw this post on Cisco High Performance Computing Networking blog and thought you might like to read it.%0A%0AJava Bindings for Open MPI%0A%0Ahttps://blogs.cisco.com/performance/java-bindings-for-open-mpi%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

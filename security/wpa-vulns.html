@@ -1,0 +1,2627 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Perspective About the Recent WPA Vulnerabilities (KRACK Attacks)</title>
+
+	<meta property="og:image" content="https://alln-extcloud-storage.cisco.com/ciscoblogs/5a75ebbb61699.png"/><meta property="og:description" content="On October 16th,Mathy Vanhoef and Frank Piessens, from the University of Leuven, published a paper disclosing a series of vulnerabilities that affect the Wi-Fi Protected Access (WPA) and the..."/><meta name="description" content="On October 16th,Mathy Vanhoef and Frank Piessens, from the University of Leuven, published a paper disclosing a series of vulnerabilities that affect the Wi-Fi Protected Access (WPA) and the..."/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; Perspective About the Recent WPA Vulnerabilities (KRACK Attacks) Comments Feed" href="https://blogs.cisco.com/security/wpa-vulns/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"235368"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='The Cisco Foodies' href='https://blogs.cisco.com/lifeatcisco/the-cisco-foodies' />
+<link rel='next' title='Cisco Showing New FDX capabilities at SCTE Cable Expo 2017' href='https://blogs.cisco.com/sp/cisco-showing-new-fdx-capabilities-at-scte-cable-expo-2017' />
+
+<link rel="canonical" href="https://blogs.cisco.com/security/wpa-vulns" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=235368' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Perspective About the Recent WPA Vulnerabilities (KRACK Attacks)"/>
+  <meta property="og:url" content="https://blogs.cisco.com/security/wpa-vulns"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2017-10-16T07:04:44+00:00"/>
+  <meta property="article:modified_time" content="2018-02-03T09:05:49+00:00" />
+  <meta property="og:updated_time" content="2018-02-03T09:05:49+00:00" />
+  <meta property="article:section" content="Security"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Perspective About the Recent WPA Vulnerabilities (KRACK Attacks)"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/security/wpa-vulns"/>
+  <meta name="twitter:description" content="On October 16th,Mathy Vanhoef and Frank Piessens, from the University of Leuven, published a paper disclosing a series of vulnerabilities that affect the Wi-Fi Protected Access (WPA) and the..."/>
+  <meta name="twitter:image" content="https://alln-extcloud-storage.cisco.com/ciscoblogs/5a75ebbb61699.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:creator" content="@https://twitter.com/santosomar"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521511955";
+		var sig = "db3d6aac3e39ef55aaa66dd41355a398";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/2yp5ScN&text=Perspective About the Recent WPA Vulnerabilities (KRACK Attacks)&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/wpa-vulns&title=Perspective About the Recent WPA Vulnerabilities (KRACK Attacks)" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/wpa-vulns" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/wpa-vulns" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Perspective About the Recent WPA Vulnerabilities (KRACK Attacks)&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0APerspective About the Recent WPA Vulnerabilities (KRACK Attacks)%0A%0Ahttps://blogs.cisco.com/security/wpa-vulns%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/security/'>Security</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/5a75ebbb61699.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Security  						</span>
+						<h1 id="post-235368" class="kindle_title title">Perspective About the Recent WPA Vulnerabilities (KRACK Attacks)</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1492091254-bpthumb.jpg"></div><div class="author_rewards_box">			<ul class = "nitro_author235368 bunchballAwards">
+		<li>
+			<div class = "nitro_badge badgenitro_author235368">
+			</div>
+			<div class = "nitro_points pointsnitro_author235368">
+			</div>
+		</li>
+		<script>
+var nitroName = 'osantos';
+var sessionKey = '';
+
+
+nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "postBadges", "nitro_author235368");</script>
+
+		</ul>
+		</ul>
+	<div class = "clear"></div>
+</div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/omarsantos" title="Posts by Omar Santos" rel="author">Omar Santos</a> - October 16, 2017 - 37 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p>On October 16<sup>th</sup>,Mathy Vanhoef and Frank Piessens, from the University of Leuven, published <a href="https://papers.mathyvanhoef.com/ccs2017.pdf">a paper</a> disclosing a series of <font color="red">vulnerabilities</font> that affect the Wi-Fi Protected Access (WPA) and the Wi-Fi Protected Access II (WPA2) protocols. These are protocol-level <font color="red">vulnerabilities</font> that affect <font color="red">wireless</font> vendors providing infrastructure devices and <font color="red">wireless</font> clients, which follow the WPA and WPA2 specifications. These <font color="red">vulnerabilities</font> were also referred to as “<a href="https://www.krackattacks.com/">KRACK</a>” (<font color="red">Key</font> <font color="red">Reinstallation</font> <font color="red">AttaCK</font>) and details were published at: <a href="https://www.krackattacks.com">https://www.krackattacks.com<br />
+</a></p>
+<h1>What <font color="red">Cisco</font> Products are Affected?</h1>
+<p>The <a href="https://www.cisco.com/c/en/us/about/security-center/security-vulnerability-policy.html"><font color="red">Cisco</font> Product <font color="red">Security Incident Response</font> Team (<font color="red">PSIRT</font>)</a> has disclosed the impact of these <font color="red">vulnerabilities</font> in <font color="red">Cisco</font> products at the following <font color="red">Cisco</font> <font color="red">Security Advisory</font>:<br />
+<a href="https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20171016-wpa">https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20171016-wpa</a></p>
+<p>It is important to note both affected <font color="red">access points</font> and the associated clients must be patched in order to fully remediate this issue. Installing the patches only in infrastructure <font color="red">wireless</font> devices will not be sufficient in order to address all of the <font color="red">vulnerabilities</font>. Similarly, fixing only the client will address nine (9) of the ten (10) <font color="red">vulnerabilities</font>; however, it will not fix the <font color="red">vulnerability</font> documented at CVE-2017-13082.</p>
+<p>&nbsp;</p>
+<h1>Industry Coordination</h1>
+<p><a href="https://www.mathyvanhoef.com/p/publications.html">Mathy Vanhoef</a> originally reported these <font color="red">vulnerabilities</font> to the <a href="https://www.cisco.com/c/en/us/about/security-center/security-vulnerability-policy.html"><font color="red">Cisco</font> <font color="red">PSIRT</font></a> and we engaged the <a href="https://icasi.org/">Industry Consortium for Advancement of <font color="red">Security</font> on the Internet (ICASI)</a> via the <a href="http://www.icasi.org/current-activities/">Unified <font color="red">Security Incident Response</font> Plan (USIRP)</a>.</p>
+<p><em>The USIRP enables Product <font color="red">Security Incident Response</font> Teams (<font color="red">PSIRTs</font>) from ICASI member companies to collaborate quickly and effectively to resolve complex, multi-stakeholder Internet <font color="red">security</font> issues. These issues include: <font color="red">vulnerabilities</font> in commonly-used software; <font color="red">incidents</font> – urgent or emergent – that affect multiple ICASI member organizations; and ongoing or long-term problems that warrant a strategic response.</em></p>
+<p><font color="red">Cisco</font> also worked with the researchers, <a href="https://www.kb.cert.org/vuls/id/228519">CERT coordination center</a>, the <a href="https://www.wi-fi.org/">Wi-Fi Alliance</a>, and several other industry peers during the investigation of these <font color="red">vulnerabilities</font>.</p>
+<p>ICASI has published a summary of the industry coordination and <font color="red">collaboration</font> at the following link: <a href="http://www.icasi.org/wi-fi-protected-access-wpa-vulnerabilities">http://www.icasi.org/wi-fi-protected-access-wpa-vulnerabilities<br />
+</a></p>
+<h1><font color="red">Vulnerability</font> Details and Additional Information</h1>
+<p>The following Common <font color="red">Vulnerability</font> and Exposure (CVE) identifiers have been assigned to each of these <font color="red">vulnerabilities</font>:</p>
+<ul>
+<li style="list-style-type: none">
+<ul>
+<li>CVE-2017-13077
+<ul>
+<li><font color="red">Reinstallation</font> of the <font color="red">pairwise key</font> in the <a href="https://upload.wikimedia.org/wikipedia/commons/a/ac/4-way-<font color="red">handshake</font>.svg">Four-way handshake</a>.</li>
+<li>The <font color="red">vulnerability</font> could allow an unauthenticated, <font color="red">adjacent attacker</font> to force a <font color="red">supplicant</font> to reinstall a previously used <font color="red">pairwise key</font>.</li>
+<li>An <font color="red">attacker</font> could exploit this <font color="red">vulnerability</font> by establishing a <font color="red">man-in-the-middle position</font> between <font color="red">supplicant</font> and <font color="red">authenticator</font> and <font color="red">retransmitting</font> previously used message exchanges between <font color="red">supplicant</font> and <font color="red">authenticator</font>.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p>&nbsp;</p>
+<ul>
+<li style="list-style-type: none">
+<ul>
+<li>CVE-2017-13078
+<ul>
+<li><font color="red">Reinstallation</font> of the group key in the Four-way handshake.</li>
+<li>The vulnerability could allow an unauthenticated, adjacent attacker to force a supplicant to reinstall a previously used group key.</li>
+<li>An attacker could exploit this vulnerability by establishing a man-in-the-middle position between supplicant and authenticator and retransmitting previously used message exchanges between supplicant and authenticator.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p>&nbsp;</p>
+<ul>
+<li style="list-style-type: none">
+<ul>
+<li>CVE-2017-13079
+<ul>
+<li>Reinstallation of the integrity group key in the Four-way handshake.</li>
+<li>The vulnerability could allow an unauthenticated, adjacent attacker to force a supplicant to reinstall a previously used integrity group key.</li>
+<li>An attacker could exploit this vulnerability by establishing a man-in-the-middle position between supplicant and authenticator and retransmitting previously used message exchanges between supplicant and authenticator.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p>&nbsp;</p>
+<ul>
+<li style="list-style-type: none">
+<ul>
+<li>CVE-2017-13080
+<ul>
+<li>Reinstallation of the group key in the Group Key handshake.Reinstallation of the group key in the Group Key handshake.</li>
+<li>The vulnerability could allow an unauthenticated, adjacent attacker to force a supplicant to reinstall a previously used group key.</li>
+<li>An attacker could exploit this vulnerability by establishing a man-in-the-middle position between supplicant and authenticator and retransmitting previously used message exchanges between supplicant and authenticator.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p>&nbsp;</p>
+<ul>
+<li style="list-style-type: none">
+<ul>
+<li>CVE-2017-13081
+<ul>
+<li>Reinstallation of the integrity group key in the Group Key handshake.</li>
+<li>The vulnerability could allow an unauthenticated, adjacent attacker to force a supplicant to reinstall a previously used integrity group key.</li>
+<li>An attacker could exploit this vulnerability by establishing a man-in-the-middle position between supplicant and authenticator and retransmitting previously used message exchanges between supplicant and authenticator.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p>&nbsp;</p>
+<ul>
+<li style="list-style-type: none">
+<ul>
+<li>CVE-2017-13082
+<ul>
+<li>Accepting a retransmitted Fast BSS Transition Re-association Request and reinstalling the <font color="red">pairwise key</font> while processing it.</li>
+<li>The vulnerability could allow an unauthenticated, adjacent attacker to force an authenticator to reinstall a previously used pairwise key.</li>
+<li>An attacker could exploit this vulnerability by passively eavesdropping on an FT <font color="red">handshake</font>, and then replaying the re-association request from the supplicant to the authenticator.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p>&nbsp;</p>
+<ul>
+<li style="list-style-type: none">
+<ul>
+<li>CVE-2017-13084
+<ul>
+<li>Reinstallation of the Station-to-station link (STSL) Transient Key (STK) in the PeerKey handshake.</li>
+<li>The <font color="red">vulnerability</font> could allow an unauthenticated, <font color="red">adjacent attacker</font> to force an STSL to reinstall a previously used STK.</li>
+<li>An attacker could exploit this vulnerability by establishing a man-in-the-middle position between the stations and retransmitting previously used messages exchanges between stations.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p>&nbsp;</p>
+<ul>
+<li style="list-style-type: none">
+<ul>
+<li>CVE-2017-13086
+<ul>
+<li>Reinstallation of the <a href="https://en.wikipedia.org/wiki/TDLS">Tunneled Direct-Link Setup (TDLS)</a> PeerKey (TPK) key in the TDLS handshake.</li>
+<li>The vulnerability could allow an unauthenticated, adjacent attacker to force a <font color="red">supplicant</font> that is compliant with the 802.11z standard, to reinstall a previously used TPK key.</li>
+<li>An <font color="red">attacker</font> could exploit this <font color="red">vulnerability</font> by passively eavesdropping on a TDLS handshake and retransmitting previously used message exchanges between <font color="red">supplicant</font> and <font color="red">authenticator</font>.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p>&nbsp;</p>
+<ul>
+<li style="list-style-type: none">
+<ul>
+<li>CVE-2017-13087
+<ul>
+<li>Reinstallation of the group key (GTK) when processing a Wireless Network Management (WNM) Sleep Mode Response frame.</li>
+<li>The vulnerability could allow an unauthenticated, adjacent attacker to force a supplicant that is compliant with the <a href="https://en.wikipedia.org/wiki/IEEE_802.11v">802.11v standard</a>, to reinstall a previously used group key.</li>
+<li>An attacker could exploit this vulnerability by passively eavesdropping and <font color="red">retransmitting</font> previously used WNM Sleep Mode Response frames.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p>&nbsp;</p>
+<ul>
+<li>CVE-2017-13088
+<ul>
+<li>Reinstallation of the integrity group key (IGTK) when processing a WNM Sleep Mode Response frame.</li>
+<li>The vulnerability could allow an unauthenticated, adjacent attacker to force a <font color="red">supplicant</font> that is compliant with the <a href="https://en.wikipedia.org/wiki/IEEE_802.11v">802.11v standard</a>, to reinstall a previously used integrity group key.</li>
+<li>An attacker could exploit this vulnerability by passively eavesdropping and retransmitting previously used WNM Sleep Mode Response frames.</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p>&nbsp;</p>
+<h1>Impact Categories</h1>
+<p>The aforementioned vulnerabilities can be grouped into two categories:</p>
+<ul>
+<li>those that affect wireless endpoints acting as a “supplicant”</li>
+<li>those that affect wireless infrastructure devices acting as &#8220;<font color="red">authenticator</font>s&#8221;</li>
+</ul>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/59e0fafeeaa3d.png"><img class="aligncenter wp-image-235390" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/59e0fafeeaa3d.png" alt="" width="1111" height="406" /></a></p>
+<p>&nbsp;</p>
+<h1>Exploitation</h1>
+<p>Exploitation of these vulnerabilities depend on the specific device configuration. Successful exploitation could allow unauthenticated attackers the reinstallation of a previously used encryption or integrity key (either by the client or the access point, depending on the specific vulnerability).</p>
+<p>Once a previously used key has successfully being reinstalled (by exploiting the disclosed vulnerabilities), an attacker may proceed to capture traffic using the reinstalled key and attempt to decrypt such traffic. In addition, the attacker may attempt to forge or replay previously seen traffic.</p>
+<p>An attacker can perform these activities by manipulating retransmissions of <font color="red">handshake</font> messages.</p>
+<p>Additional details on example attack scenarios can be found on the <a href="https://papers.mathyvanhoef.com/ccs2017.pdf">published paper</a> and at the <a href="https://www.krackattacks.com">KRACK Attack website</a>.</p>
+<p>In all cases, an <font color="red">attacker</font> will need to be adjacent to the access point, wireless router, repeater, or the client under attack. In other words, the attacker must be able to reach the affected<br />
+wireless network.</p>
+<h1>A Way to Detect the Attacks</h1>
+<p>Several of the attacks disclosed for attacker to “present” the same Basic Service Set Identification (BSSID) as the real access point (AP), but instead operating on a different channel. An SSID is the primary name associated with wireless local area network (WLAN) including enterprise networks, home networks, public hotspots, and more.</p>
+<p>Client devices use this name to identify and join wireless networks.This can be detected by <a href="https://www.cisco.com/c/en/us/products/wireless/product-listing.html">Cisco enterprise wireless access points</a> and customer can take actions based on notifications from the Wireless LAN Controllers (WLCs).</p>
+<p>There are two fundamental ways that the <a href="https://www.krackattacks.com/">KRACK</a> attacks can be executed against WLANs:</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/59e4b0a2dc0ce.png"><img class="aligncenter wp-image-235498 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/59e4b0a2dc0ce.png" alt="KRACK Attacks against WLANs" width="1685" height="431" /></a></p>
+<p>&nbsp;</p>
+<ol>
+<li><strong>Faking an infrastructure AP (rogue AP)</strong>: this includes creating same MAC address, but different channel. This is fairly easy to do; however, the attack is “very visible&#8221; (i.e., it can be easily detected).</li>
+<li><strong>Injecting frames into a valid connection, forcing the client to react</strong>: this attack can be a little harder to detect; however, it can still be detected by looking for  <em>null key attacks</em>, or Initialization Vector (IV) reuse. The wireless infrastructure devices (APs, WLCs, etc.) to detect data frames sent with its own mac address on currently operating channel. Wireless SMEs are looking into this.</li>
+</ol>
+<h2 id="toc-hId--1861836692">EAPoL Attack Protections</h2>
+<p>The following applies to vulnerabilities described in CVE-2017-13077 through CVE-2017-13081. Wireless clients can be protected relatively easy using Cisco Wireless LAN Controllers (WLCs).</p>
+<p>In order to successfully exploit these vulnerabilities the attacker needs at least one additional EAPoL retry generated by the <font color="red">authenticator</font> during the WPA 4-way <font color="red">handshake</font> , or during the broadcast key rotation. Blocking the retries will prevent exploitation of the Pairwise Transient Key (PTK)/Group-wise Transient Key (GTK) vulnerabilities.</p>
+<p><a class="auto_toc_anchor" name="anc7"></a></p>
+<p><a class="auto_toc_anchor" name="anc8"></a></p>
+<h3 id="toc-hId--491216848">Configuration</h3>
+<p>There are two mechanisms available to achieve this configuration:</p>
+<ul>
+<li>Global: available in all releases</li>
+<li>Per WLAN: available  from Cisco WLC 7.6 to latest</li>
+</ul>
+<p>The global option is the easiest to implement from the two options. All Cisco WLC versions support this option. When configuring .</p>
+<p>Per WLAN configuration setting allows a more granular control, with the possibility to limit which SSID gets impacted, so the changes could be applied per device types, etc, if they are grouped on specific wlans. This is available from version 7.6</p>
+<p>For example, it could be applied to a generic 802.1x WLAN, but not into a voice specific WLAN, where it may have a larger impact</p>
+<p>&nbsp;</p>
+<h3><strong>Global configuration:</strong></h3>
+<pre><strong>config advanced eap eapol-key-retries 0</strong></pre>
+<p>(CLI only option)</p>
+<p>The value can be validated with:</p>
+<pre>(2500-1-ipv6) &gt;<strong>show advanced eap</strong>
+
+EAP-Identity-Request Timeout (seconds)........... 30
+
+EAP-Identity-Request Max Retries................. 2
+
+EAP Key-Index for Dynamic WEP.................... 0
+
+EAP Max-Login Ignore Identity Response........... enable
+
+EAP-Request Timeout (seconds).................... 30
+
+EAP-Request Max Retries.......................... 2
+
+EAPOL-Key Timeout (milliseconds)................. 1000
+
+EAPOL-Key Max Retries............................ 0
+
+EAP-Broadcast Key Interval....................... 3600</pre>
+<h4></h4>
+<h3><strong>Per WLAN configuration:</strong></h3>
+<p><em>X=WLAN ID</em></p>
+<pre><strong>config wlan security eap-params enable X</strong>
+
+<strong>config wlan security eap-params eapol-key-retries 0 X</strong>
+
+
+
+</pre>
+<p><a class="auto_toc_anchor" name="anc10"></a></p>
+<h3>How to Identify if a Client is Deleted Due to Zero Retransmissions:</h3>
+<p>Client would be deleted due to max EAPoL retries reached, and deauthenticated. The retransmit count is 1, as the initial frame is counted</p>
+<pre> *Dot1x_NW_MsgTask_6: Oct 19 12:44:13.524: 28:34:a2:82:41:f6 Sending EAPOL-Key Message to mobile 28:34:a2:82:41:f6
+
+ state PTKINITNEGOTIATING (message 3), replay counter 00.00.00.00.00.00.00.01
+
+..
+
+*osapiBsnTimer: Oct 19 12:44:14.042: 28:34:a2:82:41:f6 802.1x 'timeoutEvt' Timer expired for station 28:34:a2:82:41:f6 and for message = M3
+
+*Dot1x_NW_MsgTask_6: Oct 19 12:44:14.042: 28:34:a2:82:41:f6 Retransmit failure for EAPOL-Key M3 to mobile 28:34:a2:82:41:f6, retransmit count 1, mscb deauth count 0
+
+..
+
+*Dot1x_NW_MsgTask_6: Oct 19 12:44:14.043: 28:34:a2:82:41:f6 Sent Deauthenticate to mobile on BSSID 58:ac:78:89:b4:19 slot 1(caller 1x_ptsm.c:602)</pre>
+<p><a class="auto_toc_anchor" name="anc11"></a></p>
+<h2 id="toc-hId-1852108157">Rogue Detection</h2>
+<p>Several of the attack techniques for the vulnerabilities against the client PMK/GTK encryption, need to “present” a fake AP with the same SSID as the infrastructure AP, but operating on a different channel. This can be easily detected and the network administrator can take physical actions based on it, as it is a visible activity.</p>
+<p>There are 2 ways proposed so far to do the EAPoL attacks :</p>
+<ul>
+<li>Faking infrastructure AP,  in other words, acting as rogue AP, using same mac  address, of a real AP, but on a different channel. Easy to do for the <font color="red">attacker</font> but visible</li>
+<li>Injecting frames into a valid connection, forcing the client to react. This is a lot less visible, but detectable under some conditions, it may need very careful timing to be successful</li>
+</ul>
+<p>The combination of AP impersonation features and rogue detection can detect if a &#8220;fake ap&#8221; is being placed in the network.</p>
+<p><a class="auto_toc_anchor" name="anc12"></a></p>
+<h3 id="toc-hId-173736413">Complete the following steps in a Wireless LAN Controller (WLC):</h3>
+<p><strong>Step 1</strong>. Make sure rogue detection is enabled</p>
+<p><strong>Step 2</strong>. Create a rule to flag rogue APs using “managed SSIDs” as malicious:</p>
+<p><img class="aligncenter wp-image-235499 " src="https://alln-extcloud-storage.cisco.com/ciscoblogs/59e4b1dbd711b.jpg" alt="" width="950" height="511" /></p>
+<p>&nbsp;</p>
+<p><strong>Step 3</strong>. Navigate to <strong>Wireless &gt; 802.11a/n/ac &gt; RRM &gt; General </strong> and ensure that Channel List is set to &#8220;All Channels&#8221; under the Noise/Interference/Rogue/Clean Air Monitoring Channels section.</p>
+<p><img class="aligncenter wp-image-235500" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/59e4b2d58bb4f.jpg" alt="" width="955" height="534" /></p>
+<p>&nbsp;</p>
+<p>These recommendations have been part of wireless best practices and are documented at the <a class="https" href="https://www.cisco.com/c/en/us/td/docs/wireless/technology/wlc/8-5/82463-wlc-config-best-practice.html#pgfId-380056">Rogue Management and Detection best practice document.</a></p>
+<h2>C<span class="s1">isco Mobility Services (CMS) and Cisco Connected Mobile Experiences (CMX)</span></h2>
+<p class="p1"><span class="s1">Cisco Mobility Services (CMS) coupled with Cisco Connected Mobile Experiences (CMX) software allows for detection of KRACK.</span></p>
+<p class="p1"><span class="s1">With Cisco Connected Mobile Experiences (CMX) 10.4 (coming out November 2017) or MSE 8.0MR5 with PI 2.2 and later, the location of the Rogue AP will be shown to the network administrator.</span></p>
+<p class="p3"><span class="s2">This is done by leveraging Cisco CMX location algorithms coupled with the RSSI strength signal. The result will help pinpoint any rouge AP’s and thus help discover possible KRACK atttacks.</span></p>
+<h1>Workarounds</h1>
+<p>The <a href="https://www.cisco.com/c/en/us/td/docs/wireless/controller/technotes/80211r-ft/b-80211r-dg.html">IEEE 802.11r or fast BSS transition (FT)</a> &#8212; also called &#8220;fast roaming&#8221; – could be disabled in a wireless infrastructure device to mitigate some of these vulnerabilities. Unfortunately, disabling FT will introduce performance issues in busy environments.</p>
+<p>The FT key hierarchy is designed to allow clients to make fast BSS transitions between access points (APs) without requiring re-authentication at every AP. Modern WLAN devices support FT and typically it is enabled by default. When FT is enabled, the initial <font color="red">handshake</font> allows the wireless client and APs to calculate the Pairwise Transient <font color="red">Key</font> (PTK) in advance. These PTK <font color="red">key</font>s are applied to the client and the AP after the client does the re-association request or response exchange with new target AP. Disabling FT could cause instability and performance issues in wireless networks and why it is not considered as a workaround in most environments.</p>
+<p>No workarounds have been identified for any of these vulnerabilities, with the exception of a workaround for <a href="https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20171016-wpa">CVE-2017-13082</a>.</p>
+<h3 id="toc-hId-173736413"></h3>
+<p><a class="auto_toc_anchor" name="anc13"></a></p>
+<h2 id="toc-hId--1762800769">AP impersonation</h2>
+<p>On default configuration, the infrastructure can detect if the attack tool is using one of our AP mac addresses. This is reported as an SNMP trap  and would be indication that the attack is taking place.</p>
+<pre><span style="color: #ff0000">Impersonation of AP with Base Radio MAC bc:16:65:13:a0:40</span> using source address of bc:16:65:13:a0:40 has been detected by the AP with MAC Address: bc:16:65:13:a0:40 on its 802.11b/g radio whose slot ID is 0</pre>
+<h1>Remediation</h1>
+<p>Cisco has started providing fixes for affected products, and will continue publishing software fixes for additional affected products, as they becomes available. The details about all affected products and available fixes can be found at the <a href="https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20171016-wpa">Cisco Security Advisory</a>.</p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=icasi">icasi</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=<font color="red">key</font>-reinstallation"><font color="red">key</font> reinstallation</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=krack">krack</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=krack-attack">krack attack</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=psirt">psirt</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=<font color="red">vulnerabilities</font>">vulnerabilities</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=<font color="red">wireless</font>-2"><font color="red">wireless</font></a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=wpa">wpa</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">37 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+			<li>
+			<div id="comment-2475380">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Alexandre Vianna						</span>
+						<br />
+						<span class="comment-meta commentmetadata">November 8, 2017 at 3:21 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Hi and what is the rules for fix that in Cisco Autonomous APs ?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2475380" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2474483">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Rupert Wever						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 20, 2017 at 12:44 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Here's the CLI commands to enable the rule mentioned:
+
+---
+
+rogue ap ssid alarm
+
+rogue rule add ap priority 1 classify malicious notify all state alert Internal
+
+rogue rule enable Internal
+
+rogue rule match any Internal
+
+rogue rule condition ap set managed-ssid Internal
+
+---</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2474483" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2474410">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Andre Bazan						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 20, 2017 at 4:25 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Will upgrade correct which vulnerability?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2474410" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2474379">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						David Yarashus						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 19, 2017 at 1:25 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>I see that the Cisco AnyConnect Secure Mobility Client - Network Access Manager is listed as being vulnerable to CVE-2017-13078 and CVE-2017-13080. How does that impact a remote teleworker scenario, where they'd be using a Remote Access VPN with their Cisco AnyConnect client for everything running over that WPA2-based wireless link?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2474379" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li class="comment byuser comment-author-omarsantos bypostauthor even depth-2" id="li-comment-2474385">
+				<div id="comment-2474385">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1492091254-bpthumb.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/omarsantos'>Omar Santos</a></span><br />
+							<span class="comment-meta commentmetadata">October 19, 2017 at 4:01 pm</span>
+
+						</div>
+						<div class="comment_text">
+							<ul class = "comment_id2474385 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'osantos';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2474385");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2474385">
+								</div>
+								<div class = "nitro_points pointscomment_id2474385">
+								</div>
+							</li>
+							</ul>
+							<div class = "clear"></div>
+							<p>Hi David, This does not affect the VPN functionality. Only the wireless supplicant. An attacker cannot exploit this vulnerability over a VPN tunnel. It can only trigger the vulnerability if the attacker is adjacent (within proximity) of the wireless network.</p>						</div>
+
+							<div class = "roblike">
+					<a  href = "#" id = "clickLike2474385" class = "commentLikeButton commentlike" data-nitro =osantos >0 likes</a>				</div>
+				<div class="reply">
+															</div>
+							<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2474344">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						CH						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 19, 2017 at 6:46 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Is there a caveat id number for this, with a pending code fix?  Or with respect to the WLC are we just tweaking these settings and calling it good from the controller side?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2474344" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li class="comment byuser comment-author-omarsantos bypostauthor odd alt depth-2" id="li-comment-2474892">
+				<div id="comment-2474892">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1492091254-bpthumb.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/omarsantos'>Omar Santos</a></span><br />
+							<span class="comment-meta commentmetadata">October 23, 2017 at 6:26 am</span>
+
+						</div>
+						<div class="comment_text">
+							<ul class = "comment_id2474892 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'osantos';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2474892");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2474892">
+								</div>
+								<div class = "nitro_points pointscomment_id2474892">
+								</div>
+							</li>
+							</ul>
+							<div class = "clear"></div>
+							<p>Hi,
+
+
+
+If you are referring to the Cisco "bug IDs", they are listed in the security advisory and I also included them below:
+
+
+
+https://tools.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-20171016-wpa
+
+
+
+CSCvf71749
+
+CSCvf71751
+
+CSCvf71754
+
+CSCvf71761
+
+CSCvf96789
+
+CSCvf96814
+
+CSCvf96818
+
+CSCvg10793
+
+CSCvg35287
+
+CSCvg42682
+
+
+
+Thanks!
+
+Omar</p>						</div>
+
+							<div class = "roblike">
+					<a  href = "#" id = "clickLike2474892" class = "commentLikeButton commentlike" data-nitro =osantos >0 likes</a>				</div>
+				<div class="reply">
+															</div>
+							<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+<li>
+			<div id="comment-2474279">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg' width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+							<a href = "https://blogs.cisco.com/rewards-profile/649">Janos Simon</a>
+						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 18, 2017 at 8:57 am</span>
+
+					</div>
+				<div class="comment_text">
+					<ul class = "comment_id2474279 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'redoak';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2474279");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2474279">
+								</div>
+								<div class = "nitro_points pointscomment_id2474279">
+								</div>
+							</li>
+							</ul>
+					<div class = "clear"></div> <p>Based on https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2017-13080 Microsoft has already published the fixes for the Windows client OSs in the OS update of 10th October 2017.
+
+
+
+Do you have information about the mobile platforms?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2474279" class = "commentLikeButton commentlike" data-nitro =redoak >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li class="comment byuser comment-author-omarsantos bypostauthor even depth-2" id="li-comment-2474891">
+				<div id="comment-2474891">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1492091254-bpthumb.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/omarsantos'>Omar Santos</a></span><br />
+							<span class="comment-meta commentmetadata">October 23, 2017 at 6:25 am</span>
+
+						</div>
+						<div class="comment_text">
+							<ul class = "comment_id2474891 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'osantos';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2474891");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2474891">
+								</div>
+								<div class = "nitro_points pointscomment_id2474891">
+								</div>
+							</li>
+							</ul>
+							<div class = "clear"></div>
+							<p>For information about client fixes, you will have to refer to each vendor security advisory or support websites.
+
+
+
+Regards,
+
+Omar</p>						</div>
+
+							<div class = "roblike">
+					<a  href = "#" id = "clickLike2474891" class = "commentLikeButton commentlike" data-nitro =osantos >0 likes</a>				</div>
+				<div class="reply">
+															</div>
+							<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2474277">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Jimmy Gesher						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 18, 2017 at 7:58 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>"In all cases, an attacker will need to be adjacent to the access point, wireless router, repeater, or the client under attack. In other words, the attacker must be able to reach the affected wireless network."
+
+
+
+In light of this comment:
+
+
+
+https://www.cs.columbia.edu/~smb/blog/2017-10/2017-10-16a.html
+
+
+
+Your remark needs to be clarified. 
+
+
+
+The /attacker/ does not need to be adjacent to an affected wireless network. It is only necessary for the attacker to have control of a device which is in physical proximity to an affected wireless network.  The attacker could be physically present anywhere in the world, so long as he can get control of a nearby wireless device (even a wireless enabled printer) from which to launch an attack.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2474277" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+<li>
+			<div id="comment-2474196">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg' width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+							<a href = "https://blogs.cisco.com/rewards-profile/18742">Manjit Kumar Raulo</a>
+						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 17, 2017 at 8:42 am</span>
+
+					</div>
+				<div class="comment_text">
+					<ul class = "comment_id2474196 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'manjit_raulo';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2474196");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2474196">
+								</div>
+								<div class = "nitro_points pointscomment_id2474196">
+								</div>
+							</li>
+							</ul>
+					<div class = "clear"></div> <p>What I Understand from the post , if we disable FT under SSID, it will address  the AP related vulnerabilities.
+
+Rest 9 vulnerabilities , we have to patch clients.
+
+
+
+Can you pleas correct me here ?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2474196" class = "commentLikeButton commentlike" data-nitro =manjit_raulo>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li class="comment byuser comment-author-omarsantos bypostauthor odd alt depth-2" id="li-comment-2474198">
+				<div id="comment-2474198">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1492091254-bpthumb.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/omarsantos'>Omar Santos</a></span><br />
+							<span class="comment-meta commentmetadata">October 17, 2017 at 8:51 am</span>
+
+						</div>
+						<div class="comment_text">
+							<ul class = "comment_id2474198 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'osantos';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2474198");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2474198">
+								</div>
+								<div class = "nitro_points pointscomment_id2474198">
+								</div>
+							</li>
+							</ul>
+							<div class = "clear"></div>
+							<p>Hi Manjit,
+
+
+
+That is correct. Also we need to keep in mind that installing the patches only in infrastructure wireless devices will not be sufficient in order to address all of the vulnerabilities. Similarly, fixing only the client will address nine (9) of the ten (10) vulnerabilities; however, it will not fix the vulnerability documented at CVE-2017-13082.</p>						</div>
+
+							<div class = "roblike">
+					<a  href = "#" id = "clickLike2474198" class = "commentLikeButton commentlike" data-nitro =osantos >2 likes</a>				</div>
+				<div class="reply">
+															</div>
+							<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+	<ul class="children">
+
+			<li class="comment byuser comment-author-omarsantos bypostauthor even depth-3" id="li-comment-2474209">
+				<div id="comment-2474209">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1492091254-bpthumb.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/omarsantos'>Omar Santos</a></span><br />
+							<span class="comment-meta commentmetadata">October 17, 2017 at 10:52 am</span>
+
+						</div>
+						<div class="comment_text">
+							<ul class = "comment_id2474209 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'osantos';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2474209");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2474209">
+								</div>
+								<div class = "nitro_points pointscomment_id2474209">
+								</div>
+							</li>
+							</ul>
+							<div class = "clear"></div>
+							<p>Hi Manjit,
+
+
+
+As a follow up, the following document from Meraki provides a good summary of the impact of each vulnerability (see the first table).
+
+
+
+https://documentation.meraki.com/zGeneral_Administration/Support/802.11r_Vulnerability_(CVE%3A_2017-13082)_FAQ</p>						</div>
+
+							<div class = "roblike">
+					<a  href = "#" id = "clickLike2474209" class = "commentLikeButton commentlike" data-nitro =osantos >2 likes</a>				</div>
+				<div class="reply">
+															</div>
+							<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+	</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2474249">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Michal Maar						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 18, 2017 at 1:55 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Hi Omar,
+
+
+
+what does it mean "Similarly, fixing only the client ..." - how can I fix only the client, please? What does it mean, please?
+
+
+
+Thank you for reply.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2474249" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li class="comment byuser comment-author-omarsantos bypostauthor odd alt depth-4" id="li-comment-2474890">
+				<div id="comment-2474890">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1492091254-bpthumb.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/omarsantos'>Omar Santos</a></span><br />
+							<span class="comment-meta commentmetadata">October 23, 2017 at 6:24 am</span>
+
+						</div>
+						<div class="comment_text">
+							<ul class = "comment_id2474890 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'osantos';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2474890");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2474890">
+								</div>
+								<div class = "nitro_points pointscomment_id2474890">
+								</div>
+							</li>
+							</ul>
+							<div class = "clear"></div>
+							<p>Hi,
+
+
+
+The client (i.e., wireless supplicant) can be your laptop, mobile device, tablet, IoT device, etc. This means Windows, Apple MAC OS X, Apple iOS, Linux, Android, etc.
+
+For information about client fixes, you will have to refer to each vendor security advisory or support websites.
+
+
+
+Regards,
+
+Omar</p>						</div>
+
+							<div class = "roblike">
+					<a  href = "#" id = "clickLike2474890" class = "commentLikeButton commentlike" data-nitro =osantos >0 likes</a>				</div>
+				<div class="reply">
+															</div>
+							<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+<li>
+			<div id="comment-2474263">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg' width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+							<a href = "https://blogs.cisco.com/rewards-profile/18742">Manjit Kumar Raulo</a>
+						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 18, 2017 at 4:54 am</span>
+
+					</div>
+				<div class="comment_text">
+					<ul class = "comment_id2474263 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'manjit_raulo';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2474263");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2474263">
+								</div>
+								<div class = "nitro_points pointscomment_id2474263">
+								</div>
+							</li>
+							</ul>
+					<div class = "clear"></div> <p>Thanks a lot Omar !! It was really helpful to understand the impact.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2474263" class = "commentLikeButton commentlike" data-nitro =manjit_raulo >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2474278">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Andrew						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 18, 2017 at 8:35 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>So, just to confirm, if the customer is not using FT then they do not need to prioritize patching the controllers/APs. Is that correct?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2474278" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+<li>
+			<div id="comment-2474192">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg' width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+							<a href = "https://blogs.cisco.com/rewards-profile/18740">Terry Pelkey</a>
+						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 17, 2017 at 8:19 am</span>
+
+					</div>
+				<div class="comment_text">
+					<ul class = "comment_id2474192 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'tpelk35';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2474192");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2474192">
+								</div>
+								<div class = "nitro_points pointscomment_id2474192">
+								</div>
+							</li>
+							</ul>
+					<div class = "clear"></div> <p>I entered this same question as a guest (Terry)  
+
+
+
+What is the down side of  Creating a rule to flag rogue APs using “managed SSIDs” as malicious:?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2474192" class = "commentLikeButton commentlike" data-nitro =tpelk35 >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li class="comment byuser comment-author-omarsantos bypostauthor even depth-2" id="li-comment-2474194">
+				<div id="comment-2474194">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1492091254-bpthumb.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/omarsantos'>Omar Santos</a></span><br />
+							<span class="comment-meta commentmetadata">October 17, 2017 at 8:41 am</span>
+
+						</div>
+						<div class="comment_text">
+							<ul class = "comment_id2474194 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'osantos';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2474194");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2474194">
+								</div>
+								<div class = "nitro_points pointscomment_id2474194">
+								</div>
+							</li>
+							</ul>
+							<div class = "clear"></div>
+							<p>Hi Terry,
+
+
+
+The following are some guidelines to manage rogue devices:
+
+(these are documented at: https://www.cisco.com/c/en/us/td/docs/wireless/controller/8-3/config-guide/b_cg83/b_cg83_chapter_011011.html )
+
+
+
+The containment frames are sent immediately after the authorization and associations are detected. The enhanced containment algorithm provides more effective containment of ad hoc clients.
+
+
+
+In a dense RF environment, where maximum rogue access points are suspected, the chances of detecting rogue access points by a local mode access point and FlexConnect mode access point in channel 157 or channel 161 are less when compared to other channels. To mitigate this problem, we recommend that you use dedicated monitor mode access points.
+
+
+
+The local and FlexConnect mode access points are designed to serve associated clients. These access points spend relatively less time performing off-channel scanning: about 50 milliseconds on each channel. If you want to perform high rogue detection, a monitor mode access point must be used. Alternatively, you can reduce the scan intervals from 180 seconds to a lesser value, for example, 120 or 60 seconds, ensuring that the radio goes off-channel more frequently, which improves the chances of rogue detection. However, the access point will still spend about 50 milliseconds on each channel.
+
+
+
+Rogue detection is disabled by default for OfficeExtend access points because these access points, which are deployed in a home environment, are likely to detect a large number of rogue devices.
+
+
+
+Client card implementations might mitigate the effectiveness of ad hoc containment.
+
+
+
+It is possible to classify and report rogue access points through the use of rogue states and user-defined classification rules that enable rogues to automatically move between states.
+
+
+
+Each controller limits the number of rogue containment to three per radio (or six per radio for access points in the monitor mode).
+
+
+
+Rogue Location Discovery Protocol (RLDP) detects rogue access points that are configured for open authentication.
+
+
+
+RLDP detects rogue access points that use a broadcast Basic Service Set Identifier (BSSID), that is, the access point broadcasts its Service Set Identifier in beacons.
+
+
+
+RLDP detects only those rogue access points that are on the same network. If an access list in the network prevents the sending of RLDP traffic from the rogue access point to the controller, RLDP does not work.
+
+
+
+RLDP does not work on 5-GHz dynamic frequency selection (DFS) channels. However, RLDP works when the managed access point is in the monitor mode on a DFS channel.
+
+If RLDP is enabled on mesh APs, and the APs perform RLDP tasks, the mesh APs are dissociated from the controller. The workaround is to disable RLDP on mesh APs.
+
+
+
+If RLDP is enabled on nonmonitor APs, client connectivity outages occur when RLDP is in process.
+
+
+
+If the rogue is manually contained, the rogue entry is retained even after the rogue expires.
+
+
+
+If the rogue is contained by any other means, such as auto, rule, and AwIPS preventions, the rogue entry is deleted when it expires.</p>						</div>
+
+							<div class = "roblike">
+					<a  href = "#" id = "clickLike2474194" class = "commentLikeButton commentlike" data-nitro =osantos >2 likes</a>				</div>
+				<div class="reply">
+															</div>
+							<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2474190">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Terry						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 17, 2017 at 8:00 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>What is the down side to applying the rule to flag rogue APs using “managed SSIDs” as malicious?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2474190" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li class="comment byuser comment-author-omarsantos bypostauthor odd alt depth-2" id="li-comment-2474195">
+				<div id="comment-2474195">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1492091254-bpthumb.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/omarsantos'>Omar Santos</a></span><br />
+							<span class="comment-meta commentmetadata">October 17, 2017 at 8:41 am</span>
+
+						</div>
+						<div class="comment_text">
+							<ul class = "comment_id2474195 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'osantos';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2474195");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2474195">
+								</div>
+								<div class = "nitro_points pointscomment_id2474195">
+								</div>
+							</li>
+							</ul>
+							<div class = "clear"></div>
+							<p>Hi Terry,
+
+
+
+The following are some guidelines to manage rogue devices:
+
+(these are documented at: https://www.cisco.com/c/en/us/td/docs/wireless/controller/8-3/config-guide/b_cg83/b_cg83_chapter_011011.html )
+
+
+
+The containment frames are sent immediately after the authorization and associations are detected. The enhanced containment algorithm provides more effective containment of ad hoc clients.
+
+
+
+In a dense RF environment, where maximum rogue access points are suspected, the chances of detecting rogue access points by a local mode access point and FlexConnect mode access point in channel 157 or channel 161 are less when compared to other channels. To mitigate this problem, we recommend that you use dedicated monitor mode access points.
+
+
+
+The local and FlexConnect mode access points are designed to serve associated clients. These access points spend relatively less time performing off-channel scanning: about 50 milliseconds on each channel. If you want to perform high rogue detection, a monitor mode access point must be used. Alternatively, you can reduce the scan intervals from 180 seconds to a lesser value, for example, 120 or 60 seconds, ensuring that the radio goes off-channel more frequently, which improves the chances of rogue detection. However, the access point will still spend about 50 milliseconds on each channel.
+
+
+
+Rogue detection is disabled by default for OfficeExtend access points because these access points, which are deployed in a home environment, are likely to detect a large number of rogue devices.
+
+
+
+Client card implementations might mitigate the effectiveness of ad hoc containment.
+
+
+
+It is possible to classify and report rogue access points through the use of rogue states and user-defined classification rules that enable rogues to automatically move between states.
+
+
+
+Each controller limits the number of rogue containment to three per radio (or six per radio for access points in the monitor mode).
+
+
+
+Rogue Location Discovery Protocol (RLDP) detects rogue access points that are configured for open authentication.
+
+
+
+RLDP detects rogue access points that use a broadcast Basic Service Set Identifier (BSSID), that is, the access point broadcasts its Service Set Identifier in beacons.
+
+
+
+RLDP detects only those rogue access points that are on the same network. If an access list in the network prevents the sending of RLDP traffic from the rogue access point to the controller, RLDP does not work.
+
+
+
+RLDP does not work on 5-GHz dynamic frequency selection (DFS) channels. However, RLDP works when the managed access point is in the monitor mode on a DFS channel.
+
+If RLDP is enabled on mesh APs, and the APs perform RLDP tasks, the mesh APs are dissociated from the controller. The workaround is to disable RLDP on mesh APs.
+
+
+
+If RLDP is enabled on nonmonitor APs, client connectivity outages occur when RLDP is in process.
+
+
+
+If the rogue is manually contained, the rogue entry is retained even after the rogue expires.
+
+
+
+If the rogue is contained by any other means, such as auto, rule, and AwIPS preventions, the rogue entry is deleted when it expires.</p>						</div>
+
+							<div class = "roblike">
+					<a  href = "#" id = "clickLike2474195" class = "commentLikeButton commentlike" data-nitro =osantos >2 likes</a>				</div>
+				<div class="reply">
+															</div>
+							<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2474172">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Thomas O. Thomsen						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 17, 2017 at 12:37 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>What about 5760 and other IOS-XE WLCs. I cant seem to find those in the Cisco Security Advisory.
+
+Are they not affected ? I think not.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2474172" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2474160">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Kenny						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 16, 2017 at 10:50 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Wouldn’t the rogue detection kick in, because he sees a rogue AP broadcasting the same SSID. The WLC would have to be kicking his (rogue AP) ass with deauthentication frames being sent to the clients.
+
+
+
+Cheers</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2474160" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2474133">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Michael						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 16, 2017 at 3:50 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>awesome blog!</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2474133" class = "commentLikeButton commentlike" data-nitro = >8 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2474121">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Manish Mathew						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 16, 2017 at 2:41 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Is it possible to whitelist AP mac address and only allow those autentication requests?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2474121" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li class="comment byuser comment-author-omarsantos bypostauthor even depth-2" id="li-comment-2474123">
+				<div id="comment-2474123">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1492091254-bpthumb.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/omarsantos'>Omar Santos</a></span><br />
+							<span class="comment-meta commentmetadata">October 16, 2017 at 3:04 pm</span>
+
+						</div>
+						<div class="comment_text">
+							<ul class = "comment_id2474123 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'osantos';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2474123");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2474123">
+								</div>
+								<div class = "nitro_points pointscomment_id2474123">
+								</div>
+							</li>
+							</ul>
+							<div class = "clear"></div>
+							<p>Hi Manish,
+
+
+
+You can certainly whitelist MAC addresses, but in some cases they can also be spoofed.</p>						</div>
+
+							<div class = "roblike">
+					<a  href = "#" id = "clickLike2474123" class = "commentLikeButton commentlike" data-nitro =osantos>1 like</a>				</div>
+				<div class="reply">
+															</div>
+							<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2474120">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Barry Anderson						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 16, 2017 at 2:34 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Does .1X with RADIUS mitigate? I saw in the paper that although normal data frames can be forged EAPOL frames cannot and hence cannot impersonate the client or AP during subsequent handshakes?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2474120" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li class="comment byuser comment-author-omarsantos bypostauthor odd alt depth-2" id="li-comment-2474124">
+				<div id="comment-2474124">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1492091254-bpthumb.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/omarsantos'>Omar Santos</a></span><br />
+							<span class="comment-meta commentmetadata">October 16, 2017 at 3:06 pm</span>
+
+						</div>
+						<div class="comment_text">
+							<ul class = "comment_id2474124 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'osantos';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2474124");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2474124">
+								</div>
+								<div class = "nitro_points pointscomment_id2474124">
+								</div>
+							</li>
+							</ul>
+							<div class = "clear"></div>
+							<p>Hi Barry,
+
+
+
+The researchers confirmed that the attacks can be possible with both WPA-personal and WPA-enterprise (including .1x). They also cover this in their FAQ at: https://www.krackattacks.com/#faq
+
+
+
+I am copying and pasting here for completeness:
+
+
+
+Q: I'm using WPA2 with only AES. That's also vulnerable?
+
+A: Yes, that network configuration is also vulnerable. The attack works against both WPA1 and WPA2, against personal and enterprise networks, and against any cipher suite being used (WPA-TKIP, AES-CCMP, and GCMP).</p>						</div>
+
+							<div class = "roblike">
+					<a  href = "#" id = "clickLike2474124" class = "commentLikeButton commentlike" data-nitro =osantos>1 like</a>				</div>
+				<div class="reply">
+															</div>
+							<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+	<ul class="children">
+
+			<li>
+			<div id="comment-2474145">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Barry Anderson						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 16, 2017 at 7:10 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Omar, thanks - I meant proxied RADIUS (I just wasn't explicit enough), but perhaps it doesn't make any (or enough of a practical) difference.
+
+
+
+Best Regards,
+
+Barry</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2474145" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2474118">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Tim Tantri						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 16, 2017 at 2:10 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>When will Aironet's status be modified from "TBD" in the advisory?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2474118" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li class="comment byuser comment-author-omarsantos bypostauthor even depth-2" id="li-comment-2474130">
+				<div id="comment-2474130">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1492091254-bpthumb.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/omarsantos'>Omar Santos</a></span><br />
+							<span class="comment-meta commentmetadata">October 16, 2017 at 3:31 pm</span>
+
+						</div>
+						<div class="comment_text">
+							<ul class = "comment_id2474130 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'osantos';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2474130");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2474130">
+								</div>
+								<div class = "nitro_points pointscomment_id2474130">
+								</div>
+							</li>
+							</ul>
+							<div class = "clear"></div>
+							<p>As fixes become available for remaining affected products, Cisco will update the security advisory.</p>						</div>
+
+							<div class = "roblike">
+					<a  href = "#" id = "clickLike2474130" class = "commentLikeButton commentlike" data-nitro =osantos >0 likes</a>				</div>
+				<div class="reply">
+															</div>
+							<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2474115">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Doug Brown						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 16, 2017 at 1:56 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Would we gain any protection using 802.1x?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2474115" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li class="comment byuser comment-author-omarsantos bypostauthor odd alt depth-2" id="li-comment-2474125">
+				<div id="comment-2474125">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1492091254-bpthumb.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/omarsantos'>Omar Santos</a></span><br />
+							<span class="comment-meta commentmetadata">October 16, 2017 at 3:06 pm</span>
+
+						</div>
+						<div class="comment_text">
+							<ul class = "comment_id2474125 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'osantos';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2474125");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2474125">
+								</div>
+								<div class = "nitro_points pointscomment_id2474125">
+								</div>
+							</li>
+							</ul>
+							<div class = "clear"></div>
+							<p>Hi,
+
+
+
+The researchers confirmed that the attacks can be possible with both WPA-personal and WPA-enterprise (including .1x). They also cover this in their FAQ at: https://www.krackattacks.com/#faq
+
+
+
+I am copying and pasting here for completeness:
+
+
+
+Q: I'm using WPA2 with only AES. That's also vulnerable?
+
+A: Yes, that network configuration is also vulnerable. The attack works against both WPA1 and WPA2, against personal and enterprise networks, and against any cipher suite being used (WPA-TKIP, AES-CCMP, and GCMP).</p>						</div>
+
+							<div class = "roblike">
+					<a  href = "#" id = "clickLike2474125" class = "commentLikeButton commentlike" data-nitro =osantos>1 like</a>				</div>
+				<div class="reply">
+															</div>
+							<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2474099">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Jeff Sharp						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 16, 2017 at 11:51 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Standing by for patches.  Thanks.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2474099" class = "commentLikeButton commentlike" data-nitro = >2 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2474095">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Richard Berke						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 16, 2017 at 10:30 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>We appreciate that Cisco is attentive to fixing this/these vulnerabilities.   
+
+
+
+It would also be helpful to know of the WiFi client-devices with which Cisco has confirmed interoperability after applying the fix to the Cisco infrastructure equipment.  We know that Cisco can't test all possible devices.  We just want to know which ones Cisco has verified.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2474095" class = "commentLikeButton commentlike" data-nitro = >4 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+<li>
+			<div id="comment-2474085">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/photo_1496428784.jpg' width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+							<a href = "https://blogs.cisco.com/rewards-profile/8953">Donald Hoffman</a>
+						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 16, 2017 at 8:50 am</span>
+
+					</div>
+				<div class="comment_text">
+					<ul class = "comment_id2474085 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'donhoffm';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2474085");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2474085">
+								</div>
+								<div class = "nitro_points pointscomment_id2474085">
+								</div>
+							</li>
+							</ul>
+					<div class = "clear"></div> <p>Very useful information, I'll be tweeting this right now. Thank you for the quick and detailed response.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2474085" class = "commentLikeButton commentlike" data-nitro =donhoffm >3 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2474078">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Mike Velasco						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 16, 2017 at 7:49 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Thanks, very helpful</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2474078" class = "commentLikeButton commentlike" data-nitro = >5 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Security:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogSecurity', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogSecurity" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Security</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscosecurity?ref=nf"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/ciscosecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://youtubecisco.com/security"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogSecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.cert.org/blogs/vuls/" target="_blank">CERT Vulnerability Analysis</a></li>
+                      <li><a href="http://blogs.technet.com/b/srd/" target="_blank">Microsoft Security Research & Defense</a></li>
+                      <li><a href="http://isc.sans.edu/index.html" target="_blank">SANS Internet Storm Center</a></li>
+                      <li><a href="http://www.schneier.com/" target="_blank">Schneier on Security</a></li>
+                  </ul>
+              <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="http://www.cisco.com/en/US/products/products_security_advisories_listing.html" target="_blank">Advisories and Responses</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/cyberRiskReport.x" target="_blank">Cyber Risk Reports</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/intelliPapers.x?i=55" target="_blank">Security Best Practices</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/home.x" target="_blank">Security Intelligence Operations</a></li>
+                        <li><a href="http://www.cisco.com/en/US/products/hw/vpndevc/index.html" target="_blank">Security Products</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscosecurity?ref=nf'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/ciscosecurity'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 235368;
+			var orig_count = 37;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/2yp5ScN&text=Perspective About the Recent WPA Vulnerabilities (KRACK Attacks)&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/wpa-vulns&title=Perspective About the Recent WPA Vulnerabilities (KRACK Attacks)" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/wpa-vulns" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/wpa-vulns" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Perspective About the Recent WPA Vulnerabilities (KRACK Attacks)&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0APerspective About the Recent WPA Vulnerabilities (KRACK Attacks)%0A%0Ahttps://blogs.cisco.com/security/wpa-vulns%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

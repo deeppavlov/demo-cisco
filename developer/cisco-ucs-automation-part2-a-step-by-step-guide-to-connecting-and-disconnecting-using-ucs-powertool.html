@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Cisco UCS Automation – Part2:  A Step-by-Step Guide to Connecting and Disconnecting using UCS PowerTool</title>
+
+	<meta property="og:image" content="https://alln-extcloud-storage.cisco.com/ciscoblogs/5a3840ba46e5e-460x230.jpg"/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"240673"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='20 Years and Beyond: A celebration of #Cisco Capital and what’s next for financial innovation' href='https://blogs.cisco.com/news/20-years-and-beyond-a-celebration-of-cisco-capital-and-whats-next-for-financial-innovation' />
+<link rel='next' title='Cyber Security is As Much about People as Technology' href='https://blogs.cisco.com/developer/cyber-security-is-as-much-about-people-as-technology' />
+
+<link rel="canonical" href="https://blogs.cisco.com/developer/cisco-ucs-automation-part2-a-step-by-step-guide-to-connecting-and-disconnecting-using-ucs-powertool" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=240673' />
+<meta property="og:image" content="http://i.ytimg.com/vi/5PxPZJKAVhs/default.jpg" />
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Cisco UCS Automation – Part2: A Step-by-Step Guide to Connecting and Disconnecting using UCS PowerTool"/>
+  <meta property="og:url" content="https://blogs.cisco.com/developer/cisco-ucs-automation-part2-a-step-by-step-guide-to-connecting-and-disconnecting-using-ucs-powertool"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2017-12-18T14:29:09+00:00"/>
+  <meta property="article:modified_time" content="2017-12-18T15:05:48+00:00" />
+  <meta property="og:updated_time" content="2017-12-18T15:05:48+00:00" />
+  <meta property="article:section" content="Developer"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Cisco UCS Automation – Part2: A Step-by-Step Guide to Connecting and Disconnecting using UCS PowerTool"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/developer/cisco-ucs-automation-part2-a-step-by-step-guide-to-connecting-and-disconnecting-using-ucs-powertool"/>
+  <meta name="twitter:description" content="Let&#039;s Connect
+
+What’s the hardest part about meeting someone new or going to another country or just interacting with something you are unfamiliar with? Typically, it’s how to start the interaction, how do you connect, stay connected, and reconnect. Sometimes the relationship or the place just doesn"/>
+  <meta name="twitter:image" content="https://alln-extcloud-storage.cisco.com/ciscoblogs/5a3840ba46e5e.jpg"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:creator" content="@http://twitter.com/johnamcdonough"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521507896";
+		var sig = "5eaa30e66d16ebbb507518e8474cc473";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/2CZOsFx&text=Want+to+automate+your+UCS+Managment+Connections%3F+%40johnamcdonough+shows+how+with+UCS+PowerTool&via=ciscodevnet" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/developer/cisco-ucs-automation-part2-a-step-by-step-guide-to-connecting-and-disconnecting-using-ucs-powertool&title=Cisco UCS Automation – Part2:  A Step-by-Step Guide to Connecting and Disconnecting using UCS PowerTool" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/developer/cisco-ucs-automation-part2-a-step-by-step-guide-to-connecting-and-disconnecting-using-ucs-powertool" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/developer/cisco-ucs-automation-part2-a-step-by-step-guide-to-connecting-and-disconnecting-using-ucs-powertool" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Cisco UCS Automation – Part2:  A Step-by-Step Guide to Connecting and Disconnecting using UCS PowerTool&body=I saw this post on Cisco Developer blog and thought you might like to read it.%0A%0ACisco UCS Automation – Part2:  A Step-by-Step Guide to Connecting and Disconnecting using UCS PowerTool%0A%0Ahttps://blogs.cisco.com/developer/cisco-ucs-automation-part2-a-step-by-step-guide-to-connecting-and-disconnecting-using-ucs-powertool%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/developer/'>Developer</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/5a3840ba46e5e-460x230.jpg">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Developer  						</span>
+						<h1 id="post-240673" class="kindle_title title">Cisco UCS Automation – Part2:  A Step-by-Step Guide to Connecting and Disconnecting using UCS PowerTool</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1486568506-bpthumb.jpg"></div><div class="author_rewards_box">			<ul class = "nitro_author240673 bunchballAwards">
+		<li>
+			<div class = "nitro_badge badgenitro_author240673">
+			</div>
+			<div class = "nitro_points pointsnitro_author240673">
+			</div>
+		</li>
+		<script>
+var nitroName = 'jomcdono';
+var sessionKey = '';
+
+
+nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "postBadges", "nitro_author240673");</script>
+
+		</ul>
+		</ul>
+	<div class = "clear"></div>
+</div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/johnmcdonough" title="Posts by John McDonough" rel="author">John McDonough</a> - December 18, 2017 - 0 Comments      					</span>
+      					<br />
+      					<br />
+      					Contributors: <a href ="https://blogs.cisco.com/author/edmurphy">Ed Murphy</a>					</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<h1>Let&#8217;s Connect</h1>
+<p>What’s the hardest part about meeting someone new or going to another country or just interacting with something you are unfamiliar with? Typically, it’s how to start the interaction, how do you connect, stay connected, and reconnect. Sometimes the relationship or the place just doesn’t work out and then you have to leave or disconnect.</p>
+<p>I think you probably already know that I’m not going to be talking about personal relationships or travel, but interacting with <font color="red">Cisco</font> <font color="red">UCS</font> <font color="red">Management interfaces</font> via <a href="https://software.cisco.com/portal/pub/download/portal/select.html?&amp;mdfid=286305108&amp;flowid=79283&amp;softwareid=284574017" target="_blank" rel="noopener"><font color="red">UCS</font> <font color="red">PowerTool</font></a>. In my <a href="https://blogs.cisco.com/developer/cisco-ucs-automation-series-part-i-getting-started-with-ucs-powertool" target="_blank" rel="noopener">previous blog</a> I wrote about getting started using <font color="red">UCS</font> <font color="red">PowerTool</font> for <font color="red">automation</font>, this blog is all about Connecting and Disconnecting. Could there really be that much information about connecting and disconnecting? You bet, let’s get started.</p>
+<p>Hold up, if you&#8217;re not familiar with the basics of <font color="red">UCS</font> <font color="red">PowerTool</font> you can start with the <font color="red">UCS</font> <font color="red">PowerTool</font> User&#8217;s guides or try out the <font color="red">DevNet</font> resources.</p>
+<ul>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/unified_computing/ucs/sw/msft_tools/powertools/ucs_powertool_book/2x/b_Cisco_<font color="red">UCS</font>M_<font color="red">PowerTool</font>_UG_Release_2x.html" target="_blank" rel="noopener"><font color="red">UCS</font> Manger <font color="red">PowerTool</font> User Guide</a></li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/unified_computing/ucs/sw/msft_tools/UCS_Central/powertools/user_guide/2x/b_Cisco_UCS_Central_PowerTool_UG_Release_2_x.html" target="_blank" rel="noopener">UCS Central PowerTool User Guide</a></li>
+<li><a href="https://www.cisco.com/c/en/us/td/docs/unified_computing/ucs/sw/msft_tools/C-Series/powertools/ucs_powertool_book/2x/b_Cisco_<font color="red">IMC</font>_<font color="red">PowerTool</font>_UG_2x.html" target="_blank" rel="noopener">IMC PowerTool User Guide</a></li>
+</ul>
+<p>If you have not joined <font color="red">DevNet</font>, please <a href="https://developer.cisco.com/join?utm_source=JohnM_UCS-PowerTools&amp;utm_medium=blog_cisco_dev" target="_blank" rel="noopener">join</a>. Now you have access to</p>
+<ul>
+<li><a href="https://learninglabs.cisco.com/modules/ucs-powertool-introduction" target="_blank" rel="noopener"><font color="red">Learning</font> Labs</a> for <font color="red">UCS</font> <font color="red">Powertool</font>.</li>
+<li><a href="https://developer.cisco.com/site/ucs-dev-center?utm_source=JohnM_<font color="red">UCS</font>-<font color="red">PowerTool</font>s&amp;utm_medium=blog_cisco_dev" target="_blank" rel="noopener">UCS Dev Center</a> and all the <a href="https://developer.cisco.com/site/ucs-dev-center/docs/#ucs-manager/ucs-manager-powertool" target="_blank" rel="noopener">PowerTool</a> content</li>
+<li><font color="red">DevNet</font> <a href="https://developer.cisco.com/site/ucs-dev-center/docs/?utm_source=JohnM_<font color="red">UCS</font>-PowerTools&amp;utm_medium=blog_cisco_dev#sandbox" target="_blank" rel="noopener">UCS <font color="red">Sandbox</font></a></li>
+</ul>
+<p>Ok, now, let&#8217;s get started.</p>
+<h1>Simple Connect and Disconnect</h1>
+<p>Connecting to the three available <font color="red">UCS</font> <font color="red">Management interfaces</font> is pretty straight forward, use the appropriate &#8220;<strong>Connect</strong>&#8221; <font color="red">Cmdlet</font> and provide one or more <font color="red">IP</font> addresses or <font color="red">DNS</font> names for the <font color="red">UCS</font> <font color="red">Management interface</font>(s) that you would like to connect to.</p>
+<pre style="padding-left: 30px">Connect-Ucs -Name &lt;ucsm-ip or dns-name, ucsm-ip or dns-name, ...&gt;
+
+Connect-UcsCentral -Name &lt;ucsc-ip or dns-name, ucsc-ip or dns-name, ...&gt;
+
+Connect-Imc -Name &lt;cimc-ip or dns-name, cimc-ip or dns-name, ...&gt;</pre>
+<p>Disconnecting is even easier, just use the appropriate &#8220;<strong>Disconnect</strong>&#8221; <font color="red">Cmdlet</font> and all the existing <font color="red">connections</font> will be dis-connected.</p>
+<pre style="padding-left: 30px">Disconnect-Ucs
+
+Disconnect-UcsCentral
+
+Disconnect-Imc</pre>
+<p>When connecting to <font color="red">UCS</font> Manager, <font color="red">UCS</font> Central or a CIMC (<font color="red">Cisco</font> Integrated <font color="red">Management</font> Controller), by default only a <font color="red">single connection</font> to a single <font color="red">interface</font> is supported and is referred to as the &#8220;Default&#8221; <font color="red">connection</font>. A variable will be created in the <font color="red">UCS</font> <font color="red">PowerTool</font> <font color="red">session</font> to hold the <font color="red">connection</font> information, these variables respectively are named,</p>
+<pre style="padding-left: 30px">$DefaultUcs
+
+$DefaultUcsCentral
+
+$DefaultImc</pre>
+<p><span id="more-240673"></span></p>
+<div id="attachment_240700" style="max-width: 1047px" class="wp-caption aligncenter"><img class="size-full wp-image-240700" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/5a33fafc0b259.jpg" alt="Connect To <font color="red">UCS</font> Manager" width="1037" height="683" /><p class="wp-caption-text">Connect To <font color="red">UCS</font> Manager</p></div>
+<p>&nbsp;</p>
+<div id="attachment_240701" style="max-width: 1047px" class="wp-caption aligncenter"><img class="size-full wp-image-240701" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/5a33fb021ac65.jpg" alt="Contents of $DefaultUcs and Disconnect from UCS Manager" width="1037" height="683" /><p class="wp-caption-text">Contents of $DefaultUcs and Disconnect from UCS Manager</p></div>
+<p>After a &#8220;<strong>Disconnect</strong>&#8221; <font color="red">Cmdlet</font> is run, the respective variable, <strong>if empty</strong>, will be removed from the environment. I said &#8220;if empty&#8221; because by <strong>default</strong> only a <font color="red">single connection</font> to a single <font color="red">UCS</font> <font color="red">Management interface</font> per <font color="red">UCS</font> <font color="red">PowerTool</font> <font color="red">session</font> is supported, you can however connect to more than one <font color="red">UCS</font> <font color="red">Management interface</font>, but first you just have to tell <font color="red">UCS</font> <font color="red">PowerTool</font> that is what you want to do.</p>
+<h1>Connect to Multiple <font color="red">UCS</font> <font color="red">Management</font> Interfaces</h1>
+<p>If you attempt to make a second <font color="red">connection</font> to the same <font color="red">UCS</font> <font color="red">Management interface</font> or to another <font color="red">UCS</font> <font color="red">Management interface</font> an error is returned indicating that multiple default <font color="red">UCS</font> (in this case) is not allowed by configuration.</p>
+<p>The <strong>Set-<font color="red">Ucs</font><font color="red">PowerTool</font>Configuration</strong> Cmldet allows you to set the Ucs PowerTool <font color="red">session</font> to support multiple default configurations. The <strong>Set-UcsPowerToolConfiguration</strong> <font color="red">Cmdlet</font> is the same <font color="red">Cmdlet</font> for each <font color="red">PowerTool</font> suite.</p>
+<p>To view the current settings for <font color="red">UCS</font> <font color="red">PowerTool</font> Configuration, run the <strong>Get-UcsPowerToolConfiguration</strong> <font color="red">Cmdlet</font>. To support multiple <font color="red">connections</font> set the SupportMultipleDefaultUcs parameter to <strong>$true</strong></p>
+<pre style="padding-left: 30px">Get-UcsPowerToolConfiguration
+
+Set-UcsPowerToolConfiguration -SupportMultipleDefaultUcs $true</pre>
+<div id="attachment_240710" style="max-width: 1247px" class="wp-caption aligncenter"><img class="size-full wp-image-240710" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/5a34017fd0735.jpg" alt="Set-UcsPowerToolConfiguration" width="1237" height="566" /><p class="wp-caption-text">Set-UcsPowerToolConfiguration</p></div>
+<p>With the SupportMultipleDefaultUcs parameter set to $true you can connect to more <font color="red">UCS</font> Managers, <font color="red">UCS</font> Centrals, or CIMCs, and where does that <font color="red">connection</font> information get stored? In the $DefaultUcs, $DefaultUcsCentral, or $DefaultImc variables respectively.</p>
+<p>Then when running the respective &#8220;<strong>Disconnect</strong>&#8221; <font color="red">Cmdlet</font> all the <font color="red">sessions</font> stored in the $Default variables with be disconnected. You can also specify which <font color="red">connection</font> you would like to disconnect.  The $DefaultUcs, $DefaultUcsCentral, $DefaultImc variables are <font color="red">PowerShell</font> array type variables if you know the <font color="red">specific connection</font> that you would to disconnect you can specify it using <font color="red">PowerShell</font> array notation and Named <font color="red">UCS</font> <font color="red">connections</font> (covered a little further down).</p>
+<h1>What Does it Mean to be Default?</h1>
+<p>What does being the &#8220;<strong>default&#8221;</strong> <font color="red">connection</font> mean? It means that when a <font color="red">Cmdlet</font> is run and a <font color="red">specific connection</font> is not specified then the <font color="red">Cmdlet</font> is run against all the $Default <font color="red">connections</font>. For example, if there are two “default” <font color="red">connections</font> to two different <font color="red">UCS</font> Managers and the <font color="red">Cmdlet</font> Get-UcsBlade is run, the Cmdlets will be run in parallel retrieving blade information from both <font color="red">UCS</font> Managers at the same time. <font color="red">UCS</font> <font color="red">PowerTool</font> associates the source <font color="red">UCS</font> Manager, <font color="red">UCS</font> Central or CIMC as an attribute to the returned objects. Using this attribute you can determine where the source of the returned object.</p>
+<p>For example running Get-UcsBlade while connected to two <font color="red">UCS</font> Managers and selecting the object attributes; <font color="red">Dn</font>, <font color="red">TotalMemory</font>, <font color="red">NumOfCpus</font>, <font color="red">Ucs</font>. Produces output indicating the source <font color="red">UCS</font> Manager of the returned objects.</p>
+<pre style="padding-left: 30px">Get-UcsBlade | Select-Object <font color="red">Dn</font>, <font color="red">TotalMemory</font>, <font color="red">NumOfCpus</font>, <font color="red">Ucs</font></pre>
+<div id="attachment_240731" style="max-width: 1247px" class="wp-caption aligncenter"><img class="size-full wp-image-240731" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/5a3417f35cbc4.jpg" alt="Get-UcsBlade | Select-Object <font color="red">Dn</font>, <font color="red">TotalMemory</font>, <font color="red">NumOfCpus</font>, <font color="red">Ucs</font>" width="1237" height="411" /><p class="wp-caption-text">Get-UcsBlade | Select-Object Dn, TotalMemory, NumOfCpus, Ucs</p></div>
+<p>The &#8220;<strong>default</strong>&#8221; <font color="red">connection</font> is used when a <font color="red">specific connection</font> is not specified. When running the <strong>Connect-Ucs</strong>, <strong>Connect-UcsCentral</strong>, or <strong>Connect-Imc</strong> Cmdlets the <font color="red">connection</font> information can be saved to a variable and excluded from the respective &#8220;<strong>Default</strong>&#8221; <font color="red">connections</font> variable.</p>
+<pre style="padding-left: 30px">$ucsm_connections = Connect-Ucs -Name &lt;ucsm-ip or dns-name, ...&gt; -NotDefault
+
+$ucsc_connections = Connect-UcsCentral -Name &lt;ucsc-ip or dns-name, ...&gt; -NotDefault
+
+$cimc_connections = Connect-Imc -Name &lt;cimc-ip or dns-name, ...&gt; -NotDefault</pre>
+<p>When saving the <font color="red">UCS</font> <font color="red">connection</font> information to a variable no output is returned to the console and the $DefaultUcs variable is not just empty, it does not exist in the <font color="red">session</font>! Now when running a <font color="red">UCS</font> <font color="red">PowerTool</font> <font color="red">Cmdlet</font> to specify the <font color="red">UCS</font> <font color="red">Management interface</font> use the <font color="red">connection</font> specification parameter. For example using the previously shown Get-UcsBlade <font color="red">Cmdlet</font></p>
+<pre style="padding-left: 30px">Get-<font color="red">Ucs</font>Blade -Ucs $ucsm_connections | Select-Object <font color="red">Dn</font>, <font color="red">TotalMemory</font>, <font color="red">NumOfCpus</font>, <font color="red">Ucs</font></pre>
+<p><font color="red">Specific connection</font> variables can be an array of <font color="red">connections</font> so the result of running a <font color="red">Cmdlet</font> against a <font color="red">specific connection</font> can be the same as running a <font color="red">Cmdlet</font> using the &#8220;<strong>default</strong>&#8221; <font color="red">connection</font>. What’s the difference? Using the &#8220;<strong>default</strong>&#8221; <font color="red">connection</font> variables allow you to not worry about specifying a <font color="red">connection</font> parameter for each <font color="red">UCS</font> <font color="red">PowerTool</font> <font color="red">Cmdlet</font> where the <font color="red">specific connection</font> can allow for a finer grain of control. My advice, is to use what works for you.</p>
+<h1>That Pesky Credentials Dialog Box</h1>
+<p>Connecting to a single <font color="red">UCS</font> <font color="red">Management interface</font> one time, multiple times, or to multiple <font color="red">UCS</font> <font color="red">Management interfaces</font> one time, or multiple times are all supported. However, that pesky dialog box asking for credentials keeps popping up. How can that be suppressed when you are automating? The Microsoft PS <font color="red">Credential</font> object is the way to go to achieve full non-interactive <font color="red">automation</font> capabilities.</p>
+<pre style="padding-left: 30px">$ucsm_credentials = New-Object -TypeName System.Management.Automation.PSCredential
+
+                    -ArgumentList “username”, 
+
+                    $(ConvertTo-SecureString -Force -AsPlainText “<font color="red">password</font>”))</pre>
+<div id="attachment_240738" style="max-width: 1247px" class="wp-caption aligncenter"><img class="size-full wp-image-240738" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/5a34221005d1d.jpg" alt="Create A Microsoft PSCredential Object" width="1237" height="557" /><p class="wp-caption-text">Create A Microsoft PSCredential Object</p></div>
+<p>Let’s breakdown what is going on</p>
+<ul>
+<li>ConvertTo-SecureString is run on the “<font color="red">password</font>” and produce a SecureString.</li>
+<li>New-Object is used to create a System.Management.Automation.PSCredential object</li>
+<li>The PSCredential object is populated with the supplied &#8220;username&#8221; and the &#8220;<font color="red">password</font>&#8221;
+<ul>
+<li>Both the &#8220;username&#8221; and &#8220;<font color="red">password</font>&#8221; strings in this example can also be variables</li>
+</ul>
+</li>
+<li>The new PSCredential object is stored in the $ucsm_credentials variable</li>
+</ul>
+<p>To use the $ucsm_credentials (PSCredential object) variable when connecting to an endpoint just specify it using the -Credential parameter of the respective UCS PowerTool &#8220;<strong>Connect</strong>&#8221; Cmdlet. Using the -Credential parameter does not limit the functionality of the &#8220;Default&#8221; or -NotDefault options.</p>
+<pre style="padding-left: 30px">Connect-Ucs -Name &lt;ucsm-ip or dns-name, ...&gt; -Credential $ucsm_credentials
+
+Connect-UcsCentral -Name &lt;ucsc-ip or dns-name, ...&gt; -Credential $ucsc_credentials
+
+Connect-Imc -Name &lt;cimc-ip or dns-name, ...&gt; -Credential $cimc_credentials</pre>
+<p>&nbsp;</p>
+<h1>Alternate Connection Capabilities for IMC PowerTool</h1>
+<p>There is a bit of alternate “Connect” functionality available with the Connect-Imc Cmdlet via two additional parameters, -FromIp and -ToIp. All the &#8220;Connect&#8221; variations still apply, &#8220;Default&#8221;, -NotDefault, -Credential</p>
+<pre style="padding-left: 30px">$cimc_connections = Connect-Imc -FromIp 10.10.10.10 -ToIp 10.10.10.30 -NotDefault</pre>
+<div id="attachment_240737" style="max-width: 1047px" class="wp-caption aligncenter"><img class="wp-image-240737 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/5a3422091474d.jpg" alt="Connect-Imc FromIp ToIp" width="1037" height="523" /><p class="wp-caption-text">Connect-Imc FromIp ToIp</p></div>
+<h1>View and Save Connections for Another Time</h1>
+<p>Now that you are connected in whatever way you have chosen to connect; wouldn’t it be great if there was a way to easily &#8220;<strong>Get</strong>&#8221; information about all your connections and perhaps even a way to &#8220;<strong>Export</strong>&#8221; all your connections and then use that export to quickly re-connect all those connecitons at another time? Awesomely there is, through the use of the these two UCS PowerTool Cmdlets</p>
+<pre style="padding-left: 30px">Get-UcsPsSession
+
+Export-UcsPsSession -Path .\ucs-sessions.xml -Key $(ConvertTo-SecureString -AsPlainText "<font color="red">password</font>" -Force)</pre>
+<p>Get-UcsPsSession will list all the UcsPsSession objects contained in the $DefaultUcs, $DefaultUcsCentral, or $DefaultImc variables respectively or the session information stored in a variable like $cimc_connections using the -Ucs parameter</p>
+<p>Export-UcsPsSession will export to the specified file an XML encoded list of all your connections. When using Export-UcsPsSession you must provide a &#8220;Key&#8221;. This &#8220;Key&#8221; will also be needed when using the exported sessions as input to the &#8220;<strong>Connect</strong>&#8221; Cmdlets. You can export sessions stored in a variable like $ucsm_connections using the -Ucs Parameter</p>
+<p>To export the connected sessions</p>
+<pre>Export-UcsPSSession -Path .\ucs-session.xml -Key $(ConvertTo-SecureString -Force -AsPlainText "password")</pre>
+<pre>&lt;basehandles&gt;
+
+  &lt;ucshandles /&gt;
+
+    &lt;imchandles&gt;
+
+      &lt;imc name="10.10.20.10" username="admin" password="+7VRmPxpy3ujd2CvMzw6PAd3TbGobzJHq4rqNuieCpk=" /&gt;
+
+      &lt;imc name="10.10.20.20" username="admin" password="TMZsoRk1zk3A3BCPUAJ8+ILP9LHo5ommYmlyJTb8JbE=" /&gt;
+
+      &lt;imc name="10.10.20.30" username="admin" password="QfL+wn3QGgFZu2HjIcjef28z2/SV4DwAN1jM2FXsRH0=" /&gt;
+
+    &lt;/imchandles&gt;
+
+  &lt;ucscentralhandles /&gt;
+
+&lt;/basehandles&gt;</pre>
+<p>To utilize the export connection sessions</p>
+<pre style="padding-left: 30px">Connect-Ucs -Path .\ucs-session.xml -Key $(ConvertTo-SecureString -Force -AsPlainText "password")</pre>
+<p>The &#8220;Key&#8221; could be almost anything, perhaps a piece of information local to the machine running UCS PowerTool or something that can be gleaned from the Network or another host.</p>
+<div id="attachment_240746" style="max-width: 1247px" class="wp-caption aligncenter"><img class="size-full wp-image-240746" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/5a344216479a5.jpg" alt="Export-UcsPsSession" width="1237" height="715" /><p class="wp-caption-text">Export-UcsPsSession</p></div>
+<p>&nbsp;</p>
+<div id="attachment_240745" style="max-width: 1247px" class="wp-caption aligncenter"><img class="size-full wp-image-240745" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/5a34420c3e54c.jpg" alt="Connect-Ucs using output from Export-UcsPsSession" width="1237" height="523" /><p class="wp-caption-text">Connect-Ucs using output from Export-UcsPsSession</p></div>
+<h1>Don&#8217;t Let Anything Come Between Us</h1>
+<p>Sometimes when working in a corporate environment there is a Proxy between you and the UCS Management interface, we have that aspect covered in UCS PowerTool as well. The &#8220;Connect&#8221; Cmdlets all support a -Proxy parameter that takes as input a Microsoft System.Net.WebProxy object</p>
+<pre style="padding-left: 30px">$proxy = New-Object System.Net.WebProxy
+
+$proxy.Address = "http://&lt;url&gt;:&lt;port&gt;"
+
+$proxy.UseDefault<font color="red">Credential</font>s = $false
+
+$proxy.Credentials = New-Object System.Net.NetworkCredential("username","password")
+
+Connect-Ucs -Path .\ucs-connections.xml -Proxy $proxy</pre>
+<h1>It&#8217;s Not You(s) It&#8217;s Me! We Can Still be Friends</h1>
+<p>One final note about the &#8220;<strong>Disconnect</strong>&#8221; Cmdlets. All of the &#8220;<strong>Disconnect</strong>&#8221; Cmdlets will by <strong>default</strong> disconnect all the UcsPsSessions stored in the $DefaultUcs, $DefaultUcsCentral, or $DefaultImc variables respectively. You can use the -Ucs, -UcsCentral, -Imc parameter of the respective &#8220;<strong>Disconnect</strong>&#8221; Cmdlets to specify a specific single connection or an array of connections.</p>
+<p>Hopefully now you’ll find it easier now to make new connections, re-connect, automate your connections, and terminate your connections (if you must.)</p>
+<h1>See this blog in Action!</h1>
+<p><iframe width="500" height="375" src="https://www.youtube.com/embed/5PxPZJKAVhs?feature=oembed" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen></iframe></p>
+<h1>What&#8217;s Next?</h1>
+<p>The next blog in the <font color="red">UCS</font> Automation with UCS <font color="red">PowerTool</font> series, will be all about UCS MetaData,</p>
+<ul>
+<li style="list-style-type: none">
+<ul>
+<li>What is UCS MetaData.</li>
+<li>Where is UCS MetaData.</li>
+<li>What can you do with UCS MetaData.</li>
+<li>Why UCS MetaData is Awesome!!</li>
+</ul>
+</li>
+</ul>
+<p>So exciting!! When is it coming out? I&#8217;ll tweet it out and so will DevNet, so if you want to be in the know, follow me and DevNet below.</p>
+<h1>How Can You Learn More?</h1>
+<p>I&#8217;m glad you asked. There are a ton of resources on DevNet, and they are all free!!!</p>
+<p>First off if you have not joined DevNet, please <a href="https://developer.cisco.com/join?utm_source=JohnM_UCS-PowerTools&amp;utm_medium=blog_cisco_dev" target="_blank" rel="noopener">join</a>.</p>
+<p>Now you have access to</p>
+<ul>
+<li><a href="https://learninglabs.cisco.com/modules/ucs-powertool-introduction" target="_blank" rel="noopener">Learning Labs</a> for UCS Powertool.</li>
+<li><a href="https://developer.cisco.com/site/ucs-dev-center?utm_source=JohnM_UCS-PowerTools&amp;utm_medium=blog_cisco_dev" target="_blank" rel="noopener">UCS Dev Center</a> and all the <a href="https://developer.cisco.com/site/ucs-dev-center/docs/#ucs-manager/ucs-manager-powertool" target="_blank" rel="noopener">PowerTool</a> content</li>
+<li>DevNet <a href="https://developer.cisco.com/site/ucs-dev-center/docs/?utm_source=JohnM_UCS-PowerTools&amp;utm_medium=blog_cisco_dev#sandbox" target="_blank" rel="noopener">UCS Sandbox</a></li>
+</ul>
+<p>I hope you found this useful. If there is anything specific that you would like me to cover, or have questions, please let me know in the comments.</p>
+<p><a class="twitter-follow-button" href="https://twitter.com/johnamcdonough">Follow @johnamcdonough</a><br />
+<a class="twitter-follow-button" href="https://twitter.com/CiscoDevNet">Follow @CiscoDevNet</a></p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=devnet">#DevNet</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=automation">automation</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=cimc">C<font color="red">IMC</font></a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=cisco-ucs">Cisco UCS</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=cisco-ucs-api">Cisco UCS API</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=data-center">data center</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=ucs-central">UCS Central</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=ucs-manager">UCS Manager</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=ucs-powertool">UCS <font color="red">PowerTool</font></a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+		</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Developer:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=DeveloperCiscoBlog', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="DeveloperCiscoBlog" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Developer</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscodevnet/"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/ciscodevnet"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="https://www.linkedin.com/groups/6609150/profile"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="https://www.youtube.com/channel/UChRmUH4H5hiYzPiFhvNoCIg"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/ciscodevnet/"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/DeveloperCiscoBlog"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">DevNet Dev Centers</li>
+<li class="roll_heading">What We're Reading</li>
+
+            <li><a href="https://developer.cisco.com/site/analytics-automation/" target="_blank">Analytics & Automation</a></li>
+                      <li><a href="https://developer.cisco.com/site/cloud/" target="_blank">Cloud</a></li>
+                      <li><a href="https://developer.cisco.com/site/collaboration" target="_blank">Collaboration</a></li>
+                      <li><a href="https://developer.cisco.com/site/data-center/" target="_blank">Data Center</a></li>
+                      <li><a href="https://developer.cisco.com/site/iot/" target="_blank">IoT</a></li>
+                      <li><a href="https://developer.cisco.com/site/mobility" target="_blank">Mobility</a></li>
+                      <li><a href="https://developer.cisco.com/site/networking/" target="_blank">Networking</a></li>
+                      <li><a href="https://developer.cisco.com/site/opensource" target="_blank">Open Source</a></li>
+                      <li><a href="https://developer.cisco.com/site/security/" target="_blank">Security</a></li>
+                  </ul>
+              <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="https://communities.cisco.com/community/developer" target="_blank">Developer Community</a></li>
+                        <li><a href="https://developer.cisco.com" target="_blank">DevNet</a></li>
+                        <li><a href="https://devnetcreate.io" target="_blank">DevNet Create</a></li>
+                        <li><a href="https://learninglabs.cisco.com" target="_blank">DevNet Learning Labs</a></li>
+                        <li><a href="https://developer.cisco.com/site/devnet/sandbox/" target="_blank">Sandbox</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscodevnet/'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/ciscodevnet'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='https://www.linkedin.com/groups/6609150/profile'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 240673;
+			var orig_count = 2;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/2CZOsFx&text=Want+to+automate+your+UCS+Managment+Connections%3F+%40johnamcdonough+shows+how+with+UCS+PowerTool&via=ciscodevnet" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/developer/cisco-ucs-automation-part2-a-step-by-step-guide-to-connecting-and-disconnecting-using-ucs-powertool&title=Cisco UCS Automation – Part2:  A Step-by-Step Guide to Connecting and Disconnecting using UCS PowerTool" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/developer/cisco-ucs-automation-part2-a-step-by-step-guide-to-connecting-and-disconnecting-using-ucs-powertool" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/developer/cisco-ucs-automation-part2-a-step-by-step-guide-to-connecting-and-disconnecting-using-ucs-powertool" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Cisco UCS Automation – Part2:  A Step-by-Step Guide to Connecting and Disconnecting using UCS PowerTool&body=I saw this post on Cisco Developer blog and thought you might like to read it.%0A%0ACisco UCS Automation – Part2:  A Step-by-Step Guide to Connecting and Disconnecting using UCS PowerTool%0A%0Ahttps://blogs.cisco.com/developer/cisco-ucs-automation-part2-a-step-by-step-guide-to-connecting-and-disconnecting-using-ucs-powertool%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

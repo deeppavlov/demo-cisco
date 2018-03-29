@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Big Data in Security &#8211; Part I: TRAC Tools</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"132514"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='From Pallet to Production &#8211; Big Data in Minutes' href='https://blogs.cisco.com/datacenter/from-pallet-to-production-big-data-in-minutes' />
+<link rel='next' title='Learning Opportunities This Week With Cisco Experts on IWAN and CMX' href='https://blogs.cisco.com/enterprise/learning-opportunities-this-week-with-cisco-experts' />
+
+<link rel="canonical" href="https://blogs.cisco.com/security/big-data-in-security-part-i-trac-tools" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=132514' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Big Data in Security - Part I: TRAC Tools"/>
+  <meta property="og:url" content="https://blogs.cisco.com/security/big-data-in-security-part-i-trac-tools"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2013-12-09T06:49:52+00:00"/>
+  <meta property="article:modified_time" content="2014-01-06T07:54:46+00:00" />
+  <meta property="og:updated_time" content="2014-01-06T07:54:46+00:00" />
+  <meta property="article:section" content="Security"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Big Data in Security - Part I: TRAC Tools"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/security/big-data-in-security-part-i-trac-tools"/>
+  <meta name="twitter:description" content="Recently I had an opportunity to sit down with the talented data scientists from Cisco&#039;s Threat Research, Analysis, and Communications (TRAC) team to discuss Big Data security challenges, tools and methodologies. The following is part one of five in this series where Jisheng Wang, John Conley, and P"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:creator" content="@https://twitter.com/levigundert"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521513417";
+		var sig = "d4b6b3cf1ad6cd242f10b8a4987697d8";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://cs.co/9006jANC&text=Big Data in Security &#8211; Part I: TRAC Tools&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/big-data-in-security-part-i-trac-tools&title=Big Data in Security &#8211; Part I: TRAC Tools" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/big-data-in-security-part-i-trac-tools" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/big-data-in-security-part-i-trac-tools" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Big Data in Security &#8211; Part I: TRAC Tools&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0ABig Data in Security &#8211; Part I: TRAC Tools%0A%0Ahttps://blogs.cisco.com/security/big-data-in-security-part-i-trac-tools%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/security/'>Security</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category50.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Security  						</span>
+						<h1 id="post-132514" class="kindle_title title">Big Data in Security &#8211; Part I: TRAC Tools</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1577.thumbnail.5243305429b97.jpg"></div><div class="author_rewards_box"></div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/levigundert" title="Posts by Levi Gundert" rel="author">Levi Gundert</a> - December 9, 2013 - 0 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p><em><img class="alignright  wp-image-132490" alt="TRAC" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/TRAC-tank-vertical_logo-300x243.png" width="180" height="146" />Recently I had an opportunity to sit down with the talented <font color="red">data scientists</font> from <font color="red">Cisco</font>&#8217;s <font color="red">Threat</font> Research, Analysis, and Communications (<font color="red">TRAC</font>) team to discuss <font color="red">Big Data</font> <font color="red">security challenges</font>, <font color="red">tools</font> and methodologies. The following is part one of five in this series where Jisheng Wang, John Conley, and Preetham Raghunanda share how <font color="red">TRAC</font> is tackling <font color="red">Big Data</font>.</em></p>
+<p><b>Given the hype surrounding “<font color="red">Big Data</font>,” what does that term actually mean?</b></p>
+<p>John:  First of all, because of overuse, the “<font color="red">Big Data</font>” term has become almost meaningless. For us and for SIO (<font color="red">Security Intelligence</font> and Operations) it means a combination of <font color="red">infrastructure</font>, <font color="red">tools</font>, and <font color="red">data</font> sources all coming together to make it possible to have unified repositories of <font color="red">data</font> that can address problems that we never thought we could solve before. It really means taking advantage of new technologies, <font color="red">tools</font>, and new ways of thinking about problems.</p>
+<p><img class="alignleft  wp-image-132523" alt="Big Data" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/Data_Center.jpg" width="680" height="454" /></p>
+<p><span id="more-132514"></span></p>
+<p>&nbsp;</p>
+<p><b>How large is the <font color="red">data</font> that you’re analyzing?</b></p>
+<p>John:  We have a lot of disparate <font color="red">data</font> sources. Web <font color="red">telemetry</font> is one of the largest single sources, and we have tens of terabytes of <font color="red">data</font> currently residing in our <font color="red">cluster</font> and we expect that to quickly grow over the next couple of years to <font color="red">petabytes</font> that we will be processing. The differentiation in the usefulness of our <font color="red">cluster</font> is the merging of numerous <font color="red">data</font> sources and sizes that are all in the same <font color="red">infrastructure</font> and providing the ability to query across all of these different <font color="red">data</font> sets using the same language and <font color="red">tools</font>.</p>
+<p>[<em>One</em> <em><font color="red">petabyte</font> is one quadrillion <font color="red">bytes</font>. For more information on &#8220;<font color="red">telemetry</font>&#8221; please visit <a href="http://www.cisco.com/web/siteassets/legal/isa_supp.html">http://www.cisco.com/web/siteassets/legal/isa_supp.html</a> and <a href="http://www.cisco.com/en/US/prod/collateral/vpndevc/ps10142/ps11720/at_a_glance_c45-729616.pdf">http://www.cisco.com/en/US/prod/collateral/vpndevc/ps10142/ps11720/at_a_glance_c45-729616.pdf</a></em>]</p>
+<p><b>Why do you like <font color="red">Hadoop</font> as a primary <font color="red">tool</font> for this <font color="red">big data</font> effort?</b></p>
+<p>John:  <font color="red">Hadoop</font> encompasses HDFS (<font color="red">Hadoop</font> Distributed File System) and the MapReduce programming framework. <font color="red">Hadoop</font> is very useful and something we use, but it’s not the only way of interacting with the <font color="red">data</font>. The reason <font color="red">Hadoop</font> is the industry standard for handling <font color="red">big data</font> is because it’s very scalable. As you throw more disks and computing resources at it you receive better performance and higher <font color="red">data processing</font> capabilities. It’s trivial to add more resources; scaling from a five <font color="red">node</font> <font color="red">cluster</font> to a thousand <font color="red">node</font> <font color="red">cluster</font> doesn’t excessively increase the burden to the administrator. <font color="red">Hadoop</font> is also extremely fault tolerant. If a disk, or <font color="red">node</font>, or even a whole rack of <font color="red">nodes</font> goes down your <font color="red">data</font> is replicated across the <font color="red">cluster</font> in such a way that you won’t lose any <font color="red">data</font>. The running jobs that are processing <font color="red">data</font> are also fault tolerant, restarting tasks when necessary to ensure all the <font color="red">data</font> is processed correctly. So you don’t have to worry about the nasty issues associated with <font color="red">big data</font> spanning across multiple disks and multiple machines. <font color="red">Hadoop</font> takes care of the resilience, <font color="red">fault tolerance</font>, and <font color="red">scalability</font> issues for you.</p>
+<p>We also use <font color="red">MapR</font>, not just <font color="red">open source</font> <font color="red">Hadoop</font>. <font color="red">MapR</font> has created a more robust and feature-rich version of <font color="red">Hadoop</font> and we found <font color="red">MapR</font> has a lot of advantages for us. There are also many other <font color="red">tools</font> we leverage or are investigating such as the distributed key-value store <font color="red">HBase</font> (<font color="red">MapR</font> also has their own version of <font color="red">Hbase</font>), in-memory databases and analysis frameworks like <font color="red">Spark</font> and Shark, as well as graph databases like InfiniteGraph and Titan. This is by no means an exhaustive list, the point is that for <font color="red">different use</font> cases there are many different <font color="red">tools</font> available and many different ways of interacting with <font color="red">big data</font>. <font color="red">Hadoop</font> is the hammer for which everything is a nail. You can use it for everything, but it’s not necessarily the best <font color="red">tool</font> for every <font color="red">use case</font>.</p>
+<p><b>Historically businesses have been storing <font color="red">data</font> in relational <font color="red">data</font>bases with some normalization and IT groups are comfortable maintaining and querying in this model. Now with the tidal wave of data that organizations are looking to store and profit from, <font color="red">NoSQL</font> <font color="red">solutions</font> are becoming much more necessary due to the resilience and <font color="red">scalability</font> factors that you mentioned. Working with <font color="red">Hadoop</font> initially feels a little daunting and the barriers to use appear higher specifically because of the Java <font color="red">API</font>. How steep is the learning curve and what sort of human resources are required to implement <font color="red">Hadoop</font> correctly?</b></p>
+<p>Preetham: All of the <font color="red">NoSQL</font> <font color="red">solutions</font> fundamentally offer an ecosystem such that other technologies can sit on top of the stack in a hierarchy. There are two important factors when analyzing large <font color="red">data</font> sets and <font color="red">Hadoop</font> does both well: the ability to run processes across multiple <font color="red">nodes</font> in the <font color="red">data center</font> and a file system that can store results in a single view. A lot of companies tried their own technologies and techniques to achieve this and when <font color="red">Hadoop</font> came along it instantly satisfied these two requirements in a dependable, open-source way. Over time the barriers to using <font color="red">Hadoop</font> &#8211; understanding the <font color="red">API</font> and architecture, setting it up, and using the eco-system &#8211; have become significantly lower. For example using <font color="red">MapR</font> abstracts away a lot of the issues that initially made <font color="red">Hadoop</font> difficult to use. It’s becoming easier to quickly start using <font color="red">Hadoop</font> primarily due to additional companies creating <font color="red">tools</font> and <font color="red">APIs</font> with their own optimizations and stacks that let you focus more on the business problems and less on the <font color="red">infrastructure</font>.</p>
+<p><b>You mentioned Hive earlier which is a query language based on <font color="red">SQL</font> and obviously IT workers tend to be comfortable crafting <font color="red">SQL</font> queries. Can <font color="red">Hadoop</font> be queried using a <font color="red">SQL</font> model?</b></p>
+<p>John: Absolutely. Hive is one <font color="red">solution</font> in a long list that provides this functionality; there are many <font color="red">solutions</font> like Shark and Apache Drill. It’s a very common <font color="red">use case</font>. The <font color="red">data</font> sitting on HDFS can be accessed with any standard <font color="red">SQL</font> query. Solutions like Hive are useful for people who are comfortable with relational databases and know how to write a <font color="red">SQL</font> query, but have never seen MapReduce before. You can write a typical <font color="red">SQL</font> query and it will run. It’s a very common <font color="red">use case</font> because so many people are used to thinking about <font color="red">data</font> in a relational way. Having the <font color="red">data</font> physically sitting in a distributed, fault-tolerant <font color="red">data</font> store like HDFS and still being able to use <font color="red">SQL</font> <font color="red">tools</font> is extremely useful.</p>
+<p><b>How long does it take to setup <font color="red">Hadoop</font> and implement a <font color="red">SQL</font> query type <font color="red">solution</font> with no prior experience?</b></p>
+<p>Preetham: Fifteen minutes. There are <font color="red">scripts</font> that will assist with a default installation.</p>
+<p><b>What was the motivation for applying <font color="red">Big Data</font> to <font color="red">security</font> at <font color="red">Cisco</font>?</b></p>
+<p>Jisheng: We started this effort of applying <font color="red">big data</font> technology to <font color="red">security</font> about 2 years ago. There were two main challenges that <font color="red">Cisco</font> <font color="red">Security</font> was facing at that time, and still faces today. First, we have lots of <font color="red">security</font> and other related <font color="red">data</font> sets inside <font color="red">Cisco</font>, but they are owned by different groups and distributed in different <font color="red">data centers</font>. Different groups of people occasionally become aware of the existence of others&#8217; <font color="red">data</font> through <font color="red">collaboration</font>, but there is no centralized place where every group can bring in their <font color="red">data</font> and share it with all other groups in <font color="red">Cisco</font>.</p>
+<p>The second <font color="red">Cisco</font> <font color="red">Security challenge</font> &#8211; that provided motivation for starting the <font color="red">big data</font> effort &#8211; has to do with people. While <font color="red">Cisco</font> has many world-class <font color="red">security</font> experts and <font color="red">data scientists</font> in different groups, they have mostly been working on solving isolated customer <font color="red">security</font> problems at a small scale. Many of these researchers have enjoyed collaborating, exchanging ideas, and brainstorming on an ad hoc basis, but there has never been a common platform and <font color="red">infrastructure</font> where these experts can work together daily, on the same <font color="red">data</font>, using the same <font color="red">tools</font>.</p>
+<p>These two challenges helped us realize the necessity for this effort. Thus far, we have been building a common <font color="red">data</font> sharing architecture  in partnership with the <font color="red">Threat Response</font>, Intelligence and Development team (TRIAD), that can support hundreds of users to store and process <font color="red">petabytes</font> of <font color="red">data</font> in <font color="red">real time</font> for <font color="red">different use</font> cases.</p>
+<p><b>From a <font color="red">security</font> perspective, what are some of the <font color="red">use cases</font> that can be solved with the <font color="red">data</font> and <font color="red">tools</font>?</b></p>
+<p>Preetham:  It’s correlation. By bringing the <font color="red">data</font> together in one place we can perform analysis that simply wasn’t possible previously. That gives us a <font color="red">competitive advantage</font>; as we centralize additional <font color="red">data</font> sets and correlate them, we find new relationships in previously unimaginable ways.</p>
+<p>John: To Preetham’s point about correlation, <font color="red">threats</font> or malicious <font color="red">cyber</font> events typically cross multiple channels and use multiple attack vectors. So you may have binaries involved in an attack or file hashes, log <font color="red">data</font>, Command and Control (C2) <font color="red">infrastructure</font>, host ownership, location, actor meta-data, etc. Before you know about a <font color="red">threat</font> or compromise, you need to have all of the different <font color="red">data</font> sets at your fingertips to query and quickly move between. This process has traditionally been done manually in a very ad-hoc manner; people have to go fetch different <font color="red">data</font> sets from different places. The whole idea behind our approach is putting all of the <font color="red">data</font> in one place where the relationships are manifest. Ultimately, we are working toward automated processes that discover relationships – the types of relationships that could have only been found through arduous manual analysis before – much more efficiently.</p>
+<p>Jisheng: We are trying to provide <font color="red">tools</font> to support four major <font color="red">use cases</font> in our <font color="red">big data</font> <font color="red">solution</font>: stream, interactive, batch and graph processing, which are all standard in any comprehensive <font color="red">big data</font> <font color="red">solution</font> these days.</p>
+<p><font color="red">Stream processing</font> is typically needed when we already have some known patterns that we use to identify <font color="red">threats</font>, and we want to be able to detect those known <font color="red">threats</font> from a high-volume stream of <font color="red">data</font> in <font color="red">real time</font>. Interactive processing is important to help our <font color="red">security</font> researchers speed up the manual investigation process to find new patterns in different large datasets. <font color="red">Batch processing</font> refers to typical MapReduce-based <font color="red">machine learning</font> and modeling work that <font color="red">data scientists</font> use to find <font color="blue">new threat</font> patterns in the <font color="red">data</font>. Finally, graph processing has been proven to be one of the most effective and powerful ways to analyze correlations over different dimensions and <font color="red">data</font> sets.</p>
+<p><b>Are these <font color="red">different use</font> cases independent from each other?</b></p>
+<p>Jisheng: No, these <font color="red">use cases</font> are not isolated; they interact closely with each other. For example, when <font color="red">security</font> experts find vague patterns or label a small set of <font color="red">new threats</font> from interactive processing, <font color="red">data scientists</font> can take advantage of these manual investigation results and train a more comprehensive and robust model to detect these <font color="red">new threats</font> through <font color="red">batch processing</font>. Also, when we find any <font color="blue">new threat</font> patterns from either interactive or <font color="red">batch processing</font>, we want to then implement them in <font color="red">stream processing</font> so that we can detect and block these <font color="red">threats</font> in real-time.</p>
+<p><b>What <font color="red">tools</font> have you considered and evaluated for <font color="red">different use</font> cases? How do you decide which <font color="red">tool</font> you want to use?</b></p>
+<p>Jisheng: We have evaluated multiple popular <font color="red">tools</font> for each <font color="red">use case</font> in the past couple years, including both <font color="red">open source</font> and commercial <font color="red">tools</font>. For example, we’ve tried Flume, Sqoop, Kafka, Qpid and RabbitMQ as different ways to ingest <font color="red">data</font> into <font color="red">Hadoop</font>, using different <font color="red">data</font> formats and persistence patterns. We’ve compared Storm with Akka for <font color="red">stream processing</font>. We’ve looked into Apache Drill, Impala, Hadapt, and AMPLab’s Shark for the interactive <font color="red">SQL</font> queries. For a <font color="red">NoSQL</font> key-value database, we’ve used Apache <font color="red">Hbase</font>, the <font color="red">MapR</font> version of <font color="red">Hbase</font> (called <font color="red">MapR</font> Tables), and Redis. We also deeply investigated using <font color="red">Spark</font> as our in-memory computing framework. Finally, for graph processing, we spent a lot of time and effort evaluating the InfiniteGraph <font color="red">solution</font> from Objectivity, as well as <font color="red">other open source</font> <font color="red">solutions</font> like Titan and Neo4J.</p>
+<p>There are several steps we normally take before deciding on a <font color="red">tool</font> for each <font color="red">use case</font>. First, we search for different currently popular <font color="red">solutions</font> and do a survey regarding general pros and cons for each <font color="red">tool</font>. Second, we narrow the list down to two or three candidate <font color="red">tools</font> for each <font color="red">use case</font> based on the fit between the <font color="red">tools</font>’ strengths and our own requirements. Third, we conduct a complete benchmarking and comparison test among the candidate <font color="red">tools</font> using our own <font color="red">data</font> sets and <font color="red">use cases</font> to decide which one fits our needs best. Normally, after these three steps, we find the best available <font color="red">tools</font> to compose our <font color="red">big data</font> <font color="red">solution</font>.</p>
+<p><b>That concludes our first Q&amp;A session on <font color="red">TRAC</font> <font color="red">tools</font>. For an introduction to this week&#8217;s <font color="red">Big Data</font> in <font color="red">Security</font> series please visit <a href="https://www.linkedin.com/redirect?url=http%3A%2F%2Fcs%2Eco%2F9005jAfZ&amp;urlhash=P7Nj&amp;_t=NUS_UNIU_SHARE-lnk&amp;trk=NUS_UNIU_SHARE-lnk" target="_blank">http://cs.co/9005jAfZ</a>. You can also listen to John and Preetham&#8217;s additional interview on <font color="red">TRAC</font> Fahrenheit: <a href="http://cs.co/9006jANC">http://cs.co/9006jANC</a>. </b></p>
+<p><b>Stop by tomorrow for my conversation with Mahdi Namazifar regarding <a title="Big Data in Security – Part II: The AMPLab Stack" href="http://blogs.cisco.com/security/big-data-in-security-part-ii-the-amplab-stack/" target="_blank">U.C. Berkeley&#8217;s AMPLab Stack</a>.</b></p>
+<p>&nbsp;</p>
+<p><iframe class="youtube-player" type="text/html" width="640" height="385" src="https://www.youtube.com/embed/LPt-xHDeqiE" frameborder="0"></iframe></p>
+<p>&nbsp;<br />
+  <br />
+<em><strong>John Conley</strong> studied physics and math at Columbia University and attained a PhD in theoretical particle physics at Stanford. He subsequently completed a post-doctoral project at the University of Bonn in Germany before returning to the U.S. and joining <font color="red">Cisco</font>. John’s physics research involved a lot of <font color="red">data</font> analysis, statistics, and <font color="red">machine learning</font>, so he was excited to join <font color="red">TRAC</font> and apply his experience to <font color="red">security</font>.</em></p>
+<p>&nbsp;</p>
+<p><i><strong><img class="alignleft size-thumbnail wp-image-132524" alt="Jisheng Wang" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/Jisheng-150x150.jpg" width="150" height="150" />Jisheng Wang</strong> received his bachelor&#8217;s and master&#8217;s degrees in electrical engineering (EE) from Shanghai Jiao Tong University, and then started his 10-year journey into <font color="red">network security</font> from Penn State University. He received his PhD in EE from Penn State in 2008, after working on automatic signature extraction for polymorphic worms. </i></p>
+<p><i>During his first years at <font color="red">Cisco</font>, Jisheng worked on <font color="red">different security</font> features and products including ACL, FW, <font color="red">IPS</font>, and <font color="red">QoS</font>. Four years, ago he began to apply <font color="red">Big Data</font> and <font color="red">data</font> analysis technologies to various <font color="red">security challenges</font>. As a researcher, he moved from traditional heuristic-driven <font color="red">security</font> to data-driven <font color="red">security</font>. Jisheng has already led a few <font color="red">data</font> analysis projects to improve the efficacy of <font color="red">Cisco</font> web and email reputation systems. Currently he is leading <font color="red">TRAC</font> efforts to pioneer development of <font color="red">Cisco</font> <font color="red">Security Intelligence</font> Operations (SIO) and next-generation <font color="red">Cisco</font> <font color="red">Threat Defense</font> (CTD).</i></p>
+<p>&nbsp;</p>
+<p><em><strong><img class="alignleft size-thumbnail wp-image-132525" alt="Preetham Raghunanda" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/preetham-150x150.jpg" width="150" height="150" />Preetham Raghunanda</strong> has been an integral part of  <font color="red">Cisco</font>&#8217;s <font color="red">security</font> business for the past five years doing both  research and development. He  is enthusiastic about how <font color="red">TRAC</font> is pioneering the application of <font color="red">data science</font> and <font color="red">big data</font> technologies within <font color="red">Cisco</font> <font color="red">Security</font>. In 2008, he earned a master&#8217;s degree in computer science from the University of Illinois at Chicago. Prior to that, he held various software engineering roles.</em></p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=analytics">analytics</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=api">API</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=big-data">Big Data</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=cisco">Cisco</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=database">database</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=hadoop">Hadoop</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=hdfs">HDFS</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=innovation-2">innovation</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=intelligence">Intelligence</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=java">java</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=mapreduce">mapreduce</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=nosql">NoSQL</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=operations">operations</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=security-2">security</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=shark">Shark</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=spark">Spark</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=sql">SQL</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=telemetry">telemetry</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=trac">TRAC</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=trac-big-data-analysis">TRAC Big Data Analysis</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+		</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Security:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogSecurity', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogSecurity" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Security</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscosecurity?ref=nf"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/ciscosecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://youtubecisco.com/security"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogSecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.cert.org/blogs/vuls/" target="_blank">CERT Vulnerability Analysis</a></li>
+                      <li><a href="http://blogs.technet.com/b/srd/" target="_blank">Microsoft Security Research & Defense</a></li>
+                      <li><a href="http://isc.sans.edu/index.html" target="_blank">SANS Internet Storm Center</a></li>
+                      <li><a href="http://www.schneier.com/" target="_blank">Schneier on Security</a></li>
+                  </ul>
+              <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="http://www.cisco.com/en/US/products/products_security_advisories_listing.html" target="_blank">Advisories and Responses</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/cyberRiskReport.x" target="_blank">Cyber Risk Reports</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/intelliPapers.x?i=55" target="_blank">Security Best Practices</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/home.x" target="_blank">Security Intelligence Operations</a></li>
+                        <li><a href="http://www.cisco.com/en/US/products/hw/vpndevc/index.html" target="_blank">Security Products</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscosecurity?ref=nf'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/ciscosecurity'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 132514;
+			var orig_count = 0;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://cs.co/9006jANC&text=Big Data in Security &#8211; Part I: TRAC Tools&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/big-data-in-security-part-i-trac-tools&title=Big Data in Security &#8211; Part I: TRAC Tools" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/big-data-in-security-part-i-trac-tools" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/big-data-in-security-part-i-trac-tools" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Big Data in Security &#8211; Part I: TRAC Tools&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0ABig Data in Security &#8211; Part I: TRAC Tools%0A%0Ahttps://blogs.cisco.com/security/big-data-in-security-part-i-trac-tools%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

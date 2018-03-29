@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Digging Deeper into VXLAN, Part 1</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; Digging Deeper into VXLAN, Part 1 Comments Feed" href="https://blogs.cisco.com/datacenter/digging-deeper-into-vxlan/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"44245"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Efficient Giving' href='https://blogs.cisco.com/manufacturing/efficient-giving' />
+<link rel='next' title='Cisco IPICS Key to Helping the New Zealand Police Protect and Serve the Public' href='https://blogs.cisco.com/news/cisco-ipics-key-to-helping-the-new-zealand-police-protect-and-serve-the-public' />
+
+<link rel="canonical" href="https://blogs.cisco.com/datacenter/digging-deeper-into-vxlan" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=44245' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Digging Deeper into VXLAN, Part 1"/>
+  <meta property="og:url" content="https://blogs.cisco.com/datacenter/digging-deeper-into-vxlan"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2011-09-29T14:50:26+00:00"/>
+  <meta property="article:modified_time" content="2011-10-10T08:07:50+00:00" />
+  <meta property="og:updated_time" content="2011-10-10T08:07:50+00:00" />
+  <meta property="article:section" content="Data Center"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Digging Deeper into VXLAN, Part 1"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/datacenter/digging-deeper-into-vxlan"/>
+  <meta name="twitter:description" content="Yes, I am still talking about VXLAN, rather you folks are still talking about VXLAN, so I thought its worthwhile digging deeper into the topic since there is so much interest out there.  There also still seem to be a fair number of misconceptions around VXLAN, so let&#039;s see what we can do to clear th"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:creator" content="@http://twitter.com/omarsultan"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521455055";
+		var sig = "ada39f778b1211860e96075f3c350998";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1IvgTdX&text=Digging Deeper into VXLAN, Part 1&via=CiscoDC" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/datacenter/digging-deeper-into-vxlan&title=Digging Deeper into VXLAN, Part 1" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/datacenter/digging-deeper-into-vxlan" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/datacenter/digging-deeper-into-vxlan" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Digging Deeper into VXLAN, Part 1&body=I saw this post on Cisco Data Center blog and thought you might like to read it.%0A%0ADigging Deeper into VXLAN, Part 1%0A%0Ahttps://blogs.cisco.com/datacenter/digging-deeper-into-vxlan%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/datacenter/'>Data Center</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category5.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Data Center  						</span>
+						<h1 id="post-44245" class="kindle_title title">Digging Deeper into VXLAN, Part 1</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/OmarSultan.thumbnail.4e719a3c410ce.jpg"></div><div class="author_rewards_box">			<ul class = "nitro_author44245 bunchballAwards">
+		<li>
+			<div class = "nitro_badge badgenitro_author44245">
+			</div>
+			<div class = "nitro_points pointsnitro_author44245">
+			</div>
+		</li>
+		<script>
+var nitroName = 'osultan';
+var sessionKey = '';
+
+
+nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "postBadges", "nitro_author44245");</script>
+
+		</ul>
+		</ul>
+	<div class = "clear"></div>
+</div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/omarsultan" title="Posts by Omar Sultan" rel="author">Omar Sultan</a> - September 29, 2011 - 9 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p>Yes, I am still talking about <a href="http://blogs.cisco.com/datacenter/introducing-vxlan/" target="_blank"><font color="red">VXLAN</font></a>, rather you folks are still talking about <font color="red">VXLAN</font>, so I thought its worthwhile digging deeper into the topic since there is so much interest out there.  There also still seem to be a fair number of misconceptions around <font color="red">VXLAN</font>, so let&#8217;s see what we can do to clear things up.</p>
+<p>This time around, I have some <font color="red">partners</font> in crime for the discussion:</p>
+<p><a rel="attachment wp-att-44258" href="http://blogs.cisco.com/datacenter/digging-deeper-into-vxlan/attachment/larry-head-2/"><img class="size-full wp-image-44258 alignleft" style="margin-left: 0px; margin-right: 10px;" title="Larry Head" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/Larry-Head1.jpg" alt="" width="100" height="120" /></a><strong>Larry Kreeger</strong> is currently a Principal Engineer at <font color="red">Cisco</font> Systems’ SAVTG working on <font color="red">Nexus</font> 1000V architecture. Larry has a wide ranging background in <font color="red">networking</font> accumulated from over 25 years of experience in developing <font color="red">networking</font> products.  His recent focus is <font color="red">data center networking</font>, especially as it relates to <font color="red">data center virtualization</font>.</p>
+<p><img class="alignleft size-full wp-image-44259" style="margin-left: 0px; margin-right: 10px;" title="sanzgiri" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/sanzgiri1.jpg" alt="" width="100" height="120" /></p>
+<p><strong>Ajit Sanzgiri</strong> has worked on various <font color="red">networking</font> technologies at <font color="red">Cisco</font> and other bay area <font color="red">networking</font> companies over the last 16 years. His interests include hardware based switching and routing solutions, <font color="red">Ethernet</font> and wireless <font color="red">LANs</font> and virtual <font color="red">networking</font>. Currently he works on the Nexus1000v and related <font color="red">network</font> <font color="red">virtualization</font> products.</p>
+<p>So, Larry and Ajit have put together this <font color="red">VXLAN</font> primer&#8211;its fairly dense stuff, so we are breaking this into three posts.  In this initial post, we&#8217;ll cover the basics&#8211;why <font color="red">VXLANs</font> and what is <font color="red">VXLAN</font>.  I know I&#8217;ve covered this to some degree <a href="http://blogs.cisco.com/datacenter/more-vxlan-qa/" target="_blank">already</a>, but Larry and Ajit are going to dig a little deeper, which will hopefully help clarify the lingering questions and misconceptions.  In the next post, we&#8217;ll discuss how <font color="red">VXLAN</font> compares with the other tools in your <font color="red">networking</font> arsenal, and, in the final post, we&#8217;ll cover more of the common questions we are seeing.</p>
+<p><span id="more-44245"></span></p>
+<p><strong>1 Why <font color="red">VXLANs</font> ?</strong></p>
+<p><font color="red">VLANs</font> have been used in <font color="red">networking infrastructures</font> for many years now to solve different problems. They can be used to enforce <font color="red">L2</font> isolation, as <font color="red">policy enforcement</font> points and as routing <font color="red">interface</font> identifiers. <font color="red">Network services</font> like <font color="red">firewalls</font> have used them in novel ways for <font color="red">traffic steering</font> purposes</p>
+<p>Support for <font color="red">VLANs</font> is now available in most operating systems, <font color="red">NICs</font>, <font color="red">network</font> equipment (e.g. <font color="red">switches</font>, <font color="red">routers</font>, <font color="red">firewalls</font> etc.) and also in most <font color="red">virtualization</font> solutions. As <font color="red">virtualized data centers</font> proliferate and grow, some shortcomings of the <font color="red">VLAN</font> technology are beginning to make themselves felt. <a href="http://www.cisco.com/web/solutions/trends/cloud/build-public-cloud.html" title="<font color="red">Cloud providers</font>" target="_blank" class="seoal-link">Cloud providers</a> need some extensions to the basic <font color="red">VLAN</font> mechanism if these are to be overcome.</p>
+<p>The first is the <font color="red">VLAN</font> namespace itself. 802.1q specifies a <font color="red">VLAN</font> <font color="red">ID</font> to be 12 bits which restricts the number of <font color="red">VLANs</font> in a single <font color="red">switched</font> <font color="red">L2</font> domain to 4096 at best. (Usually some <font color="red">VLAN</font> <font color="red">IDs</font> are reserved for &#8216;well-known&#8217; uses, which restricts the range further.) <font color="red">Cloud provider</font> environments require accommodating different tenants in the same underlying <font color="red">physical infrastructure</font>. Each tenant may in turn create multiple L2/L3 <font color="red">networks</font> within their own slice of the virtualized <font color="red">data center</font>. This drives the need for a greater number of <font color="red">L2</font> <font color="red">networks</font>.</p>
+<p>The second issue has to do with the <font color="blue">operational model</font> for deploying <font color="red">VLANs</font>. Although VTP exists as a protocol for creating, disseminating and deleting <font color="red">VLANs</font> as well as for pruning them for optimal extent, most <font color="red">networks</font> disable it. That means some sort of manual coordination is required among the <font color="red">network</font> admin, the <font color="red">cloud</font> admin and the tenant admin to transport <font color="red">VLANs</font> over existing <font color="red">switches</font>. Any proposed extension to <font color="red">VLANs</font> must figure out a way to avoid such coordination. To be more precise, adding each new <font color="red">L2</font> <font color="red">network</font> must not require incremental config changes in the transport infrastructure.</p>
+<p>Third, <font color="red">VLANS</font> today are too restrictive for <font color="red">virtual data centers</font> in terms of physical constraints of distance and <font color="red">deployment</font>. The new standard should ideally be free (at least &#8216;freer&#8217;) of these constraints. This would allow <font color="red">data centers</font> more flexibility in distributing <font color="red">workloads</font>, for instance, across L3 boundaries.</p>
+<p>Finally, any proposed extension to the <font color="red">VLAN</font> mechanism should not necessarily require a wholesale replacement of existing <font color="red">network</font> gear. The reason for this should be self-evident.</p>
+<p><font color="red">VXLAN</font> is the proposed technology to support these requirements.</p>
+<p><strong>2 What are <font color="red">VXLANs</font> ?</strong></p>
+<p><em>2.1  What’s in a name?</em></p>
+<p>As the name <font color="red">VXLANs</font> (Virtual eXtensible <font color="red">LANs</font>) implies, the technology is meant to provide the same services to connected <font color="red">Ethernet</font> <font color="red">end systems</font> that <font color="red">VLANs</font> do today, but in a more extensible manner.  Compared to <font color="red">VLANs</font>, <font color="red">VXLANs</font> are extensible with regard to scale, and extensible with regard to the reach of their <font color="red">deployment</font>.</p>
+<p>As mentioned, the 802.1Q <font color="red">VLAN</font> Identifier space is only 12 bits.  The <font color="red">VXLAN</font> Identifier space is 24 bits.  This doubling in size allows the <font color="red">VXLAN</font> <font color="red">Id</font> space to increase by over 400,000 percent to over 16 million unique identifiers.  This should provide sufficient room for expansion for years to come.</p>
+<p><font color="red">VXLANs</font> use Internet Protocol (both unicast and <font color="red">multicast</font>) as the transport medium.  The ubiquity of <font color="red">IP</font> <font color="red">networks</font> and equipment allows the end to end reach of a <font color="red">VXLAN</font> segment to be extended far beyond the typical reach of <font color="red">VLANs</font> using 802.1Q today.  There is no denying that there are other technologies that can extend the reach of <font color="red">VLANs</font> (<font color="red">Cisco</font> FabricPath/TRILL is just one), but none are as ubiquitously deployed as <font color="red">IP</font>.</p>
+<p><em>2.2  Protocol Design Considerations</em></p>
+<p>When it comes to <font color="red">networking</font>, not every problem can be solved with the same tool.  Specialized tools are optimized for specific environments (e.g. <font color="red">WAN</font>, MAN, Campus, <font color="red">Datacenter</font>). In designing the operation of <font color="red">VXLANs</font>, the following <font color="red">deployment</font> environment characteristics were considered for its <font color="red">deployment</font>.  These characteristics are based on large <font color="red">datacenters</font> hosting highly virtualized <font color="red">workloads</font> providing Infrastructure as a Service offerings.</p>
+<ol>
+<li>Highly distributed systems.  <font color="red">VXLANs</font> should work in an environment where there could be many thousands of <font color="red">networking</font> <font color="red">nodes</font> (and many more <font color="red">end systems</font> connected to them).  The protocol should work without requiring a centralized control point, nor without a hierarchy of protocols.</li>
+<li>Many highly distributed segments with sparse connectivity.   Each <font color="red">VXLAN</font> segment could be highly distributed among the <font color="red">networking</font> <font color="red">nodes</font>.  Also, with so many segments, the number of <font color="red">end systems</font> connected to any one segment is expected to be relatively low, and therefore the percentage of <font color="red">networking</font> <font color="red">nodes</font> participating in any one segment would also be low.</li>
+<li>Highly dynamic <font color="red">end systems</font>.  <font color="red">End systems</font> connected to <font color="red">VXLANs</font> can be very dynamic, both in terms of creation/deletion/power-on/off and in terms of mobility across the <font color="red">network</font> <font color="red">nodes</font>.</li>
+<li>Work with existing, widely deployed <font color="red">network</font> equipment. This translates into <font color="red">Ethernet</font> <font color="red">switches</font> and <font color="red">IP</font> <font color="red">routers</font>.</li>
+<li><font color="red">Network infrastructure</font> administered by a single administrative domain.  This is consistent with operation within a <font color="red">datacenter</font>, and not across the internet.</li>
+<li>Low <font color="red">network</font> <font color="red">node</font> overhead / simple implementation.  With the requirement to support very large numbers of <font color="red">network</font> <font color="red">nodes</font>, the resource requirements on each <font color="red">node</font> should not be intensive both in terms of memory footprint or processing cycles.  This also means consideration for hardware offload.</li>
+</ol>
+<p><em>2.3  How does it work?</em></p>
+<p>The <font color="red">VXLAN</font> draft defines the <font color="red">VXLAN</font> Tunnel End Point (<font color="red">VTEP</font>) which contains all the functionality needed to provide <font color="red">Ethernet</font> layer 2 services to connected <font color="red">end systems</font>.  <font color="red">VTEPs</font> are intended to be at the edge of the <font color="red">network</font>, typically connecting an <font color="red">access switch</font> (virtual or physical) to an <font color="red">IP</font> transport <font color="red">network</font>.  It is expected that the <font color="red">VTEP</font> functionality would be built into the <font color="red">access switch</font>, but it is logically separate from the <font color="red">access switch</font>. The figure below depicts the relative placement of the <font color="red">VTEP</font> <font color="red">function</font>.</p>
+<p>Each <font color="red">end system</font> connected to the same <font color="red">access switch</font> communicates through the <font color="red">access switch</font>.  The <font color="red">access switch</font> acts as any <font color="red">learning</font> bridge does, by flooding out its ports when it doesn’t know the destination MAC, or sending out a single port when it has learned which direction leads to the end station as determined by source MAC learning.  <font color="red">Broadcast</font> traffic is sent out all ports.  Further, the <font color="red">access switch</font> can support multiple “bridge domains” which are typically identified as <font color="red">VLANs</font> with an associated <font color="red">VLAN</font> <font color="red">ID</font> that is carried in the 802.1Q header on trunk ports.  In the case of a <font color="red">VXLAN</font> enabled <font color="red">switch</font>, the bridge domain would instead by associated with a <font color="red">VXLAN</font> <font color="red">ID</font>.</p>
+<p><a rel="attachment wp-att-44264" href="http://blogs.cisco.com/datacenter/digging-deeper-into-vxlan/attachment/vxlan-fig-1/"><img class="aligncenter size-large wp-image-44264" title="vxlan-fig-1" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/vxlan-fig-1-550x187.jpg" alt="" width="550" height="187" /></a></p>
+<p>Each <font color="red">VTEP</font> <font color="red">function</font> has two <font color="red">interfaces</font>.  One is a bridge domain trunk port to the <font color="red">access switch</font>, and the other is an <font color="red">IP</font> <font color="red">interface</font> to the <font color="red">IP</font> <font color="red">network</font>.  The <font color="red">VTEP</font> behaves as in <font color="red">IP</font> host to the <font color="red">IP</font> <font color="red">network</font>.  It is configured with an <font color="red">IP</font> address based on the subnet its <font color="red">IP</font> <font color="red">interface</font> is connected to.  The <font color="red">VTEP</font> uses this <font color="red">IP</font> <font color="red">interface</font> to exchange <font color="red">IP</font> <font color="red">packets</font> carrying the encapsulated <font color="red">Ethernet</font> frames with other <font color="red">VTEPs</font>.  A <font color="red">VTEP</font> also acts as an <font color="red">IP</font> host by using the Internet Group Membership Protocol (IGMP) to join <font color="red">IP</font> <font color="red">multicast groups</font>.</p>
+<p>In addition to a <font color="red">VXLAN</font> <font color="red">ID</font> to be carried over the <font color="red">IP</font> <font color="red">interface</font> between <font color="red">VTEPs</font>, each <font color="red">VXLAN</font> is associated with an <font color="red">IP</font> <font color="red">multicast group</font>.  The <font color="red">IP</font> <font color="red">multicast group</font> is used as communication bus between each <font color="red">VTEP</font> to carry <font color="red">broadcast</font>, <font color="red">multicast</font> and unknown unicast frames to every <font color="red">VTEP</font> participating in the <font color="red">VXLAN</font> at a given moment in time.  This is illustrated in the figure below.</p>
+<p><a rel="attachment wp-att-44265" href="http://blogs.cisco.com/datacenter/digging-deeper-into-vxlan/attachment/vxlan-fig-2/"><img class="aligncenter size-large wp-image-44265" title="vxlan-fig-2" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/vxlan-fig-2-550x201.jpg" alt="" width="550" height="201" /></a></p>
+<p>The <font color="red">VTEP</font> <font color="red">function</font> also works the same way as a <font color="red">learning</font> bridge, in that if it doesn’t know where a given destination MAC is, it floods the frame, but it performs this flooding <font color="red">function</font> by sending the frame to the <font color="red">VXLAN</font>’s associated <font color="red">multicast group</font>.  <font color="red">Learning</font> is similar, except instead of learning the source <font color="red">interface</font> associated with a frame’s source MAC, it learns the encapsulating source <font color="red">IP</font> address.  Once it has learned this MAC to remote <font color="red">IP</font> association, frames can be encapsulated within a unicast <font color="red">IP</font> <font color="red">packet</font> directly to the destination <font color="red">VTEP</font>.</p>
+<p>The initial use case for <font color="red">VXLAN</font> enabled <font color="red">access switches</font> are for <font color="red">access switches</font> connected to <font color="red">end systems</font> that are <font color="red">Virtual Machines</font> (<font color="red">VMs</font>).  These <font color="red">switches</font> are typically tightly integrated with the hypervisor.  One benefit of this <font color="red">tight integration</font> is that the virtual <font color="red">access switch</font> knows exactly when a <font color="red">VM</font> connects to or disconnects from the <font color="red">switch</font>, and what <font color="red">VXLAN</font> the <font color="red">VM</font> is connected to.  Using this information, the <font color="red">VTEP</font> can decide when to join or leave a <font color="red">VXLAN</font>’s <font color="red">multicast group</font>.  When the first <font color="red">VM</font> connects to a given <font color="red">VXLAN</font>, the <font color="red">VTEP</font> can join the <font color="red">multicast group</font> and start receiving broadcasts/multicasts/floods over that group.  Similarly, when the last <font color="red">VM</font> connected to a <font color="red">VXLAN</font> disconnects, the <font color="red">VTEP</font> can use IGMP to leave the <font color="red">multicast group</font> and stop receiving traffic for the <font color="red">VXLAN</font> which has no local receivers.</p>
+<p>Note that because the potential number of <font color="red">VXLANs</font> (16M!) could exceed the amount of <font color="red">multicast</font> state supported by the <font color="red">IP</font> <font color="red">network</font>, multiple <font color="red">VXLANs</font> could potentially map to the same <font color="red">IP</font> <font color="red">multicast group</font>.  While this could result in <font color="red">VXLAN</font> traffic being sent needlessly to a <font color="red">VTEP</font> that has no <font color="red">end systems</font> connected to that <font color="red">VXLAN</font>, inter <font color="red">VXLAN</font> traffic isolation is still maintained.  The same <font color="red">VXLAN</font> <font color="red">Id</font> is carried in <font color="red">multicast</font> encapsulated <font color="red">packets</font> as is carried in unicast encapsulated <font color="red">packets</font>.  It is not the <font color="red">IP</font> <font color="red">network</font>’s job to keep the traffic to the <font color="red">end systems</font> isolated, but the <font color="red">VTEP</font>’s.  Only the <font color="red">VTEP</font> inserts and interprets/removes the <font color="red">VXLAN</font> header within the <font color="red">IP</font>/UDP payload. The IP <font color="red">network</font> simply sees <font color="red">IP</font> <font color="red">packets</font> carrying UDP traffic with a well-known destination UDP port.</p>
+<p>So, that was the first installment&#8211;if you have questions, post them as comments and we&#8217;ll get back to you.</p>
+<p><em>[Updated 11 Nov 11]</em></p>
+<p>Subsequent parts of this post can be found <a href="http://blogs.cisco.com/datacenter/vxlan-deep-dive-part-2-looking-at-the-options/" target="_blank">here</a> and <a href="http://blogs.cisco.com/datacenter/digging-deeper-in-vxlan-pt-3-more-faqs/" target="_blank">here</a>.</p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=data-center">data center</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=virtualization">virtualization</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=vxlan">VXLAN</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">9 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+			<li>
+			<div id="comment-379421">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Anshuman Jain						</span>
+						<br />
+						<span class="comment-meta commentmetadata">November 3, 2011 at 9:13 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>1. So how is the VXLAN connected to the outside internet ?
+
+
+
+2. A machine, say a VM, which is a part of a VXLAN communicates with other VXLAN's through a VTEP. 
+
+When, one edge switch on which VXLAN is running, wants to communicate with other Machine whose MAX address is knos but the next hop Switch is unknown, the Switch broadcasts a message ( Kinda like ARP ), and the VXLAN containing that MAC address responds, Wouldn,t one central Machine hold all that data, like a DNS on internet ??
+
+
+
+Isn't that a better solution, to make hierarchical DNS, and reduce the load on each hypervisor and reduce the amount of information flow inside a data center ?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike379421" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-324088">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Anshuman Jain						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 19, 2011 at 12:25 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>1.  How are VXLAN ID's allocated, and is it done by the cloud provider, or can the Host company allocate to their own VXLAN ?
+
+
+
+2. Wouldn't the integration of the VTEP directly in the hyper visor extract more power from it ?
+
+
+
+3. Is there an additional security mechanism that may be constructed for the safe transportation of the VXLAN ID over an IP network, or just the know encryption techniques enough ?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike324088" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li>
+			<div id="comment-329072">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Lawrence Kreeger						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 20, 2011 at 2:19 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Anshuman, here are your answers...
+
+
+
+1. Yes, the VXLAN IDs are assigned by the cloud provider.  A cloud tenant will not even be aware that their L2 segment is backed by a VXLAN as opposed to a VLAN.
+
+
+
+2. Yes, it takes some CPU cycles to perform VXLAN encapsulation/decapsulation in the hypervisor.
+
+
+
+3. Typically encryption is not performed within the walls of a cloud provider's data center.  The important thing to do is keep the VXLAN encapsulated traffic isolated from networks the tenant VMs are connected to.  This can be performed using traditional mechanisms such as ACLS and VRFs.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike329072" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-273265">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Larry Kreeger						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 3, 2011 at 9:08 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Andrew, The current VXLAN draft does not address the use of IPv6 as the encapsulation.  However, it would not help in this case because the limitations of multicast state in the network have nothing to do with the address space, but with amount of forwarding state present in the switches/routers.  There is actually 16 times the amount of available multicast addresses in IPv4 compared to VXLAN IDs (2^28 vs 2^24).  In fact, since IPv6 addresses are 4 times larger than IPv4 addresses (128 vs 32 bits) they actually use more forwarding memory in the routers typically resulting in less multicast state forwarding entries (making the issue worse, not better).</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike273265" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-273148">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Andrew						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 3, 2011 at 8:02 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Where does VXLAN stand with respect to IPv6?  Not necessarily in its ability to carry v6 traffic, but operate over a v6 network.  Wouldn't the expanded multicast address space help relive the VXLAN identifier vs IPv4 multicast space incongruity?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike273148" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-270187">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Balaji Sivasubramanian						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 1, 2011 at 6:34 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>When N1K supports VTEP, who is providing this central entity function ?  
+
+Any plans to support VTEP on Nexus 5500 switches.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike270187" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li>
+			<div id="comment-273380">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Ajit Sanzgiri						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 3, 2011 at 10:14 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Balaji, 'central entity' here refers to the management interface. It could be the CLI interface or a management application. 
+
+
+
+As about plans on other platforms, stay tuned. :-)</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike273380" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-268000">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Cristiano Monteiro						</span>
+						<br />
+						<span class="comment-meta commentmetadata">September 30, 2011 at 1:52 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Hello guys,
+
+
+
+I have some doubts about it:
+
+
+
+1 how the vtep will map vlxlan id  to multicast group? I mean which criteria will be used ? 
+
+2 Im very curious about how the control plane will work ? How the association vxlan id x multicast group will be announced in the network ?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike268000" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li>
+			<div id="comment-268086">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Larry Kreeger						</span>
+						<br />
+						<span class="comment-meta commentmetadata">September 30, 2011 at 2:54 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Hi Cristiano.  The VXLAN draft states that the VXLAN ID to Multicast Group mapping comes down to the VTEP via the network management channel.  It has not defined a control plane mechanism to query this mapping.  In either case, some central entity should manage this relationship based on any multicast scoped address boundaries configured in the networking infrastructure interconnecting the VTEPs, and if the number of VXLAN segments exceeds the amount of multicast state the network can support, it should perform an intelligent mapping so as to not overload any one multicast group.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike268086" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Data Center:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogDataCenterNetworks', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogDataCenterNetworks" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Data Center</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscodc"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/CiscoDC"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco-data-center-and-cloud?trk=biz-brand-tree-co-name"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/114381144808300038585/posts"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/Ciscodatacenter/presentations"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://www.youtube.com/user/Cisco/videos?sort=dd&view=46&tag_id=UCEWiIE6Htd8mvlOR6YQez1g.3.data-center-virtualization"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogDataCenterNetworks"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+
+	<li id ="twitter_widget" class="widget">
+
+	<!-- white background -->
+	<div class="topContainer">
+	 <div class="twit_container">
+
+		<div id="twit_req">
+
+			<span class="widgetheading">
+				Tweets
+			</span>
+
+			<a href="https://twitter.com/" target="_blank"><span class="twit_logo"></span></a>
+							<div class="clear"></div>
+							</div>
+			<!-- <span class="twit_logo" href="#"></span> -->
+			<div class="clear"></div>
+		</div></div>
+		</li>
+
+<br class="clear" />
+
+<script type = "text/javascript">
+
+jQuery(document).ready(function() {
+ //Calling Twitter Widget
+var url = "https://tts-prod.cloudapps.cisco.com/ciscotweetsapp/api/v1/gettweets/ciscodc/response.jsonp";
+
+		loadSpotlightTweet(url);
+
+		//Metrics for each reply retweet and favorites(loop for each tweet)
+		cdc.util.addMetricsRule(".twit_reply", {linktext: "reply"});
+		cdc.util.addMetricsRule(".twit_retweet", {linktext: " retweet "});
+		cdc.util.addMetricsRule(".twit_favorite", {linktext: " favorite "});
+
+	   //lpos for all clicks inside twitter_widget
+		cdc.util.addMetricsRule("#twitter_widget a[href]", {lpos: "tweets"});
+
+});
+
+String.prototype.parseURL = function() {
+	var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+	return this.replace(exp, "<a href='$1' target='_blank'>$1</a>");
+};
+
+String.prototype.parseUsername = function() {
+	return this.replace(/[@]+[A-Za-z0-9-_]+/g, function(u) {
+		var username = u.replace("@", "");
+		// return u.link("http://twitter.com/" + username);
+		return '<a target="_blank" href="https://twitter.com/' + username
+				+ '">' + u + '</a>';
+		// return u.link(window.open('http://www.google.com', '_blank',
+		// 'toolbar=0,location=0,menubar=0'));
+	});
+
+};
+
+String.prototype.parseHashtag = function() {
+	return this.replace(/[#]+[A-Za-z0-9-_]+/g, function(t) {
+		var tag = t.replace("#", "%23");
+		// tag = tag.replace(tag,"<a href='$1' target='_blank'>$1</a>");
+		// return t.link("https://twitter.com/search?q=" + tag +
+		// "&src=hash");//https://twitter.com/search?q=%23retail&src=hash
+		return '<a target="_blank" href="https://twitter.com/search?q=' + tag
+				+ '&src=hash">' + t + '</a>';
+	});
+
+};
+
+function parseURLEntities(t, arg) {
+	for ( var j = 0; j < arg.length; j++) {
+		t = t.replace(arg[j].url, '<a target="_blank" href="' + arg[j].url
+				+ '">' + arg[j].displayURL + '</a>');
+	}
+	return t;
+}
+
+
+function parseDate(str) {
+	var v = str.split(' ');
+	return new Date(Date.parse(v[1] + " " + v[2] + ", " + v[5] + " " + v[3]
+			+ " UTC"));
+}
+
+function selectDay() {
+	var d = new Date();
+	var weekday = new Array(7);
+	weekday[0] = "Sun";
+	weekday[1] = "Mon";
+	weekday[2] = "Tue";
+	weekday[3] = "Wed";
+	weekday[4] = "Thu";
+	weekday[5] = "Fri";
+	weekday[6] = "Sat";
+
+	var n = weekday[d.getDay()];
+
+	return n;
+}
+
+
+var checkIE = function () {
+    var a = navigator.userAgent;
+    return {
+        ie: a.match(/MSIE\s([^;]*)/)
+    };
+}();
+
+
+function relative_time(time_value) {
+	//time_value is in millisecond (GMT)
+
+	var d = new Date(time_value);//converting to our local PST default Date Format
+	//console.log('PST : ' + d);
+
+	var values = d.toString().split(" ");
+	var time_value_format = values[1] + " " + values[2] + ", " + values[3] + " " + values[4];
+//	console.log(time_value_format);
+
+	var parsed_date = Date.parse(time_value_format);
+    var relative_to = (arguments.length > 1) ? arguments[1] : new Date();
+//    console.log(relative_to.getTime());
+    var delta = parseInt((relative_to.getTime() - parsed_date) / 1000);
+    //delta = delta + (relative_to.getTimezoneOffset() * 60); 	//Not Required: converting into GMT since we are getting in GMT Format
+
+   	if (delta < 60) {
+		return delta + 's';
+	} else if (delta < 120) {
+		return '1m';
+	} else if (delta < (60 * 60)) {
+		return (parseInt(delta / 60)).toString() + 'm';
+	} else if (delta < (120 * 60)) {
+		return '1h';
+	} else if (delta < (24 * 60 * 60)) {
+		return (parseInt(delta / 3600)).toString() + 'h';
+	} else if (delta < (48 * 60 * 60)) {
+		return values[2] + " " + values[1];
+	} else {
+		return values[2] + " " + values[1];
+	}
+
+}
+
+
+	function loadSpotlightTweet(tweetsURL)
+	{
+
+	try {
+		var req = jQuery.ajax({
+			url: tweetsURL,
+			async: false,
+			dataType : "jsonp",
+			timeout : 1000,
+
+		});
+
+			req
+				.success(function(data) {
+			var metricsUser= "";
+
+				  if(data == "")
+					  return;
+
+					var arr1 = [];
+					var displayVal = [];
+
+					for ( var i = data.length-1; i >= 0; i -= 1) {
+
+						arr1.push(data[i].createdAt);
+
+					}
+
+					arr1.sort();
+
+                // Sorting for tweets based on Time
+				for ( var i = arr1.length - 1; i >= 0; i -=1) {
+
+						for ( var j = 0; j < data.length; j++) {
+
+							if (arr1[i] == (data[j].createdAt)) {
+								displayVal.push(j);
+
+							}
+						}
+					}
+
+					//Tweets Multiple Display URL Links
+					var t1 = "";
+					var screen_Name = "";
+					var retweeted = "";
+
+					 // Retweets User/Screen Names.
+					 var RetScreenName = "";
+					 var RetUserName = "" ;
+					 var tUserName = "";
+                     var tScreenName = "";
+                     var profileImg = "";
+
+					var loopArr = [];
+
+					for ( var k = 0; k < displayVal.length; k++) {
+
+						if (data[displayVal[k]].urlEntities != null) {
+							t1 = parseURLEntities(data[displayVal[k]].text,
+									data[displayVal[k]].urlEntities);
+						} else {
+							t1 = (data[displayVal[k]].text)
+									.parseURL();
+						}
+
+						//End Tweets Links
+
+						// Check Re-tweeted Status
+                       retweeted = data[displayVal[k]].retweet;
+
+						if(retweeted)
+						{
+                           RetScreenName = data[displayVal[k]].rtScreenName ;
+						   RetUserName = data[displayVal[k]].rtUserName;
+						   profileImg = data[displayVal[k]].rtProfileImageURL;
+						}
+						else
+						{
+                           RetScreenName = data[displayVal[k]].screenName ;
+						   RetUserName = data[displayVal[k]].userName;
+						   profileImg = data[displayVal[k]].profileImageURLHttps;
+						}
+
+						// Widget contents
+
+						jQuery('.twit_container')
+								.append(
+										 '<div class="single_tweet">'
+     									+ '<div id="twit_avatar" class="twit_avatar">'
+										+ '<img border="0" src="'
+										+ profileImg
+										+ '" width="40" height="40" style="border-radius:5px;"/></div>'
+
+										+ '<div class="twit_content"><div class ="twit_userinfo">'
+										+ '<a class="twit_realname" id="twit_realname" href="https://twitter.com/'
+										+ RetScreenName
+										+ '" target="_blank">'
+										+ RetUserName
+										+ '</a><br/>'
+										+ '<a id="twit_username" href="https://twitter.com/'
+										+ RetScreenName
+										+ '" target="_blank">@'
+										+ RetScreenName
+										+ '</a></div>'
+										+ '<div class ="timestamp"><a href="https://twitter.com/'
+										+ RetScreenName
+										+ '/status/'
+										+ data[displayVal[k]].id
+										+ '" target="_blank">'
+										+ relative_time(data[displayVal[k]].createdAt)
+									    + '</a></div>'
+										+ '<div class="clear"></div></div>'
+										+ '<div class="clear"></div>'
+
+                                        + '<div id="twit_text" class="twit_text">'
+												+ t1.parseUsername()
+														.parseHashtag()
+												+ '</div>'
+
+												//Retweeted Content
+												+ '<div class="re-tweet"><div class="retweet_img"><span class="retweet_badge"><a href="" class="retweeted_icon"></a><span class="retweet_text"> Retweeted By <a class="rtwit" href="https://twitter.com/'
+												+ data[displayVal[k]].screenName
+												+ '" target="_blank">'
+												+ data[displayVal[k]].userName
+												+ '</a></span></span></div></div>'
+
+												+ '<div class ="twit_actions">'
+
+												+ '<a class="twit_reply" href = "https://twitter.com/intent/tweet?in_reply_to='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+ '<a class="twit_retweet" href = "https://twitter.com/intent/retweet?tweet_id='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+ '<a class ="twit_favorite" href = "https://twitter.com/intent/favorite?tweet_id='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+'<span class="twit_follow"><a href="https://twitter.com/intent/follow?screen_name='
+												+ data[displayVal[k]].screenName
+												+ '" target="_blank"></a></span>'
+
+												+ '<div class ="clear"></div>'
+												+ '</div></div></div>');
+
+
+
+
+					// Retweeted Status Show/Hide
+					if (retweeted) {
+							jQuery(".re-tweet").eq(k).css("display", "inline");
+						} else {
+							jQuery(".re-tweet").eq(k).css("display", "none");
+						}
+
+
+	}
+
+					//End Widget Contents
+
+
+                // To sort and match properly
+	            jQuery('div.twit_container').find('.single_tweet:eq(0)').clone().appendTo('.twit_container');
+
+				// Metrics for each tweet <--link id to group links in each tweet content--->
+				// cdc.util.addMetricsRule('.single_tweet a[href]', {lid: '" + @twittusername+ "'});
+
+				jQuery(".single_tweet").each(function(i){
+				    var user = jQuery(this).find('#twit_username').text();
+				    var links = jQuery(".single_tweet:eq("+i+") a[href]").get();
+				    cdc.util.addMetricsRule(links, {lid: user });
+				});
+
+					// Loop Through Tweets
+					jQuery('.topContainer').css('display','block');
+					elems = jQuery('.single_tweet').hide().get();
+
+					(function loop() {
+						var i = 0, pointer = jQuery(elems).filter(':visible:last')[0]
+								|| jQuery(elems).last()[0];
+
+						jQuery(elems).hide();
+
+						while (i < 3) {
+							pointer = jQuery(pointer).next()[0]
+									|| jQuery(elems).first()[0];
+							jQuery(pointer).show();
+							i += 1;
+						}
+
+						setTimeout(loop, 12000); // 12 seconds 120000
+					})();
+
+				//End of looping three tweets
+
+
+
+});
+
+		// End of Reply/Retweet/Fav link mouse over/out
+
+		req
+				.error(function(msg) {
+					console.log("In Error of rate limit exception: " + msg);
+					//alert("Rate Limit Exceeded: Please Check after some time.Thank you for your patience. ");
+
+				});
+
+
+	} catch (err) {
+		txt = "There was an error on this page.\n\n";
+		txt += "Error description: " + err.message + "\n\n";
+		txt += "Click OK to continue.\n\n";
+		alert(txt);
+	}
+}
+</script>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.bladewatch.com/" target="_blank">Blade Watch</a></li>
+                      <li><a href="http://www.infoworld.com/?source=nav_BLOGS" target="_blank">InfoWorld</a></li>
+                      <li><a href="http://www.networkworld.com/blogs/" target="_blank">Network World</a></li>
+                      <li><a href="http://blogs.techrepublic.com.com/" target="_blank">TechRepublic</a></li>
+                      <li><a href="http://datacenterjournal.com/index.php" target="_blank">The Data Center Journal</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscodc'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/CiscoDC'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco-data-center-and-cloud?trk=biz-brand-tree-co-name'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/114381144808300038585/posts'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 44245;
+			var orig_count = 6;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1IvgTdX&text=Digging Deeper into VXLAN, Part 1&via=CiscoDC" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/datacenter/digging-deeper-into-vxlan&title=Digging Deeper into VXLAN, Part 1" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/datacenter/digging-deeper-into-vxlan" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/datacenter/digging-deeper-into-vxlan" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Digging Deeper into VXLAN, Part 1&body=I saw this post on Cisco Data Center blog and thought you might like to read it.%0A%0ADigging Deeper into VXLAN, Part 1%0A%0Ahttps://blogs.cisco.com/datacenter/digging-deeper-into-vxlan%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

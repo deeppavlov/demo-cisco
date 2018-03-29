@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  The Napkin Dialogues: Nexus Programmability, Part I</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"147064"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Security and Collaboration – Top of mind for IT and OT (Operational Technologies) professionals' href='https://blogs.cisco.com/energy/security-and-collaboration-top-of-mind-for-it-and-ot-professionals' />
+<link rel='next' title='One Team. One Fight. Our Fight for LLS.' href='https://blogs.cisco.com/government/one-team-one-fight-our-fight-for-lls' />
+
+<link rel="canonical" href="https://blogs.cisco.com/datacenter/napkins-dialogue-nexus-programmability-part-i" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=147064' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="The Napkin Dialogues: Nexus Programmability, Part I"/>
+  <meta property="og:url" content="https://blogs.cisco.com/datacenter/napkins-dialogue-nexus-programmability-part-i"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2014-06-30T12:08:08+00:00"/>
+  <meta property="article:modified_time" content="2014-07-22T09:40:49+00:00" />
+  <meta property="og:updated_time" content="2014-07-22T09:40:49+00:00" />
+  <meta property="article:section" content="Data Center"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="The Napkin Dialogues: Nexus Programmability, Part I"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/datacenter/napkins-dialogue-nexus-programmability-part-i"/>
+  <meta name="twitter:description" content="I know that I take a different approach to learning new things than most people. At least, I know my approach is different than the way people present them. The good news is that when I get something, I really get it. However, when looking at the juggernaut that is “Software-Defined X,” or even “pro"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:creator" content="@http:/twitter.com/drjmetz"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521452035";
+		var sig = "20fdea6d69dcf9013f8ed6f84119c19c";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://cs.co/9009YXXD&text=The Napkin Dialogues: Nexus Programmability, Part I&via=CiscoDC" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/datacenter/napkins-dialogue-nexus-programmability-part-i&title=The Napkin Dialogues: Nexus Programmability, Part I" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/datacenter/napkins-dialogue-nexus-programmability-part-i" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/datacenter/napkins-dialogue-nexus-programmability-part-i" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: The Napkin Dialogues: Nexus Programmability, Part I&body=I saw this post on Cisco Data Center blog and thought you might like to read it.%0A%0AThe Napkin Dialogues: Nexus Programmability, Part I%0A%0Ahttps://blogs.cisco.com/datacenter/napkins-dialogue-nexus-programmability-part-i%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/datacenter/'>Data Center</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category5.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Data Center  						</span>
+						<h1 id="post-147064" class="kindle_title title">The Napkin Dialogues: Nexus Programmability, Part I</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/JMichelMetz.thumbnail.jpg"></div><div class="author_rewards_box"></div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/jmichelmetz" title="Posts by J Metz" rel="author">J Metz</a> - June 30, 2014 - 0 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p>I know that I take a different approach to learning new things than most people. At least, I know my approach is different than the way people <i>present</i> them. The good news is that when I get something, I <i>really</i> get it. However, when looking at the juggernaut that is “Software-Defined <i>X</i>,” or even “<font color="red">programmability</font>,” I know that I’m still a long, long way away from feeling like I have a handle on it.</p>
+<p>When I wrote <a href="http://blogs.cisco.com/datacenter/the-napkin-dialogues-open-ing-up-to-sdn/" target="_blank">the <font color="red">previous blog post</font></a> on some of the key “Open” terms were in <font color="red">programmability</font>, I was overjoyed to find out that there were a few people who also had difficulty getting a grip on this too.</p>
+<p>In other words, I’m not alone!</p>
+<p>There is still a bewildering amount of information that I still need to learn, however, and it seems to me that if I resonated with a few people about these high-level topics, there are probably a few more who are curious about what lies beneath as well. Fortunately I work for a company (and with a lot of people) who have been willing to help me.<span id="more-147064"></span>Because he did such a fantastic job breaking the different tiers of “Open” for me, I asked Jim* to break out the napkins once more and run down some of the more esoteric <font color="red">programmability</font> elements.</p>
+<p>[* Jim is still not a real person]</p>
+<p>At first, though, he wasn’t sure where to start. “That’s a tall order,” he said. “You’re asking me to teach you programming?”</p>
+<p>“No, no,” I reassured him. “In fact, I <i>don’t</i> want you to teach me programming. There’s no way that I can simply become an expert programmer just by taking a week-long course in <font color="red">Python</font> or Ruby or C or <font color="red">Java</font>, etc. But that’s the part that makes me nervous.”</p>
+<p>“Why?”</p>
+<p>“Because I feel so hopelessly out of my league,” I said. “I understand storage, and I understand storage <font color="red">networks</font>. I have the basics of <font color="red">Ethernet</font> networking – about a <i>CCNA’s</i> worth – but I’m no CCIE. I have no idea how I’m going to suddenly learn how to be an expert programmer as well.”</p>
+<p>“Ah, I see,” Jim said, his voice turning sympathetic. “The good news is that you don’t have to become a <i>programmer</i>, per se.”</p>
+<p>“No?” I wasn’t sure if I believed him.</p>
+<p>He shook his head. “No,” he said. “<font color="red">Programmability</font> – in this case – simply refers to the ability to make a <font color="red">switch</font> do something. It has to do with the way you can interact with the <font color="red">switch</font> itself. “</p>
+<p>“But I keep hearing about <font color="red">Java</font>, <font color="red">Python</font>, Ruby, C, etc.,” I argued. “Those sound like programming languages to me.”</p>
+<p>He nodded, acknowledging my mild sarcasm. “Yes, they are, but it’s all about <i>how</i> you use them,” he countered.</p>
+<p>I must not have looked convinced, because he took out his pen and pulled a napkin over from the dispenser. Given that we seem to have these conversations over beer, a napkin was always handy. And, since I owed him “big time” for all the help he’d given me to understand this stuff, I felt it was the least I could do to buy him as many as it took to get me to understand. How he hadn’t died from alcohol poisoning by this point I have no idea.</p>
+<p>“Okay, let’s say you’ve got a <font color="red">Nexus</font> <font color="red">switch</font>,” he said.</p>
+<p>“Oh no,” I groaned.</p>
+<p>He stopped. “What?” he asked.</p>
+<p>“If you’re going to start by drawing <font color="red">abstraction</font> layers and whatnot, with a bunch of rectangles stacked on top of each other, I don’t think I’m going to get it,” I said.</p>
+<div id="attachment_147070" style="max-width: 560px" class="wp-caption aligncenter"><img class="size-large wp-image-147070" alt="It takes me forever to unpack these kinds of graphics" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/No-Massive-Charts-550x433.png" width="550" height="433" /><p class="wp-caption-text">It takes me forever to unpack these kinds of graphics</p></div>
+<p>“I mean, I know they have a purpose and are useful to a point,” I complained, “but I’ve seen so many of them back-to-back that they really have lost all meaning to me.”</p>
+<p>“Okay,” he said, thoughtfully. “I can see that. Let’s try something radically different.”</p>
+<p>He started drawing on the napkin.</p>
+<div id="attachment_147076" style="max-width: 560px" class="wp-caption aligncenter"><img class="size-large wp-image-147076" alt="Telling a <font color="red">switch</font> what to do with a <font color="red">port</font>" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/Canvas-2-550x297.png" width="550" height="297" /><p class="wp-caption-text">Telling a switch what to do with a <font color="red">port</font></p></div>
+<p>Okay. <i>This</i> was different. He had my attention.</p>
+<h3>CLI/Python/NetConf</h3>
+<p>“Let’s say you have a port on a <font color="red">Nexus</font> <font color="red">switch</font>, and you want to do something to that <font color="red">port</font>,” he explained as he drew. “It doesn’t matter what you want to do with it, so let’s keep it very, <i>very</i> simple. The <font color="red">port</font> is controlled by the operating system, right?”</p>
+<p>“Right,” I said. “NX-OS.”</p>
+<p>“Correct,” he said. “Now, in this case, what we really need to do is talk <i>to</i> NX-OS. So how do we go about talking to NX-OS traditionally?”</p>
+<p>“Through the <font color="red">command-line interface</font>,” I suggested.</p>
+<p>He tapped his nose to indicate that I was spot on. “Yes. The <font color="red">CLI</font>,” he said as he went back to drawing.</p>
+<p>&nbsp;</p>
+<div id="attachment_147077" style="max-width: 560px" class="wp-caption aligncenter"><img class="size-large wp-image-147077" alt="Gotta tell NX-OS to do it. <font color="red">CLI</font> is one way." src="https://alln-extcloud-storage.cisco.com/ciscoblogs/Canvas-8-550x297.png" width="550" height="297" /><p class="wp-caption-text">Gotta tell NX-OS to do it. <font color="red">CLI</font> is one way.</p></div>
+<p>“When we use the CLI to do this, we enter into the configuration part of the <font color="red">interface</font> and tell it to do whatever we want. In this case, we want to activate the <font color="red">port</font>.” He started writing some text off to the side.</p>
+<div id="attachment_147081" style="max-width: 437px" class="wp-caption aligncenter"><img class="size-full wp-image-147081" alt="So simple even I could do it..." src="https://alln-extcloud-storage.cisco.com/ciscoblogs/CLI-Example.png" width="427" height="108" /><p class="wp-caption-text">So simple even I could do it&#8230;</p></div>
+<p>“Now before you say anything,” he cautioned, “I know this is an <i>extremely</i> simple example, but the point is only to show that this is how we communicate with NX-OS for it to do <i>something</i>. Even simple tasks count as ‘something.’”</p>
+<p>“Got it,” I said. I knew there was more that you had to do to an <font color="red">interface</font> or the <font color="red">switch</font> in order for it to do anything useful, but that wasn’t the point here. We were focusing solely on <i>how </i>to communicate with the <font color="red">switch</font>, rather than <i>what</i> to communicate.</p>
+<p>Obviously, anyone who had ever worked with a <font color="red">Cisco</font> <font color="red">switch</font> would know this; there is nothing new here. Even so, it was a great place to level-set, even for me.</p>
+<p>“For some people using the <font color="red">CLI</font> can be somewhat limiting, though,” he said. “For example, while the <font color="red">CLI</font> provides you with direct access to the operating system, it doesn’t really allow you for even the most basic programming functions.”</p>
+<p>“For example?” I asked. This was the kind of thing that I wanted to hear.</p>
+<p>“Well,” he said. “Say you wanted to check for a condition first and <i>then</i> you want to activate or deactivate the <font color="red">port</font>.”</p>
+<p>“Okay,” I said, “But I think I’m going to need something a bit more real to work with.”</p>
+<p>“Fair enough, here’s an example anyone can do at home,” he said, sounding just like a children’s TV show <font color="red">presenter</font>.</p>
+<p>“Let’s say that you want to check the traffic on an <font color="red">interface</font> to look for CRC errors and, if there are, you want to shut down the <font color="red">port</font>. This is what it might look like.”</p>
+<div id="attachment_147082" style="max-width: 560px" class="wp-caption aligncenter"><img class="size-large wp-image-147082" alt="Making decisions that would lead to telling the <font color="red">switch</font> to do something with the <font color="red">port</font>..." src="https://alln-extcloud-storage.cisco.com/ciscoblogs/CLI-Example-2-550x150.png" width="550" height="150" /><p class="wp-caption-text">Making decisions that would lead to telling the switch to do something with the port&#8230;</p></div>
+<p>“In this case, this is a very simple four-step process that lists the configuration for the Ethernet1/2 <font color="red">interface</font>, singles out the CRC errors and shows it to us. Then we go into the <font color="red">interface</font> itself and shut it down.”</p>
+<p>“I think I see what you’re getting at,” I said. While this may be fine for checking on one or two <font color="red">ports</font>, if you have to do an entire <font color="red">switch</font> – which can have up to hundreds of <font color="red">ports</font>, this can get pretty onerous.”</p>
+<p>Jim nodded. “Yes, and that’s just for one <font color="red">switch</font>! Imagine if you have hundreds of <font color="red">switches</font>.”</p>
+<p>I frowned, thinking that one through. “Sure, but would anyone really want to send a <font color="red">script</font> out to hundreds of <font color="red">switches</font> like that?”</p>
+<p>Jim grinned broadly. “Well, that’s a completely different question. I suggest we leave that one aside for the moment.”</p>
+<p>I nodded. That sounded like a can of worms I wasn’t ready to open just yet.</p>
+<p>“For now, though,” Jim continued, “let’s suppose that you want to do this for a <font color="red">single switch</font> that has a couple-dozen <font color="red">ports</font>. This is a four-step process that requires you to type in all that stuff each time you want to do this. Sure, you can abbreviate most of these commands – which I’m going to do from now on because it’s a lot to write out – but it’s still an awful lot of typing.”</p>
+<p>“Sure,” I said, “but not all of your <font color="red">ports</font> are going to require you to type in all that information, if there are no CRC errors.”</p>
+<p>He pointed his pen at me. “Exactly,” he said emphatically. “You only want to do this <i>if</i> there are CRC errors. The <font color="red">CLI</font> cannot make that determination for you, you have to either do it yourself – “</p>
+<p>“Or use something that can do it for you,” I finished for him.</p>
+<p>“Correct,” he confirmed. “For example, there is the <font color="red">Python interpreter</font>.”</p>
+<div id="attachment_147079" style="max-width: 560px" class="wp-caption aligncenter"><img class="size-large wp-image-147079" alt="Accessing the <font color="red">CLI</font> from outside the <font color="red">switch</font> via a <font color="red">script</font>" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/Canvas-12-550x423.png" width="550" height="423" /><p class="wp-caption-text">Accessing the CLI from outside the switch via a <font color="red">script</font></p></div>
+<p>“… which of course can be called remotely using a script that uses SSH to connect to the device,” he said, continuing to talk as he wrote on the napkin.</p>
+<p>“I had heard that <font color="red">Python</font> was pretty popular now,” I said. “I confess, I tried to learn it a long time ago but realized my future wasn’t in programming.” Little did I know.</p>
+<p>“<font color="red">Python</font> itself is pretty easy to learn as well,” Jim continued, “plus it has some advantages over other <font color="red">scripting</font> languages such as Perl or TCL in that it’s easy to read, it’s object-oriented, and it’s very, very clean. Not only that, but there is an enormous community that help support <font color="red">Python</font> as well. There are oodles of tutorials out there for everyone from the absolute beginner to the most experienced programmer.”</p>
+<p>He took out another napkin and started writing down some addresses for me to look at on my own:</p>
+<blockquote><p><a href="https://www.coursera.org/course/interactive<font color="red">python</font>" target="_blank">https://www.coursera.org/course/interactivepython</a> &#8212;&gt; (9 week course)<br />
+<a href="http://www.learnpython.org/" target="_blank">http://www.learnpython.org/</a> &#8212;&gt; no download needed, start coding in python on the website<br />
+<a href="http://docs.python.org/2/tutorial/" target="_blank">http://docs.python.org/2/tutorial/</a> &#8212;&gt; Official <font color="red">Python</font> tutorial (really good source of <font color="red">python</font> documentation)<br />
+<a href="http://www.trypython.org/" target="_blank">http://www.trypython.org/</a> &#8212;&gt; <font color="red">python interpreter</font> online</p></blockquote>
+<p>“What’s the big deal?” I asked, genuinely confused. “So I can write a <font color="red">script</font> that connects to the <font color="red">switch</font> and runs the <font color="red">CLI</font>. So what?”</p>
+<p>He shook his head. “You can do that, sure,” he said, “but any <font color="red">Python script</font> can be run <i>on the box itself</i>.”</p>
+<div id="attachment_147078" style="max-width: 560px" class="wp-caption aligncenter"><img class="size-large wp-image-147078" alt="Using the on-board <font color="red">Python interpreter</font>" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/Canvas-11-550x423.png" width="550" height="423" /><p class="wp-caption-text">Using the on-board <font color="red">Python</font> interpreter</p></div>
+<p>This was news to me. “Huh?” I asked. “You can run Python on the <font color="red">switch</font> itself?”</p>
+<p>He grinned. “Yup. I can’t believe you didn’t know that.”</p>
+<p>Neither could I. “What kind of commands can you run?”</p>
+<p>“All of them.”</p>
+<p>I cocked my head. “Say again?”</p>
+<p>“All of them,” he repeated. “Well, pretty much all of them. I can only think of one command off the top of my head, and perhaps there are a few others, but generally speaking yes, you have the full breadth of NX-OS commands at your disposal. Any <font color="red">CLI</font> command can be executed from the <font color="red">Python Interpreter</font> mode. Not only that, but you can parse the outputs and perform conditional actions. You can call a different <font color="red">python script</font> from within a <font color="red">script</font>, too. When you do this the <font color="red">script</font> is stored on bootflash on the <font color="red">switch</font>. There is a pretty good <a href="http://www.cisco.com/c/en/us/td/docs/switches/datacenter/sw/6_x/nx-os/fundamentals/configuration/guide/b_Cisco_Nexus_7000_Series_NX-OS_Fundamentals_Configuration_Guide_Release_6-x/b_Cisco_Nexus_7000_Series_NX-OS_Fundamentals_Configuration_Guide_Release_6-x_chapter_01011.html" target="_blank">webpage about the <font color="red">Python</font> <font color="red">API</font> on the N7k</a>, as well as <a href="http://www.cisco.com/c/en/us/td/docs/switches/datacenter/nexus5000/sw/python/api/python_api.pdf" target="_blank">for the 5k</a>, for example.”</p>
+<p>“If you take this example,” he said, tapping the napkin with the CRC <font color="red">CLI</font> commands, and you wanted to run the <a href="https://github.com/datacenter/nexus7000/blob/master/crc_checker_n7k.py" target="_blank"><font color="red">Python</font> code on the <font color="red">Nexus</font> 7000</a>, for instance, this is what you would get.”</p>
+<div id="attachment_147083" style="max-width: 560px" class="wp-caption aligncenter"><img class="size-large wp-image-147083" alt="A simpler way of doing things" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/CLI-Example-3-550x171.png" width="550" height="171" /><p class="wp-caption-text">A simpler way of doing things</p></div>
+<p>“Here, though, the <font color="red">script</font> runs through <i>all</i> of the <font color="red">interfaces</font> on the <font color="red">switch</font>,” he explained, “not just the Ethernet1/2 <font color="red">interface</font>.”</p>
+<p>“Nice. What else can you do?” I asked.</p>
+<p>“The on-box <font color="red">Python</font> can be used to do things like Power-On Auto Provisioning, or POAP,” he said. “It can also be used to tie into <font color="red">EEM</font>.”</p>
+<p>“What’s <font color="red">EEM</font>?” I asked.</p>
+<p>“Sorry,” he apologized. “There are a lot of acronyms here to play with. <font color="red">EEM</font> stands for <i>Embedded Event Manager</i>, which is an internal scripting capability in NX-OS. It can do things like monitor events and then take action, such as when a module changes status, or the temperature of a <font color="red">switch</font> reaches a certain threshold. Stuff like that.</p>
+<p>&#8220;Ultimately, there is a lot you can do with <font color="red">Python</font>, both on- and off-box. If you take a look around the web, you&#8217;ll find some <font color="red">Cisco</font>- and <a href="https://github.com/datacenter" target="_blank">community-contributed <font color="red">scripts</font> at places like GitHub</a>,&#8221; he said.</p>
+<h3><font color="red">NetConf</font></h3>
+<p>“But that’s not the only way to communicate with the <font color="red">CLI</font>,” he continued. “You can, of course, connect to the <font color="red">switch</font> using a <font color="red">script</font>, or even use something like <font color="red">NetConf</font>, which can call the <font color="red">CLI</font> directly but does not reside on the <font color="red">switch</font> itself.”</p>
+<div id="attachment_147080" style="max-width: 560px" class="wp-caption aligncenter"><img class="size-large wp-image-147080" alt="Using <font color="red">NetConf</font> to connect to the <font color="red">CLI</font>" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/Canvas-13-550x438.png" width="550" height="438" /><p class="wp-caption-text">Using <font color="red">NetConf</font> to connect to the CLI</p></div>
+<p>&nbsp;</p>
+<p>“Go on,” I prompted. He knew what I was going to ask anyway.</p>
+<p>“NetConf,” he said, smiling, “is another way of managing a device. It’s <font color="red">remote management</font>, which gives some pretty nice advantages over more traditional ways, such as the <font color="red">CLI</font> and <font color="red">SNMP</font>.”</p>
+<p>“How so?”</p>
+<p>“Well, <font color="red">SNMP</font> – comparatively speaking – is a bit limited and more complicated when compared to newer methods, and not quite as powerful either,” he replied.</p>
+<p>“<font color="red">NetConf</font>, on the other hand,” he continued, “is a way that we can use virtually any of the <font color="red">CLI</font> outputs as well as filter them. Additionally, sometimes – rare as it may be – the <font color="red">CLI</font> commands can actually change between OS upgrades, and making sure that your <font color="red">scripts</font> will work if they only replicate the <font color="red">CLI</font> can be a pain. <font color="red">NetConf</font> helps address the ever-changing structure and syntax of commands.</p>
+<p>“As far as <font color="red">SNMP</font> is concerned, <font color="red">NetConf</font> has a big advantage, because not only is it agentless, but it eliminates the need for screen scraping using complex <font color="red">scripts</font> just because <font color="red">SNMP</font> doesn’t define all the possible output fields.”</p>
+<p>“So, from the <font color="red">switch</font>’s perspective,” I concluded, “this minimizes the load on <font color="red">CPU</font> and memory because we’re connecting to the <font color="red">switch</font> via SSH sessions.</p>
+<p>“Exactly,” he agreed. “In addition, <font color="red">SNMP</font> was designed for performance and monitoring applications, not configuration, and generally speaking there is a lack of useful standard security mechanisms, though version 3 has improved upon this quite a bit.</p>
+<p>“For our conversation here, though,” he said, “<font color="red">SNMP</font> has the key drawback that there is a lack of a defined discovery process that makes it hard to find the right modules to hook into. With <font color="red">NetConf</font>, you have the ability to display the <font color="red">CLI</font> output in NetConf/XML format, which makes parsing by <font color="red">script</font> much easier.”</p>
+<p>“You can do that?” I asked.</p>
+<p>Jim pulled out his laptop. “Sure. Let me show you.”</p>
+<p>He called up a terminal window and typed in some familiar commands. “Let’s just take a look at the <font color="red">Ethernet</font> <font color="red">interface</font>,” he said.</p>
+<div id="attachment_147084" style="max-width: 560px" class="wp-caption aligncenter"><img class="size-large wp-image-147084" alt="The basic show <font color="red">interface</font> <font color="red">CLI</font> command" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/NetConf-Example-550x181.png" width="550" height="181" /><p class="wp-caption-text">The basic show interface CLI command</p></div>
+<p>“And now we can run the same command, but have the output give us <font color="red">XML</font>,” he said, adding in a quick few characters to the command.</p>
+<div id="attachment_147085" style="max-width: 560px" class="wp-caption aligncenter"><img class="size-large wp-image-147085" alt="<font color="red">NetConf</font> output for same command" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/NetConf-Example-2-550x460.png" width="550" height="460" /><p class="wp-caption-text">NetConf output for same command</p></div>
+<p>“Ah, I see,” I said. It was easy to see how that format would be much easier for a <font color="red">script</font> to parse into something usable.</p>
+<p>“It’s important to remember,” he said, “that <font color="red">NetConf</font> was designed from the ground up to <font color="red">interface</font> with the <font color="blue">network device</font> manager. It has the ability to make a distinction between multiple configuration data sets, such as the running configuration, startup configuration, and a potential candidate configuration, and it has a more robust commit mechanism that allows you to check to make sure that dependencies are satisfied before committing a change.”</p>
+<p>“Let me see if I understand this,” I said. “I can check to see if there are going to be any unintended consequences before blindly submitting the command?”</p>
+<p>“Precisely, although,” he said, smiling. “it’s <i>also</i> important to remember that it’s garbage-in, garbage-out. If you write stupid code, you’re going to get stupid behavior. Later on, though, we&#8217;ll talk about how we can get even more streamlined output from <font color="red">JSON</font>.”</p>
+<p>I grinned, but inside I realized that I was <i>very </i>good at doing stupid things. Better leave that to the professionals. Or something.</p>
+<h3>Taking a Break</h3>
+<p>At this point we both needed a bit of a breather, but I knew we had just gotten started. When we came back to continue our conversation, <a title="Part 2" href="http://blogs.cisco.com/datacenter/the-napkin-dialogues-nexus-programmability-part-ii/" target="_blank">we spent more time</a> talking about Puppet, Chef, and what in the world this “<font color="red">onePK</font>” thing is all about. After that, we started talking more about <font color="red">XML</font>, <font color="red">JSON</font>, NXAPI and a few other things to help paint a much broader picture.</p>
+<p>&nbsp;</p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=cli">CLI</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=netconf">netconf</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=nexus">nexus</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=programmability">programmability</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=python">python</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=sdn">SDN</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+		</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Data Center:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogDataCenterNetworks', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogDataCenterNetworks" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Data Center</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscodc"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/CiscoDC"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco-data-center-and-cloud?trk=biz-brand-tree-co-name"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/114381144808300038585/posts"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/Ciscodatacenter/presentations"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://www.youtube.com/user/Cisco/videos?sort=dd&view=46&tag_id=UCEWiIE6Htd8mvlOR6YQez1g.3.data-center-virtualization"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogDataCenterNetworks"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+
+	<li id ="twitter_widget" class="widget">
+
+	<!-- white background -->
+	<div class="topContainer">
+	 <div class="twit_container">
+
+		<div id="twit_req">
+
+			<span class="widgetheading">
+				Tweets
+			</span>
+
+			<a href="https://twitter.com/" target="_blank"><span class="twit_logo"></span></a>
+							<div class="clear"></div>
+							</div>
+			<!-- <span class="twit_logo" href="#"></span> -->
+			<div class="clear"></div>
+		</div></div>
+		</li>
+
+<br class="clear" />
+
+<script type = "text/javascript">
+
+jQuery(document).ready(function() {
+ //Calling Twitter Widget
+var url = "https://tts-prod.cloudapps.cisco.com/ciscotweetsapp/api/v1/gettweets/ciscodc/response.jsonp";
+
+		loadSpotlightTweet(url);
+
+		//Metrics for each reply retweet and favorites(loop for each tweet)
+		cdc.util.addMetricsRule(".twit_reply", {linktext: "reply"});
+		cdc.util.addMetricsRule(".twit_retweet", {linktext: " retweet "});
+		cdc.util.addMetricsRule(".twit_favorite", {linktext: " favorite "});
+
+	   //lpos for all clicks inside twitter_widget
+		cdc.util.addMetricsRule("#twitter_widget a[href]", {lpos: "tweets"});
+
+});
+
+String.prototype.parseURL = function() {
+	var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+	return this.replace(exp, "<a href='$1' target='_blank'>$1</a>");
+};
+
+String.prototype.parseUsername = function() {
+	return this.replace(/[@]+[A-Za-z0-9-_]+/g, function(u) {
+		var username = u.replace("@", "");
+		// return u.link("http://twitter.com/" + username);
+		return '<a target="_blank" href="https://twitter.com/' + username
+				+ '">' + u + '</a>';
+		// return u.link(window.open('http://www.google.com', '_blank',
+		// 'toolbar=0,location=0,menubar=0'));
+	});
+
+};
+
+String.prototype.parseHashtag = function() {
+	return this.replace(/[#]+[A-Za-z0-9-_]+/g, function(t) {
+		var tag = t.replace("#", "%23");
+		// tag = tag.replace(tag,"<a href='$1' target='_blank'>$1</a>");
+		// return t.link("https://twitter.com/search?q=" + tag +
+		// "&src=hash");//https://twitter.com/search?q=%23retail&src=hash
+		return '<a target="_blank" href="https://twitter.com/search?q=' + tag
+				+ '&src=hash">' + t + '</a>';
+	});
+
+};
+
+function parseURLEntities(t, arg) {
+	for ( var j = 0; j < arg.length; j++) {
+		t = t.replace(arg[j].url, '<a target="_blank" href="' + arg[j].url
+				+ '">' + arg[j].displayURL + '</a>');
+	}
+	return t;
+}
+
+
+function parseDate(str) {
+	var v = str.split(' ');
+	return new Date(Date.parse(v[1] + " " + v[2] + ", " + v[5] + " " + v[3]
+			+ " UTC"));
+}
+
+function selectDay() {
+	var d = new Date();
+	var weekday = new Array(7);
+	weekday[0] = "Sun";
+	weekday[1] = "Mon";
+	weekday[2] = "Tue";
+	weekday[3] = "Wed";
+	weekday[4] = "Thu";
+	weekday[5] = "Fri";
+	weekday[6] = "Sat";
+
+	var n = weekday[d.getDay()];
+
+	return n;
+}
+
+
+var checkIE = function () {
+    var a = navigator.userAgent;
+    return {
+        ie: a.match(/MSIE\s([^;]*)/)
+    };
+}();
+
+
+function relative_time(time_value) {
+	//time_value is in millisecond (GMT)
+
+	var d = new Date(time_value);//converting to our local PST default Date Format
+	//console.log('PST : ' + d);
+
+	var values = d.toString().split(" ");
+	var time_value_format = values[1] + " " + values[2] + ", " + values[3] + " " + values[4];
+//	console.log(time_value_format);
+
+	var parsed_date = Date.parse(time_value_format);
+    var relative_to = (arguments.length > 1) ? arguments[1] : new Date();
+//    console.log(relative_to.getTime());
+    var delta = parseInt((relative_to.getTime() - parsed_date) / 1000);
+    //delta = delta + (relative_to.getTimezoneOffset() * 60); 	//Not Required: converting into GMT since we are getting in GMT Format
+
+   	if (delta < 60) {
+		return delta + 's';
+	} else if (delta < 120) {
+		return '1m';
+	} else if (delta < (60 * 60)) {
+		return (parseInt(delta / 60)).toString() + 'm';
+	} else if (delta < (120 * 60)) {
+		return '1h';
+	} else if (delta < (24 * 60 * 60)) {
+		return (parseInt(delta / 3600)).toString() + 'h';
+	} else if (delta < (48 * 60 * 60)) {
+		return values[2] + " " + values[1];
+	} else {
+		return values[2] + " " + values[1];
+	}
+
+}
+
+
+	function loadSpotlightTweet(tweetsURL)
+	{
+
+	try {
+		var req = jQuery.ajax({
+			url: tweetsURL,
+			async: false,
+			dataType : "jsonp",
+			timeout : 1000,
+
+		});
+
+			req
+				.success(function(data) {
+			var metricsUser= "";
+
+				  if(data == "")
+					  return;
+
+					var arr1 = [];
+					var displayVal = [];
+
+					for ( var i = data.length-1; i >= 0; i -= 1) {
+
+						arr1.push(data[i].createdAt);
+
+					}
+
+					arr1.sort();
+
+                // Sorting for tweets based on Time
+				for ( var i = arr1.length - 1; i >= 0; i -=1) {
+
+						for ( var j = 0; j < data.length; j++) {
+
+							if (arr1[i] == (data[j].createdAt)) {
+								displayVal.push(j);
+
+							}
+						}
+					}
+
+					//Tweets Multiple Display URL Links
+					var t1 = "";
+					var screen_Name = "";
+					var retweeted = "";
+
+					 // Retweets User/Screen Names.
+					 var RetScreenName = "";
+					 var RetUserName = "" ;
+					 var tUserName = "";
+                     var tScreenName = "";
+                     var profileImg = "";
+
+					var loopArr = [];
+
+					for ( var k = 0; k < displayVal.length; k++) {
+
+						if (data[displayVal[k]].urlEntities != null) {
+							t1 = parseURLEntities(data[displayVal[k]].text,
+									data[displayVal[k]].urlEntities);
+						} else {
+							t1 = (data[displayVal[k]].text)
+									.parseURL();
+						}
+
+						//End Tweets Links
+
+						// Check Re-tweeted Status
+                       retweeted = data[displayVal[k]].retweet;
+
+						if(retweeted)
+						{
+                           RetScreenName = data[displayVal[k]].rtScreenName ;
+						   RetUserName = data[displayVal[k]].rtUserName;
+						   profileImg = data[displayVal[k]].rtProfileImageURL;
+						}
+						else
+						{
+                           RetScreenName = data[displayVal[k]].screenName ;
+						   RetUserName = data[displayVal[k]].userName;
+						   profileImg = data[displayVal[k]].profileImageURLHttps;
+						}
+
+						// Widget contents
+
+						jQuery('.twit_container')
+								.append(
+										 '<div class="single_tweet">'
+     									+ '<div id="twit_avatar" class="twit_avatar">'
+										+ '<img border="0" src="'
+										+ profileImg
+										+ '" width="40" height="40" style="border-radius:5px;"/></div>'
+
+										+ '<div class="twit_content"><div class ="twit_userinfo">'
+										+ '<a class="twit_realname" id="twit_realname" href="https://twitter.com/'
+										+ RetScreenName
+										+ '" target="_blank">'
+										+ RetUserName
+										+ '</a><br/>'
+										+ '<a id="twit_username" href="https://twitter.com/'
+										+ RetScreenName
+										+ '" target="_blank">@'
+										+ RetScreenName
+										+ '</a></div>'
+										+ '<div class ="timestamp"><a href="https://twitter.com/'
+										+ RetScreenName
+										+ '/status/'
+										+ data[displayVal[k]].id
+										+ '" target="_blank">'
+										+ relative_time(data[displayVal[k]].createdAt)
+									    + '</a></div>'
+										+ '<div class="clear"></div></div>'
+										+ '<div class="clear"></div>'
+
+                                        + '<div id="twit_text" class="twit_text">'
+												+ t1.parseUsername()
+														.parseHashtag()
+												+ '</div>'
+
+												//Retweeted Content
+												+ '<div class="re-tweet"><div class="retweet_img"><span class="retweet_badge"><a href="" class="retweeted_icon"></a><span class="retweet_text"> Retweeted By <a class="rtwit" href="https://twitter.com/'
+												+ data[displayVal[k]].screenName
+												+ '" target="_blank">'
+												+ data[displayVal[k]].userName
+												+ '</a></span></span></div></div>'
+
+												+ '<div class ="twit_actions">'
+
+												+ '<a class="twit_reply" href = "https://twitter.com/intent/tweet?in_reply_to='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+ '<a class="twit_retweet" href = "https://twitter.com/intent/retweet?tweet_id='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+ '<a class ="twit_favorite" href = "https://twitter.com/intent/favorite?tweet_id='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+'<span class="twit_follow"><a href="https://twitter.com/intent/follow?screen_name='
+												+ data[displayVal[k]].screenName
+												+ '" target="_blank"></a></span>'
+
+												+ '<div class ="clear"></div>'
+												+ '</div></div></div>');
+
+
+
+
+					// Retweeted Status Show/Hide
+					if (retweeted) {
+							jQuery(".re-tweet").eq(k).css("display", "inline");
+						} else {
+							jQuery(".re-tweet").eq(k).css("display", "none");
+						}
+
+
+	}
+
+					//End Widget Contents
+
+
+                // To sort and match properly
+	            jQuery('div.twit_container').find('.single_tweet:eq(0)').clone().appendTo('.twit_container');
+
+				// Metrics for each tweet <--link id to group links in each tweet content--->
+				// cdc.util.addMetricsRule('.single_tweet a[href]', {lid: '" + @twittusername+ "'});
+
+				jQuery(".single_tweet").each(function(i){
+				    var user = jQuery(this).find('#twit_username').text();
+				    var links = jQuery(".single_tweet:eq("+i+") a[href]").get();
+				    cdc.util.addMetricsRule(links, {lid: user });
+				});
+
+					// Loop Through Tweets
+					jQuery('.topContainer').css('display','block');
+					elems = jQuery('.single_tweet').hide().get();
+
+					(function loop() {
+						var i = 0, pointer = jQuery(elems).filter(':visible:last')[0]
+								|| jQuery(elems).last()[0];
+
+						jQuery(elems).hide();
+
+						while (i < 3) {
+							pointer = jQuery(pointer).next()[0]
+									|| jQuery(elems).first()[0];
+							jQuery(pointer).show();
+							i += 1;
+						}
+
+						setTimeout(loop, 12000); // 12 seconds 120000
+					})();
+
+				//End of looping three tweets
+
+
+
+});
+
+		// End of Reply/Retweet/Fav link mouse over/out
+
+		req
+				.error(function(msg) {
+					console.log("In Error of rate limit exception: " + msg);
+					//alert("Rate Limit Exceeded: Please Check after some time.Thank you for your patience. ");
+
+				});
+
+
+	} catch (err) {
+		txt = "There was an error on this page.\n\n";
+		txt += "Error description: " + err.message + "\n\n";
+		txt += "Click OK to continue.\n\n";
+		alert(txt);
+	}
+}
+</script>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.bladewatch.com/" target="_blank">Blade Watch</a></li>
+                      <li><a href="http://www.infoworld.com/?source=nav_BLOGS" target="_blank">InfoWorld</a></li>
+                      <li><a href="http://www.networkworld.com/blogs/" target="_blank">Network World</a></li>
+                      <li><a href="http://blogs.techrepublic.com.com/" target="_blank">TechRepublic</a></li>
+                      <li><a href="http://datacenterjournal.com/index.php" target="_blank">The Data Center Journal</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscodc'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/CiscoDC'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco-data-center-and-cloud?trk=biz-brand-tree-co-name'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/114381144808300038585/posts'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 147064;
+			var orig_count = 0;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://cs.co/9009YXXD&text=The Napkin Dialogues: Nexus Programmability, Part I&via=CiscoDC" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/datacenter/napkins-dialogue-nexus-programmability-part-i&title=The Napkin Dialogues: Nexus Programmability, Part I" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/datacenter/napkins-dialogue-nexus-programmability-part-i" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/datacenter/napkins-dialogue-nexus-programmability-part-i" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: The Napkin Dialogues: Nexus Programmability, Part I&body=I saw this post on Cisco Data Center blog and thought you might like to read it.%0A%0AThe Napkin Dialogues: Nexus Programmability, Part I%0A%0Ahttps://blogs.cisco.com/datacenter/napkins-dialogue-nexus-programmability-part-i%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Penetration Testing in the Cloud</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content="Tell me if this sounds familiar... you are asked to perform a penetration test on customer\'s network to determine the security posture of their assets and the first thing they do is give you a list of assets that you are NOT allowed to test, because they are critical systems to the business. Ironic isn’t it? This is exactly the difficulty you can expect when performing penetration testing in the cloud, but multiplied by ten. There is a lot to think about and plan for when you want to perform a penetration test in a cloud service provider’s (CSP) network. Before we get into the technical details, we need to start with the basics."/><meta name="description" content="Tell me if this sounds familiar... you are asked to perform a penetration test on customer\'s network to determine the security posture of their assets and the first thing they do is give you a list of assets that you are NOT allowed to test, because they are critical systems to the business. Ironic isn’t it? This is exactly the difficulty you can expect when performing penetration testing in the cloud, but multiplied by ten. There is a lot to think about and plan for when you want to perform a penetration test in a cloud service provider’s (CSP) network. Before we get into the technical details, we need to start with the basics."/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; Penetration Testing in the Cloud Comments Feed" href="https://blogs.cisco.com/security/penetration-testing-in-the-cloud/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"39516"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Tips to make your next site survey 100% more fun!' href='https://blogs.cisco.com/wireless/tips-to-make-your-next-site-survey-100-more-fun' />
+<link rel='next' title='Cisco offers cloud and data center solutions for DISA’s Customer &#038; Industry Forum' href='https://blogs.cisco.com/government/cisco-offers-cloud-and-data-center-solutions-for-disa%e2%80%99s-customer-industry-forum' />
+
+<link rel="canonical" href="https://blogs.cisco.com/security/penetration-testing-in-the-cloud" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=39516' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Penetration Testing in the Cloud"/>
+  <meta property="og:url" content="https://blogs.cisco.com/security/penetration-testing-in-the-cloud"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2011-08-12T11:28:13+00:00"/>
+  <meta property="article:modified_time" content="2011-08-12T22:05:10+00:00" />
+  <meta property="og:updated_time" content="2011-08-12T22:05:10+00:00" />
+  <meta property="article:section" content="Security"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Penetration Testing in the Cloud"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/security/penetration-testing-in-the-cloud"/>
+  <meta name="twitter:description" content="Tell me if this sounds familiar... you are asked to perform a penetration test on customer&#039;s network to determine the security posture of their assets and the first thing they do is give you a list of assets that you are NOT allowed to test, because they are critical systems to the business. Ironic"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521514116";
+		var sig = "9e1b5c35b8ca5970f172f6dfc8b20208";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1Fb3qFu&text=Penetration Testing in the Cloud&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/penetration-testing-in-the-cloud&title=Penetration Testing in the Cloud" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/penetration-testing-in-the-cloud" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/penetration-testing-in-the-cloud" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Penetration Testing in the Cloud&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0APenetration Testing in the Cloud%0A%0Ahttps://blogs.cisco.com/security/penetration-testing-in-the-cloud%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/security/'>Security</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category50.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Security  						</span>
+						<h1 id="post-39516" class="kindle_title title">Penetration Testing in the Cloud</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/aaronbryson.thumbnail.4e29eb7b5de92.jpg"></div><div class="author_rewards_box"></div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/aaronbryson" title="Posts by Aaron Bryson" rel="author">Aaron Bryson</a> - August 12, 2011 - 5 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/cloudhacking-border1.png"><img class="aligncenter size-medium wp-image-39524" title="cloudhacking" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/cloudhacking-border1-300x209.png" alt="" width="300" height="209" /></a></p>
+<p>Tell me if this sounds familiar&#8230; you are asked to perform a <font color="red">penetration test</font> on customer&#8217;s <font color="red">network</font> to determine the <font color="blue">security posture</font> of their assets and the first thing they do is give you a list of assets that you are <strong>NOT</strong> allowed to test, because they are <strong>critical</strong> <strong>systems</strong> to the business. Ironic isn’t it? This is exactly the difficulty you can expect when performing <font color="red">penetration testing</font> in the <font color="red">cloud</font>, but multiplied by ten.</p>
+<p>There is a lot to think about and plan for when you want to perform a <font color="red">penetration test</font> in a <font color="red">cloud service provider</font>’s (<font color="red">CSP</font>) <font color="red">network</font>. Before we get into the technical details, we need to start with the basics.</p>
+<p><span id="more-39516"></span></p>
+<h4>Questions to ask yourself</h4>
+<ul>
+<li>What does my contract and <font color="red">SLA</font> state about <font color="red">penetration testing</font>?</li>
+<li>Does the <font color="red">CSP</font> already have a team of <font color="red">penetration</font> testers? Is this enough to meet your <font color="red">security</font> requirements or compliance objectives?</li>
+<li>Are we hiring a third-party company to perform the <font color="red">penetration tests</font> for us?</li>
+<li>Do we have our <font color="red">own penetration</font> testing team?</li>
+</ul>
+<h4><strong><font color="red">CSP</font> In-House <font color="red">Pen Test</font> Team</strong></h4>
+<p><span style="font-weight: normal;">If your <font color="red">cloud service provider</font> has their <font color="red">own penetration</font> testers that is great news! Not only does it show that they take <font color="red">security</font> seriously, but it means that you can leverage their internal testing results for your own audits. If you do not have the money for your <font color="red">own penetration</font> testing team (either in-house or third-party), you may be able to request detailed audit reports from the <font color="red">CSP</font> relative to your company. Have information disclosure policies built-in to your <font color="red">SLA</font> and monthly <font color="red">vulnerability</font> reports delivered to you. Some types of compliance will say this is not enough and still require third-party testing. Honestly, you should perform your <font color="red">own penetration</font> tests, either with your own team or by hiring a trusted and skilled third-party. If your <font color="red">CSP</font> claims that they are secure, are you just going to believe them? How do you know they didn’t leave anything out of their reports?</span></p>
+<p>Make sure you ask a lot of questions about what they tested &amp; how:</p>
+<ul>
+<li>What was in scope? What devices, web apps, <font color="red">services</font>, databases, hosts, <font color="red">subnets</font>, and <font color="red">network storage</font>? Make sure that any part of their Infrastructure (<font color="red">IaaS</font>), Platform (<font color="red">PaaS</font>), or Software (<font color="red">SaaS</font>) that is relevant to you is included in the scope of testing and reports that are delivered to you.</li>
+<li>For <font color="red">IaaS</font>, you may want to view their architectural design and <font color="red">security</font> review documents, <font color="red">security policies</font> and <font color="red">patch management</font> policies, as well as any hardening guides that they used. In addition, you should request <font color="red">vulnerability</font> scans to be performed on your part of the <font color="red">VLAN</font> or <font color="red">subnet</font>. Other than providing you facilities with HVAC, physical <font color="red">security</font>, and hazard controls &#8211; most of the technical <font color="red">security</font> is your responsibility. Your job is to identify what <font color="red">security</font> gaps have not been filled by the <font color="red">CSP</font> and fill them, or get the <font color="red">CSP</font> to do it.</li>
+<li>For <font color="red">PaaS</font>, in addition to everything listed above, you should have your <font color="red">CSP</font> verify that your platform is fully patched and up-to-date. Ensure that your installation of Apache, Ruby on Rails, Java, PHP, Bugzilla, Drupal, etc. is up-to-date and not running a default installation with default user names, passwords, and configuration files. If it is not protected, it is your job as a <font color="red">PaaS</font> tenant to protect it. Some of these <font color="red">security</font> responsibilities will be shared by the <font color="red">CSP</font> and yourself, so make sure you know where the line is drawn and who is responsible for what through an <font color="red">SLA</font>.</li>
+<li>For <font color="red">SaaS</font>, <font color="red">security</font> mostly depends on the <font color="red">CSP</font>. Make sure that in addition to everything listed for <font color="red">IaaS</font> &amp; <font color="red">PaaS</font>, that you also have <font color="red">web application</font> &amp; <font color="red">web service</font> <font color="red">penetration testing</font> done. Request <font color="red">web application</font> <font color="red">vulnerability</font> reports, and make sure the reports have a <font color="red">web application</font> <font color="red">security policy</font> that requires the <font color="red">CSP</font> to test for <font color="red">vulnerabilities</font> on a regular basis. At a <strong>minimum</strong>, request that they test for the <a href="https://www.owasp.org/index.php/Category:OWASP_Top_Ten_Project" target="_blank">OWASP Top 10</a> <font color="red">web application</font> <font color="red">vulnerabilities</font>. If they don’t have <font color="red">penetration</font> testers, they should at least be performing <font color="red">web application</font> <font color="red">vulnerability</font> scans using one of the several great tools that they can setup in-house. Coincidentally, this type of scanning can also be done from the <font color="red">cloud</font> by certain vendors as well.</li>
+<li>How did they test those things? Were the tests performed black box, <font color="red">white box</font>, or grey box? <font color="red">Vulnerability</font> scans &amp; fingerprinting are a precursor to the actual <font color="red">penetration testing</font>. That being said, you want to ensure that from the very beginning you have an accurate <font color="red">vulnerability</font> report by reducing the number of false positives that are discovered. The best way to do this is to use credentials (user + password). If your <font color="red">vulnerability scanner</font> says one of your <font color="red">servers</font> is running an unpatched, old version of Apache…what is the best way to verify this? You login and see what version of Apache it is actually running. This is what <font color="red">white box</font> testing does for you. It reduces the amount of “unknowns” in your testing. You don’t want any “unknowns,&#8221; because that is what will kill you. Be warned you still MUST sort through any false-positives, but the amount you will have to deal with should be far less.</li>
+<li>What tools were used? If they used a <font color="red">vulnerability scanner</font>, what scan policy (what <font color="red">vulnerabilities</font>) did they scan for? Top 10? Top 20? Make sure that anything you expect to be covered is tested in their <font color="red">penetration tests</font> &amp; <font color="red">vulnerability</font> scanning. If you are using a <font color="red">SaaS</font> product, you might want to know whether or not their website enforces SSL encryption, or is checked for code injection <font color="red">vulnerabilities</font> such as Cross-site scripting (XSS) and <font color="red">SQL</font> Injections.</li>
+</ul>
+<h4><strong>Third-Party <font color="red">Pen Test</font> Team</strong></h4>
+<p>If you are going to hire outsiders, you will be playing the middleman and working out a lot of contract/SLA issues between all three parties that are involved. You will have due diligence to perform when selecting your third-party <font color="red">pen test</font> team. Many of the considerations suggested next should be used when hiring third-party <font color="red">pen test</font>ers. You should ask the same questions and have similar requirements as listed above from the third-party pen test team just as one would with the <font color="red">CSP</font>.<strong> </strong></p>
+<h4><strong>Your Own <font color="red">Pen Test</font> Team</strong></h4>
+<p>So you have a team and you want to <font color="red">pen test</font> your <font color="red">CSP</font>. Great! Let’s get started. First, you should check your <font color="red">SLA</font> and contractual agreement between you and the <font color="red">CSP</font> and then consider the type of <font color="red">cloud</font> you will be testing, because each of them has different consideration you must account for:</p>
+<ul>
+<li><font color="red">IaaS</font> (Infrastructure as a <font color="red">Service</font>)</li>
+<li><font color="red">PaaS</font> (Platform as a <font color="red">Service</font>)</li>
+<li><font color="red">SaaS</font> (Software as a <font color="red">Service</font>)<strong> </strong></li>
+</ul>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/Seperation-of-Responsibility-in-Cloud.png"><img class="aligncenter size-large wp-image-39525" title="Seperation-of-Responsibility-in-Cloud" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/Seperation-of-Responsibility-in-Cloud-550x329.png" alt="" width="550" height="329" /></a></p>
+<p><strong>Next you must know the scope of what you want tested to meet your <font color="red">security</font> requirements:</strong></p>
+<ul>
+<li><font color="red">Web application</font> <font color="red">pen test</font> (this includes mobile apps)<strong> </strong></li>
+<li><font color="red">Web service</font> <font color="red">pen test</font> (this includes mobile back-end <font color="red">services</font>)<strong> </strong></li>
+<li>Network/host <font color="red">pen test</font> (this includes databases, <font color="red">firewalls</font>, and other systems in your <font color="red">cloud network</font>)<strong> </strong></li>
+</ul>
+<h4><font color="red">IaaS</font>/PaaS Web Apps &amp; Web Services</h4>
+<p>The good news is that IaaS <font color="red">cloud</font> grants the customer the most granular control over the entire environment. That means most of <font color="red">security</font> built-in will have to be setup by your organization and you should have an easier time planning how to properly conduct your test with the given architecture. Since it is up to you to supply the <font color="red">web application</font> and <font color="red">web services</font>, you will have an easier time testing for <font color="red">vulnerabilities</font> and performing <font color="red">penetration tests</font>. Because <font color="red">security</font> is left to the <font color="red">cloud</font> user’s responsibility, you usually will not have to interact too much with the <font color="red">CSP</font> in order to perform your <font color="red">own penetration</font> tests on your own system as part of your <font color="red">cloud</font> <font color="red">security</font> program. You should state upfront in your <font color="red">CSP</font> contract that you will be performing your <font color="red">own penetration</font> tests and what that scope is going to be and how often. This, ideally, should have been planned early on in the contract, not after the fact. If you are lucky, the <font color="red">CSP</font> has already put this language into their <font color="red">service level</font> agreement (<font color="red">SLA</font>). You should know what <font color="red">application</font> and technology you are running in your <font color="red">own cloud</font> since it was provided by your organization, and you may not have to worry about multi-tenancy issues (but you will for <font color="red">network</font> &amp; host level <font color="red">pen tests</font>). <strong> </strong>You should be able to easily reach your web application/services remotely for <font color="red">penetration testing</font>. However, if you have deployed <font color="red">web application</font> <font color="red">firewalls</font> (<font color="red">WAF</font>), or reverse proxy <font color="red">servers</font> into your <font color="red">cloud</font> it can interfere with your <font color="red">penetration testing</font>. For the most accurate results, it is recommended to <font color="red">pen test</font> against these web apps/services <strong>without</strong> your <font color="red">WAF</font> or reverse proxy in front of you. The reason is simple…you want to know what <font color="red">vulnerabilities</font> actually exist so that you can fix them. <font color="red">WAFs</font> are not replacements for secure coding practices. You wouldn’t run an un-patched OS on the web with only a <font color="red">firewall</font>, and expect it to be “secured” would you? Testing with these types of mechanisms in place gives you a false sense of <font color="red">security</font> by hiding what really exists.<strong> </strong>However, you may also want to test with your <font color="red">IPS</font>, <font color="red">WAF</font>, and <font color="red">other security</font> devices in place; this can also give you another valuable point-of-view. You just need to decide if the goal is to test how well your devices are configured and operating, or if the goal is to test the <font color="red">CSP</font>’s <font color="blue">security team</font> and how well attacks are detected on their <font color="red">network</font>? An exercise can be coordinated with the <font color="red">CSP</font>’s <font color="blue">security team</font>, by which a live <font color="red">penetration test</font> is conducted to test the responsiveness and effectiveness of their <font color="blue">security team</font>.<strong> </strong>You should opt to perform authenticated <font color="red">pen tests</font> against web apps and <font color="red">services</font>, and authenticated <font color="red">vulnerability</font> scans against hosts. You will be able to get more accurate test coverage of your <font color="red">cloud</font>.<strong> </strong></p>
+<h4>Iaas/PaaS <font color="red">Network</font> &amp; Hosts</h4>
+<p>If you want to <font color="red">pen test</font> your <font color="red">cloud network</font> meticulously, you should perform internal and external <font color="red">pen tests</font>. This will provide you with two dissimilar points of view, and likely a different set of <font color="red">vulnerability</font> results.</p>
+<p>To conduct an internal <font color="red">pen test</font>, you should already have access to all your <font color="red">servers</font> and hosts in the <font color="red">cloud</font> (including the databases and storage components). You should also have <font color="red">access control</font> credentials and <font color="red">network architecture</font>. Start with an authenticated <font color="red">vulnerability</font> scan against your systems. The idea behind an internal assessment is that you want to know what kind of damage a <font color="red">hacker</font> (or disgruntled employee) can do, if he/she had access inside the perimeter. This will also help discover potential <strong>pivot*</strong> points used by <font color="red">hackers</font>.</p>
+<p>It may be possible in your IaaS/PaaS environment that multi-tenancy exists! If this condition exists, you may not be allowed to perform authenticated tests or any test for that matter against certain systems (due to the impact it can have against other <font color="red">CSP</font> customers). You will have to work with your <font color="red">CSP</font> to determine what is allowed, and what is not, which should be documented in your contractual agreement and <font color="red">SLA</font>. Your goal should still be as much testing coverage as possible within legal bounds. For an external and more realistic viewpoint of an average <font color="red">hacker</font>, you will want to remotely test from outside the DMZ. This should be performed as any typical black box remote <font color="red">penetration test</font>. External <font color="red">white box</font> testing here is not really necessary if you are already performing internal <font color="red">white box</font> <font color="red">pen tests</font>.</p>
+<h4><strong><font color="red">SaaS</font> <font color="red">Pen Testing</font> in General </strong></h4>
+<p>It is up to the <font color="red">CSP</font> to provide the <font color="red">security</font> to the customer in this <font color="red">cloud environment</font>. That includes host-level <font color="red">security</font> all the way up to <font color="red">web application</font> <font color="red">security</font>. Performing internal and external <font color="red">pen tests</font> of any type will usually require very difficult contract negotiations, because of multi-tenancy. It is very common that <font color="red">SaaS</font> products share backend components (e.g. databases and storage), and as such certain <font color="red">vulnerability</font> tests (e.g. DoS and <font color="red">SQL</font> injection) may not be permitted.<strong> </strong>Since you will have very little access beyond the public facing <font color="red">web application</font>(s) &amp; <font color="red">web service</font>(s), you don’t have many options for <font color="red">network</font> <font color="red">pen tests</font>. To test in a <font color="red">SaaS</font> environment, it will require very special permission and you will have to take what you can get. Remember that your objective is still to get as much test coverage as possible. So try to push for an internal <font color="red">pen test</font> on their <font color="red">network</font> through a documented mutual agreement. However, you will most likely only receive permission to <font color="red">pen test</font> the web app and <font color="red">web service</font> itself, and maybe the web <font color="red">servers</font> that those are hosted on. Make sure that you perform authenticated <font color="red">penetration tests</font> for the best coverage.</p>
+<h4>Take Home</h4>
+<p>What you should take away from this is that <font color="red">penetration testing</font> in the <font color="red">cloud</font> takes a large amount of coordination and contract negotiations before the fun stuff can begin. Before you negotiate the terms of <font color="red">penetration testing</font> in your contract, you have homework to do. Know what kind of <font color="red">penetration testing</font> you want to perform. For areas that you are not able to test, make sure you take note of where <font color="red">security</font> gaps may exist, and check to make sure you have compensating controls in place to mitigate the risk. For example, if you are unable to perform <font color="red">penetration tests</font> against a database, ask the user <font color="red">CSP</font> to provide design details, sanitized <font color="red">device configuration</font> files, the hardening guide lines used, results from the <font color="red">CSP</font>’s <font color="red">own penetration</font> tests, and any other relevant audit reports. You have less control over the <font color="red">cloud environment</font> than with your own <font color="red">network</font>, so try to maintain as much of that control as possible through contractual agreements and <font color="red">SLAs</font>.</p>
+<p><strong>Pivot*</strong> A “pivot” is when a <font color="red">hacker</font> breaks into a computer and uses that computer to hack into another. This has a few advantages:</p>
+<p>1) It disguises the <font color="red">hacker</font>&#8217;s true origins</p>
+<p>2) It allows a <font color="red">hacker</font> to attack other targets from the point-of-view of the victim (i.e. inside the <font color="red">firewall</font>).</p>
+<p>If the <font color="red">attacker</font> couldn’t port scan you before, he can now! The best type of pivot is a <font color="red">VPN</font> pivot. The <font color="red">hacker</font> sets up a secure <font color="red">VPN</font> connection between the compromised host inside your <font color="red">network</font> and the outside world, effectively giving him a backdoor into your <font color="blue">corporate network</font>.</p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=cloud2">cloud</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=cloud-computing">Cloud Computing</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=cloud-security">cloud security</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=penetration-testing">penetration testing</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=vulnerability-assessment">vulnerability assessment</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">5 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+			<li>
+			<div id="comment-196551">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Aaron Bryson						</span>
+						<br />
+						<span class="comment-meta commentmetadata">August 22, 2011 at 9:24 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Thank you Robbie, Bucino, and mlm for the great feedback. Is there anything in particular y'all might be interested in for the next article?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike196551" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-196338">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://www.bucinoulje.com.hr' rel='external nofollow' class='url'>bucino ulje</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">August 22, 2011 at 12:56 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>This is very interesting, You're a very skilled blogger. I have joined your feed and look forward to seeking more of your magnificent post. Also, I've shared your site in my social networks!</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike196338" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-195528">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://www.artificialneuralnetwork.org/neural-network-software/top-paying-computer-certifications.html' rel='external nofollow' class='url'>online mlm business</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">August 20, 2011 at 9:26 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Just gonna commentabout this article, after reading whole of this it make me to have new vision about one big event, hope I can read more quality news again from you so I bookmark your website.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike195528" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-194644">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://www.firsttimecarinsuranceprices.com' rel='external nofollow' class='url'>Robbie Rivas</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">August 18, 2011 at 3:33 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Nice article, I have bookmarked your blog.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike194644" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-191925">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Aaron Bryson						</span>
+						<br />
+						<span class="comment-meta commentmetadata">August 12, 2011 at 12:52 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>@lucid_1999 asks on Twitter: "is this done with Nessus?"
+
+
+
+Response:
+
+Nessus is certainly one option, however, most penetration hackers have many tools in their tool box. Think of Nessus as just another tool to get the job done. In addition, Nessus and tools like it perform automated vulnerability scanning - which is only one piece of the puzzle. A penetration tester should perform such vulnerability scans, but then they must filter out all the false-positives, and know where the limitations of the tool are. To account for false-negatives (vulnerabilities not identified by a vulnerability scanning tool), the penetration tester must perform manual penetration testing where he/she performs tests that the tools are incapable of (or insufficient at).
+
+
+
+For example, I do not know of any tools that are very good at performing attacks in web applications &amp; services where user A can access user B’s information. Most tools that check for this type of vulnerability, usually just check to see if user B’s URLs can be accessed with user A’s session cookie. Most of the time when I find these types of vulnerabilities, it requires more specific manipulation of parameters being passed to the service.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike191925" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Security:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogSecurity', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogSecurity" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Security</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscosecurity?ref=nf"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/ciscosecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://youtubecisco.com/security"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogSecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.cert.org/blogs/vuls/" target="_blank">CERT Vulnerability Analysis</a></li>
+                      <li><a href="http://blogs.technet.com/b/srd/" target="_blank">Microsoft Security Research & Defense</a></li>
+                      <li><a href="http://isc.sans.edu/index.html" target="_blank">SANS Internet Storm Center</a></li>
+                      <li><a href="http://www.schneier.com/" target="_blank">Schneier on Security</a></li>
+                  </ul>
+              <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="http://www.cisco.com/en/US/products/products_security_advisories_listing.html" target="_blank">Advisories and Responses</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/cyberRiskReport.x" target="_blank">Cyber Risk Reports</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/intelliPapers.x?i=55" target="_blank">Security Best Practices</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/home.x" target="_blank">Security Intelligence Operations</a></li>
+                        <li><a href="http://www.cisco.com/en/US/products/hw/vpndevc/index.html" target="_blank">Security Products</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscosecurity?ref=nf'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/ciscosecurity'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 39516;
+			var orig_count = 0;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1Fb3qFu&text=Penetration Testing in the Cloud&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/penetration-testing-in-the-cloud&title=Penetration Testing in the Cloud" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/penetration-testing-in-the-cloud" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/penetration-testing-in-the-cloud" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Penetration Testing in the Cloud&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0APenetration Testing in the Cloud%0A%0Ahttps://blogs.cisco.com/security/penetration-testing-in-the-cloud%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

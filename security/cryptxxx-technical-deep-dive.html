@@ -1,0 +1,2527 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  CryptXXX Technical Deep Dive</title>
+
+	<meta property="og:image" content="https://alln-extcloud-storage.cisco.com/ciscoblogs/crytpoxxx-blog-460x230.png"/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; CryptXXX Technical Deep Dive Comments Feed" href="https://blogs.cisco.com/security/cryptxxx-technical-deep-dive/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"201099"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='#CiscoChampion Radio, S3|Ep. 22: DNA: QoE/VoE Overview' href='https://blogs.cisco.com/perspectives/ciscochampion-radio-s3ep-22-dna-qoevoe-overview' />
+<link rel='next' title='At the Heart of Asia’s Mobile Growth Momentum' href='https://blogs.cisco.com/sp/at-the-heart-of-asias-mobile-growth-momentum' />
+
+<link rel="canonical" href="https://blogs.cisco.com/security/cryptxxx-technical-deep-dive" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=201099' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="CryptXXX Technical Deep Dive"/>
+  <meta property="og:url" content="https://blogs.cisco.com/security/cryptxxx-technical-deep-dive"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2016-08-17T06:00:44+00:00"/>
+  <meta property="article:modified_time" content="2016-08-17T09:34:01+00:00" />
+  <meta property="og:updated_time" content="2016-08-17T09:34:01+00:00" />
+  <meta property="article:section" content="Security"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="CryptXXX Technical Deep Dive"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/security/cryptxxx-technical-deep-dive"/>
+  <meta name="twitter:description" content="0.0 Introduction:
+
+In our previous post we discussed the AMP ThreatGrid Research and Efficacy Team’s continuous support for Ransomware attack vectors, generic behavior detection of un-discovered variants, and the creation of behavioral indicators once new variants are identified. In this post we&#039;ll"/>
+  <meta name="twitter:image" content="https://alln-extcloud-storage.cisco.com/ciscoblogs/crytpoxxx-blog-e1470685314692.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521512486";
+		var sig = "770acdfedab711f52bec76d0c6703696";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/2bcQA1n&text=CryptXXX Technical Deep Dive&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/cryptxxx-technical-deep-dive&title=CryptXXX Technical Deep Dive" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/cryptxxx-technical-deep-dive" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/cryptxxx-technical-deep-dive" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: CryptXXX Technical Deep Dive&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0ACryptXXX Technical Deep Dive%0A%0Ahttps://blogs.cisco.com/security/cryptxxx-technical-deep-dive%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/security/'>Security</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/crytpoxxx-blog-460x230.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Security  						</span>
+						<h1 id="post-201099" class="kindle_title title">CryptXXX Technical Deep Dive</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1470941003-bpthumb.jpg"></div><div class="author_rewards_box">			<ul class = "nitro_author201099 bunchballAwards">
+		<li>
+			<div class = "nitro_badge badgenitro_author201099">
+			</div>
+			<div class = "nitro_points pointsnitro_author201099">
+			</div>
+		</li>
+		<script>
+var nitroName = 'joshreyn';
+var sessionKey = '';
+
+
+nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "postBadges", "nitro_author201099");</script>
+
+		</ul>
+		</ul>
+	<div class = "clear"></div>
+</div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/joshreynolds" title="Posts by Josh Reynolds" rel="author">Josh Reynolds</a> - August 17, 2016 - 3 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<h1>0.0 Introduction:</h1>
+<p>In our <a href="https://blogs.cisco.com/security/the-general-behavior-of-ransomware">previous post</a> we discussed the <font color="red">AMP</font> <font color="red">ThreatGrid</font> Research and Efficacy Team’s continuous support for <font color="red">Ransomware</font> attack vectors, generic behavior <font color="red">detection</font> of un-discovered variants, and the creation of behavioral indicators once new variants are identified. In this post we&#8217;ll be discussing one of the more prevalent variants to surface in the wake of <a href="http://blog.talosintel.com/2016/06/teslacrypt-decryptor.html">TeslaCrypt&#8217;s death</a>: <font color="red">CryptXXX</font>.</p>
+<p><font color="red">CryptXXX</font> has been notably dropped by <a href="http://malware-traffic-analysis.net/2016/06/01/index2.html">Angler</a> and <a href="https://isc.sans.edu/diary/CryptXXX%25252Bransomware%25252Bupdated/21229">Neutrino</a> exploit kits in recent months and continues to evolve. This post provides a <font color="red">technical deep dive</font> that discusses <font color="red">CryptXXX</font>&#8217;s <font color="red">obfuscation</font>, <font color="red">execution</font>, and evolving cryptographic mechanisms. We will then discuss <font color="red">AMP</font> <font color="red">ThreatGrid</font>’s <font color="red">detection</font> of this <font color="red">threat</font>.</p>
+<h2>1.0 Unpacking:</h2>
+<p>During the initial analysis of the <font color="red">v2</font>.006 binary we found it peculiar that an entry-point was being provided that did not exist in the packed PE, but when providing an entry-point that we observed during <font color="blue">dynamic analysis</font> (a subsequent call to the same DLL with a new entry point was being made with rundll32.exe) the binary executed properly. The reason that this can occur is that the DLL entry-point (in this case the unpacking stub) is called regardless of the provided entry-point each run, which in turn can replace the PE image with that of the unpacked code containing the malicious entry-point for core functionality, which is then looked up and subsequently called by rundll32.exe. The following is an example of the packed entry-point “MXS1” being called that was observed during <font color="blue">dynamic analysis</font>:</p>
+<p style="text-align: center;"><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog1-3.png"><img class="aligncenter wp-image-201448 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog1-3.png" alt="blog1" width="901" height="369" /></a><em>Figure 1.0: Packed entry-point being called during <font color="blue">dynamic analysis</font></em></p>
+<p style="text-align: left;"><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog2-2.png"><img class="aligncenter wp-image-201449 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog2-2.png" alt="blog2" width="900" height="675" /></a></p>
+<p style="text-align: center;"><em>Figure 2.0: Depiction of DLL overwrite process exposing entry-point to jump to.</em></p>
+<p>While observing the unpacking code for <font color="red">v2</font>.006 and setting a breakpoint on VirtualAlloc we found that a <font color="red">PE header</font> was being referenced by a registry in memory:</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog3-1.png"><img class="aligncenter wp-image-201453 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog3-1.png" alt="blog3" width="900" height="308" /></a></p>
+<p class="BodyA" style="margin: 5pt 0cm; text-align: center;"><em>Figure 3.0: Registry reference to PE and MZ header in memory on call to VirtualAlloc</em></p>
+<p>Jumping to this address we can see that it is indeed a <font color="red">PE header</font>:</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog4-1.png"><img class="aligncenter wp-image-201455 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog4-1.png" alt="blog4" width="900" height="644" /></a></p>
+<p style="text-align: center;"><em>Figure 4.0: <font color="red">PE header</font> at memory location pointed to by registry</em></p>
+<p>Dumping this and removing preceding <font color="red">bytes</font> leading up to the MZ header yields a clean PE, which can be disassembled accordingly.</p>
+<p><font color="red">CryptXXX</font> v 3.0 has similar unpacking functionality, but requires a few extra steps. A simple approach to unpacking this sample is knowing an <font color="red">API</font> <font color="red">function</font> that is called once the file is fully unpacked, observing where it is being called from, and finally attempting to retrieve the image that is being written to the memory layout once it is fully unpacked. Since they are calling CreateProcessW to spawn multiple instances of rundll32.exe to load this DLL we can set a hardware breakpoint on the entry-point of this <font color="red">function</font> with a debugger. Once the breakpoint is hit, we know we are in unpacked code (this will not always be the case for all <font color="red">malware</font> samples), and from the call to this <font color="red">API</font> we can see the address we are returning into, and therefore what <font color="red">segment</font> contains unpacked code:</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog5-1.png"><img class="aligncenter wp-image-201457 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog5-1.png" alt="blog5" width="900" height="538" /></a></p>
+<p style="text-align: center;"><em>Figure 5.0: Registry reference to PE and MZ header in memory on call to VirtualAlloc</em></p>
+<p>If we open the memory layout we can see that this is the CODE <font color="red">segment</font> that is in memory when the DLL is initially loaded. If we restart the <font color="red">execution</font> and set a memory write breakpoint on this <font color="red">segment</font> we break on a section that is writing a value within ECX into our code <font color="red">segment</font>:</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog6-1.png"><img class="aligncenter wp-image-201458 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog6-1.png" alt="blog6" width="900" height="533" /></a></p>
+<p style="text-align: center;"><em>Figure 6.0: Writing value of ECX into CODE <font color="red">segment</font></em></p>
+<p>This value appears to be a memory address, and if we jump to this address, it is indeed valid. If we navigate to the top of the <font color="red">segment</font>, and search for a common PE term we can find a <font color="red">PE header</font>, we can dump and remove residual <font color="red">bytes</font> leading up to the MZ header for a valid PE:</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog7-1.png"><img class="aligncenter wp-image-201459 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog7-1.png" alt="blog7" width="900" height="414" /></a></p>
+<p style="text-align: center;"><em>Figure 7.0: Search result for common <font color="red">PE header</font> term</em></p>
+<h1><strong>2.0 <font color="red">Obfuscation</font></strong></h1>
+<h2><strong>2.1 String <font color="red">Obfuscation</font></strong></h2>
+<p>Upon opening the binary in a disassembler it is very apparent that strings used throughout the binary are obfuscated, but are all are being set as the second parameter to a single <font color="red">function</font>:</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog8-1.png"><img class="aligncenter wp-image-201462 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog8-1.png" alt="blog8" width="900" height="697" /></a></p>
+<p style="text-align: center;"><em>Figure 8.0: Obfuscated string references</em></p>
+<p>For each call made to the <font color="red">function</font>, one of the parameters happens to be 0xE. In this instance the binary happens to be a Borland Delphi executable, which makes use of the Borland Fastcall calling convention, which uses EAX for the first parameter being passed to a <font color="red">function</font>. Considering how often <font color="red">XOR</font> <font color="red">encryption</font> is used for <font color="red">obfuscation</font>, let&#8217;s check for this first:</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog9-1.png"><img class="aligncenter wp-image-201463 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog9-1.png" alt="blog9" width="900" height="77" /></a></p>
+<p style="text-align: center;"><em>Figure 9.0: De-obfuscation of <font color="red">XOR</font> encoded <font color="red">data</font> using Interactive Ruby Shell</em></p>
+<p>Using the Interactive Ruby Shell we <font color="red">XOR</font> each <font color="red">byte</font> in the obfuscated string with 0xE, which in turn gives us a valid output. In this case it appears that they are looking for avp.exe, a Kaspersky anti-virus process, in memory. In order to apply this de-obfuscation routine to every obfuscated string referencing this <font color="red">function</font> we can use IDAPython. The following <font color="red">script</font> will satisfy our needs:</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/blof10.png"><img class="aligncenter wp-image-201464 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/blof10.png" alt="blof10" width="900" height="975" /></a></p>
+<p style="text-align: center;"><em>Figure 10.0: IDAPython for automated de-obfuscation of strings</em></p>
+<p>We can loop through all cross-references to the de-obfuscation <font color="red">function</font> (in this case 0x9CDC74), get the address of each obfuscated string, de-obfuscate it, and comment the string address and each call to the de-obfuscation <font color="red">function</font> with the resulting string.</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog11-1.png"><img class="aligncenter wp-image-201465 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog11-1.png" alt="blog11" width="900" height="497" /></a></p>
+<p style="text-align: center;"><em>Figure 11.0: Resulting string comments from IDA Python de-obfuscation <font color="red">script</font></em></p>
+<p>As seen from the above de-obfuscated strings, the <font color="red">ransom note</font> is shipped with the binary itself, unlike other variants that reach out to Command and Control servers to fetch the <font color="red">ransomware</font> notes and other content.</p>
+<h2><strong>2.2 Command and Control <font color="red">IP</font> Addresses</strong></h2>
+<p>Throughout the analysis there are multiple references to the &#8216;send&#8217; <font color="red">socket</font> <font color="red">API</font>, and on checking cross-references to this <font color="red">function</font> there are calls to setup the <font color="red">socket</font> and sockaddr objects for the connection which are passed the result of another call:</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog12-1.png"><img class="aligncenter wp-image-201466 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog12-1.png" alt="blog12" width="900" height="236" /></a></p>
+<p style="text-align: center;"><em>Figure 12.0: <font color="red">Network</font> connection <font color="red">functions</font></em></p>
+<p>This <font color="red">function</font> is provided a large <font color="red">integer</font> value (0x990D17D9) in <font color="red">network</font> <font color="red">byte</font> order and a pointer argument that points to a resulting <font color="red">IP address</font>. The <font color="red">function</font> derives the <font color="red">IP address</font> from this <font color="red">integer</font> value by iterating over each <font color="red">byte</font> in memory, turning its numeric representation into a string, and concatenating the result with &#8216;.&#8217;. This is not technically <font color="red">obfuscation</font>, but the <font color="red">IP addresses</font> are not immediately apparent during initial phases of analysis. These values can be converted in the following manner using C:</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog13-1.png"><img class="aligncenter wp-image-201467 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog13-1.png" alt="blog13" width="900" height="411" /></a></p>
+<p style="text-align: center;"><em>Figure 13.0: C code for deriving <font color="red">IP address</font> from <font color="red">integer</font> value</em></p>
+<p>Which in this case produces 217.23.13.153, which when searched for in <font color="red">AMP</font> <font color="red">ThreatGrid</font> we can see all samples that have reached out to this <font color="red">IP address</font>:</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog14.png"><img class="aligncenter wp-image-201468 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog14.png" alt="blog14" width="900" height="672" /></a></p>
+<p style="text-align: center;"><em>Figure 14.0: Search results for <font color="red">IP address</font> in <font color="red">AMP</font> <font color="red">ThreatGrid</font></em></p>
+<p>If we navigate to the entity page for this <font color="red">IP address</font> we can see this has also been <font color="red">tagged</font> by the Snort side system that the Research &amp; Efficacy Team has created to process all <font color="red">network</font> traffic associated with the sample analysis.</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog15.png"><img class="aligncenter wp-image-201469 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog15.png" alt="blog15" width="900" height="486" /></a></p>
+<p style="text-align: center;"><em>Figure 15.0: <font color="red">IP address</font> entity page in <font color="red">AMP</font> <font color="red">ThreatGrid</font></em></p>
+<p>These <font color="red">tags</font> identify that this <font color="red">IP address</font> has been used by traffic matching <font color="red">CryptXXX</font>.</p>
+<h1><strong>3.0 <font color="red">Execution</font></strong></h1>
+<p>As mentioned, <font color="red">CryptXXX</font> makes heavy use of packed entry points to perform different tasks, separating the overall <font color="red">execution</font> flow into multiple spawned processes of a copied version of rundll32.exe. In <font color="red">v2</font>.006 rundll32.exe is copied to the current location of the executing binary, and is renamed svchost.exe. In <font color="red">v3</font>.0 it copies the executable but does not rename it. After the unpacking stub finishes, the unpacked entry-point will be executed and check what executable it is being executed from, if it does not correspond to the respective copied name (svchost.exe, or rundll32.exe) it will execute the &#8216;setup&#8217; entry-point (in the case of <font color="red">v2</font>.006 MS111, and <font color="red">v3</font>.0 MXS0) that initiates the <font color="red">execution</font> flow, whose process tree ends up looking like this:</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog16.png"><img class="aligncenter wp-image-201470 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog16.png" alt="blog16" width="900" height="91" /></a></p>
+<p style="text-align: center;"><em>Figure 16.0: Example resulting <font color="red">execution</font> tree for <font color="red">CryptXXX</font></em></p>
+<p>For this post we will be analyzing the <font color="red">execution</font> path that performs the <font color="red">encryption</font> of files.</p>
+<h1><strong>4.0 <font color="red">Encryption</font></strong></h1>
+<p><font color="red">CryptXXX</font> targets a subset of file extensions to encrypt, which are searched for recursively throughout the system. These extensions are de-obfuscated using the same <font color="red">XOR</font> routine, and are passed off for <font color="red">encryption</font>. These include:</p>
+<p>.3DM, .3DS, .7Z, .ACCDB, .AES, .AI, .APK, .APP, .ARC, .ASC, .ASM, .ASP, .ASPX, .BRD, .BZ2, .C, .CER, .CFG, .CFM, .CGI, .CGM, .CLASS, .CMD, .CPP, .CRT, .CS, .<font color="red">CSR</font>, .CSS, .CSV, .CUE, .DB, .DBF, .DCH, .DCU, .DIF, .DIP, .DJV, .DJVU, .DOC, .DOCB, .DOCM, .DOCX, .DOT, .DOTM, .DOTX, .DTD, .DWG, .DXF, .EML, .EPS, .FDB, .FLA, .FRM, .GADGET, .GBK, .GBR, .GED, .GPG, .GPX, .GZ, .H, .HTM, .HTML, .HWP, .IBD, .IBOOKS, .INDD, .JAR, .JAVA, .JKS, .JS, .JSP, .KEY, .KML, .KMZ, .LAY, .LAY6, .LDF, .LUA, .M, .MAX, .MDB, .MDF, .MFD, .MML, .MS11, .MSI, .MYD, .MYI, .NEF, .NOTE, .OBJ, .ODB, .ODG, .ODP, .ODS, .ODT, .OTG, .OTP, .OTS, .<font color="red">OTT</font>, .P12, .PAGES, .PAQ, .PAS, .PCT, .PDB, .PDF, .PEM, .PHP, .PIF, .PL, .PLUGIN, .POT, .POTM, .POTX, .PPAM, .PPS, .PPSM, .PPSX, .PPT, .PPTM, .PPTX, .PRF, .PRIV, .PRIVATE, .PS, .PSD, .PY, .QCOW2, .RAR, .RAW, .RSS, .RTF, .SCH, .SDF, .SH, .SITX, .SLDX, .SLK, .SLN, .<font color="red">SQL</font>, .SQLITE3, .SQLITEDB, .STC, .STD, .STI, .STW, .SVG, .SWF, .SXC, .SXD, .SXI, .SXM, .SXW, .TAR, .TBK, .TEX, .TGZ, .TLB, .TXT, .UOP, .UOT, .VB, .VBS, .VCF, .VCXPROJ, .<font color="red">VDI</font>, .VMDK, .VMX, .WKS, .WPD, .WPS, .WSF, .XCODEPROJ, .XHTML, .XLC, .XLM, .XLR, .XLS, .XLSB, .XLSM, .XLSX, .XLT, .XLTM, .XLTX, .XLW, .XML, .ZIP, .ZIPX, 3G2, .3GP, .AIF, .ASF, .ASX, .AVI, .BMP, .DDS, .FLV, .GIF, .IFF, .JPG, .M3U, .M4A, .M4V, .MID, .MKV, .MOV, .MP3, .MP4, .MPA, .MPG, .PNG, .PSPIMAGE, .RA, .RM, .SRT, .TGA, .THM, .TIF, .TIFF, .TMP, .VOB, .WAV, .WMA, .WMV, .YUV</p>
+<p>For version 2.006 “MS112” is the entry-point that performs the <font color="red">encryption</font> operations, while “MXS1” is used for version 3.0.</p>
+<h2><strong>4.1 Key Generation Algorithm</strong></h2>
+<h2><strong>4.1.1 Seed Generation</strong></h2>
+<p>The following algorithm is used for the initial seed generation (System::Random(void)), as you can see it is purely based on the current system time:</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog17.png"><img class="aligncenter wp-image-201472 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog17.png" alt="blog17" width="900" height="538" /></a></p>
+<p style="text-align: center;"><em>Figure 17.0: <font color="red">CryptXXX</font> seed generation algorithm</em></p>
+<p>ds:RandSeed is referenced by Delphi&#8217;s RandInt() for all &#8216;randomized&#8217; operations:</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog18.png"><img class="aligncenter wp-image-201480 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog18.png" alt="blog18" width="900" height="192" /></a></p>
+<p style="text-align: center;"><em>Figure 18.0: <font color="red">CryptXXX</font> RandSeed <font color="red">function</font> that provides pseudo-random values</em></p>
+<p>RandSeed is based on a linear congruential generator, which was found based on the constant used 8088405h: <a href="https://en.wikipedia.org/wiki/Linear_congruential_generator">https://en.wikipedia.org/wiki/Linear_congruential_generator</a></p>
+<h2><strong>4.1.2 Key Generation &amp; <font color="red">Encryption</font></strong></h2>
+<p>The following algorithm generates a 64-byte ASCII key:</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog19.png"><img class="aligncenter wp-image-201481 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog19.png" alt="blog19" width="900" height="894" /></a></p>
+<p style="text-align: center;"><em>Figure 19.0: <font color="red">CryptXXX</font> key generation algorithm</em></p>
+<p>It is important to make note that they&#8217;re requesting a new seed for every new file encrypted and that seed is based purely on system time, which is then used to seed RandInt that is called for the generation of each part of this key (more on this later).</p>
+<p>This key is then used within a key scheduling algorithm to create a key stream that is similar to RC4. The following code is a re-implementation of the key scheduling algorithm in C:</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog20.png"><img class="aligncenter wp-image-201482 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog20.png" alt="blog20" width="900" height="573" /></a></p>
+<p style="text-align: center;"><em>Figure 20.0: <font color="red">CryptXXX</font> key stream generation algorithm</em></p>
+<p>Finally, once the key stream is created, it is used to encrypt the <font color="red">data</font> blob provided:</p>
+<p><em><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog22-1.png"><img class="aligncenter wp-image-201484 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog22-1.png" alt="blog22" width="901" height="755" /></a></em></p>
+<p style="text-align: center;"><em>Figure 21.0: <font color="red">CryptXXX</font> <font color="red">encryption algorithm</font></em></p>
+<p>A public key that is shipped with the binary is then used to encrypt the generated key, and the resulting ciphertext is then appended to the encrypted file:<br />
+<a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog21-1.png"><img class="aligncenter wp-image-201483 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog21-1.png" alt="blog21" width="900" height="331" /></a></p>
+<p style="text-align: center;"><em>Figure 22.0: <font color="red">Encryption</font> of generated key using shipped public key</em></p>
+<h2><strong>4.1.3 <font color="red">CryptXXX</font> <font color="red">v3</font>.0 <font color="red">Encryption</font> Changes</strong></h2>
+<p>A number of changes to <font color="red">encryption</font> scheme were made for <font color="red">v3</font>.0 of <font color="red">CryptXXX</font>. The first is <font color="red">network</font> share enumeration and <font color="red">encryption</font>:</p>
+<p>&nbsp;</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog23.png"><img class="aligncenter wp-image-201485 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog23.png" alt="blog23" width="900" height="933" /></a></p>
+<p style="text-align: center;"><em>Figure 23.0: <font color="red">CryptXXX</font> v. 3.0 <font color="red">network</font> share enumeration for <font color="red">encryption</font> </em></p>
+<p>The second is the RC4 related <font color="red">encryption algorithm</font> is no longer used as the primary <font color="red">encryption</font> vector (likely due to having a number of crypto flaws) and the embedded public <font color="red">encryption</font> key that is shipped with the binary and decoded using the same <font color="red">XOR</font> <font color="red">obfuscation</font>, is used instead. This makes <font color="red">decryption</font> of files extremely difficult:</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog24.png"><img class="aligncenter wp-image-201486 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog24.png" alt="blog24" width="900" height="333" /></a></p>
+<p style="text-align: center;"><em>Figure 24.0: <font color="red">CryptXXX</font> 3.0 public key <font color="red">encryption</font> </em></p>
+<p>The resulting ciphertext is then encrypted using the same RC4 related algorithm from <font color="red">v2</font>.006. This may indicate that a solution was &#8216;hacked together&#8217; for release of a version that could not be decrypted, as this step seems unnecessary.</p>
+<h2><strong>4.2.0 Breaking <font color="red">Encryption</font> in <font color="red">v2</font>.006</strong></h2>
+<p><font color="red">CryptXXX</font> &lt;= <font color="red">v2</font>.006 are publicly known to be broken, and Kaspersky has released a <a href="http://media.kaspersky.com/utilities/VirusUtilities/EN/rannohdecryptor.zip">publicly available decryptor for them</a>. Although they have not publicly spoken about their <font color="red">decryption</font> methods, one method of attack against this <font color="red">CryptXXX</font> <font color="red">encryption</font> scheme is their insecure seed generation algorithm. Since it is based on system time, it may be possible to <font color="red">brute force</font> portions of the seed very quickly.</p>
+<h2><strong>4.2.1 Seed Leak Resulting in Quick Brute-Force</strong></h2>
+<p>Initially we investigated the possibility of recovering potential seed <font color="red">data</font> based on the write times of the encrypted files, however, <font color="red">CryptXXX</font> will restore the original write/modification times of the affected file. We then noticed that a <font color="red">ransom note</font> is written to a given directory once all targeted file types within said directory have been encrypted. What this provides is leaked seed <font color="red">data</font>, since the modification time stamp of the <font color="red">ransom note</font> should be close to what is returned by get_seed()&#8217;s GetSystemTime() call. What we&#8217;re left with is a known SYSTEMTIME.wHour, a potentially known SYSTEMTIME.wMinute, and since <font color="red">encryption</font> still takes some time we will have to brute-force the remaining SYSTEMTIME.wSecond (0-59), and SYSTEMTIME.wMillisecond (0-999). Given the worst case scenario for discovering these two values is 60*1000 we are given up to 60,000 operations to perform, given that we have the correct minute from the <font color="red">ransom note</font>.</p>
+<h2><strong>4.2.2 <font color="red">Decryption</font> <font color="red">PoC</font></strong></h2>
+<p>We&#8217;ve provided <a href="https://communities.cisco.com/docs/DOC-69132"><font color="red">PoC</font> code</a> that will decrypt a given file solely based on the last modified time-stamp of a the dropped <font color="red">ransom note</font> by attempting to decrypt the first four <font color="red">bytes</font> of a file&#8217;s magic with a generated key based on the current SYSTEMTIME.wSecond, and SYSTEMTIME.wMillisecond being brute-forced:</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog25.png"><img class="aligncenter wp-image-201487 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog25.png" alt="blog25" width="901" height="964" /></a></p>
+<p style="text-align: center;"><em>Figure 25.0: <font color="red">CryptXXX</font> <font color="red">brute force</font> ms and s <font color="red">PoC</font></em></p>
+<p>Once the given magic is found (which in turn means that the key has been recovered) then the file is decrypted in its entirety. The following is an example of the <font color="red">PoC</font>&#8217;s output:</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog26.png"><img class="aligncenter wp-image-201488 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog26.png" alt="blog26" width="900" height="148" /></a></p>
+<p style="text-align: center;"><em>Figure 26.0: <font color="red">Decryption</font> <font color="red">PoC</font> output</em> example</p>
+<h1><strong>5.0 <font color="red">AMP</font> <font color="red">ThreatGrid</font> Coverage</strong></h1>
+<p><a href="https://blogs.cisco.com/security/the-general-behavior-of-ransomware">As mentioned in our <font color="red">previous blog post</font></a>, <font color="red">AMP</font> <font color="red">ThreatGrid</font> has a number of generic <font color="red">ransomware</font> indicators used to detect new variants that are being released daily, and targeted behavioral indicators used to detect the ever growing variants of <font color="red">CryptXXX</font>.</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog27.png"><img class="aligncenter wp-image-201489 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/blog27.png" alt="blog27" width="900" height="482" /></a></p>
+<p style="text-align: center;">Figure 27.0: <font color="red">CryptXXX</font> 3.0 report in <font color="red">AMP</font> <font color="red">ThreatGrid</font></p>
+<p>With the rapid development of <font color="red">ransomware</font> variants that are continuously being released on a weekly basis, <font color="red">AMP</font> <font color="red">ThreatGrid</font> provides an automated platform for identifying, and classifying variants. Intelligence from this platform is continuously fed back into the <font color="red">AMP</font> ecosystem providing protection to <font color="red">Cisco</font> customers.</p>
+<h1><strong>6.0 The Road Ahead</strong></h1>
+<p>Unfortunately due to changes made by <font color="red">CryptXXX</font> authors in versions &gt;= 3.0 it is no longer possible to decrypt <font color="red">CryptXXX</font> using these methods. The most effective way of combatting <font color="red">CryptXXX</font> and <font color="red">Ransomware</font> is prevention of infection through a layered approach to security including reliable backup practices. There are also many ways of preventing the initial infection vectors through enabling click-to-play functionality of common plugins that run the risk of becoming outdated or are commonly prone to in-the-wild exploitation through exploit kits such as <a href="http://blog.talosintel.com/2016/05/angler-phish.html">Angler</a>. Educating users to not open ZIP, javascript, or macro-enabled documents (especially those that request the enabling of such content) can also assist in prevention of <font color="red">Ransomware</font> infections within your organization.</p>
+<h1><strong>7.0 Indicators</strong></h1>
+<table class=" aligncenter">
+<tbody>
+<tr>
+<th>
+<pre>Version</pre>
+</th>
+<th>
+<pre>SHA256</pre>
+</th>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>00010d394c06533d58f021115d7bde815b5daf498fe2659980bf1cc337fda3fc</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>03add73b979c9eaeef3aad8aa6a75b7abe40b3ea9fa4a57ccdd74db5dbaaa252</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>046215078fa5284346081207c9eff133a47d6af9be570f1a4f6dc42ae622aab8</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>04cc79fbf6e6d82b3e37e302e6d4306b42432f28829e9bbf2102150f78cc2e44</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>0740f96742c9500d52a14b2ef007b390fccbdcb0658b82082d525b1d9864c2c6</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>0886883282ddd1ae4553b99915baa7c294f5ef3ff9700c72f847db77c60a3f38</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>09b6352cc56c64919d9b3661c8d23876b17c4d940581234cb18f7124e1f9087b</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>0a1dde60c72e5f1cf0286dd57e3b683f61aec132ce7db7678e806c9a2b3f1a3c</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>0cbc3b3019ae908abbbd80fa3e7c6d455e4ae576d4e8f9fe6fe986741ee47d03</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>0d3f21fbed73b75534683f1230dd7e13a344f22a0bf31b2fb203daf5d6e02bbb</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>0dd37f0cf661b6735c54ba8e76a40d3647de90469087ce4cc4975eb4c72af120</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>0e4e5a3763d9aa4ba19ccdd1409b77f683c81f72e54423b8c2a02034a311444a</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>135abc2fbfca8b577028b0c220cef9c98f4580f9d310cae7fb4f8b28ac261119</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>143a9486579b75bacde9a1e592071fb0dcb5e0f921bc4c2649c5709075008d30</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>16366a9a6fa27e41a629f5bd7971e60bb7110e08cd3b82eb25a08023ccbc6483</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>16b196d1bf2652ebfa44f3301bf0b6a370d0c629a53808be86eb583c852ae650</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>16d75d3df201d9a341f5e9ca1e38c41fda9bc3b263f5a1ab59b6632cd3b03a60</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>1c20f93c4d175bea26515101a351c1f877b0b8620ec4d1db3b88ea15c42ea7cf</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>1cf3f27bc136b2535dec72a12116fba1a0c57f21a08ea27499f9771de281af3f</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>1d45efc7c00d3d34c02f35c2f0f9401445f674f489ab0fb156b147789dd9945e</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>20e1d6dc6853aefde5068d3dfeec0e60796966c32b08e9065319f5b92139303a</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>259c76d43148070c729837e2598347a50981b32f431300cc4fafc41437f988f2</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>271ea8b6b7eea798842fae9bbd0d06ad1d58ad515d82d1b58da0585c38765909</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>27819abb4e9fd6c86cacfa97ca21a0f5749380dc602caed986063dd256e2d1ce</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>2d888d5340a7d3c6ad69cd95b849a829dbb6c4952300ea3c73a73833e70cb25e</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>2dc4c0273d98668ddac7d66f337822f6188a138931c2ea61fcb2a713577618d5</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>31e26c5a6e07b9b221e650d7c2c42acb71169ef94d2d08080008bd4d3e6c0029</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>31e58f599ff114191ee59665e27a5eb82e9d7e0023021beb453416530e455dae</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>3cdb3544f00ea9507b1f28402ffbdd2ef75e46a6e176dfab5c7c9be3215dc7c7</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>403ec0d80ab65da07927605010c4d5b62a2ae388ecaebf50ee90b7567504c44e</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>416918f81dc4b6d708c6de86b1cc7d4f9872376c385480b3e031f1080af4d354</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>427c9d7a6831588deae6719de264aa0bd556174292ba29885d42b78328f431a3</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>4322be54af5557b4171fcc61d5c0426f6556983322cee8360a6244f7a669c10a</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>44a44c24cb6495b4dca03a0a0e5d7716e6af1b37f390d25c344dabd7517663e5</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>46e8328de0f30d3a673b71681e4cbfc28f921719a61ce87301fd86181b13c9e7</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>4ab84b3083e382f875d605e1dbdafcad028935b6437fd9ddc40b37d5ba31d171</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>4aeead8a128ea58c611e14496379a198beecb7bb8f5698d7d379be0fc271479e</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>4c2398adb49020f7a98b813c8ddc2244972f11be999c46dacac779f44993f6cf</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>4cc5eb93eebfacb2752d42804b4acec2ac8bb150b7a7bb9e624f062908c79734</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>4d729b1b8024ba4ed5262d5811fac4925ae3f54ed7d0adc4ffeb169dddd4c510</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>4df47b25fe1189755ba6447215c5afded02b31e86f33315f429fdb2927817ce5</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>4eaea066dd08c122cd6923d161b951befbcedff79d5e45af3f9481fbc934f5b6</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>4ef30f114adb24878c73a9e58dbf3cec5d31f3267be6357dc9d6fe016a658fb9</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>502933afdf8b979b9f31fc7a6f36ba330a6a0f56d3005ac02ac27a86f88f234f</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>51b7dac0cde40daa7d0f046b3351a5e771202a1b8eccdf6d5eeb9da17f55597b</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>51ee64957427b52a785fae0c633374332d2da52b2585bae3611f9c3791efd0a8</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>520efc6eacef202ba3ab7971ce617f799a49ec36ea471f059346e2f1eaa50abe</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>527594e383dad5dc8dae285f56d55b68c0755e93f066277b076daa92bbdab9d6</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>5778898744d6032d92b0efe569205edb8eab16debdceac965d73593e217c0aca</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>59e65814bd09c264a71ceb705bb216e979eb880bd251fc4ac75bc3b7d1d4b811</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>5d12943f1d4f7acb8ac10842d77c85dd91c3a11a3c3e228f5bb726f9d6879894</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>5d57302419d55ab491c542008cab8af0ff8302a3e8ba9b92ea02a41ee3ff43b8</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>5f1ea5bafc748349d639d10df6fb6319ca11a0b681b448ccbd95fc87fe595d49</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>5f73a917184ea302872be402c84f072047ff701d070e3944d971c612a277068d</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>65e325b662197eb703dd73487d1608d439f447e331d3b2ccc7275ee79a2244fd</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>694959f7125440166166463b6dc5e3a14e7c3eccf73e8d482d6bddaf09640350</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>6ae29650bc628615401f9e3c48573ab7ecf7314c2f26aa1354c0f0b05d10b64d</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>6c68fa24e88d7513b633bc355f5b7458949e8c65483b04b2d5b76c3bf6de7b15</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>6e537cb179a41e1e9dd7579effd28fcd8d35ede0b52321656dbfd0f49c153ae1</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>6f57e785aada126bf5262f8478e6a13ce624d494c1381105853a753649940dda</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>6f79e9b511109233556d46e720eaca3b59a751f1fabdf37a3657e22e6c59eef8</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>6fb8b2093af1d804be3a583683d7dd7fe7fae9561291ff796c4a65480c19f6d9</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>75a4b04736f979e6e13abacbf617b71ae69a4448311e754b086509110f092208</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>778d4144dbed9cf3d1880cddbd8ef70fefa11d8e6f67363c21c0476f8f3cd0ba</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>7a3d34ea59b089f04c49fccea67696b81990512e91cf155baa0ed805f0ae566b</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>7cc406d9d532c82607c6e06da5da549b05b91e23edb756c70f1f52572337c63b</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>7e4d8633df7cdf993f91774905427994354b9b43312a53765f56fee401d62f5f</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>82695a9a04ff75cedad32114a3dbea5b1ff7f5b0a5f3554e7b1bd7d68c5779fc</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>8273ed121aea7dab0b07fe42eb303d3adcf23cc3001940579166f0c87b25e59f</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>831168e4ac5d3446abbdb0a92cf23d81e884325f6b6fb7edb3c0c33b8740c133</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>84ab15f876fadb95b8ef204a12f788aa5c1366e2088e47fb7bfe022f67353cba</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>84f3a6961da0e62f23086cd12a2387d794b98ead2b37d383db588ebec134ed95</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>852de24d1d145487c4328dc722854fd0123c2f47ee12c613b1f5bb122f32c1b0</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>85c904aba1b2d9f42f746abd8b93dc8e247362559083429d1338074494a3477b</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>85fb5fccf26ff35e0c5e832d356a1752c0a06d6c00396ba2789c6e091ab41fcb</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>884a1962d1e8d4b0d66414ecdb9daa0654651ea1b2cb625d8d4cdd79f34874f8</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>8877a89cae1486859d4a6c44c688cc9afc2bce08aedcaa1d831633cab2c194cb</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>89581a21d799be7e8fdfc84e8d8ab1d621ec05965dbacfe210b040ce7d263c4d</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>8ac3423b97d9a49249f5efa066a076581c7c0c1ebf8ae9bc9d502b1f4fffdefe</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>8bc3e86de5b8f05c037ccf808c8a6c0e4bc5b493668dbffdfe854c2ed6057e88</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>8cfb790efcb59ea14762894853825e744fafdf48da999cedcf34c3477caf0483</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>8def4590634e14d388faee822be7e21d5256ed900e5bd4c6be7d7f1845c6706d</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>8f43929756b8c35e129183da7960388099581df462ed9dddd61dd3125bf239ce</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>904f425e13c3f0aceda34ae1e118a05999e8423a1e4214fac8567b846f2d6e9b</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>9071b5bd61a32e1ac78ef210cd3cd466568aeb98705f61eb90c28a51e5482253</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>90b940f48cdd8dfa44a03b02c25ec04fed48d764b253f0707e6f288a72888144</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>90cbdab6279440a7f4b3808fb0ab92f90fd7f8986f4e9e535174900aba9f963a</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>919bc35f84a87f35256e097254909538f116a69c49df820b658a5a540657b01c</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>9284486f46c0d1bf6fcd17f66db10f7f3bd2a3fb8d8b48f186aff5abd703b74e</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>92e85b0a3dfa3dfc55cfaa51056b3009b4c908c24034915233149f5ffcae0ab6</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>944c2fd7c6e6bc9ba056621eb4f00b23f17cb72695cd1dd6f5d908d125ce8b92</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>951ccd4e08fbb43e5cd22f82ba1f5f8e094dffe7c10eb7cffac398aa508c39e6</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>99aeb560616f7c6beead980f480bf646490f7b02f6a09c256ea10e837a5d2a55</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>9c66a35ce815c27c6d947decda0c57fb9107e1e460d2bd0a457567b92d8f02a4</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>9dfafb0e38da3b7fb7b4a8a44d3125040b180918c4f1aed89e41a0d8e7aaacc4</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>9ff35f24d8e64114bc9556e14419122a25c494fd0f58419819d99a152c186aa1</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>a033b20e4ab914bab3babfc8ddcac41d32a2253e943462b94443087a07a84a13</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>a3067f35c5910d882cf4a0c359701ec013e1c0e3ec0f85e3508e5f6dc357a6d0</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>a7a7aef5d3ae2fe9f475887b094a1d67ce7687bd284cbbff4d4ccc8c91f431db</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>a7ff0ea0aa36c303eb3cd234b4e10a05856bc79c7284448fd30fc92fa73dd985</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>a9320a99d64280d5054ae05bd7f4e32e51ef97b7f3723923c0c3d6a159c6f78f</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>aa16376e1c3b7031d01911a43109322dcb6bec1e590e5d9d91f2a3d4ea5fba23</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>abfbae6865cd4b88a8789984f5dfff5180354c4282af2b7823de3121a9fa36b7</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>ac930b24c7dc5a72893f7e3131e31623e770cab35506b53b6516520ee5094d86</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>adff9d5654ffa72ce93173014833a11402d1a5fb2c1dfc26634d7daf71cd939e</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>ae6bdddc45fb32322b01ccf9f130c30e54b90d1b2969a8cda87ac9b03d9c1e27</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>b052bb9175fb24a78f12fc886115a2ef4fe41f1d3d299c4173c51e6bf8aa9f6c</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>b48f795b0717ad1ebede18352da340d5640c2cb4ca8aaec6548063b43bbeb9fe</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>b4969ddc0695c36b37940b7dfab55483fe4e5f941aab6614146fa1725471904f</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>b8d12c71c0c6d7d191ab99780357d119b35973010530c9ba05e4cfaed1a90f42</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>bb49103bfa95b074d0004f214d94ba12866227d399237814a2631c3788c24fb7</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>bc1f7d7fbca468bedc028e163ec91521d900e846974ac71993e9908ba8852f7b</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>bcaec4c50df0dc454163158b7811a0c855edfbe1c6ab92bf10f866bb6bfc8203</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>bea1833d9dc56303cdaadbd5f8f64f39a882813da7c73209922bf58ef220da1a</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>bec4a3a48c6b6392ade784e368bda92180b26c663bb7414285ef40c4752da297</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>bff1db5b8e791cca6cc63da07d9218fde521ecca46599a973af55aa22927eb4a</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>c0b7f6a62122072da4e1c29c3a9cebe5a39f2c12b86173a3784427a94ad200fa</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>c0fa3a506fc941520a6b57edad663103391ad46ee51febb1161a9d07ff4ee263</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>c27873c492ce96019a103bc7d5aaf405846dc41cc65b139171ee624c6d35031e</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>c41df74b1214da762b9e682a6f2d08e6c349cdb093d141b8d7c9591f0c1bdb4c</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>c5ec99a6a26ea8fdb236615ef0e86391ee937db7fed0be0e96117b40b5283e93</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>c6dd856a1a8d409282979ae29483a2c43e553696afaaac8b12eb53f808cdbae0</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>c8f00898456bc4e8b7201a8404b60bc49325b9ead9f75ab31b0744a102d1b906</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>c9969f4dee053c0a2102cfef4d15f70c330e84534fec6abd01be2bca0da9aaa5</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>cd595dbfde3eedd6eacaf4ef8f84b6a691b32bf1501b2ef1b2dead78d6ee9029</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>cfee7bee198da177b28c4c9ae15ce6cf81737b297be9978c4e5d726f8282fe87</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>d18e18cbea00bd86297e592b30bca9aa200d0a883236b649ad72f5cb6d24a96a</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>d3a7426fed76a176c37c05723079296f6493d8cace9940951d3943d4f16691b9</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>d4121554cb193932576f3d0b0650ce77536fd5fcda048d7c9d7a59864f59e980</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>d49748f47aa76a2d464b16749dd40290b284dcb2d08a1abd0259286a3453980a</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>d6406c49d4074754590c5dd4ab756c4ee59005c6fa092f2d39aa3533573e2fc7</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>d6ca272ee8ddbd878810e8eb9173835cf54ce56da633fd893063c28e73a69dcd</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>d71ad1ada7a601db025c95cbfa50edaf985f0dd459516bf2906f37b7c960253f</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>d729a04612626023132831c9f028143083b85c568ae7784edcb63bfbc1d59740</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>db006c0662796053e9bdbb4962546cd9e93a37a27222d70fb0d9a5f468929176</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>db333d373158453a2c7b602a0dd792a7745434711f02f8056f0c73ccd103ffb5</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>dc713e3b72537300cbb356940553d91461b01c7ce4a52ae721306195783ceadd</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>df371247860482f8f889d63a2dd8e6c8a2261f5ce62f1b23e6dd1abf3e0404ae</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>e07ff347a27eb18a9863fab951d218dcfec84e19623d8c2826bc0268fdb79450</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>e10befa1a9334510905af507f217cf14fa3f33c19245ac435a688a9cfbfc0424</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>e1d57fcb93ee6d86f53c7bdb1e5fad877cbcf29c939a9b22b412fdbe7258ef8c</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>e22bf15f81a3af153c7670adde6ecc4735fc98587ac3fac132d497490ee5a134</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>e42093d450761a13de73a108124a4266441af935a7ab76c967bca0752aa7cf65</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>e423599e0cc48a61aac2adb93096a24e39ca870430fc4cbb5003f4187faa0d2c</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>e4a404bc544181ca33f6a0bd3516b3d14aa94ba14e470c6836e50ed2057b1cf1</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>e4cc284cfe8770645f3225c56eeb00927dea5013f5404e3685d66e177bb9c522</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>e58f303e3dd817321e47c8e4291ad03c9f83e2d5ddd84371e83db05d76bbe4d8</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>e77fecc5d0f9d17a091e1f2a95763d938f38dbfbd5f316dc2db49eed9af434f4</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>e98933476273d9d9a49cf6f2bb0a9004f138eb2f9d7358c61b666fc2f74b332f</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>ea4f132c1bf7088036390b256b5964d243a551a78b792a2b93a271cbb9ee8932</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>efbdb9b90ddcf73317adfcd3d6964be56c147472c8f27b1069cc992e2560ea53</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>f0ad5f131775fdf9c76742d7941af62f87e8b21670e59e2a9e7d5bae97a5fe04</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>f5c99e16737e6db6de5b0e9379ed084fead9259856db21fb7787a5063fa5fa42</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>f705a10f78e258ec861e53e9ed31217234f15bfdc03fff2c00c339545a22f9c2</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>f70c9c5dbc072b7696b11b5d50f7d440d1a7f34c8782a526f21848dbb71ab23e</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>fb2bfa8256c7a985f5d395af8af33207d36ff8447c60bcd23794386fef205d8f</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>fb3ff63005317c879ca922d8e86ebf6cbb61e8766a4e3cc38ac87ca448af58c4</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>fd40fb3622c6f4f2c746869f889b63b68e9bb553c4d0f3c65b84b13e642a1674</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v2</font>.006</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>ffd6489aa896b8423b420c0d186c5aa1b55cfe05712a4b2a7e9435af50ba5396</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v3</font>.0</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>1830f0ec353f1f50118a8aaebd0fe92f7148719e8be43bae182e100ba6c6ff50</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v3</font>.0</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>236a231c6f852d947deb068e70f37cfed4f8b0f5adfd8ad7a955224e2f79b384</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v3</font>.0</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>2ee11a8a8b657ce211ee449eb2e465c1a38029a180a48f32e4b876a879383e9a</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v3</font>.0</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>4e3f4efec0214a1b83932e10c4af61b4ed568da3105d0cc520576e1d3b7e529e</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v3</font>.0</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>5f0ab67ca970c1db70d195eab5a583ed9114b8afa215337c4711a01afea1b5f2</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v3</font>.0</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>6b0134c8b4d8b346ee96ea502f128feec20407664bbe2dc0e83536627c95649b</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v3</font>.0</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>6f9b97c5374d8634f29e33c5b465ff3c85dbe2302e2684f105446aec0342173f</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v3</font>.0</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>778c259e1388eaae60953c92b55274d7502335c08d14113fd9775c797e3b94ee</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v3</font>.0</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>7cb5c8aebf13b499e24e9564a5f61542873d18a16befdbc3a351851c2200ba27</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v3</font>.0</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>7de6586e31ebbc7ded107686e478a02fcdcdaeb57944153a76d35e2eecd233e4</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v3</font>.0</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>83fc42ddc4d64a26585a5aaf64fd31eb9abf6955818cb9ddc890c0e55cf367fb</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v3</font>.0</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>88a89c748fd1138de9954674bec7ed0ac86e3b28f28f16f48492868820f35c18</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v3</font>.0</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>8db1566c369101175be51ddcfd2a3156b308a7307cf9b445e5a5a536c7ab842a</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v3</font>.0</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>b0a52da5028b35e1d975eec65e0d31a9d93fa4399706eab0d7ac76258e10d664</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v3</font>.0</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>c91a9c5770a8fd75b17e49c0125c45ffd567df93f1fdda27656e61cd980b91c7</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v3</font>.0</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>cad7b946ac67a2178cdb110569caabbea494410be986c999af81216de6aef7e8</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v3</font>.0</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>d430e7d810f1b1b83fbf473b1c10af84608f41889e1f2b5cd305ca94f2e97c67</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v3</font>.0</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>d95cb5a01736761ec76b9b89710f19d800e389331354ec4b51672830ec315d10</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v3</font>.0</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>e5b0a5956095f438ef806d4d13eab6ce6dc5fd3566c28e50d79da49658053760</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v3</font>.0</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>e8f91ce5be4cd96f2deb2b534327b26399e63b76994b61eec31431104daa8de1</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v3</font>.0</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>ec02f6fbe9a8aeedc4ac31fe9dad44130d2c25b185b0afe74740697c1fee7579</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v3</font>.0</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>ee4f57770b7d83d440dadf8f79054cedfd2a72c081c133e3cbffed98729f860e</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v3</font>.0</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>fa3fff2ebd4a7d3e94256946d8c0c29724526c0e8d027b904afb0a9827de5b6f</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre><font color="red">CryptXXX</font> <font color="red">v3</font>.0</pre>
+</td>
+<td style="padding-left: 30px;">
+<pre>ff829b249df9ddc88eef8293cd25657017514fd7c17c9eefb1062f70bce525c4</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<pre style="text-align: left;"> 
+
+
+
+
+
+<font color="red">IP Address</font></pre>
+<table>
+<tbody>
+<tr>
+<td>
+<pre>69.64.33.48</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre>217.23.13.153</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre>144.76.82.19</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre>85.25.194.116</pre>
+</td>
+</tr>
+<tr>
+<td>
+<pre>93.170.187.64</pre>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=amp-threat-grid">AMP Threat Grid</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=exploit-kit">exploit kit</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=ransomware">ransomware</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=technical">technical</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">3 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+			<li>
+			<div id="comment-2413087">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Yusuf Bhaiji						</span>
+						<br />
+						<span class="comment-meta commentmetadata">August 22, 2016 at 5:01 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Great analysis!</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2413087" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+<li>
+			<div id="comment-2412590">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg' width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+							<a href = "https://blogs.cisco.com/rewards-profile/8772">Patrick Fisk</a>
+						</span>
+						<br />
+						<span class="comment-meta commentmetadata">August 17, 2016 at 11:17 am</span>
+
+					</div>
+				<div class="comment_text">
+					<ul class = "comment_id2412590 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'pafisk';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2412590");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2412590">
+								</div>
+								<div class = "nitro_points pointscomment_id2412590">
+								</div>
+							</li>
+							</ul>
+					<div class = "clear"></div> <p>Would you recommend IP blocking to ward off this type of attack or do the C&amp;C servers change so fast it isn't worth the effort?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2412590" class = "commentLikeButton commentlike" data-nitro =pafisk >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li class="comment even depth-2" id="li-comment-2412592">
+				<div id="comment-2412592">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1470941003-bpthumb.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/joshreynolds'>Josh Reynolds</a></span><br />
+							<span class="comment-meta commentmetadata">August 17, 2016 at 11:36 am</span>
+
+						</div>
+						<div class="comment_text">
+							<ul class = "comment_id2412592 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'joshreyn';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2412592");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2412592">
+								</div>
+								<div class = "nitro_points pointscomment_id2412592">
+								</div>
+							</li>
+							</ul>
+							<div class = "clear"></div>
+							<p>Unfortunately blocking the C&amp;C server in the case of CryptXXX would not prevent encryption due to the fact that they are shipping the keys used for encryption with the binary itself, as mentioned in the post. This is not the case, however, with all variants, who typically request a public key from a C&amp;C server. Blocking in that case would prevent encryption.</p>						</div>
+
+							<div class = "roblike">
+					<a  href = "#" id = "clickLike2412592" class = "commentLikeButton commentlike" data-nitro =joshreyn >5 likes</a>				</div>
+				<div class="reply">
+															</div>
+							<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Security:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogSecurity', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogSecurity" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Security</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscosecurity?ref=nf"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/ciscosecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://youtubecisco.com/security"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogSecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.cert.org/blogs/vuls/" target="_blank">CERT Vulnerability Analysis</a></li>
+                      <li><a href="http://blogs.technet.com/b/srd/" target="_blank">Microsoft Security Research & Defense</a></li>
+                      <li><a href="http://isc.sans.edu/index.html" target="_blank">SANS Internet Storm Center</a></li>
+                      <li><a href="http://www.schneier.com/" target="_blank">Schneier on Security</a></li>
+                  </ul>
+              <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="http://www.cisco.com/en/US/products/products_security_advisories_listing.html" target="_blank">Advisories and Responses</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/cyberRiskReport.x" target="_blank">Cyber Risk Reports</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/intelliPapers.x?i=55" target="_blank">Security Best Practices</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/home.x" target="_blank">Security Intelligence Operations</a></li>
+                        <li><a href="http://www.cisco.com/en/US/products/hw/vpndevc/index.html" target="_blank">Security Products</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscosecurity?ref=nf'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/ciscosecurity'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 201099;
+			var orig_count = 2;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/2bcQA1n&text=CryptXXX Technical Deep Dive&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/cryptxxx-technical-deep-dive&title=CryptXXX Technical Deep Dive" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/cryptxxx-technical-deep-dive" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/cryptxxx-technical-deep-dive" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: CryptXXX Technical Deep Dive&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0ACryptXXX Technical Deep Dive%0A%0Ahttps://blogs.cisco.com/security/cryptxxx-technical-deep-dive%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

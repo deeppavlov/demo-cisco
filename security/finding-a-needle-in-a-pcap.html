@@ -1,0 +1,1822 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Finding A Needle In A PCAP</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content="When news of Conficker surfaced I obtained a traffic sample from our botnet honeynet. I wanted to see what relevant aggregate information I could extract and see if there was any specific indication of Conficker activity. Using some lightweight tools I was able to quickly analyze my traffic sample and focus further research."/><meta name="description" content="When news of Conficker surfaced I obtained a traffic sample from our botnet honeynet. I wanted to see what relevant aggregate information I could extract and see if there was any specific indication of Conficker activity. Using some lightweight tools I was able to quickly analyze my traffic sample and focus further research."/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; Finding A Needle In A PCAP Comments Feed" href="https://blogs.cisco.com/security/finding-a-needle-in-a-pcap/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"12901"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Focus on Energy &#8211; No Flash in the Pan' href='https://blogs.cisco.com/cin/focus_on_energy_-_no_flash_in_the_pan' />
+<link rel='next' title='Change is Challenging &#8211; A Perspective on Cisco&#8217;s New Management Structure' href='https://blogs.cisco.com/news/change_is_challenging' />
+
+<link rel="canonical" href="https://blogs.cisco.com/security/finding-a-needle-in-a-pcap" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=12901' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Finding A Needle In A PCAP"/>
+  <meta property="og:url" content="https://blogs.cisco.com/security/finding-a-needle-in-a-pcap"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2009-08-13T13:16:38+00:00"/>
+  <meta property="article:modified_time" content="2010-11-19T13:42:55+00:00" />
+  <meta property="og:updated_time" content="2010-11-19T13:42:55+00:00" />
+  <meta property="article:section" content="Security"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Finding A Needle In A PCAP"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/security/finding-a-needle-in-a-pcap"/>
+  <meta name="twitter:description" content="When news of Conficker surfaced I obtained a traffic sample from our botnet honeynet. I wanted to see what relevant aggregate information I could extract and see if there was any specific indication of Conficker activity. Using some lightweight tools I was able to quickly analyze my traffic sample a"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521514540";
+		var sig = "e2430a6a3dc614e06c379caa5dbef6f0";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1JDVAEh&text=Finding A Needle In A PCAP&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/finding-a-needle-in-a-pcap&title=Finding A Needle In A PCAP" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/finding-a-needle-in-a-pcap" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/finding-a-needle-in-a-pcap" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Finding A Needle In A PCAP&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0AFinding A Needle In A PCAP%0A%0Ahttps://blogs.cisco.com/security/finding-a-needle-in-a-pcap%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/security/'>Security</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category50.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Security  						</span>
+						<h1 id="post-12901" class="kindle_title title">Finding A Needle In A PCAP</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/ShivaPersaud.thumbnail.4caa02729b4b4.jpg"></div><div class="author_rewards_box"></div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/ShivaPersaud" title="Posts by Shiva Persaud" rel="author">Shiva Persaud</a> - August 13, 2009 - 11 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<style type="text/css">
+.pseudo_xterm .prompt {
+        color:          DarkRed;
+}
+.xterm_close {
+        float: right;
+        font-size: small;
+        color:          black;
+        padding-left:   2px;
+        padding-right:  2px;
+        border:         1px solid black;
+        margin:         0;
+        margin-left:    3px;
+        font-family:    sans-serif;
+}
+.pseudo_xterm {
+        background:     black;
+        color:          black;
+        border:         2px solid cornflowerblue;
+        <font color="red">width</font>:          580px;
+	margin-top:	15px;
+	margin-bottom:	15px;
+}
+.pseudo_xterm_title {
+        color:          black;
+        font-weight:    bold;
+        padding:        .25em;
+        background:     cornflowerblue;
+        font-size:      12px;
+        margin:         0px;
+}
+.pseudo_xterm pre {
+        white-space: pre-wrap;
+        white-space: -moz-pre-wrap !important;
+        white-space: -pre-wrap;
+        white-space: -o-pre-wrap;
+        word-wrap: break-word;
+        overflow:       auto;
+	<font color="red">height</font>: auto;
+        max-height:         300px;
+        margin:         0px;
+        clear: right;
+        background-image: none;
+        padding:3px;
+        background: white;
+	border: 0px;
+        font-size:0.90em;
+	color: black;
+}
+</style>
+<p>When news of <font color="red">Conficker</font> surfaced I obtained a <font color="red">traffic sample</font> from our <font color="red">botnet</font> <font color="red">honeynet</font>. I wanted to see what relevant aggregate information I could extract and see if there was any specific indication of <font color="red">Conficker</font> activity. Using some lightweight tools I was able to quickly analyze my <font color="red">traffic sample</font> and focus further research. I find that these high level analysis techniques lead me to ask the more <a href="http://blogs.cisco.com/security/comments/hello_waledac_my_old_friend/" target="_blank">interesting questions</a> and, more importantly, come to my rescue when I&#8217;m pressed for time. Below, I share a little about how I deconstructed the <font color="red">traffic sample</font>, briefly discuss visualization and turn to <font color="red">IPS</font> and Global Correlation to get a bigger perspective on what was happening. Some of my colleagues here in <font color="red">Cisco</font> Security Intelligence Operations (<a href="http://tools.cisco.com/security/center/home.x" target="_blank">SIO</a>) find these techniques useful so I thought I would pass them on in the hopes that others will as well. I&#8217;d like to hear from some of you on your favorite tools and tricks for this sort of sleuth work.</p>
+<p>There are some things I should point out before delving into my <font color="red">traffic sample</font>:</p>
+<ul>
+<li>I sanitized all <font color="red">IP</font> addresses because the hosts in this <font color="red">traffic sample</font> are Internet facing. That is, I replaced all <font color="red">IP</font> addresses with a fictitious FQDN.  Hosts with the domain <font color="red">honeynet</font>.eg are on the honeynet and all other hosts use the network.eg domain. The hostnames are randomly selected three-letter words from CrackLib&#8217;s dictionary. My fictitious FQDNs are consistent across this post.</li>
+<li>Some of the <font color="red">xterm</font> windows below may have a scroll bar. It&#8217;s easy to miss.  Scroll down for more info.</li>
+<li>The <font color="red">honeynet</font> has several hosts which each have multiple <font color="red">IP</font> addresses. We use this to increase <font color="red">attack surface</font>. Because this isn&#8217;t relevant, I normalized the <font color="red">traffic</font> such that each host on my <font color="red">network</font> has one and only one <font color="red">IP</font> address.</li>
+</ul>
+<p><span id="more-12901"></span></p>
+<h3><font color="red">Packet</font> grepping with <font color="red">tshark</font></h3>
+<p>Not surprisingly, the first tool I turned to was <a href="http://www.wireshark.org" target="_blank"><font color="red">Wireshark</font></a>. Everyone knows and loves <font color="red">Wireshark</font> but <a href="http://www.wireshark.org/docs/man-pages/<font color="red">tshark</font>.html" target="_blank">tshark</a>, its extremely powerful <font color="red">command line</font> companion, often flies under the radar. Most of what I discuss will be around using <font color="red">tshark</font>. Keep in mind that my goal isn&#8217;t to be exhaustive. It&#8217;s to get my feet wet and pique my curiosity before turning to more involved analysis techniques.</p>
+<p>Let&#8217;s take a look at my <font color="red">traffic</font> capture and <font color="red">tshark</font>&#8217;s default output:</p>
+<div class="pseudo_<font color="red">xterm</font>">
+<div class="xterm_close">x</div>
+<div class="xterm_close">~</div>
+<div class="xterm_close">_</div>
+<div class="pseudo_xterm_title">xterm: default output</div>
+<pre><span class="prompt">$ </span><font color="red">tshark</font> -<font color="red">r</font> traffic_sample.<font color="red">pcap</font> | wc -l
+
+449802
+
+<span class="prompt">$</span>
+
+
+
+<span class="prompt">$ </span><font color="red">tshark</font> -<font color="red">r</font> traffic_sample.<font color="red">pcap</font> | head -n 5
+
+  1   0.000000 tty.honeynet.eg -&gt; vex.honeynet.eg SSL Continuation <font color="red">Data</font>
+
+  2   0.000030 tty.honeynet.eg -&gt; tty.honeynet.eg SSL Continuation <font color="red">Data</font>
+
+  3   0.000082 tty.honeynet.eg -&gt; vex.honeynet.eg SSL Continuation <font color="red">Data</font>
+
+  4   0.000495 vex.honeynet.eg -&gt; tty.honeynet.eg TCP pvsw-inet &gt; <font color="red">https</font> [<font color="red">ACK</font>] <font color="red">Seq</font>=1 <font color="red">Ack</font>=2563 Win=65535 <font color="red">Len</font>=0
+
+  5   0.000499 tty.honeynet.eg -&gt; tty.honeynet.eg TCP pvsw-inet &gt; <font color="red">https</font> [<font color="red">ACK</font>] <font color="red">Seq</font>=1 <font color="red">Ack</font>=1183 Win=65535 <font color="red">Len</font>=0
+
+<span class="prompt">$</span>
+
+</pre>
+</div>
+<p>We&#8217;ve got almost 450,000 <font color="red">packets</font> to sift through!</p>
+<p>To me, <font color="red">tshark</font>&#8217;s most useful feature is that it allows me to use <font color="red">Wireshark</font>&#8217;s extensive <a href="http://www.wireshark.org/docs/wsdg_html_chunked/ChapterDissection.html" target="_blank">dissectors</a> to find exactly what I&#8217;m looking for and display it in the way that&#8217;s most helpful to me. Using these features we can do some rudimentary netflow-type analysis. For example, we can determine the TCP and <font color="red">UDP</font> flows that see the most <font color="red">traffic</font> by passing <font color="red">tshark</font> output to our friends <a href="http://www.gnu.org/software/coreutils/manual/html_node/sort-invocation.html#sort-invocation" target="_blank">sort</a>, <a href="http://www.gnu.org/software/coreutils/manual/html_node/<font color="red">uniq</font>-invocation.html#uniq-invocation" target="_blank">uniq</a> and <a href="http://www.gnu.org/software/coreutils/manual/html_node/head-invocation.html#head-invocation" target="_blank">head</a>:</p>
+<div class="pseudo_<font color="red">xterm</font>">
+<div class="xterm_close">x</div>
+<div class="xterm_close">~</div>
+<div class="xterm_close">_</div>
+<div class="pseudo_xterm_title">xterm: <font color="red">netflow</font> analysis</div>
+<pre><span class="prompt">$ </span><font color="red">tshark</font> -<font color="red">r</font> traffic_sample.<font color="red">pcap</font> -T fields -e ip.src -e tcp.srcport -e ip.dst -e tcp.dstport
+
+tty.honeynet.eg   443     vex.honeynet.eg    2441
+
+tty.honeynet.eg   443     tty.honeynet.eg   2441
+
+tty.honeynet.eg   443     vex.honeynet.eg    2441
+
+vex.honeynet.eg    2441    tty.honeynet.eg   443
+
+tty.honeynet.eg   2441    tty.honeynet.eg   443
+
+...
+
+<span class="prompt">$ </span><font color="red">tshark</font> -<font color="red">r</font> traffic_sample.<font color="red">pcap</font> -T fields -e ip.src -e tcp.srcport -e ip.dst -e tcp.dstport tcp | sort | <font color="red">uniq</font> -c | sort -brnk1 | head -n 10
+
+   3161 paz.network.eg  6000    bid.honeynet.eg  2967
+
+   3111 foe.network.eg 6000    bid.honeynet.eg  8090
+
+   3100 foe.network.eg 6000    bid.honeynet.eg  8089
+
+   3096 foe.network.eg 6000    bid.honeynet.eg  8088
+
+   3096 foe.network.eg 6000    bid.honeynet.eg  808
+
+   2328 and.network.eg 19877   tty.honeynet.eg   22
+
+   2137 tty.honeynet.eg   22      and.network.eg 19877
+
+    805 tty.honeynet.eg   443     sal.network.eg   1397
+
+    564 sal.network.eg   1397    tty.honeynet.eg   443
+
+    372 foe.network.eg 6000    vex.honeynet.eg    808
+
+<span class="prompt">$ </span><font color="red">tshark</font> -<font color="red">r</font> traffic_sample.<font color="red">pcap</font> -T fields -e ip.src -e <font color="red">udp</font>.srcport -e ip.dst -e udp.dstport udp | sort | <font color="red">uniq</font> -c | sort -brnk1 | head -n 10
+
+  52378 lad.honeynet.eg   55178   met.<font color="red">network</font>.eg   53
+
+  52375 met.network.eg   53      lad.honeynet.eg   55178
+
+   7421 was.network.eg   49271   tty.honeynet.eg   9994
+
+   1999 vex.honeynet.eg    137     tty.honeynet.eg   137
+
+   1999 bid.honeynet.eg  137     tty.honeynet.eg   137
+
+   1921 vex.honeynet.eg    137     phi.honeynet.eg  137
+
+    517 tty.honeynet.eg   32768   sal.network.eg   902
+
+    199 ala.network.eg    41620   bid.honeynet.eg  137
+
+    190 vex.honeynet.eg    138     tty.honeynet.eg   138
+
+    190 bid.honeynet.eg  138     tty.honeynet.eg   138
+
+</pre>
+</div>
+<p>Let&#8217;s continue digging. Some things I&#8217;d like to know: Which hosts are connecting to my network? Which <font color="red">external hosts</font> are my hosts connecting to? And over what ports? This should be pretty straight-forward&#8230; all I need to do is see who&#8217;s opening <font color="red">TCP connections</font>. Below, I use <font color="red">tshark</font>&#8217;s display filter to limit the <font color="red">packets</font> displayed to those with a <font color="red">SYN</font> bit set.</p>
+<div class="pseudo_<font color="red">xterm</font>">
+<div class="xterm_close">x</div>
+<div class="xterm_close">~</div>
+<div class="xterm_close">_</div>
+<div class="pseudo_xterm_title">xterm: <font color="red">syn</font> bit set</div>
+<pre>
+
+<span class="prompt">$ </span><font color="red">tshark</font> -<font color="red">r</font> traffic_sample.<font color="red">pcap</font> tcp.flags.syn <font color="red">eq</font> 0x1
+
+ 22   0.597630 old.network.eg -&gt; bid.honeynet.eg TCP ddrepl &gt; microsoft-ds [<font color="red">SYN</font>] <font color="red">Seq</font>=0 Win=65535 <font color="red">Len</font>=0 <font color="red">MSS</font>=1460
+
+ 26   0.642020 gee.network.eg -&gt; bid.honeynet.eg TCP vsat-control &gt; microsoft-ds [<font color="red">SYN</font>] <font color="red">Seq</font>=0 Win=16384 <font color="red">Len</font>=0 <font color="red">MSS</font>= 1440
+
+ 29   0.737034 viz.network.eg -&gt; bid.honeynet.eg TCP tsilb &gt; microsoft-ds [<font color="red">SYN</font>] <font color="red">Seq</font>=0 Win=65535 <font color="red">Len</font>=0 <font color="red">MSS</font>=1460
+
+ 47   1.464693 add.network.eg -&gt; gag.honeynet.eg TCP 4195 &gt; microsoft-ds [<font color="red">SYN</font>] <font color="red">Seq</font>=0 Win=65535 <font color="red">Len</font>=0 <font color="red">MSS</font>=1440
+
+ 59   1.795854 nbs.network.eg -&gt; bid.honeynet.eg TCP <font color="red">http</font> &gt; 7893 [<font color="red">SYN</font>, <font color="red">ACK</font>] <font color="red">Seq</font>=0 <font color="red">Ack</font>=0 Win=16384 <font color="red">Len</font>=0 <font color="red">MSS</font>=1460
+
+ 80   1.991162 vex.honeynet.eg -&gt; tty.honeynet.eg TCP netangel &gt; <font color="red">https</font> [<font color="red">SYN</font>] <font color="red">Seq</font>=0 Win=65535 <font color="red">Len</font>=0 <font color="red">MSS</font>=1460
+
+ 81   1.991164 tty.honeynet.eg -&gt; tty.honeynet.eg TCP netangel &gt; <font color="red">https</font> [<font color="red">SYN</font>] <font color="red">Seq</font>=0 Win=65535 <font color="red">Len</font>=0 <font color="red">MSS</font>=1460
+
+ 82   1.991396 tty.honeynet.eg -&gt; tty.honeynet.eg TCP <font color="red">https</font> &gt; netangel [<font color="red">SYN</font>, <font color="red">ACK</font>] <font color="red">Seq</font>=0 <font color="red">Ack</font>=1 Win=5840 <font color="red">Len</font>=0 <font color="red">MSS</font>=1 380
+
+...
+
+...
+
+</pre>
+</div>
+<p>Notice that frames 59 and 82 have both the <font color="red">SYN</font> and <font color="red">ACK</font> bits set. What I wanted was <font color="red">packets</font> with <em>only</em> the <font color="red">SYN</font> bit set because this indicates that the sending host is attempting to initiate a <font color="red">TCP connection</font>. To do this, I need to know the value of the TCP header&#8217;s flags field when the only bit set is the <font color="red">SYN</font> bit set. There are many ways to do this if I don&#8217;t feel like thinking in binary. First, I can use <a href="http://www.secdev.org/projects/scapy/" target="_blank">Scapy</a>, another one my favorite tools. Second, I can use <font color="red">tshark</font>&#8217;s <a href="http://www.nbee.org/doku.php?id=netpdl:pdml_specification" target="_blank">PDML output</a>. For the latter, I need to know which frame has only the <font color="red">SYN</font> bit set ahead of time. Both techniques are demonstrated below:</p>
+<div class="pseudo_<font color="red">xterm</font>">
+<div class="xterm_close">x</div>
+<div class="xterm_close">~</div>
+<div class="xterm_close">_</div>
+<div class="pseudo_xterm_title">xterm: finding tcp flags field values</div>
+<pre><span class="prompt">$ </span>scapy
+
+WARNING: <font color="red">IPv6 support</font> disabled in <font color="red">Python</font>. Cannot load scapy <font color="red">IPv6</font> layers.
+
+INFO: Can't import <font color="red">python</font> gnuplot w<font color="red">r</font>appe<font color="red">r</font> . Won't be able to plot.
+
+INFO: Can't impo<font color="red">r</font>t PyX. Won't be able to use psdump() or pdfdump().
+
+WARNING: Failed to execute tcpdump. Check it is installed and in the PATH
+
+Welcome to Scapy (2.0.1)
+
+&gt;&gt;&gt; a = TCP()
+
+&gt;&gt;&gt; a.flags='S'
+
+&gt;&gt;&gt; a.sprintf("%r,TCP.flags%")
+
+'2'
+
+&gt;&gt;&gt; a.flags='SA'
+
+&gt;&gt;&gt; a.sprintf("%r,TCP.flags%")
+
+'18'
+
+&gt;&gt;&gt; hex(int(a.sprintf("%r,TCP.flags%")))
+
+'0x12'
+
+<span class="prompt">$ </span><font color="red">tshark</font> -c 1 -<font color="red">r</font> traffic_sample.<font color="red">pcap</font> -T pdml frame.number <font color="red">eq</font> 421513 and tcp | grep tcp.flags
+
+    &lt;field name="tcp.flags" showname="Flags: 0x02 (<font color="red">SYN</font>)" size="1" pos="47" show="0x02" value="02"&gt;
+
+      &lt;field name="tcp.flags.cwr" showname="0... .... = Congestion Window Reduced (CWR): Not set" size="1" pos="47" show="0" value="0" unmaskedvalue="02"/&gt;
+
+      &lt;field name="tcp.flags.ecn" showname=".0.. .... = ECN-Echo: Not set" size="1" pos="47" show="0" value="0" unmaskedvalue="02"/&gt;
+
+
+
+      &lt;field name="tcp.flags.urg" showname="..0. .... = Urgent: Not set" size="1" pos="47" show="0" value="0" unmaskedvalue="02"/&gt;
+
+      &lt;field name="tcp.flags.ack" showname="...0 .... = Acknowledgement: Not set" size="1" pos="47" show="0" value="0" unmaskedvalue="02"/&gt;
+
+      &lt;field name="tcp.flags.push" showname=".... 0... = Push: Not set" size="1" pos="47" show="0" value="0" unmaskedvalue="02"/&gt;
+
+      &lt;field name="tcp.flags.reset" showname=".... .0.. = Reset: Not set" size="1" pos="47" show="0" value="0" unmaskedvalue="02"/&gt;
+
+      &lt;field name="tcp.flags.syn" showname=".... ..1. = Syn: Set" size="1" pos="47" show="1" value="1" unmaskedvalue="02"&gt;
+
+      &lt;field name="tcp.flags.fin" showname=".... ...0 = Fin: Not set" size="1" pos="47" show="0" value="0" unmaskedvalue="02"/&gt;
+
+
+
+<span class="prompt">$</span>
+
+</pre>
+</div>
+<p>We now know that if the only bit set in a TCP header&#8217;s flags field is the <font color="red">SYN</font> bit that it will have a value of 2. If it has both the SYN and <font color="red">ACK</font> bits set, it will have a value of 18 (0x12). Using this, I can return to leaning on <font color="red">tshark</font>&#8217;s display filters to show <font color="red">packets</font> that have only the <font color="red">SYN</font> bit set.  Instead of looking at tcp.flags.syn I need look at tcp.flags. This seems obvious to me now but it didn&#8217;t occur to me at first; initially I experimented with the bitwise_and and slice operators. Now that we know how to filter <font color="red">packets</font> with only a <font color="red">SYN</font> bit set, we can extend display filters even further and limit output to <font color="red">packets</font> coming from our <font color="red">subnet</font>. That&#8217;s right! <font color="red">Wireshark</font> allows users to specify <font color="red">subnets</font> as display filter criteria.</p>
+<div class="pseudo_<font color="red">xterm</font>">
+<div class="xterm_close">x</div>
+<div class="xterm_close">~</div>
+<div class="xterm_close">_</div>
+<div class="pseudo_xterm_title">xterm: filtering by <font color="red">subnets</font></div>
+<pre><span class="prompt">$ </span><font color="red">tshark</font> -<font color="red">r</font> traffic_sample.<font color="red">pcap</font> -T fields -e ip.src -e tcp.srcport -e ip.dst -e tcp.dstport tcp.flags <font color="red">eq</font> 0x2 and ip.dst <font color="red">eq</font> honeynet.eg/16 | sort | <font color="red">uniq</font> -c | sort -brn -k1 | head -n 10
+
+   3161 paz.network.eg  6000    bid.honeynet.eg  2967
+
+   3111 foe.network.eg 6000    bid.honeynet.eg  8090
+
+   3100 foe.network.eg 6000    bid.honeynet.eg  8089
+
+   3096 foe.network.eg 6000    bid.honeynet.eg  8088
+
+   3096 foe.network.eg 6000    bid.honeynet.eg  808
+
+    372 foe.network.eg 6000    vex.honeynet.eg    808
+
+    366 foe.network.eg 6000    vex.honeynet.eg    8089
+
+    313 foe.network.eg 6000    vex.honeynet.eg    8090
+
+    280 foe.network.eg 6000    vex.honeynet.eg    8088
+
+    264 paz.network.eg  6000    vex.honeynet.eg    2967
+
+</pre>
+</div>
+<p>Huh. I&#8217;ll have to look into that port 6000 <font color="red">traffic</font> later.  I&#8217;ll also take a closer look at what both foe.network.eg and bid.<font color="red">honeynet</font>.eg are up to. In the meantime, I can use filters to display:</p>
+<ul>
+<li>The 5 hosts on my honeynet that get the most <font color="red">SYN</font> <font color="red">packets</font>.</li>
+<li>The 5 hosts on my <font color="red">honeynet</font> that initiate the most outbound connections.</li>
+<li>The 5 <font color="red">external hosts</font> that initiate the most connections to my <font color="red">honeynet</font>.</li>
+</ul>
+<div class="pseudo_<font color="red">xterm</font>">
+<div class="xterm_close">x</div>
+<div class="xterm_close">~</div>
+<div class="xterm_close">_</div>
+<div class="pseudo_xterm_title">xterm: finding top offenders</div>
+<pre><span class="prompt">$ </span># The 5 hosts on my <font color="red">honeynet</font> that get the most <font color="red">SYN</font> <font color="red">packets</font>.
+
+<span class="prompt">$ </span><font color="red">tshark</font> -<font color="red">r</font> traffic_sample.<font color="red">pcap</font> -T fields -e ip.dst tcp.flags <font color="red">eq</font> 0x02 and ip.dst <font color="red">eq</font> "honeynet.eg/16" | sort | <font color="red">uniq</font> -c | sort -brn -k 1 | head -n 5
+
+  46736 bid.<font color="red">honeynet</font>.eg
+
+   8100 tty.honeynet.eg
+
+   7513 vex.honeynet.eg
+
+   3328 gag.honeynet.eg
+
+   2486 sat.honeynet.eg
+
+<span class="prompt">$ </span># The 5 hosts on my honeynet that initiate the most outbound connections.
+
+<span class="prompt">$ </span><font color="red">tshark</font> -<font color="red">r</font> traffic_sample.<font color="red">pcap</font> -T fields -e ip.src tcp.flags <font color="red">eq</font> 0x02 and ip.src <font color="red">eq</font> "honeynet.eg/16" | sort | <font color="red">uniq</font> -c | sort -brn -k 1 | head -n 5
+
+  86196 sat.honeynet.eg
+
+   1866 vex.honeynet.eg
+
+   1849 tty.honeynet.eg
+
+    297 lab.honeynet.eg
+
+    102 pow.honeynet.eg
+
+<span class="prompt">$ </span># The 5 <font color="red">external hosts</font> that initate the most connections to my <font color="red">honeynet</font>.
+
+
+
+<span class="prompt">$ </span><font color="red">tshark</font> -<font color="red">r</font> traffic_sample.<font color="red">pcap</font> -T fields -e ip.src tcp.flags <font color="red">eq</font> 0x02 and ip.dst <font color="red">eq</font> "honeynet.eg/16" and ip.src ne "honeynet.eg/16" | sort | <font color="red">uniq</font> -c | sort -brn -k 1 | head -n 5
+
+  15881 foe.network.eg
+
+   8087 ida.network.eg
+
+   3926 rod.network.eg
+
+   3891 paz.network.eg
+
+   1773 ray.network.eg
+
+</pre>
+</div>
+<p>There&#8217;s foe.network.eg and bid.honeynet.eg again. I&#8217;ll call them &#8220;sore thumb 1&#8221; and &#8220;sore thumb 2&#8221; from now on. There are three caveats to highlight here.  First, it is extremely important to pay close attention to how we&#8217;re specifying direction. Notice that in the first example above I used <font color="red">dst</font>, in the second I used <font color="red">src</font> and in the third I mixed both <font color="red">src</font> and <font color="red">dst</font>. Second, note that some protocol fields can be accessed via different filters. For example, filtering by &#8220;ip.addr&#8221; will search both ip.src and ip.dst fields. Third, sometimes a single <font color="red">packet</font> can contain multiple fields with the same name. For example, an ICMP <font color="red">packet</font> can contain two ip.src fields: one for the outer <font color="red">IP</font> layer and the other for the <font color="red">IP</font> layer that sits on top of the ICMP layer. I demonstrate this below by showing that an ICMP <font color="red">packet</font> <font color="red">packet</font> going from mig.honeynet.eg to lay.network.eg will be displayed when using a display filter of either &#8220;ip.src <font color="red">eq</font> mig.honeynet.eg&#8221; or &#8220;ip.dst <font color="red">eq</font> mig.honeynet.eg&#8221;:</p>
+<div class="pseudo_<font color="red">xterm</font>">
+<div class="xterm_close">x</div>
+<div class="xterm_close">~</div>
+<div class="xterm_close">_</div>
+<div class="pseudo_xterm_title">xterm: multiple instances of the same field</div>
+<pre><span class="prompt">$ </span><font color="red">tshark</font> -<font color="red">r</font> ping.pcap
+
+  1   0.000000 mig.honeynet.eg -&gt; lay.network.eg ICMP Destination unreachable (Port unreachable)
+
+<span class="prompt">$ </span><font color="red">tshark</font> -<font color="red">r</font> ping.pcap ip.src <font color="red">eq</font> mig.honeynet.eg
+
+  1   0.000000 mig.honeynet.eg -&gt; lay.network.eg ICMP Destination unreachable (Port unreachable)
+
+<span class="prompt">$ </span><font color="red">tshark</font> -<font color="red">r</font> ping.pcap ip.dst <font color="red">eq</font> mig.honeynet.eg
+
+  1   0.000000 mig.honeynet.eg -&gt; lay.network.eg ICMP Destination unreachable (Port unreachable)
+
+<span class="prompt">$ </span><font color="red">tshark</font> -V -<font color="red">r</font> ping.pcap ip.dst <font color="red">eq</font> mig.honeynet.eg
+
+...
+
+...
+
+    [Protocols in frame: eth:<font color="red">ip</font>:icmp:<font color="red">ip</font>:<font color="red">udp</font>:<font color="red">data</font>]
+
+...
+
+...
+
+<font color="red">Internet Protocol</font>, <font color="red">Src</font>: mig.honeynet.eg (mig.honeynet.eg), <font color="red">Dst</font>: lay.network.eg (20
+
+auk.network.eg)
+
+...
+
+...
+
+    Source: mig.honeynet.eg (mig.honeynet.eg)
+
+    Destination: lay.network.eg (lay.network.eg)
+
+Internet Control Message Protocol
+
+    Type: 3 (Destination unreachable)
+
+    Code: 3 (Port unreachable)
+
+    Checksum: 0x9aa1 [correct]
+
+    <font color="red">Internet Protocol</font>, <font color="red">Src</font>: lay.network.eg (lay.network.eg), <font color="red">Dst</font>: mig.honeynet.eg (mig.honeynet.eg)
+
+...
+
+...
+
+        Source: lay.network.eg (lay.network.eg)
+
+        Destination: mig.honeynet.eg (mig.honeynet.eg)
+
+<span class="prompt">$ </span><font color="red">tshark</font> -<font color="red">r</font> ping.pcap -T pdml ip.dst <font color="red">eq</font> mig.honeynet.eg | grep ip.src
+
+    &lt;field name="ip.src" showname="Source: mig.honeynet.eg (mig.honeynet.eg)" size="4" pos="26" show="mig.honeynet.eg" value="xxxxxxxx"/&gt;
+
+    &lt;field name="ip.src_host" showname="Source Host: mig.honeynet.eg" hide="yes" size="4" pos="26" show="mig.honeynet.eg" value="xxxxxxxx"/&gt;
+
+      &lt;field name="ip.src" showname="Source: lay.network.eg (lay.network.eg)" size="4" pos="54" show="lay.network.eg" value="xxxxxxxx"/&gt;
+
+
+
+      &lt;field name="ip.src_host" showname="Source Host: lay.network.eg" hide="yes" size="4" pos="54" show="lay.network.eg" value="xxxxxxxx"/&gt;
+
+<span class="prompt">$</span>
+
+</pre>
+</div>
+<p>It becomes apparent rather quickly that I need to distinguish between attempted connections and successful connections. In other words, what I really care about is looking at connections that are in the <font color="red">SYN</font>_RVCD state because then I at least know that the port in question is listening for incoming connection requests and is therefore more interesting. We found out earlier that tcp.flags will be set to 0x12 if both the SYN and <font color="red">ACK</font> bits are turned on. Below, I get the top 5 hosts on the <font color="red">honeynet</font> that are responding to connection requests by filtering for <font color="red">SYN</font>/ACK responses from port 445. Notice that the top 5 hosts sending SYN/ACK responses below are different than the top 5 hosts that get SYN <font color="red">packets</font> above. This validates our concern.</p>
+<div class="pseudo_<font color="red">xterm</font>">
+<div class="xterm_close">x</div>
+<div class="xterm_close">~</div>
+<div class="xterm_close">_</div>
+<div class="pseudo_xterm_title">xterm: <font color="red">syn</font> and <font color="red">ack</font> bits set</div>
+<pre><span class="prompt">$ </span><font color="red">tshark</font> -<font color="red">r</font> traffic_sample.<font color="red">pcap</font> tcp.flags <font color="red">eq</font> 0x12 and ip.src <font color="red">eq</font> "honeynet.eg/16" and tcp.srcport <font color="red">eq</font> 445 | head -n 5
+
+219   4.658323 lad.honeynet.eg -&gt; tim.network.eg TCP microsoft-ds &gt; lkcmserver [<font color="red">SYN</font>, <font color="red">ACK</font>] <font color="red">Seq</font>=0 <font color="red">Ack</font>=1 Win=5840 <font color="red">Len</font>=0 <font color="red">MSS</font>=1460
+
+372   7.906750 sat.honeynet.eg -&gt; ray.network.eg  TCP microsoft-ds &gt; 55499 [<font color="red">SYN</font>, <font color="red">ACK</font>] <font color="red">Seq</font>=0 <font color="red">Ack</font>=1 Win=17520 <font color="red">Len</font>=0 <font color="red">MSS</font>=1460
+
+442   9.311976 ere.honeynet.eg -&gt; ray.network.eg  TCP microsoft-ds &gt; 47017 [<font color="red">SYN</font>, <font color="red">ACK</font>] <font color="red">Seq</font>=0 <font color="red">Ack</font>=1 Win=5840 <font color="red">Len</font>=0 <font color="red">MSS</font>=1460
+
+458   9.387011 lad.honeynet.eg -&gt; chi.network.eg TCP microsoft-ds &gt; 15709 [<font color="red">SYN</font>, <font color="red">ACK</font>] <font color="red">Seq</font>=0 <font color="red">Ack</font>=1 Win=5840 <font color="red">Len</font>=0 <font color="red">MSS</font>=1460
+
+465   9.430407 lad.honeynet.eg -&gt; chi.network.eg TCP microsoft-ds &gt; 15720 [<font color="red">SYN</font>, <font color="red">ACK</font>] <font color="red">Seq</font>=0 <font color="red">Ack</font>=1 Win=5840 <font color="red">Len</font>=0 <font color="red">MSS</font>=1460
+
+<span class="prompt">$</span>
+
+<span class="prompt">$ </span><font color="red">tshark</font> -<font color="red">r</font> traffic_sample.<font color="red">pcap</font> -T fields -e ip.src tcp.flags <font color="red">eq</font> 0x12 and ip.src <font color="red">eq</font> honeynet.eg/16 and tcp.srcport <font color="red">eq</font> 445 | sort | <font color="red">uniq</font> -c | sort -rnb -k 1 | head -n 5
+
+   1028 sat.honeynet.eg
+
+    519 lad.honeynet.eg
+
+    500 ere.honeynet.eg
+
+     21 rae.honeynet.eg
+
+     10 pro.honeynet.eg
+
+</pre>
+</div>
+<p>Up to this point, all we know for sure is that hosts on my <font color="red">network</font> are listening for connections on TCP port 445. I&#8217;d like to dig deeper. <a href="http://www.microsoft.com/technet/security/bulletin/ms08-067.mspx" target="_blank">According to Microsoft</a>, the vulnerable RPC <font color="red">uuid</font> is 4b324fc8-1670-01d3-1278-5a47bf6ee188. If we see this <font color="red">uuid</font> in our <font color="red">traffic</font> capture we have more evidence that <font color="red">Conficker</font> is spreading. As you may expect, <font color="red">Wireshark</font> makes it easy to filter by <font color="red">uuid</font>:</p>
+<div class="pseudo_<font color="red">xterm</font>">
+<div class="xterm_close">x</div>
+<div class="xterm_close">~</div>
+<div class="xterm_close">_</div>
+<div class="pseudo_xterm_title">xterm: filtering by ms-rpc interface</div>
+<pre><span class="prompt">$ </span><font color="red">tshark</font> -<font color="red">r</font> traffic_sample.<font color="red">pcap</font> -T fields -e dcerpc.cn_bind_to_uuid | grep - | sort | <font color="red">uniq</font> -c
+
+      5 12345778-1234-abcd-ef00-0123456789ac
+
+     13 3919286a-b10c-11d0-9ba8-00c04fd92ef5
+
+     85 4b324fc8-1670-01d3-1278-5a47bf6ee188
+
+<span class="prompt">$</span>
+
+</pre>
+</div>
+<p>3919286a-b10c-11d0-9ba8-00c04fd92ef5 is the RPC interface for the Local Security Authority Subsystem Service (LSASS). A <a href="http://www.microsoft.com/technet/security/bulletin/ms04-011.mspx" target="_blank"><font color="red">vulnerability</font> (CVE-2003-0533)</a> in this service was exploited by the <a href="http://en.wikipedia.org/wiki/Sasser_(computer_worm)" target="_blank">Sasser worm</a>. 12345778-1234-abcd-ef00-0123456789ac is the RPC interface for Security Account Manager (<a href="http://msdn.microsoft.com/en-us/library/cc245476(PROT.13).aspx">SAM</a>).</p>
+<p>So, we know that vulnerable RPC interfaces are being called. We can also show that the TCP payload contains <font color="red">byte</font> sequences that correspond to <a href="http://www.honeynet.org/files/KYE-Conficker.pdf" target="_blank">Conficker.A and Conficker.B <font color="red">shellcode</font></a>:</p>
+<div class="pseudo_<font color="red">xterm</font>">
+<div class="xterm_close">x</div>
+<div class="xterm_close">~</div>
+<div class="xterm_close">_</div>
+<div class="pseudo_xterm_title">xterm: hunting for <font color="red">shellcode</font></div>
+<pre><span class="prompt">$ </span> <font color="red">tshark</font> -<font color="red">r</font> traffic_sample.<font color="red">pcap</font> tcp contains e8:ff:ff:ff:ff:c2:5f:8d:4f:10:80:31:c4:41:66:81 and tcp.dstport <font color="red">eq</font> 445 | grep -v Retransmission | shuf -n 10
+
+44800 680.094661 log.network.eg -&gt; sat.honeynet.eg SRVSVC NetPathCanonicalize request
+
+117739 1709.278701 cup.network.eg -&gt; sat.honeynet.eg SRVSVC NetPathCanonicalize request
+
+148006 2115.057841 joy.network.eg -&gt; sat.honeynet.eg SRVSVC NetPathCanonicalize request
+
+9476 164.171395 ian.network.eg -&gt; sat.honeynet.eg SRVSVC NetPathCanonicalize request
+
+51944 800.585453 pin.network.eg -&gt; sat.honeynet.eg SRVSVC NetPathCanonicalize request
+
+32784 544.978680 big.network.eg -&gt; sat.honeynet.eg SRVSVC NetPathCanonicalize request
+
+76211 1230.059103 the.network.eg -&gt; sat.honeynet.eg SRVSVC NetPathCanonicalize request
+
+135633 1922.571202  trw.network.eg -&gt; vex.honeynet.eg SRVSVC NetPathCanonicalize request
+
+298896 4054.865260 ftc.network.eg -&gt; sat.honeynet.eg SRVSVC NetPathCanonicalize request
+
+187360 2763.170242 won.network.eg -&gt; sat.honeynet.eg SRVSVC NetPathCanonicalize request
+
+<span class="prompt">$</span>
+
+</pre>
+</div>
+<p>It would be nice if I could easily isolate individual tcp streams in my <font color="red">traffic sample</font>. This has been possible for a while now using <font color="red">Wireshark</font>&#8217;s &#8220;Follow TCP Stream&#8221; <font color="red">function</font>. Mike Hall is <a href="http://anonsvn.wireshark.org/viewvc/trunk/AUTHORS?revision=29056&amp;view=markup" target="_blank">credited</a> for implementing the &#8220;Follow TCP Stream&#8221; <font color="red">function</font> in <font color="red">Wireshark</font>. He sits just down the hall from me. He told me he implemented it on a cross-country road trip because he &#8220;had an itch&#8221;. I&#8217;m pretty sure he wasn&#8217;t driving while he wrote the code but you never know with Mike. Anyway, for a long time this <font color="red">function</font> was only available via the <font color="red">Wireshark</font> gui. You select a <font color="red">packet</font>, right click and select &#8220;Follow TCP Stream&#8221;.  As of <a href="http://anonsvn.wireshark.org/viewvc/trunk/epan/dissectors/packet-tcp.c?revision=26305&amp;view=markup&amp;pathrev=26305" target="_blank">September 2008</a>, you also can isolate <font color="red">packets</font> belonging to a given stream from the <font color="red">command line</font> by filtering for tcp.stream. Once you have a tcp.stream <font color="red">ID</font>, you can get a list of all frames in that stream and write those frames to a new <font color="red">pcap file</font> using <a href="http://www.wireshark.org/docs/man-pages/editcap.html" target="_blank">editcap</a>. There are some limitations to using this approach for larger <font color="red">traffic samples</font>. Namely the list of tcp streams can get rather long and editcap limits the number of <font color="red">packets</font> it handles.  Still, I wanted to mention this approach because editcap is helpful in many circumstances.</p>
+<div class="pseudo_<font color="red">xterm</font>">
+<div class="xterm_close">x</div>
+<div class="xterm_close">~</div>
+<div class="xterm_close">_</div>
+<div class="pseudo_xterm_title">xterm: extracting tcp streams using editcap</div>
+<pre><span class="prompt">$ </span>export tcp_streams=$(<font color="red">tshark</font> -<font color="red">r</font> traffic_sample.<font color="red">pcap</font> -T fields -e tcp.stream dcerpc.cn_bind_to_uuid <font color="red">eq</font> 4b324fc8-1670-01d3-1278-5a47bf6ee188 | tr '\n' ' ')
+
+<span class="prompt">$ </span>echo $tcp_streams
+
+767 791 790 1042 1091 1498 2066 2472 2495 2571 2714 2862 6654 6669 6716 7182 7219 8866 8990 9074 9739 10646 10881 12641 12857 14121 14186 15001 14992 19602 19589 19661 20228 21015 21103 21473 22487 22869 23423 23533 23832 24005 24164 24338 24364 24707 42649 42720 42794 43129 43178 45803 46495 50504 51824 52932 54609 55593 57208 59116 60015 61611 62134 63482 64040 64826 65624 66440 67902 69525 69466 71763 72063 74254 74748 78440 79903 81060 84389 84503 85120 85390 88252 91150 91465
+
+<span class="prompt">$ </span><font color="red">tshark</font> -<font color="red">r</font> traffic_sample.<font color="red">pcap</font> -T fields -e frame.number tcp.stream <font color="red">eq</font> 23832 &gt; f<font color="red">r</font>ame_numbers.txt
+
+<span class="prompt">$ </span>wc -w frame_numbers.txt
+
+26 frame_numbers.txt
+
+<span class="prompt">$ </span>editcap -r traffic_sample.<font color="red">pcap</font> stream_23832.<font color="red">pcap</font> $(&lt; frame_numbers.txt)
+
+Add_Selected: 182700
+
+Not inclusive ... 182700
+
+Add_Selected: 182701
+
+...
+
+...
+
+Add_Selected: 188919
+
+Not inclusive ... 188919
+
+</pre>
+</div>
+<p>Instead of using editcap I choose to simply wrap <font color="red">tshark</font>&#8217;s -w flag in a</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">for</div></div>
+<p>loop to generate <font color="red">pcaps</font> containing unique TCP streams. Below I create a subdirectory with <font color="red">pcaps</font> for each TCP stream containing our <font color="red">uuid</font> of interest.  Having these individual files is convenient for further research.</p>
+<div class="pseudo_<font color="red">xterm</font>">
+<div class="xterm_close">x</div>
+<div class="xterm_close">~</div>
+<div class="xterm_close">_</div>
+<div class="pseudo_xterm_title">xterm: extracting tcp streams using <font color="red">tshark</font></div>
+<pre><span class="prompt">$ </span>echo "$tcp_streams" | wc -w
+
+85
+
+<span class="prompt">$ </span>for x in $tcp_streams; do <font color="red">tshark</font> -<font color="red">r</font> traffic_sample.<font color="red">pcap</font> -w individual_streams/"${x}".<font color="red">pcap</font> tcp.stream <font color="red">eq</font> $x; echo "Finished stream ${x}"; done
+
+Finished stream 767
+
+Finished stream 791
+
+Finished stream 790
+
+...
+
+...
+
+...
+
+Finished stream 88252
+
+Finished stream 91150
+
+Finished stream 91465
+
+</pre>
+</div>
+<p>Now we have 85 <font color="red">pcap files</font> with each containing a TCP stream where there is an attempt to bind to 4b324fc8-1670-01d3-1278-5a47bf6ee188.</p>
+<h3>Visualizing <font color="red">traffic</font> with Graphviz</h3>
+<p>Sometimes ideas click if I see <font color="red">data</font> represented visually. <a href="http://www.graphviz.org/" target="_blank">Graphviz</a> makes it easy to construct graphs that visualize <font color="red">traffic</font> flow. One thing I was curious to see was which hosts on my <font color="red">honeynet</font> the top 5 <font color="red">external hosts</font> attempted to connect to.  I can generate these images in only a few commands:</p>
+<div class="pseudo_<font color="red">xterm</font>">
+<div class="xterm_close">x</div>
+<div class="xterm_close">~</div>
+<div class="xterm_close">_</div>
+<div class="pseudo_xterm_title">xterm: visualizing a specific <font color="red">attacker</font>&#8217;s activity</div>
+<pre>
+
+<span class="prompt">$ </span>export top_5_external=$(<font color="red">tshark</font> -<font color="red">r</font> ../traffic_sample.<font color="red">pcap</font> -T fields -e ip.src tcp.flags <font color="red">eq</font> 0x02 and ip.dst <font color="red">eq</font> "honeynet.eg/16" and ip.src ne "honeynet.eg/16" | sort | <font color="red">uniq</font> -c | sort -brn -k 1 | head -n 5 | grep -o "[^ ]*$")
+
+<span class="prompt">$ </span>echo $top_5_external
+
+foe.network.eg ida.network.eg rod.network.eg paz.network.eg ray.network.eg
+
+<span class="prompt">$ </span>for <font color="red">ip</font> in $top_5_external
+
+&gt; do
+
+&gt;     <font color="red">tshark</font> -<font color="red">r</font> ../traffic_sample.<font color="red">pcap</font> -T fields -e ip.src -e ip.dst "ip.src <font color="red">eq</font> honeynet.eg/16 and ip.dst <font color="red">eq</font> ${<font color="red">ip</font>} and not icmp" | sort | <font color="red">uniq</font> &gt; ${<font color="red">ip</font>}
+
+&gt; done
+
+<span class="prompt">$ </span>ls
+
+rod.network.eg  ray.network.eg  ida.network.eg  paz.network.eg  foe.network.eg
+
+<span class="prompt">$ </span>mkdir graphs
+
+<span class="prompt">$ </span>for datafile in $(find . -maxdepth 1 -type f);
+
+&gt; do
+
+&gt;     ../mkgraph.py -f ${datafile} -n "honeynet.eg/16" | dot -Tpng -o ./graphs/${datafile}.png;
+
+&gt; done
+
+<span class="prompt">$ </span>ls graphs/
+
+rod.network.eg.png  ray.network.eg.png  ida.network.eg.png  paz.network.eg.png  foe.network.eg.png
+
+<span class="prompt">$ </span>../mkgraph.py -f foe.network.eg -n "honeynet.eg/16"
+
+graph G
+
+{
+
+rankdir=LR
+
+ranksep=3
+
+subgraph cluster0 {
+
+"bid.honeynet.eg"
+
+"lad.honeynet.eg"
+
+"lac.honeynet.eg"
+
+"ere.honeynet.eg"
+
+"rae.honeynet.eg"
+
+"vex.honeynet.eg"
+
+"pro.honeynet.eg"
+
+"sat.honeynet.eg"
+
+}
+
+"lad.honeynet.eg" -- "foe.network.eg"
+
+"bid.honeynet.eg" -- "foe.network.eg"
+
+"rae.honeynet.eg" -- "foe.network.eg"
+
+"vex.honeynet.eg" -- "foe.network.eg"
+
+"sat.honeynet.eg" -- "foe.network.eg"
+
+"ere.honeynet.eg" -- "foe.network.eg"
+
+"pro.honeynet.eg" -- "foe.network.eg"
+
+"lac.honeynet.eg" -- "foe.network.eg"
+
+}
+
+</pre>
+</div>
+<p>mkgraph.py is a <font color="red">script</font> I wrote that parses <font color="red">tshark</font> output and generates a <a href="http://www.graphviz.org/pdf/dotguide.pdf" target="_blank">dot file</a> that dot will use to generate a graph. Below is one of the images generated (click for a larger version). Notice that foe.network.eg, &#8220;sore thumb 1&#8221;, has been quite busy. (My <font color="red">script</font> for sanitizing <font color="red">IPs</font> chose foe.network.eg on its own&#8230; it could be self-aware)</p>
+<p><a href="http://www.cisco.com/web/about/security/images/blog/graph1.JPG"><img src="http://www.cisco.com/web/about/security/images/blog/graph1.JPG" border="0" alt="" width="470" align="center" /></a></p>
+<p>Another thing I was interested to see was the source ports responding to connection attempts to and from vex.honeynet.eg, one of my top 5 hosts. I removed port 80 for keep the graph simple.</p>
+<div class="pseudo_<font color="red">xterm</font>">
+<div class="xterm_close">x</div>
+<div class="xterm_close">~</div>
+<div class="xterm_close">_</div>
+<div class="pseudo_xterm_title">xterm: visualizing connections to and from a given host</div>
+<pre><span class="prompt">$ </span><font color="red">tshark</font> -<font color="red">r</font> traffic_sample.<font color="red">pcap</font> -T fields -e ip.src -e ip.dst -e tcp.srcport ip.addr <font color="red">eq</font> vex.honeynet.eg and tcp.flags <font color="red">eq</font> 0x12 and tcp.srcport ne 80 | sort | <font color="red">uniq</font> &gt; tcp_flows.txt
+
+<span class="prompt">$ </span>./mkgraph.py -f tcp_flows.txt -n "honeynet.eg/16" &gt; tcp_flows.dot
+
+<span class="prompt">$ </span>dot -Gsize="5,5" -Tpng -o tcp_flows.png tcp_flows.dot
+
+<span class="prompt">$ </span>cat tcp_flows.dot
+
+digraph G
+
+{
+
+rankdir=LR
+
+ranksep=3
+
+subgraph cluster0 {
+
+"tty.honeynet.eg"
+
+"vex.honeynet.eg"
+
+}
+
+"tty.honeynet.eg" -&gt; "vex.honeynet.eg" [label="443"]
+
+"vex.honeynet.eg" -&gt; "dec.network.eg" [label="23"]
+
+"vex.honeynet.eg" -&gt; "crt.network.eg" [label="445"]
+
+"vex.honeynet.eg" -&gt; "bye.network.eg" [label="23"]
+
+"vex.honeynet.eg" -&gt; "trw.network.eg" [label="445"]
+
+"vex.honeynet.eg" -&gt; "ida.network.eg" [label="139"]
+
+"vex.honeynet.eg" -&gt; "ida.network.eg" [label="445"]
+
+"vex.honeynet.eg" -&gt; "ivy.network.eg" [label="23"]
+
+"vex.honeynet.eg" -&gt; "sum.network.eg" [label="139"]
+
+"vex.honeynet.eg" -&gt; "sum.network.eg" [label="445"]
+
+"vex.honeynet.eg" -&gt; "vet.network.eg" [label="23"]
+
+"ncr.network.eg" -&gt; "vex.honeynet.eg" [label="6005"]
+
+"bud.network.eg" -&gt; "vex.honeynet.eg" [label="443"]
+
+"nat.network.eg" -&gt; "vex.honeynet.eg" [label="10010"]
+
+"bin.network.eg" -&gt; "vex.honeynet.eg" [label="10010"]
+
+"sci.network.eg" -&gt; "vex.honeynet.eg" [label="25511"]
+
+"des.network.eg" -&gt; "vex.honeynet.eg" [label="10192"]
+
+}
+
+</pre>
+</div>
+<p>Here&#8217;s the image Graphviz generated (click for a larger version):</p>
+<p><a href="http://www.cisco.com/web/about/security/images/blog/graph2.JPG"><img src="http://www.cisco.com/web/about/security/images/blog/graph2.JPG" border="0" alt="" width="470" /></a></p>
+<p>I&#8217;m only scratching the surface when it comes to visualizing my <font color="red">traffic sample</font>. I could use Scapy&#8217;s rich features to generate dot files that will tell me all sorts of details about my <font color="red">traffic</font>. Scapy also comes with some visualization capability out of the box. One thing I&#8217;d like to do is graph the spread of <font color="red">Conficker</font> to and within my <font color="red">honeynet</font>.</p>
+<h3>What did my <font color="red">IPS</font> and <font color="red">Network</font> Participation tell me?</h3>
+<p>Obviously there&#8217;s a lot of <font color="red">data</font> that can be extracted from these 450,000 <font color="red">packets</font>. I was curious to see what other <font color="red">vulnerabilities</font> were being exploited so I ran the <font color="red">traffic</font> through my <font color="red">IPS</font>. Some of the <font color="red">vulnerabilities</font> that the <font color="red">IPS</font> detected in my <font color="red">traffic sample</font> are below:</p>
+<ul>
+<li><a href="http://tools.cisco.com/security/center/viewAlert.x?alertId=17121" target="_blank">Worm: W32/Conficker.worm</a></li>
+<li><a href="http://tools.cisco.com/security/center/viewAlert.x?alertId=5358" target="_blank">Worm: W32/SQLSlammer.worm</a></li>
+<li><a href="http://tools.cisco.com/security/center/viewAlert.x?alertId=1143" target="_blank">Microsoft Windows LSASS RPC Overflow</a></li>
+<li><a href="http://tools.cisco.com/security/center/viewAlert.x?alertId=7536" target="_blank">Microsoft Windows RPC DCOM Multiple <font color="red">Vulnerabilities</font></a></li>
+<li><a href="http://tools.cisco.com/security/center/viewAlert.x?alertId=7251" target="_blank">Microsoft Windows ASN.1 Buffer Overflow <font color="red">Vulnerability</font></a></li>
+<li><a href="http://tools.cisco.com/security/center/viewAlert.x?alertId=1145" target="_blank">Server Message Block Protocol Share Enumeration Denial of Service <font color="red">Vulnerability</font></a></li>
+<li><a href="http://tools.cisco.com/security/center/viewAlert.x?alertId=11104" target="_blank">Microsoft Windows <font color="red">Routing</font> and <font color="red">Remote Access</font> Memory Corruption <font color="red">Vulnerability</font></a></li>
+<li><a href="http://tools.cisco.com/security/center/viewAlert.x?alertId=53" target="_blank">Weak User and System Account Passwords</a></li>
+<li><a href="http://tools.cisco.com/security/center/viewAlert.x?alertId=1142" target="_blank">Windows Guest Login</a></li>
+<li><a href="http://tools.cisco.com/security/center/viewAlert.x?alertId=690" target="_blank">Default Accounts <font color="red">Vulnerability</font></a></li>
+<li><a href="http://tools.cisco.com/security/center/viewAlert.x?alertId=1144" target="_blank">Windows NT Server Message Block NULL Session Connection Red Button <font color="red">Vulnerability</font></a></li>
+<li><a href="http://tools.cisco.com/security/center/viewAlert.x?alertId=11104" target="_blank">Microsoft Windows <font color="red">Routing</font> and <font color="red">Remote Access</font> Memory Corruption <font color="red">Vulnerability</font></a></li>
+<li><a href="http://tools.cisco.com/security/center/viewAlert.x?alertId=9572" target="_blank">Microsoft Windows Plug and Play Remote Code Execution <font color="red">Vulnerability</font></a></li>
+</ul>
+<p>Back to <font color="red">Conficker</font> though&#8230;I was curious to see how widespread attacks from my top 5 <font color="red">attackers</font> were. That is, were these <font color="red">attackers</font> a problem for my <font color="red">honeynet</font> only or did we see attacks from them elsewhere on the Internet? I checked <a href="http://blogs.cisco.com/security/comments/cisco_sensorbase_confirms_microsoft_video_activex_vulnerability_exploited/" target="_blank"><font color="red">Network</font> Participation</a> <font color="red">data</font> for the top 5 <font color="red">external hosts</font> that connected to the vulnerable RPC interface on my <font color="red">honeynet</font>. Not surprisingly, I saw some of these <font color="red">IP</font> addresses triggering Conficker-related signatures in several locations.</p>
+<h3>So in the end&#8230;</h3>
+<p>Well, there we go. I have some good insight into the <font color="red">traffic</font> capture we started with and we were able to perform this analysis quickly and easily from the <font color="red">command line</font>. I know network-level things like who&#8217;s attacking us and who&#8217;s getting attacked. I know packet-level things like which streams contain <font color="red">Conficker</font> <font color="red">shellcode</font>. I even have some basic visualization. Now I can do further research like target specific hosts for both <font color="red">network</font> and host-level forensics or extract binaries from TCP streams for disassembly and behavioral analysis.  What I&#8217;d like to hear is what tools/techniques others use to do this sort of quick research. The fun starts now.</p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=emerging-threats">emerging threats</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=security-2">security</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=security-research">security research</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=wireshark">wireshark</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">11 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+			<li>
+			<div id="comment-34556">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Brian Chow						</span>
+						<br />
+						<span class="comment-meta commentmetadata">July 21, 2010 at 6:40 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>This is a very interesting and creative way of using tshark to sort through this. There is also a free online Web2.0 tool that does just that but in just seconds. Would probably save a lot of time using that tool. They call it xtractr and leverage tshark as well but with less scripting involved as it has a great UI.http://www.pcapr.net/xtractr</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike34556" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-21746">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Shiva Persaud						</span>
+						<br />
+						<span class="comment-meta commentmetadata">February 24, 2010 at 4:57 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Uwe,Sure. I'll send it to you via email.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike21746" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-21739">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Uwe						</span>
+						<br />
+						<span class="comment-meta commentmetadata">February 24, 2010 at 4:56 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Awesome blogpost. Maybe the best stuff a read for long time. Do you see any chance to share mkgraph.py?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike21739" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-21560">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://www.pcapr.net' rel='external nofollow' class='url'>pcapr</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">February 22, 2010 at 8:49 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Just announced xtractr today: http://bit.ly/d7yrKl Thought you might find it useful.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike21560" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-16889">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Shiva Persaud						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 16, 2009 at 9:54 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Antonio, you can use tshark to view files in a variety of packet capture formats including pcap. Run editcap -F"" to see a list of supported formats."</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike16889" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-16723">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						antonio						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 16, 2009 at 9:49 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Hi,but it is possible to use this procedure to file of traffic saved  in pcapformat ?thank you</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike16723" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-15418">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://www.clarifiednetworks.com/' rel='external nofollow' class='url'>Jani Kentt</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">September 9, 2009 at 4:21 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Anoter nice thing to look at is the Clarified Analyzer, which lets you find the needle from the pcap and view neat (and useful) visualizations.https://www.clarifiednetworks.com/Clarified Analyzer</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike15418" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-15038">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://www.pcapr.net' rel='external nofollow' class='url'>pcapr</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">August 24, 2009 at 9:06 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>You should check out Collaborative Network Forensics that we just launched on pcapr:http://www.pcapr.net/forensicsYou get full-text and contextual search/extract on over 25 million packets!</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike15038" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-14913">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						MDS						</span>
+						<br />
+						<span class="comment-meta commentmetadata">August 21, 2009 at 4:41 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Brilliant stuff! Nice to see people using the command line.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike14913" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-14829">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Shiva Persaud						</span>
+						<br />
+						<span class="comment-meta commentmetadata">August 14, 2009 at 9:37 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Raffy, thanks for the compliment and for the links. I'll definitely check out AfterGlow.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike14829" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-14823">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://secviz.org' rel='external nofollow' class='url'>Raffy</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">August 14, 2009 at 9:21 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>I like your post! Great work. Have you seen http://secviz.org? People use all kinds of other tools to visualize security related data. One other tool is AfterGlow (http://afterglow.sf.net). It is very simple to use and lets you configure your graphs via a property file. It makes it really easy to assign color, shape, etc. to your nodes. Check it out.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike14823" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Security:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogSecurity', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogSecurity" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Security</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscosecurity?ref=nf"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/ciscosecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://youtubecisco.com/security"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogSecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.cert.org/blogs/vuls/" target="_blank">CERT Vulnerability Analysis</a></li>
+                      <li><a href="http://blogs.technet.com/b/srd/" target="_blank">Microsoft Security Research & Defense</a></li>
+                      <li><a href="http://isc.sans.edu/index.html" target="_blank">SANS Internet Storm Center</a></li>
+                      <li><a href="http://www.schneier.com/" target="_blank">Schneier on Security</a></li>
+                  </ul>
+              <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="http://www.cisco.com/en/US/products/products_security_advisories_listing.html" target="_blank">Advisories and Responses</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/cyberRiskReport.x" target="_blank">Cyber Risk Reports</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/intelliPapers.x?i=55" target="_blank">Security Best Practices</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/home.x" target="_blank">Security Intelligence Operations</a></li>
+                        <li><a href="http://www.cisco.com/en/US/products/hw/vpndevc/index.html" target="_blank">Security Products</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscosecurity?ref=nf'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/ciscosecurity'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 12901;
+			var orig_count = 0;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1JDVAEh&text=Finding A Needle In A PCAP&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/finding-a-needle-in-a-pcap&title=Finding A Needle In A PCAP" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/finding-a-needle-in-a-pcap" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/finding-a-needle-in-a-pcap" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Finding A Needle In A PCAP&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0AFinding A Needle In A PCAP%0A%0Ahttps://blogs.cisco.com/security/finding-a-needle-in-a-pcap%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

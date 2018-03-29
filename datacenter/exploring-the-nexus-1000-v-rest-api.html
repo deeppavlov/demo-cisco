@@ -1,0 +1,1799 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Exploring the Nexus 1000 V REST API</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; Exploring the Nexus 1000 V REST API Comments Feed" href="https://blogs.cisco.com/datacenter/exploring-the-nexus-1000-v-rest-api/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"132077"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Cisco Partner Weekly Rewind – November 27, 2013' href='https://blogs.cisco.com/partner/cisco-partner-weekly-rewind-november-27-2013' />
+<link rel='next' title='Driving to work in Internet of Everything' href='https://blogs.cisco.com/perspectives/driving-to-work-in-internet-of-everything' />
+
+<link rel="canonical" href="https://blogs.cisco.com/datacenter/exploring-the-nexus-1000-v-rest-api" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=132077' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Exploring the Nexus 1000 V REST API"/>
+  <meta property="og:url" content="https://blogs.cisco.com/datacenter/exploring-the-nexus-1000-v-rest-api"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2013-11-27T09:05:22+00:00"/>
+  <meta property="article:modified_time" content="2013-12-02T12:56:54+00:00" />
+  <meta property="og:updated_time" content="2013-12-02T12:56:54+00:00" />
+  <meta property="article:section" content="Data Center"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Exploring the Nexus 1000 V REST API"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/datacenter/exploring-the-nexus-1000-v-rest-api"/>
+  <meta name="twitter:description" content="Out with the old and in with the new and honestly I couldn’t be happier with the new that’s coming in. What is the new that I’m talking about? The Nexus 1000V REST API of course.
+
+
+
+I just finished writing scripts to manage (create, modify, delete) vlans and port-profiles on a Nexus 1000V using expe"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:creator" content="@http://twitter.com/johnamcdonough"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521452751";
+		var sig = "11f2848053484526c98384705184ae7d";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1FaR1Sc&text=Exploring the Nexus 1000 V REST API&via=CiscoDC" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/datacenter/exploring-the-nexus-1000-v-rest-api&title=Exploring the Nexus 1000 V REST API" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/datacenter/exploring-the-nexus-1000-v-rest-api" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/datacenter/exploring-the-nexus-1000-v-rest-api" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Exploring the Nexus 1000 V REST API&body=I saw this post on Cisco Data Center blog and thought you might like to read it.%0A%0AExploring the Nexus 1000 V REST API%0A%0Ahttps://blogs.cisco.com/datacenter/exploring-the-nexus-1000-v-rest-api%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/datacenter/'>Data Center</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category5.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Data Center  						</span>
+						<h1 id="post-132077" class="kindle_title title">Exploring the Nexus 1000 V REST API</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1486568506-bpthumb.jpg"></div><div class="author_rewards_box">			<ul class = "nitro_author132077 bunchballAwards">
+		<li>
+			<div class = "nitro_badge badgenitro_author132077">
+			</div>
+			<div class = "nitro_points pointsnitro_author132077">
+			</div>
+		</li>
+		<script>
+var nitroName = 'jomcdono';
+var sessionKey = '';
+
+
+nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "postBadges", "nitro_author132077");</script>
+
+		</ul>
+		</ul>
+	<div class = "clear"></div>
+</div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/johnmcdonough" title="Posts by John McDonough" rel="author">John McDonough</a> - November 27, 2013 - 1 Comment      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p>Out with the old and in with the new and honestly I couldn’t be happier with the new that’s coming in. What is the new that I’m talking about? The <a title="<font color="red">Nexus</font> 1000V REST <font color="red">API</font>" href="http://www.cisco.com/en/US/partner/docs/switches/datacenter/nexus1000/sw/4_2_1_s_v_2_2_1_a/REST_API/b_REST_API_Config_Guide_4_2_1_SV2_2_1a.html" target="_blank">Nexus 1000V REST API</a> of course.</p>
+<p>I just finished writing <font color="red">scripts</font> to manage (create, modify, delete) <font color="red">vlans</font> and port-profiles on a <font color="red">Nexus</font> 1000V using expect. The <font color="red">scripts</font> work fine, I’m using <font color="red">PowerShell</font> as the main <font color="red">script</font> and it calls out to expect and ssh running in a Cygwin environment, however it would be nice to use the REST <font color="red">API</font>, and do everything from <font color="red">PowerShell</font> or the language of your choice.</p>
+<p>The customer I did the work for has multiple 1000V deployments and wanted to automate some aspects of the 1000V administration. <font color="red">Vlan</font> provisioning and port-profile creation seemed to be obvious choices.</p>
+<p><span id="more-132077"></span></p>
+<p>I wrote an expect <font color="red">script</font> to check for the existence of one or more <font color="red">vlans</font> and an expect <font color="red">script</font> to check for the existence of a specific port-profile. Here’s the important part of that code;</p>
+<p><!-- HTML generated using hilite.me --></p>
+<div style="background: #ffffff;overflow: auto;width: auto;border: solid gray;border-width: .1em .1em .1em .8em;padding: .2em .6em">
+<table>
+<tbody>
+<tr>
+<td>
+<pre style="margin: 0;line-height: 125%"> 1
+
+ 2
+
+ 3
+
+ 4
+
+ 5
+
+ 6
+
+ 7
+
+ 8
+
+ 9
+
+10
+
+11
+
+12
+
+13</pre>
+</td>
+<td>
+<pre style="margin: 0;line-height: 125%"><span style="color: #00aaaa">set</span> <font color="red">vlans</font> [split <span style="color: #ff0000;background-color: #ffaaaa">$</span><font color="red">vlan</font>IDs <span style="color: #aa5500">","</span>]
+
+foreach vlan <span style="color: #ff0000;background-color: #ffaaaa">$</span><font color="red">vlans</font> {
+
+  <span style="color: #00aaaa">set</span> chkVlanCmd <span style="color: #aa5500">"show <font color="red">vlan</font> brief | egrep '^$<font color="red">vlan</font> ' | count | sed 's/^/$<font color="red">vlan</font>:/' | no-more"</span>
+
+  send <span style="color: #aa5500">"$chkVlanCmd\r"</span>
+
+  expect {
+
+    <span style="color: #aa5500">":0"</span> {
+
+      puts <span style="color: #aa5500">"$<font color="red">vlan</font>:0"</span>
+
+    }
+
+    <span style="color: #aa5500">":1"</span> {
+
+      puts <span style="color: #aa5500">"$<font color="red">vlan</font>:1"</span>
+
+    }
+
+  }
+
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>$vlanIDs is set from the <font color="red">command line</font> it is a commas separated list of <font color="red">vlans</font> to check for, the <font color="red">script</font> loops through them one by one, using the “show <font color="red">vlan</font> brief” command to display the <font color="red">vlan</font>. Additionally the <font color="red">script</font> uses the <font color="red">Nexus</font> <font color="red">command line</font> <font color="red">capabilities</font> to run egrep, count and sed on the output of “show <font color="red">vlan</font> brief”<br />
+If the input <font color="red">vlan</font> list was “100,101,200,201” and <font color="red">vlan</font> 100 and 201 exist then output of the <font color="red">script</font> will be</p>
+<blockquote><p>100:1<br />
+101:0<br />
+200:0<br />
+201:1</p></blockquote>
+<p>Similarly the input to the expect <font color="red">script</font> that checks for the existence of the port-profile will output the port-profile name with either a :0 or :1 appended to it, :0 for not found and :1 for found.</p>
+<p>I call the expect <font color="red">scripts</font> from a <font color="red">PowerShell</font> and use the formatted output from expect to make logic decisions in the <font color="red">PowerShell</font> <font color="red">script</font>. With the new <font color="red">Nexus</font> 1000V REST <font color="red">API</font> I can run everything from <font color="red">PowerShell</font> and get the results I need to make the correct decisions to either add the <font color="red">vlan</font> or not, or to create the port-profile or just update it.</p>
+<p>To retrieve <font color="red">Vlans</font> via the <font color="red">Nexus</font> 1000V REST <font color="red">API</font> for the <font color="red">VMware</font> version of the 1000V this code does the trick.<br />
+<!-- HTML generated using hilite.me --></p>
+<div style="background: #ffffff;overflow: auto;width: auto;border: solid gray;border-width: .1em .1em .1em .8em;padding: .2em .6em">
+<table>
+<tbody>
+<tr>
+<td>
+<pre style="margin: 0;line-height: 125%">1
+
+2
+
+3
+
+4</pre>
+</td>
+<td>
+<pre style="margin: 0;line-height: 125%"><span style="color: #aa0000">$n1kUser</span> = <span style="color: #aa5500">"admin"</span>
+
+<span style="color: #aa0000">$n1kPass</span> = <span style="color: #00aaaa">ConvertTo-SecureString</span> -String <span style="color: #aa5500">"admin"</span> -AsPlainText -Force
+
+<span style="color: #aa0000">$n1kCred</span> = <span style="color: #00aaaa">New-Object</span> -TypeName System.Management.Automation.PSCredential -ArgumentList <span style="color: #aa0000">$n1kUser</span>, <span style="color: #aa0000">$n1kPass</span>
+
+<span style="color: #aa0000">$n1kVlans</span> = <span style="color: #00aaaa">Invoke-RestMethod</span> -<font color="red">Uri</font> http<span style="color: #ff0000;background-color: #ffaaaa">:</span>//172.21.67.89/api/vlan -<font color="red">Credential</font> <span style="color: #aa0000">$n1kCred</span></pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The command will return either <font color="red">XML</font> or <font color="red">JSON</font>, by default <font color="red">XML</font> is returned.  The retuned <font color="red">XML</font> looks like this <!-- HTML generated using hilite.me --></p>
+<div style="background: #ffffff;overflow: auto;width: auto;border: solid gray;border-width: .1em .1em .1em .8em;padding: .2em .6em">
+<table>
+<tbody>
+<tr>
+<td>
+<pre style="margin: 0;line-height: 125%"> 1
+
+ 2
+
+ 3
+
+ 4
+
+ 5
+
+ 6
+
+ 7
+
+ 8
+
+ 9
+
+10
+
+11
+
+12
+
+13
+
+14
+
+15
+
+16
+
+17
+
+18
+
+19</pre>
+</td>
+<td>
+<pre style="margin: 0;line-height: 125%"><span style="color: #4c8317">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+
+<span style="color: #1e90ff;font-weight: bold">&lt;set</span> <span style="color: #1e90ff">name=</span><span style="color: #aa5500">"vlan_set"</span><span style="color: #1e90ff;font-weight: bold">&gt;</span>
+
+  <span style="color: #1e90ff;font-weight: bold">&lt;instance</span> <span style="color: #1e90ff">name=</span><span style="color: #aa5500">"208"</span> <span style="color: #1e90ff">url=</span><span style="color: #aa5500">"/api/vlan/208"</span><span style="color: #1e90ff;font-weight: bold">&gt;</span>
+
+    <span style="color: #1e90ff;font-weight: bold">&lt;properties&gt;</span>
+
+      <span style="color: #1e90ff;font-weight: bold">&lt;id&gt;</span>208<span style="color: #1e90ff;font-weight: bold">&lt;/id&gt;</span>
+
+      <span style="color: #1e90ff;font-weight: bold">&lt;state&gt;</span>active<span style="color: #1e90ff;font-weight: bold">&lt;/state&gt;</span>
+
+      <span style="color: #1e90ff;font-weight: bold">&lt;name&gt;</span>VLAN0208<span style="color: #1e90ff;font-weight: bold">&lt;/name&gt;</span>
+
+      <span style="color: #1e90ff;font-weight: bold">&lt;shutdown&gt;</span>false<span style="color: #1e90ff;font-weight: bold">&lt;/shutdown&gt;</span>
+
+    <span style="color: #1e90ff;font-weight: bold">&lt;/properties&gt;</span>
+
+  <span style="color: #1e90ff;font-weight: bold">&lt;/instance&gt;</span>
+
+  <span style="color: #1e90ff;font-weight: bold">&lt;instance</span> <span style="color: #1e90ff">name=</span><span style="color: #aa5500">"610"</span> <span style="color: #1e90ff">url=</span><span style="color: #aa5500">"/api/vlan/610"</span><span style="color: #1e90ff;font-weight: bold">&gt;</span>
+
+    <span style="color: #1e90ff;font-weight: bold">&lt;properties&gt;</span>
+
+      <span style="color: #1e90ff;font-weight: bold">&lt;id&gt;</span>610<span style="color: #1e90ff;font-weight: bold">&lt;/id&gt;</span>
+
+      <span style="color: #1e90ff;font-weight: bold">&lt;state&gt;</span>active<span style="color: #1e90ff;font-weight: bold">&lt;/state&gt;</span>
+
+      <span style="color: #1e90ff;font-weight: bold">&lt;name&gt;</span>VLAN0610<span style="color: #1e90ff;font-weight: bold">&lt;/name&gt;</span>
+
+      <span style="color: #1e90ff;font-weight: bold">&lt;shutdown&gt;</span>false<span style="color: #1e90ff;font-weight: bold">&lt;/shutdown&gt;</span>
+
+    <span style="color: #1e90ff;font-weight: bold">&lt;/properties&gt;</span>
+
+  <span style="color: #1e90ff;font-weight: bold">&lt;/instance&gt;</span>
+
+<span style="color: #1e90ff;font-weight: bold">&lt;/set&gt;</span></pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Then I could do the following to list the returned <font color="red">Vlans</font></p>
+<blockquote><p>$n1kVlans.set.instance.properties.id<br />
+208<br />
+610</p></blockquote>
+<p>You could specify -Headers @{&#8220;Accept&#8221;=&#8221;application/json&#8221;} and get back <font color="red">JSON</font> instead. Unfortunately there is a bug in <font color="red">PowerShell</font> 3.0 that does not allow for the manipulation of the some web request headers, Accept being one of them. The bug has been reported as fixed for <font color="red">PowerShell</font> 4.0. That does not mean that <font color="red">PowerShell</font> 3.0 cannot be used to retrieve <font color="red">JSON</font> output, it can, just not via the Invoke-RestMethod <font color="red">cmdlet</font>.</p>
+<p>This code will produce <font color="red">JSON</font> output, using basic web authentication. <!-- HTML generated using hilite.me --></p>
+<div style="background: #ffffff;overflow: auto;w<font color="red">id</font>th: auto;border: sol<font color="red">id</font> gray;border-w<font color="red">id</font>th: .1em .1em .1em .8em;padding: .2em .6em">
+<table>
+<tbody>
+<tr>
+<td>
+<pre style="margin: 0;line-height: 125%"> 1
+
+ 2
+
+ 3
+
+ 4
+
+ 5
+
+ 6
+
+ 7
+
+ 8
+
+ 9
+
+10
+
+11
+
+12
+
+13
+
+14
+
+15
+
+16
+
+17
+
+18
+
+19
+
+20
+
+21
+
+22
+
+23
+
+24
+
+25
+
+26
+
+27</pre>
+</td>
+<td>
+<pre style="margin: 0;line-height: 125%"><span style="color: #0000aa">function</span> reqREST ()
+
+{
+
+    <span style="color: #0000aa">param</span>(
+
+        <span style="color: #aa0000">[string]</span> <span style="color: #aa0000">$inUri</span>    = <span style="color: #aa0000">$null</span>,
+
+        <span style="color: #aa0000">[string]</span> <span style="color: #aa0000">$inPath</span>   = <span style="color: #aa0000">$null</span>,
+
+        <span style="color: #aa0000">[string]</span> <span style="color: #aa0000">$inCreds</span>  = <span style="color: #aa0000">$null</span>,
+
+        <span style="color: #aa0000">[string]</span> <span style="color: #aa0000">$inMethod</span> = <span style="color: #aa0000">$null</span>
+
+    )<span style="color: #ff0000;background-color: #ffaaaa">;</span>
+
+
+
+    <span style="color: #aa0000">$encoded</span> =  <span style="color: #aa0000">[System.Convert]</span><span style="color: #ff0000;background-color: #ffaaaa">::</span>ToBase64String(<span style="color: #aa0000">[System.Text.Encoding]</span><span style="color: #ff0000;background-color: #ffaaaa">::</span>UTF8.GetBytes(<span style="color: #aa0000">$inCreds</span>))
+
+    <span style="color: #aa0000">$webRequest</span> = <span style="color: #aa5500">""</span>
+
+    <span style="color: #aa0000">$webRequest</span> = <span style="color: #aa0000">[System.Net.WebRequest]</span><span style="color: #ff0000;background-color: #ffaaaa">::</span>Create( <span style="color: #aa5500">"$inUri/$inPath"</span>)
+
+    <span style="color: #aa0000">$webRequest</span>.PreAuthenticate = <span style="color: #aa0000">$true</span>
+
+    <span style="color: #aa0000">$webRequest</span>.Headers.Add(<span style="color: #aa5500">'Authorization'</span>, <span style="color: #aa5500">"Basic "</span>+<span style="color: #aa0000">$encoded</span>)
+
+    <span style="color: #aa0000">$webRequest</span>.Accept = <span style="color: #aa5500">'application/json'</span>
+
+    <span style="color: #aa0000">$webRequest</span>.Method = <span style="color: #aa0000">$inMethod</span>
+
+    <span style="color: #aa0000">$webRequest</span>.GetResponse()
+
+    <span style="color: #aa0000">[Net.HttpWebResponse]</span> <span style="color: #aa0000">$result</span> = <span style="color: #aa0000">$webRequest</span>.GetResponse()
+
+    <span style="color: #aa0000">[IO.Stream]</span> <span style="color: #aa0000">$stream</span> = <span style="color: #aa0000">$result</span>.GetResponseStream()
+
+    <span style="color: #aa0000">[IO.StreamReader]</span> <span style="color: #aa0000">$reader</span> = <span style="color: #00aaaa">New-Object</span> IO.StreamReader(<span style="color: #aa0000">$stream</span>)
+
+    <span style="color: #aa0000">[string]</span> <span style="color: #aa0000">$output</span> = <span style="color: #aa0000">$reader</span>.ReadToEnd()
+
+    <span style="color: #aa0000">$stream</span>.Flush()
+
+    <span style="color: #aa0000">$stream</span>.Close()
+
+    <span style="color: #aa0000">$output</span>
+
+}
+
+
+
+reqREST <span style="color: #aa5500">"http://172.21.67.89"</span> <span style="color: #aa5500">"api/vlan"</span> <span style="color: #aa5500">"admin:admin"</span> <span style="color: #aa5500">"GET"</span></pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Produces this output</p>
+<p><!-- HTML generated using hilite.me --></p>
+<div style="background: #ffffff;overflow: auto;w<font color="red">id</font>th: auto;border: sol<font color="red">id</font> gray;border-w<font color="red">id</font>th: .1em .1em .1em .8em;padding: .2em .6em">
+<table>
+<tbody>
+<tr>
+<td>
+<pre style="margin: 0;line-height: 125%">1
+
+2
+
+3
+
+4
+
+5
+
+6
+
+7</pre>
+</td>
+<td>
+<pre style="margin: 0;line-height: 125%">{<span style="color: #1e90ff;font-weight: bold">"208"</span>:{<span style="color: #1e90ff;font-weight: bold">"url"</span>:<span style="color: #aa5500">"/api/vlan/208"</span>,<span style="color: #1e90ff;font-weight: bold">"properties"</span>:{<span style="color: #1e90ff;font-weight: bold">"<font color="red">id</font>"</span>:<span style="color: #009999">208</span>,<span style="color: #1e90ff;font-weight: bold">"state"</span>:<span style="color: #aa5500">"active"</span>,<span style="color: #1e90ff;font-weight: bold">"name"</span>:<span style="color: #aa5500">"VLAN0208"</span>,<span style="color: #1e90ff;font-weight: bold">"shutdown"</span>:<span style="color: #0000aa">false</span>}},
+
+<span style="color: #1e90ff;font-weight: bold">"610"</span>:{<span style="color: #1e90ff;font-weight: bold">"url"</span>:<span style="color: #aa5500">"/api/vlan/610"</span>,<span style="color: #1e90ff;font-weight: bold">"properties"</span>:{<span style="color: #1e90ff;font-weight: bold">"id"</span>:<span style="color: #009999">610</span>,<span style="color: #1e90ff;font-weight: bold">"state"</span>:<span style="color: #aa5500">"active"</span>,<span style="color: #1e90ff;font-weight: bold">"name"</span>:<span style="color: #aa5500">"VLAN0610"</span>,<span style="color: #1e90ff;font-weight: bold">"shutdown"</span>:<span style="color: #0000aa">false</span>}},
+
+<span style="color: #1e90ff;font-weight: bold">"613"</span>:{<span style="color: #1e90ff;font-weight: bold">"url"</span>:<span style="color: #aa5500">"/api/vlan/613"</span>,<span style="color: #1e90ff;font-weight: bold">"properties"</span>:{<span style="color: #1e90ff;font-weight: bold">"id"</span>:<span style="color: #009999">613</span>,<span style="color: #1e90ff;font-weight: bold">"state"</span>:<span style="color: #aa5500">"active"</span>,<span style="color: #1e90ff;font-weight: bold">"name"</span>:<span style="color: #aa5500">"VLAN0613"</span>,<span style="color: #1e90ff;font-weight: bold">"shutdown"</span>:<span style="color: #0000aa">false</span>}},
+
+<span style="color: #1e90ff;font-weight: bold">"1"</span>:{<span style="color: #1e90ff;font-weight: bold">"url"</span>:<span style="color: #aa5500">"/api/vlan/1"</span>,<span style="color: #1e90ff;font-weight: bold">"properties"</span>:{<span style="color: #1e90ff;font-weight: bold">"id"</span>:<span style="color: #009999">1</span>,<span style="color: #1e90ff;font-weight: bold">"state"</span>:<span style="color: #aa5500">"active"</span>,<span style="color: #1e90ff;font-weight: bold">"name"</span>:<span style="color: #aa5500">"default"</span>,<span style="color: #1e90ff;font-weight: bold">"shutdown"</span>:<span style="color: #0000aa">false</span>}},
+
+<span style="color: #1e90ff;font-weight: bold">"611"</span>:{<span style="color: #1e90ff;font-weight: bold">"url"</span>:<span style="color: #aa5500">"/api/vlan/611"</span>,<span style="color: #1e90ff;font-weight: bold">"properties"</span>:{<span style="color: #1e90ff;font-weight: bold">"id"</span>:<span style="color: #009999">611</span>,<span style="color: #1e90ff;font-weight: bold">"state"</span>:<span style="color: #aa5500">"active"</span>,<span style="color: #1e90ff;font-weight: bold">"name"</span>:<span style="color: #aa5500">"VLAN0611"</span>,<span style="color: #1e90ff;font-weight: bold">"shutdown"</span>:<span style="color: #0000aa">false</span>}},
+
+<span style="color: #1e90ff;font-weight: bold">"33"</span>:{<span style="color: #1e90ff;font-weight: bold">"url"</span>:<span style="color: #aa5500">"/api/vlan/33"</span>,<span style="color: #1e90ff;font-weight: bold">"properties"</span>:{<span style="color: #1e90ff;font-weight: bold">"id"</span>:<span style="color: #009999">33</span>,<span style="color: #1e90ff;font-weight: bold">"state"</span>:<span style="color: #aa5500">"active"</span>,<span style="color: #1e90ff;font-weight: bold">"name"</span>:<span style="color: #aa5500">"VLAN0033"</span>,<span style="color: #1e90ff;font-weight: bold">"shutdown"</span>:<span style="color: #0000aa">false</span>}},
+
+<span style="color: #1e90ff;font-weight: bold">"614"</span>:{<span style="color: #1e90ff;font-weight: bold">"url"</span>:<span style="color: #aa5500">"/api/vlan/614"</span>,<span style="color: #1e90ff;font-weight: bold">"properties"</span>:{<span style="color: #1e90ff;font-weight: bold">"id"</span>:<span style="color: #009999">614</span>,<span style="color: #1e90ff;font-weight: bold">"state"</span>:<span style="color: #aa5500">"active"</span>,<span style="color: #1e90ff;font-weight: bold">"name"</span>:<span style="color: #aa5500">"VLAN0614"</span>,<span style="color: #1e90ff;font-weight: bold">"shutdown"</span>:<span style="color: #0000aa">false</span>}}}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>A port-profile request and it&#8217;s output</p>
+<p><!-- HTML generated using hilite.me --></p>
+<div style="background: #ffffff;overflow: auto;width: auto;border: solid gray;border-width: .1em .1em .1em .8em;padding: .2em .6em">
+<table>
+<tbody>
+<tr>
+<td>
+<pre style="margin: 0;line-height: 125%">1</pre>
+</td>
+<td>
+<pre style="margin: 0;line-height: 125%">reqREST <span style="color: #aa5500">"http://172.21.67.89"</span> <span style="color: #aa5500">"api/port-profile"</span> <span style="color: #aa5500">"admin:admin"</span> <span style="color: #aa5500">"GET"</span></pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><!-- HTML generated using hilite.me --></p>
+<div style="background: #ffffff;overflow: auto;width: auto;border: solid gray;border-width: .1em .1em .1em .8em;padding: .2em .6em">
+<table>
+<tbody>
+<tr>
+<td>
+<pre style="margin: 0;line-height: 125%">1
+
+2
+
+3
+
+4</pre>
+</td>
+<td>
+<pre style="margin: 0;line-height: 125%">{ <span style="color: #1e90ff;font-weight: bold">"Unused_Or_Quarantine_Uplink"</span>:{<span style="color: #1e90ff;font-weight: bold">"url"</span>:<span style="color: #aa5500">"/api/port-profile/Unused_Or_Quarantine_Uplink"</span>,<span style="color: #1e90ff;font-weight: bold">"properties"</span>:{<span style="color: #1e90ff;font-weight: bold">"minPorts"</span>:<span style="color: #009999">1</span>,<span style="color: #1e90ff;font-weight: bold">"description"</span>:<span style="color: #aa5500">"Port-group created for <font color="red">Nexus1000V</font> internal usage. Do not use."</span>,<span style="color: #1e90ff;font-weight: bold">"<font color="red">capability</font>"</span>:<span style="color: #aa5500">""</span>,<span style="color: #1e90ff;font-weight: bold">"state"</span>:<span style="color: #0000aa">false</span>,<span style="color: #1e90ff;font-weight: bold">"name"</span>:<span style="color: #aa5500">"Unused_Or_Quarantine_Uplink"</span>,<span style="color: #1e90ff;font-weight: bold">"shutdown"</span>:<span style="color: #0000aa">true</span>,<span style="color: #1e90ff;font-weight: bold">"portGroupName"</span>:<span style="color: #aa5500">"Unused_Or_Quarantine_Uplink"</span>,<span style="color: #1e90ff;font-weight: bold">"portBinding"</span>:<span style="color: #aa5500">"static"</span>,<span style="color: #1e90ff;font-weight: bold">"maxPorts"</span>:<span style="color: #009999">32</span>,<span style="color: #1e90ff;font-weight: bold">"type"</span>:<span style="color: #aa5500">"<font color="red">Ethernet</font>"</span>}},
+
+<span style="color: #1e90ff;font-weight: bold">"prd-clnt-uplink"</span>:{<span style="color: #1e90ff;font-weight: bold">"url"</span>:<span style="color: #aa5500">"/api/port-profile/prd-clnt-uplink"</span>,<span style="color: #1e90ff;font-weight: bold">"properties"</span>:{<span style="color: #1e90ff;font-weight: bold">"minPorts"</span>:<span style="color: #009999">1</span>,<span style="color: #1e90ff;font-weight: bold">"description"</span>:<span style="color: #aa5500">""</span>,<span style="color: #1e90ff;font-weight: bold">"switchportMode"</span>:<span style="color: #aa5500">"trunk"</span>,<span style="color: #1e90ff;font-weight: bold">"<font color="red">capability</font>"</span>:<span style="color: #aa5500">""</span>,<span style="color: #1e90ff;font-weight: bold">"state"</span>:<span style="color: #0000aa">false</span>,<span style="color: #1e90ff;font-weight: bold">"type"</span>:<span style="color: #aa5500">"<font color="red">Ethernet</font>"</span>,<span style="color: #1e90ff;font-weight: bold">"name"</span>:<span style="color: #aa5500">"prd-clnt-uplink"</span>,<span style="color: #1e90ff;font-weight: bold">"shutdown"</span>:<span style="color: #0000aa">false</span>,<span style="color: #1e90ff;font-weight: bold">"portGroupName"</span>:<span style="color: #aa5500">"prd-clnt-uplink"</span>,<span style="color: #1e90ff;font-weight: bold">"portBinding"</span>:<span style="color: #aa5500">"static"</span>,<span style="color: #1e90ff;font-weight: bold">"maxPorts"</span>:<span style="color: #009999">32</span>,<span style="color: #1e90ff;font-weight: bold">"switchportTrunkVLANs"</span>:[<span style="color: #009999">10</span>]}},
+
+<span style="color: #1e90ff;font-weight: bold">"Unused_Or_Quarantine_Veth"</span>:{<span style="color: #1e90ff;font-weight: bold">"url"</span>:<span style="color: #aa5500">"/api/port-profile/Unused_Or_Quarantine_Veth"</span>,<span style="color: #1e90ff;font-weight: bold">"properties"</span>:{<span style="color: #1e90ff;font-weight: bold">"minPorts"</span>:<span style="color: #009999">1</span>,<span style="color: #1e90ff;font-weight: bold">"description"</span>:<span style="color: #aa5500">"Port-group created for <font color="red">Nexus1000V</font> internalusage. Do not use."</span>,<span style="color: #1e90ff;font-weight: bold">"<font color="red">capability</font>"</span>:<span style="color: #aa5500">""</span>,<span style="color: #1e90ff;font-weight: bold">"state"</span>:<span style="color: #0000aa">false</span>,<span style="color: #1e90ff;font-weight: bold">"name"</span>:<span style="color: #aa5500">"Unused_Or_Quarantine_Veth"</span>,<span style="color: #1e90ff;font-weight: bold">"shutdown"</span>:<span style="color: #0000aa">true</span>,<span style="color: #1e90ff;font-weight: bold">"portGroupName"</span>:<span style="color: #aa5500">"Unused_Or_Quarantine_Veth"</span>,<span style="color: #1e90ff;font-weight: bold">"portBinding"</span>:<span style="color: #aa5500">"static"</span>,<span style="color: #1e90ff;font-weight: bold">"maxPorts"</span>:<span style="color: #009999">32</span>,<span style="color: #1e90ff;font-weight: bold">"type"</span>:<span style="color: #aa5500">"Vethernet"</span>}},
+
+<span style="color: #1e90ff;font-weight: bold">"profile-02"</span>:{<span style="color: #1e90ff;font-weight: bold">"url"</span>:<span style="color: #aa5500">"/api/port-profile/profile-02"</span>,<span style="color: #1e90ff;font-weight: bold">"properties"</span>:{<span style="color: #1e90ff;font-weight: bold">"minPorts"</span>:<span style="color: #009999">1</span>,<span style="color: #1e90ff;font-weight: bold">"description"</span>:<span style="color: #aa5500">""</span>,<span style="color: #1e90ff;font-weight: bold">"switchportMode"</span>:<span style="color: #aa5500">"access"</span>,<span style="color: #1e90ff;font-weight: bold">"state"</span>:<span style="color: #0000aa">false</span>,<span style="color: #1e90ff;font-weight: bold">"name"</span>:<span style="color: #aa5500">"profile-02"</span>,<span style="color: #1e90ff;font-weight: bold">"<font color="red">capability</font>"</span>:<span style="color: #aa5500">""</span>,<span style="color: #1e90ff;font-weight: bold">"portGroupName"</span>:<span style="color: #aa5500">""</span>,<span style="color: #1e90ff;font-weight: bold">"portBinding"</span>:<span style="color: #aa5500">"static"</span>,<span style="color: #1e90ff;font-weight: bold">"maxPorts"</span>:<span style="color: #009999">32</span>,<span style="color: #1e90ff;font-weight: bold">"type"</span>:<span style="color: #aa5500">"Vethernet"</span>}}}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>These two examples should show you how to eliminate the need for expect and ssh to query information on the <font color="red">Nexus</font> 1000V. Additionally there is a <font color="red">CLI</font> <font color="red">capability</font> in the REST <font color="red">API</font>. The <a title="<font color="red">Nexus</font> 1000 V REST <font color="red">API</font>" href="http://www.cisco.com/en/US/partner/docs/switches/datacenter/nexus1000/sw/4_2_1_s_v_2_2_1_a/REST_API/b_REST_API_Config_Guide_4_2_1_SV2_2_1a.html" target="_blank">Nexus 1000V REST API</a> user guide, for the <font color="red">VMware</font> version of the <font color="red">Nexus</font> 1000V REST <font color="red">API</font> has an example call to the <font color="red">CLI</font> to save the running configuration.</p>
+<blockquote><p>curl -u username:<font color="red">password</font> 10.10.10.2/api/cli -d &#8216;{&#8220;<font color="red">cmd</font>&#8221;: &#8220;copy r s&#8221;}&#8217; –i</p></blockquote>
+<p>This command will copy the running-config to the startup-config. The example uses curl but it easily translates to the Invoke-RESTMethod</p>
+<blockquote><p>Invoke-RestMethod -<font color="red">Uri</font> http://172.21.67.89/api/cli -<font color="red">Credential</font> $n1kCred -Method POST -Body &#8216;{&#8220;<font color="red">cmd</font>&#8221;: &#8220;copy r s&#8221;}&#8217;</p></blockquote>
+<p>But it seems as if any <font color="red">cli</font> command will work, e.g. “show <font color="red">vlan</font> brief”</p>
+<blockquote>
+<pre>PS C:\Windows\<font color="red">system32</font>&gt; Invoke-RestMethod -<font color="red">Uri</font> http://172.21.67.89/api/cli -<font color="red">Credential</font> $n1kCred -Method POST -Body '{"<font color="red">cmd</font>": "show <font color="red">vlan</font> brief"}'
+
+
+
+<font color="red">VLAN</font> Name Status Ports
+
+---- -------------------------------- --------- -------------------------------
+
+1 default active
+
+33 VLAN0033 active
+
+208 VLAN0208 active
+
+610 VLAN0610 active
+
+611 VLAN0611 active
+
+613 VLAN0613 active
+
+614 VLAN0614 active</pre>
+</blockquote>
+<p>So you can still sort of have your expect, if you were thinking you would miss it. I showed how to query <font color="red">vlans</font> and port-profiles and get back <font color="red">XML</font> or <font color="red">JSON</font>, but what about creating them? The process is outlined in the user guide using curl for a port-profile. Showing a creation, an update and a deletion.</p>
+<blockquote><p>curl -X POST -u admin:<font color="red">password</font> 10.10.10.2/api/port-profile -d &#8216;{ &#8220;name&#8221; : &#8220;profile1&#8221;, &#8220;switchportMode&#8221; : &#8220;access&#8221;, &#8220;shutdown&#8221; : &#8220;false&#8221;}&#8217;</p>
+<p>Successfully created &#8220;<font color="red">port-profile profile1</font>&#8221;</p></blockquote>
+<p>&nbsp;</p>
+<blockquote><p>curl -X POST -u admin:<font color="red">password</font> 10.10.10.2/api/port-profile/profile1 -d &#8216;{ &#8220;switchportMode&#8221; : &#8220;trunk&#8221;, &#8220;shutdown&#8221; : &#8220;false&#8221;}’</p>
+<p>Successfully modified &#8220;<font color="red">port-profile profile1</font>&#8221;</p></blockquote>
+<p>&nbsp;</p>
+<blockquote><p>curl -u admin:<font color="red">password</font> -X DELETE 10.10.10.2/api/port-profile/profile1</p>
+<p>Successfully deleted &#8220;<font color="red">port-profile profile1</font>&#8221;</p></blockquote>
+<p>In <font color="red">PowerShell</font> it is an easy translation.</p>
+<blockquote><p>PS C:\Windows\<font color="red">system32</font>&gt; Invoke-RestMethod -<font color="red">Uri</font> http://172.21.67.89/api/port-profile -<font color="red">Credential</font> $n1kCred -Method POST -Body &#8216;{ &#8220;name&#8221; : &#8220;profile1&#8221;, &#8220;switchportMode&#8221; : &#8220;access&#8221;, &#8220;shutdown&#8221; : &#8220;false&#8221;}&#8217;<br />
+Successfully created &#8220;<font color="red">port-profile profile1</font>&#8221;</p>
+<p>PS C:\Windows\<font color="red">system32</font>&gt; Invoke-RestMethod -<font color="red">Uri</font> http://172.21.67.89/api/port-profile/profile1 -<font color="red">Credential</font> $n1kCred -Method POST -Body &#8216;{ &#8220;switchportMode&#8221; : &#8220;trunk&#8221;, &#8220;shutdown&#8221; : &#8220;false&#8221;}&#8217;<br />
+Successfully modified &#8220;<font color="red">port-profile profile1</font>&#8243;</p>
+<p>PS C:\Windows\<font color="red">system32</font>&gt; Invoke-RestMethod -<font color="red">Uri</font> http://172.21.67.89/api/port-profile/profile1 -<font color="red">Credential</font> $n1kCred -Method DELETE&#8221;</p>
+<p>Successfully deleted &#8220;<font color="red">port-profile profile1</font>&#8221;</p></blockquote>
+<p>The same sequence for a <font color="red">VLAN</font>, <font color="red">vlan</font> 2020</p>
+<blockquote><p>PS C:\Windows\<font color="red">system32</font>&gt; Invoke-RestMethod -<font color="red">Uri</font> http://172.21.67.89/api/vlan -<font color="red">Credential</font> $n1kCred -Method POST -Body &#8216;{ &#8220;<font color="red">id</font>&#8221; : &#8220;2020&#8221;, &#8220;name&#8221; : &#8220;<font color="red">vlan</font>2020&#8221;, &#8220;state&#8221; : &#8220;active&#8221;, &#8220;shutdown&#8221; : &#8220;false&#8221;}&#8217;<br />
+Successfully created &#8220;vlan 2020&#8221;</p>
+<p>PS C:\Windows\<font color="red">system32</font>&gt; Invoke-RestMethod -<font color="red">Uri</font> http://172.21.67.89/api/vlan/2020 -<font color="red">Credential</font> $n1kCred -Method POST -Body &#8216;{ &#8220;<font color="red">id</font>&#8221; : &#8220;2020&#8221;, &#8220;name&#8221; : &#8220;<font color="red">vlan</font>2020&#8221;, &#8220;state&#8221; :&#8221;active&#8221;, &#8220;shutdown&#8221; : &#8220;true&#8221;}&#8217;<br />
+Successfully modified &#8220;vlan 2020&#8221;</p>
+<p>PS C:\Windows\<font color="red">system32</font>&gt; Invoke-RestMethod -<font color="red">Uri</font> http://172.21.67.89/api/vlan/2020 -<font color="red">Credential</font> $n1kCred -Method DELETE<br />
+Successfully deleted &#8220;<font color="red">vlan</font> 2020&#8221;</p></blockquote>
+<p>When creating or modifying an entity, whether it is a <font color="red">VLAN</font> or a port-profile there are available attributes that can be specified. To get those attributes access the <font color="red">metadata</font> for the entity.</p>
+<blockquote><p>PS C:\Windows\<font color="red">system32</font>&gt; Invoke-RestMethod -<font color="red">Uri</font> http://172.21.67.89/api/vlan?meta -<font color="red">Credential</font> $n1kCred<br />
+Invoke-RestMethod : Querying <font color="red">metadata</font> is not implemented for MIME type &#8220;application/xml&#8221;.</p></blockquote>
+<p>The error is because <font color="red">metadata</font> comes back as <font color="red">JSON</font>, let’s try specifying a Content Type</p>
+<blockquote><p>PS C:\Windows\<font color="red">system32</font>&gt; Invoke-RestMethod -<font color="red">Uri</font> http://172.21.67.89/api/vlan?meta -<font color="red">Credential</font> $n1kCred -ContentType &#8220;applicaiton/json&#8221;<br />
+Invoke-RestMethod : Querying <font color="red">metadata</font> is not implemented for MIME type &#8220;application/xml&#8221;.</p></blockquote>
+<p>But that does not help because -Content-Type specifies the type of content that is being sent, it is the Accept header that allows for <font color="red">JSON</font> to be returned and we will need to utilize the <font color="red">PowerShell</font> work around from above for the Accept header.</p>
+<p>PS C:\Windows\<font color="red">system32</font>&gt; reqREST &#8220;http://172.21.67.89&#8221; &#8220;api/vlan?meta&#8221; &#8220;admin:admin&#8221; &#8220;GET&#8221;<br />
+<!-- HTML generated using hilite.me --></p>
+<div style="background: #ffffff;overflow: auto;w<font color="red">id</font>th: auto;border: solid gray;border-width: .1em .1em .1em .8em;padding: .2em .6em">
+<table>
+<tbody>
+<tr>
+<td>
+<pre style="margin: 0;line-height: 125%"> 1
+
+ 2
+
+ 3
+
+ 4
+
+ 5
+
+ 6
+
+ 7
+
+ 8
+
+ 9
+
+10
+
+11
+
+12
+
+13
+
+14
+
+15
+
+16
+
+17
+
+18
+
+19
+
+20
+
+21
+
+22
+
+23
+
+24
+
+25
+
+26
+
+27
+
+28
+
+29
+
+30
+
+31
+
+32
+
+33
+
+34
+
+35
+
+36
+
+37</pre>
+</td>
+<td>
+<pre style="margin: 0;line-height: 125%">{
+
+  <span style="color: #1e90ff;font-weight: bold">"class"</span>: {
+
+    <span style="color: #1e90ff;font-weight: bold">"operations"</span>: {
+
+      <span style="color: #1e90ff;font-weight: bold">"get"</span>: <span style="color: #aa5500">"true"</span>,
+
+      <span style="color: #1e90ff;font-weight: bold">"create"</span>: <span style="color: #aa5500">"true"</span>,
+
+      <span style="color: #1e90ff;font-weight: bold">"enum"</span>: <span style="color: #aa5500">"true"</span>,
+
+      <span style="color: #1e90ff;font-weight: bold">"query"</span>: <span style="color: #aa5500">"false"</span>,
+
+      <span style="color: #1e90ff;font-weight: bold">"set"</span>: <span style="color: #aa5500">"true"</span>,
+
+      <span style="color: #1e90ff;font-weight: bold">"delete"</span>: <span style="color: #aa5500">"true"</span>
+
+    },
+
+    <span style="color: #1e90ff;font-weight: bold">"key"</span>: <span style="color: #aa5500">"id"</span>,
+
+    <span style="color: #1e90ff;font-weight: bold">"properties"</span>: {
+
+      <span style="color: #1e90ff;font-weight: bold">"shutdown"</span>: {
+
+        <span style="color: #1e90ff;font-weight: bold">"attrib"</span>: <span style="color: #aa5500">"rw"</span>,
+
+        <span style="color: #1e90ff;font-weight: bold">"type"</span>: <span style="color: #aa5500">"boolean"</span>,
+
+        <span style="color: #1e90ff;font-weight: bold">"doc"</span>: <span style="color: #aa5500">"Shut State of the <font color="red">vlan</font>"</span>
+
+      },
+
+      <span style="color: #1e90ff;font-weight: bold">"name"</span>: {
+
+        <span style="color: #1e90ff;font-weight: bold">"attrib"</span>: <span style="color: #aa5500">"rw"</span>,
+
+        <span style="color: #1e90ff;font-weight: bold">"type"</span>: <span style="color: #aa5500">"string"</span>,
+
+        <span style="color: #1e90ff;font-weight: bold">"doc"</span>: <span style="color: #aa5500">"Name of the <font color="red">Vlan</font> (should be unique). Set null value to remove."</span>
+
+      },
+
+      <span style="color: #1e90ff;font-weight: bold">"state"</span>: {
+
+        <span style="color: #1e90ff;font-weight: bold">"attrib"</span>: <span style="color: #aa5500">"rw"</span>,
+
+        <span style="color: #1e90ff;font-weight: bold">"type"</span>: <span style="color: #aa5500">"string"</span>,
+
+        <span style="color: #1e90ff;font-weight: bold">"doc"</span>: <span style="color: #aa5500">"set active or suspended state for the <font color="red">vlan</font>. Set null value to remove."</span>
+
+      },
+
+      <span style="color: #1e90ff;font-weight: bold">"<font color="red">id</font>"</span>: {
+
+        <span style="color: #1e90ff;font-weight: bold">"attrib"</span>: <span style="color: #aa5500">"rw"</span>,
+
+        <span style="color: #1e90ff;font-weight: bold">"type"</span>: <span style="color: #aa5500">"number"</span>,
+
+        <span style="color: #1e90ff;font-weight: bold">"doc"</span>: <span style="color: #aa5500">"<font color="red">Vlan</font> <font color="red">id</font> &lt;1-3967,4048-4093&gt;"</span>
+
+      }
+
+    },
+
+    <span style="color: #1e90ff;font-weight: bold">"doc"</span>: <span style="color: #aa5500">"<font color="red">vlan</font> document"</span>,
+
+    <span style="color: #1e90ff;font-weight: bold">"classname"</span>: <span style="color: #aa5500">"<font color="red">vlan</font>"</span>
+
+  }
+
+}</pre>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>I formatted the output for easier reading, the <font color="red">metadata</font> has a good amount of information in it. I would like to see it expanded in the future to include items like regular expressions and min and max length for strings. Still the <font color="red">Nexus</font> 1000V REST <font color="red">API</font> is significantly better than expect/ssh and brings down the number of moving parts for your scripting, <font color="red">automation</font>, orchestration, etc…</p>
+<p>As always I hope this helps in your scripting and <font color="red">automation</font> efforts. <font color="red">Script</font> formatting was provided by <a title="hilite.me" href="http://hilite.me/">http://hilite.me/</a></p>
+<p><a class="twitter-follow-button" href="https://twitter.com/johnamcdonough">follow @johnamcdonough</a></p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=1000">1000</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=1000v">1000V</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=nexus">nexus</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=ucs">UCS</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">1 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+			<li>
+			<div id="comment-1158538">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Ricardo Maakaroun						</span>
+						<br />
+						<span class="comment-meta commentmetadata">November 28, 2013 at 3:28 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>it seems the Nexu1000v Rest API doesn't cover append to switchportTrunkVLANs, it similar to "switchport trunk allowed vlan add"
+
+
+
+if anyone knows how to do it please let me know</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike1158538" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Data Center:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogDataCenterNetworks', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogDataCenterNetworks" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Data Center</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscodc"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/CiscoDC"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco-data-center-and-cloud?trk=biz-brand-tree-co-name"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/114381144808300038585/posts"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/Ciscodatacenter/presentations"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://www.youtube.com/user/Cisco/videos?sort=dd&view=46&tag_id=UCEWiIE6Htd8mvlOR6YQez1g.3.data-center-virtualization"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogDataCenterNetworks"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+
+	<li id ="twitter_widget" class="widget">
+
+	<!-- white background -->
+	<div class="topContainer">
+	 <div class="twit_container">
+
+		<div id="twit_req">
+
+			<span class="widgetheading">
+				Tweets
+			</span>
+
+			<a href="https://twitter.com/" target="_blank"><span class="twit_logo"></span></a>
+							<div class="clear"></div>
+							</div>
+			<!-- <span class="twit_logo" href="#"></span> -->
+			<div class="clear"></div>
+		</div></div>
+		</li>
+
+<br class="clear" />
+
+<script type = "text/javascript">
+
+jQuery(document).ready(function() {
+ //Calling Twitter Widget
+var url = "https://tts-prod.cloudapps.cisco.com/ciscotweetsapp/api/v1/gettweets/ciscodc/response.jsonp";
+
+		loadSpotlightTweet(url);
+
+		//Metrics for each reply retweet and favorites(loop for each tweet)
+		cdc.util.addMetricsRule(".twit_reply", {linktext: "reply"});
+		cdc.util.addMetricsRule(".twit_retweet", {linktext: " retweet "});
+		cdc.util.addMetricsRule(".twit_favorite", {linktext: " favorite "});
+
+	   //lpos for all clicks inside twitter_widget
+		cdc.util.addMetricsRule("#twitter_widget a[href]", {lpos: "tweets"});
+
+});
+
+String.prototype.parseURL = function() {
+	var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+	return this.replace(exp, "<a href='$1' target='_blank'>$1</a>");
+};
+
+String.prototype.parseUsername = function() {
+	return this.replace(/[@]+[A-Za-z0-9-_]+/g, function(u) {
+		var username = u.replace("@", "");
+		// return u.link("http://twitter.com/" + username);
+		return '<a target="_blank" href="https://twitter.com/' + username
+				+ '">' + u + '</a>';
+		// return u.link(window.open('http://www.google.com', '_blank',
+		// 'toolbar=0,location=0,menubar=0'));
+	});
+
+};
+
+String.prototype.parseHashtag = function() {
+	return this.replace(/[#]+[A-Za-z0-9-_]+/g, function(t) {
+		var tag = t.replace("#", "%23");
+		// tag = tag.replace(tag,"<a href='$1' target='_blank'>$1</a>");
+		// return t.link("https://twitter.com/search?q=" + tag +
+		// "&src=hash");//https://twitter.com/search?q=%23retail&src=hash
+		return '<a target="_blank" href="https://twitter.com/search?q=' + tag
+				+ '&src=hash">' + t + '</a>';
+	});
+
+};
+
+function parseURLEntities(t, arg) {
+	for ( var j = 0; j < arg.length; j++) {
+		t = t.replace(arg[j].url, '<a target="_blank" href="' + arg[j].url
+				+ '">' + arg[j].displayURL + '</a>');
+	}
+	return t;
+}
+
+
+function parseDate(str) {
+	var v = str.split(' ');
+	return new Date(Date.parse(v[1] + " " + v[2] + ", " + v[5] + " " + v[3]
+			+ " UTC"));
+}
+
+function selectDay() {
+	var d = new Date();
+	var weekday = new Array(7);
+	weekday[0] = "Sun";
+	weekday[1] = "Mon";
+	weekday[2] = "Tue";
+	weekday[3] = "Wed";
+	weekday[4] = "Thu";
+	weekday[5] = "Fri";
+	weekday[6] = "Sat";
+
+	var n = weekday[d.getDay()];
+
+	return n;
+}
+
+
+var checkIE = function () {
+    var a = navigator.userAgent;
+    return {
+        ie: a.match(/MSIE\s([^;]*)/)
+    };
+}();
+
+
+function relative_time(time_value) {
+	//time_value is in millisecond (GMT)
+
+	var d = new Date(time_value);//converting to our local PST default Date Format
+	//console.log('PST : ' + d);
+
+	var values = d.toString().split(" ");
+	var time_value_format = values[1] + " " + values[2] + ", " + values[3] + " " + values[4];
+//	console.log(time_value_format);
+
+	var parsed_date = Date.parse(time_value_format);
+    var relative_to = (arguments.length > 1) ? arguments[1] : new Date();
+//    console.log(relative_to.getTime());
+    var delta = parseInt((relative_to.getTime() - parsed_date) / 1000);
+    //delta = delta + (relative_to.getTimezoneOffset() * 60); 	//Not Required: converting into GMT since we are getting in GMT Format
+
+   	if (delta < 60) {
+		return delta + 's';
+	} else if (delta < 120) {
+		return '1m';
+	} else if (delta < (60 * 60)) {
+		return (parseInt(delta / 60)).toString() + 'm';
+	} else if (delta < (120 * 60)) {
+		return '1h';
+	} else if (delta < (24 * 60 * 60)) {
+		return (parseInt(delta / 3600)).toString() + 'h';
+	} else if (delta < (48 * 60 * 60)) {
+		return values[2] + " " + values[1];
+	} else {
+		return values[2] + " " + values[1];
+	}
+
+}
+
+
+	function loadSpotlightTweet(tweetsURL)
+	{
+
+	try {
+		var req = jQuery.ajax({
+			url: tweetsURL,
+			async: false,
+			dataType : "jsonp",
+			timeout : 1000,
+
+		});
+
+			req
+				.success(function(data) {
+			var metricsUser= "";
+
+				  if(data == "")
+					  return;
+
+					var arr1 = [];
+					var displayVal = [];
+
+					for ( var i = data.length-1; i >= 0; i -= 1) {
+
+						arr1.push(data[i].createdAt);
+
+					}
+
+					arr1.sort();
+
+                // Sorting for tweets based on Time
+				for ( var i = arr1.length - 1; i >= 0; i -=1) {
+
+						for ( var j = 0; j < data.length; j++) {
+
+							if (arr1[i] == (data[j].createdAt)) {
+								displayVal.push(j);
+
+							}
+						}
+					}
+
+					//Tweets Multiple Display URL Links
+					var t1 = "";
+					var screen_Name = "";
+					var retweeted = "";
+
+					 // Retweets User/Screen Names.
+					 var RetScreenName = "";
+					 var RetUserName = "" ;
+					 var tUserName = "";
+                     var tScreenName = "";
+                     var profileImg = "";
+
+					var loopArr = [];
+
+					for ( var k = 0; k < displayVal.length; k++) {
+
+						if (data[displayVal[k]].urlEntities != null) {
+							t1 = parseURLEntities(data[displayVal[k]].text,
+									data[displayVal[k]].urlEntities);
+						} else {
+							t1 = (data[displayVal[k]].text)
+									.parseURL();
+						}
+
+						//End Tweets Links
+
+						// Check Re-tweeted Status
+                       retweeted = data[displayVal[k]].retweet;
+
+						if(retweeted)
+						{
+                           RetScreenName = data[displayVal[k]].rtScreenName ;
+						   RetUserName = data[displayVal[k]].rtUserName;
+						   profileImg = data[displayVal[k]].rtProfileImageURL;
+						}
+						else
+						{
+                           RetScreenName = data[displayVal[k]].screenName ;
+						   RetUserName = data[displayVal[k]].userName;
+						   profileImg = data[displayVal[k]].profileImageURLHttps;
+						}
+
+						// Widget contents
+
+						jQuery('.twit_container')
+								.append(
+										 '<div class="single_tweet">'
+     									+ '<div id="twit_avatar" class="twit_avatar">'
+										+ '<img border="0" src="'
+										+ profileImg
+										+ '" width="40" height="40" style="border-radius:5px;"/></div>'
+
+										+ '<div class="twit_content"><div class ="twit_userinfo">'
+										+ '<a class="twit_realname" id="twit_realname" href="https://twitter.com/'
+										+ RetScreenName
+										+ '" target="_blank">'
+										+ RetUserName
+										+ '</a><br/>'
+										+ '<a id="twit_username" href="https://twitter.com/'
+										+ RetScreenName
+										+ '" target="_blank">@'
+										+ RetScreenName
+										+ '</a></div>'
+										+ '<div class ="timestamp"><a href="https://twitter.com/'
+										+ RetScreenName
+										+ '/status/'
+										+ data[displayVal[k]].id
+										+ '" target="_blank">'
+										+ relative_time(data[displayVal[k]].createdAt)
+									    + '</a></div>'
+										+ '<div class="clear"></div></div>'
+										+ '<div class="clear"></div>'
+
+                                        + '<div id="twit_text" class="twit_text">'
+												+ t1.parseUsername()
+														.parseHashtag()
+												+ '</div>'
+
+												//Retweeted Content
+												+ '<div class="re-tweet"><div class="retweet_img"><span class="retweet_badge"><a href="" class="retweeted_icon"></a><span class="retweet_text"> Retweeted By <a class="rtwit" href="https://twitter.com/'
+												+ data[displayVal[k]].screenName
+												+ '" target="_blank">'
+												+ data[displayVal[k]].userName
+												+ '</a></span></span></div></div>'
+
+												+ '<div class ="twit_actions">'
+
+												+ '<a class="twit_reply" href = "https://twitter.com/intent/tweet?in_reply_to='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+ '<a class="twit_retweet" href = "https://twitter.com/intent/retweet?tweet_id='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+ '<a class ="twit_favorite" href = "https://twitter.com/intent/favorite?tweet_id='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+'<span class="twit_follow"><a href="https://twitter.com/intent/follow?screen_name='
+												+ data[displayVal[k]].screenName
+												+ '" target="_blank"></a></span>'
+
+												+ '<div class ="clear"></div>'
+												+ '</div></div></div>');
+
+
+
+
+					// Retweeted Status Show/Hide
+					if (retweeted) {
+							jQuery(".re-tweet").eq(k).css("display", "inline");
+						} else {
+							jQuery(".re-tweet").eq(k).css("display", "none");
+						}
+
+
+	}
+
+					//End Widget Contents
+
+
+                // To sort and match properly
+	            jQuery('div.twit_container').find('.single_tweet:eq(0)').clone().appendTo('.twit_container');
+
+				// Metrics for each tweet <--link id to group links in each tweet content--->
+				// cdc.util.addMetricsRule('.single_tweet a[href]', {lid: '" + @twittusername+ "'});
+
+				jQuery(".single_tweet").each(function(i){
+				    var user = jQuery(this).find('#twit_username').text();
+				    var links = jQuery(".single_tweet:eq("+i+") a[href]").get();
+				    cdc.util.addMetricsRule(links, {lid: user });
+				});
+
+					// Loop Through Tweets
+					jQuery('.topContainer').css('display','block');
+					elems = jQuery('.single_tweet').hide().get();
+
+					(function loop() {
+						var i = 0, pointer = jQuery(elems).filter(':visible:last')[0]
+								|| jQuery(elems).last()[0];
+
+						jQuery(elems).hide();
+
+						while (i < 3) {
+							pointer = jQuery(pointer).next()[0]
+									|| jQuery(elems).first()[0];
+							jQuery(pointer).show();
+							i += 1;
+						}
+
+						setTimeout(loop, 12000); // 12 seconds 120000
+					})();
+
+				//End of looping three tweets
+
+
+
+});
+
+		// End of Reply/Retweet/Fav link mouse over/out
+
+		req
+				.error(function(msg) {
+					console.log("In Error of rate limit exception: " + msg);
+					//alert("Rate Limit Exceeded: Please Check after some time.Thank you for your patience. ");
+
+				});
+
+
+	} catch (err) {
+		txt = "There was an error on this page.\n\n";
+		txt += "Error description: " + err.message + "\n\n";
+		txt += "Click OK to continue.\n\n";
+		alert(txt);
+	}
+}
+</script>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.bladewatch.com/" target="_blank">Blade Watch</a></li>
+                      <li><a href="http://www.infoworld.com/?source=nav_BLOGS" target="_blank">InfoWorld</a></li>
+                      <li><a href="http://www.networkworld.com/blogs/" target="_blank">Network World</a></li>
+                      <li><a href="http://blogs.techrepublic.com.com/" target="_blank">TechRepublic</a></li>
+                      <li><a href="http://datacenterjournal.com/index.php" target="_blank">The Data Center Journal</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscodc'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/CiscoDC'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco-data-center-and-cloud?trk=biz-brand-tree-co-name'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/114381144808300038585/posts'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 132077;
+			var orig_count = 0;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1FaR1Sc&text=Exploring the Nexus 1000 V REST API&via=CiscoDC" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/datacenter/exploring-the-nexus-1000-v-rest-api&title=Exploring the Nexus 1000 V REST API" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/datacenter/exploring-the-nexus-1000-v-rest-api" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/datacenter/exploring-the-nexus-1000-v-rest-api" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Exploring the Nexus 1000 V REST API&body=I saw this post on Cisco Data Center blog and thought you might like to read it.%0A%0AExploring the Nexus 1000 V REST API%0A%0Ahttps://blogs.cisco.com/datacenter/exploring-the-nexus-1000-v-rest-api%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

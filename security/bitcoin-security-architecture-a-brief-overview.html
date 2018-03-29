@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Bitcoin Security Architecture: A Brief Overview</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content="Bitcoin is an emerging technical and economic phenomenon, based upon a self-published paper by Satoshi Nakamoto. Many sites have taken notice of Bitcoin and have published some very thoughtful “what is Bitcoin,” “How-to get started” documentation. But the resources available to address Bitcoin are few, and primarily oriented toward enthusiasts, casual hobbyists, or those interested in making and securing a profit off of Bitcoin generation (“mining”). In this post, we make an effort to extend the Bitcoin security body of knowledge, but from an organizational perspective: what are the risks associated with adopting Bitcoin, intentionally or unintentionally."/><meta name="description" content="Bitcoin is an emerging technical and economic phenomenon, based upon a self-published paper by Satoshi Nakamoto. Many sites have taken notice of Bitcoin and have published some very thoughtful “what is Bitcoin,” “How-to get started” documentation. But the resources available to address Bitcoin are few, and primarily oriented toward enthusiasts, casual hobbyists, or those interested in making and securing a profit off of Bitcoin generation (“mining”). In this post, we make an effort to extend the Bitcoin security body of knowledge, but from an organizational perspective: what are the risks associated with adopting Bitcoin, intentionally or unintentionally."/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; Bitcoin Security Architecture: A Brief Overview Comments Feed" href="https://blogs.cisco.com/security/bitcoin-security-architecture-a-brief-overview/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"36471"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='A Sneak Peek of the UCS 2nd Year Celebration' href='https://blogs.cisco.com/news/a-sneak-peak-of-the-ucs-2nd-year-celebration' />
+<link rel='next' title='Why a Good Enough Network Isn’t' href='https://blogs.cisco.com/news/why-a-good-enough-network-isn%e2%80%99t' />
+
+<link rel="canonical" href="https://blogs.cisco.com/security/bitcoin-security-architecture-a-brief-overview" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=36471' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Bitcoin Security Architecture: A Brief Overview"/>
+  <meta property="og:url" content="https://blogs.cisco.com/security/bitcoin-security-architecture-a-brief-overview"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2011-07-12T14:23:51+00:00"/>
+  <meta property="article:modified_time" content="2011-07-13T05:48:03+00:00" />
+  <meta property="og:updated_time" content="2011-07-13T05:48:03+00:00" />
+  <meta property="article:section" content="Security"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Bitcoin Security Architecture: A Brief Overview"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/security/bitcoin-security-architecture-a-brief-overview"/>
+  <meta name="twitter:description" content="Bitcoin is an emerging technical and economic phenomenon, based upon a self-published paper by Satoshi Nakamoto. Many sites have taken notice of Bitcoin and have published some very thoughtful “what is Bitcoin,” “How-to get started” documentation. But the resources available to address Bitcoin are f"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521514135";
+		var sig = "518d2afbb850a87180f9ae2cae865c99";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1IvhjRD&text=Bitcoin Security Architecture: A Brief Overview&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/bitcoin-security-architecture-a-brief-overview&title=Bitcoin Security Architecture: A Brief Overview" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/bitcoin-security-architecture-a-brief-overview" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/bitcoin-security-architecture-a-brief-overview" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Bitcoin Security Architecture: A Brief Overview&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0ABitcoin Security Architecture: A Brief Overview%0A%0Ahttps://blogs.cisco.com/security/bitcoin-security-architecture-a-brief-overview%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/security/'>Security</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category50.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Security  						</span>
+						<h1 id="post-36471" class="kindle_title title">Bitcoin Security Architecture: A Brief Overview</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/367.thumbnail.51f2c82c4370b.jpg"></div><div class="author_rewards_box"></div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/SethHanford" title="Posts by Seth Hanford" rel="author">Seth Hanford</a> - July 12, 2011 - 9 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p><font color="red">Bitcoin</font> is an emerging technical and economic phenomenon, based upon a self-published <a href="http://www.bitcoin.org/bitcoin.pdf" target="_blank">paper by Satoshi Nakamoto.</a> Many sites have taken notice of <font color="red">Bitcoin</font> and have published some very thoughtful “what is <font color="red">Bitcoin</font>,” “How-to get started” documentation. But the resources available to address <font color="red">Bitcoin</font> are few, and primarily oriented toward enthusiasts, casual hobbyists, or those interested in making and securing a profit off of <font color="red">Bitcoin</font> generation (“mining”). In this post, we make an effort to extend the <font color="red">Bitcoin</font> <font color="red">security</font> body of knowledge, but from an organizational perspective: what are the risks associated with adopting <font color="red">Bitcoin</font>, intentionally or unintentionally.</p>
+<p><span id="more-36471"></span><font color="red">Bitcoin</font>&#8217;s success is dependent at least upon its ability to securely fulfill its two primary goals: money generation and transaction <font color="red">validation</font>. In addition to these two goals, the currency must face traditional economic challenges such as market confidence, which are somewhat outside the scope of our expertise, and traditional information assurance challenges, which are not.</p>
+<p><strong>Money Generation</strong></p>
+<p>Money generation in <font color="red">Bitcoin</font> is a function of <a href="https://en.bitcoin.it/wiki/Block_hashing_algorithm" target="_blank">block <font color="red">validation</font></a>. The first transaction of the block is a payment to whoever solves the block&#8217;s hash via proof-of-work (50 new <font color="red">Bitcoins</font>, or BTC, at the moment; or block processing fees once all of the available <font color="red">Bitcoins</font> have been generated). Locks are defined by any transactions collected since the last block was received for the longest known chain of blocks until the next proof-of-work is generated. The proof-of-work, hashed against the transactions being validated, serves as a distributed, trusted timestamp of sorts.</p>
+<p>Each proof-of-work, which is incredibly computationally expensive, constitutes a primary function of the <font color="red">Bitcoin</font> P2P <font color="red">network</font>. For the foreseeable future, the collective <font color="red">processing power</font> of the <font color="red">Bitcoin</font> <font color="red">network</font> will increase in proportion to the profitability of &#8220;mining&#8221; BTCs. As the number of BTCs in the economy approaches the maximum of 21 million, the number of coins created by the <font color="red">network</font> will decrease. Over time, it is expected that transaction fees will increase to replace the incentive of mining with the incentive of transaction processing. Thus the <font color="red">processing power</font> of the <font color="red">Bitcoin</font> <font color="red">network</font> will continue to pay off, representing our first set of <font color="red">threats</font>.</p>
+<ol>
+<li>Trojan Horse BTC Generation:<br />
+If computers become infected with persistent <font color="red">malware</font>, or if existing <font color="red">malware</font> is updated to begin using the infected computer&#8217;s <font color="red">CPU</font> or GPU to perform mining and block <font color="red">validation</font>, then enterprise resources (computer performance, <font color="red">network performance</font>, and most of all, electricity) will be co-opted for use by criminals to make real money. Early efforts have been <a href="http://www.zdnet.com/blog/security/researchers-find-malware-rigged-with-bitcoin-miner/8934" target="_blank">spotted in the wild</a>.</li>
+<li>Targeted <font color="red">Malware</font> for Computer Gamers:<br />
+Because the GPUs used to play modern PC video games are quite well suited for performing the SHA256 hash operations vital to <font color="red">Bitcoin</font> block <font color="red">validation</font>, many intrepid &#8220;miners&#8221; are buying up the latest and greatest video cards for dedicated mining rigs. <font color="red">Malware</font> packaged to target the gaming community could find a profitable foothold among enthusiasts who are not well-protected.</li>
+</ol>
+<p><strong>Money Retention</strong></p>
+<p>When BTCs are transacted, the coins themselves are assigned to the <font color="red">user</font>&#8217;s public key and stored &#8220;in the <font color="red">network</font>.&#8221; However, since they are signed with the public key, anyone with the <font color="red">private key</font> may spend them. The wallet, then, is a <font color="red">data</font> file that stores the <font color="red">private keys</font> for a <font color="red">user</font>&#8217;s accumulated BTC wealth. <font color="red">Users</font> may have multiple wallets, and <font color="red">users</font> who fear that their wallets have been read may transfer money to a new wallet (new set of <font color="red">private keys</font>), but if the <font color="red">private keys</font> are compromised there is no guarantee that a <font color="red">user</font> will retain any or all of their BTCs.</p>
+<p>For <font color="red">users</font> and sites sending or receiving BTC transactions, wallet <font color="red">security</font> will be crucial. In mid-June, when the exchange rate from USD to BTC was about 20:1, <a href="http://www.pcworld.com/article/230377/worlds_first_virtual_heist_bitcoin_user_loses_500000.html" target="_blank">one <font color="red">Bitcoin</font> <font color="red">user</font> reported a loss of over 25,000 BTC</a> from a poorly protected wallet, worth nearly $500,000 at the time. Organizations, and even individuals, would do well to understand the confidentiality requirements of the <font color="red">private keys</font> stored in wallets. So long as <font color="red">users</font> can keep track of their various wallets, there is no limitation on the number of wallets that a <font color="red">user</font> could possess. Further, limiting exposure by restricting read access to the wallet (through encryption, air gap, or other means) at any time besides during a transaction will help to prevent theft of its <font color="red">private keys</font>.</p>
+<p>Various <a href="https://en.bitcoin.it/wiki/Securing_your_wallet" target="_blank">community-generated suggestions exist for wallet <font color="red">security</font> practices</a>, but <font color="red">users</font> will likely struggle for some time to easily balance <font color="red">security</font> with usability.</p>
+<p><strong><font color="red">Attacks</font> on the <font color="red">Bitcoin</font> <font color="red">Protocol</font></strong></p>
+<p>The <font color="red">Bitcoin</font> <font color="red">protocol</font> is fairly complicated, and <font color="red">client software</font> does quite a bit behind the scenes that many <font color="red">users</font> may not be aware of. Miners usually know enough to notice when their accepted hash rate per hour or per day drops below what they would expect. But the decentralized nature of the <font color="red">protocol</font>, and the power of controlling &gt; 50% of block <font color="red">validation</font>, means that even noticing a problem may not be enough to stop an all-out <font color="red">attack</font> on the economy.</p>
+<p>The authors and maintainers of <font color="red">Bitcoin</font> are quite up-front about the danger of collusion or concentration of <font color="red">processing power</font>. Citing the Gambler&#8217;s Ruin mathematical problem, the official paper notes that as an <font color="red">attacker</font> with greater than 50% <font color="red">processing power</font> remains in that position, it becomes increasingly less probable that the minority portion of the <font color="red">network</font> can win the race to confirm a malicious block offered by the <font color="red">attacker</font>. This could result in the <font color="red">attacker</font> being able to reverse their own transactions (violating protection against double-spending), or prevent others&#8217; transactions or block generations from validating. If the <font color="red">attacker</font> can persist in their position of power, these malicious transactions may become permanent.</p>
+<p>Yet less than a month ago, <font color="red">data</font> suggested that the operator of the popular Deepbit Mining Pool was close to attaining 50% share of miners. That dominance has since changed, but again, on July 5, an <a href="http://www.reddit.com/r/Bitcoin/comments/ihew8/deepbit_just_surpassed_50_should_i_be_worried/" target="_blank">outage at BTCWorld&#8217;s mining pool</a> pushed Deepbit&#8217;s share of the global hashrate above 50%. This shows that outpacing the 50% mark is certainly possible by an individual, by the collusion of a few major pool operators, or even an <font color="red">attack</font> directed against larger pools. Note that this would include unintentional collusion (such as a hypothetical malicious compromise of large mining pools).</p>
+<p>Other low-level <font color="red">protocol</font> concerns could also pose a <font color="red">threat</font> from a sophisticated <font color="red">attacker</font>. The <font color="red">Bitcoin</font> wiki suggests <a href="https://en.bitcoin.it/wiki/Weaknesses" target="_blank">other weaknesses</a>, and further research or speculation has uncovered some subtle ones like, <a href="http://culubas.blogspot.com/2011/05/timejacking-bitcoin_802.html" target="_blank">timing <font color="red">attacks</font></a>. An <font color="red">attack</font> against the <font color="red">Bitcoin</font> source code could be devastating. If enough clients used compromised code, this could have the same &#8220;critical mass&#8221; effect as a mining pool compromise, outpacing the capability to reverse compromised block <font color="red">validations</font>. Combined with the introduction of subtle, malicious features into the <font color="red">network</font>, such an <font color="red">attack</font> could overwhelm the purported resilience of <font color="red">Bitcoin</font>&#8217;s &#8220;decentralization.&#8221; Overall, the technical foundation of this fledgling economy is creating an opportunity for not only compromise via traditional methods (such as fraud) but electronic methods as well.</p>
+<p><strong>Trust and the <font color="red">Bitcoin</font> Economy</strong></p>
+<p>Economic concerns also factor into <font color="red">Bitcoin</font>&#8217;s long-term success, as well. For the moment, with pure <font color="red">Bitcoin</font> transactions still somewhat of a rarity, there is a great interest in having currency exchange. Those who mine <font color="red">Bitcoins</font> want to turn them into dollars; those who have dollars want to turn them into <font color="red">Bitcoins</font>, in order to purchase goods and <font color="red">services</font> that are offered for sale in <font color="red">Bitcoins</font>. Enter the concept of the Exchange. Websites have been established that serve a similar purpose as &#8220;Wall Street&#8221; for <font color="red">Bitcoins</font>.</p>
+<p>In one particular case, a site called <a href="https://mtgox.com/support" target="_blank">Mt. Gox</a> serves as quite a large player in the exchange of <font color="red">Bitcoins</font> to and from US Dollars. <font color="red">Bitcoin</font> <font color="red">users</font> track the exchange rates and, for the most part, the Mt. Gox historical trading <font color="red">data</font> shows the going rate, or value, of <font color="red">Bitcoins</font>.</p>
+<p><span style="text-decoration: line-through;">US Securities laws, and the regulatory oversight of the US Securities and Exchange Commission (SEC) have required that <font color="red">services</font> such as Mt. Gox register and comply with SEC regulation if they allow trades over $1,000 per person per day. As a result, Mt. Gox has imposed a $1,000 limit in order to avoid the costly regulation associated with SEC rules.</span></p>
+<p>Operating a <font color="red">service</font> to exchange BTCs for currency could make sites such as Mt. Gox subject to various jurisdictional regulations, particularly those dealing with anti-money laundering (AML), as they could be classified as Money <font color="red">Service</font> Businesses (MSB). In order to <a href="http://fincen.gov/statutes_regs/bsa/" target="_blank">comply with the US regulations</a> stemming from various legislations at the Federal and State levels, including the 1970 Bank Secrecy Act (BSA) and PATRIOT ACT, trades are limited to $1,000 per person, per day. This economic reality led to what many are calling a coordinated <font color="red">attack</font> on the exchange rate for <font color="red">Bitcoins</font>, in a bid to crash the market, acquire more <font color="red">Bitcoins</font>, and then make a profit later after the BTC price recovered.</p>
+<p>On June 20th, 2011, <a href="http://thedailyattack.com/2011/06/30/mtgox-apologizes/" target="_blank">an <font color="red">attacker</font> compromised an administrator account at Mt. Gox</a> with access to a large <font color="red">Bitcoin</font> balance in their wallet. The <font color="red">attacker</font> was then able to use the large balance to deflate the exchange rate for BTC and retrieve 2,000 BTCs from the exchange, shortcutting the $1,000 per day rule imposed by the system by making the large number of coins (worth several dollars each, prior to the <font color="red">attack</font>) worth so little that they could be transferred out. Now that the value of Bitcoins has rebounded, the resulting <font color="red">attack</font> essentially compromised tens of thousands of dollars in value. The Mt. Gox staff has acknowledged that the controls put in place at the site did not scale quickly enough to keep up with the value of the transactions involved.</p>
+<p>For many, the draw of <font color="red">Bitcoin</font> is its decentralized nature, removing the economic trust that many had previously placed in their governments. In the aftermath of recent economic troubles around the globe, this promise of a currency-among-peers salves the wounds left by global economic crisis. But the <font color="red">attack</font> on Mt. Gox shows that the currency is not above trusting third-parties, or even trusting economic stability of the system itself. Even <font color="red">users</font> who never rely upon exchanges could find their <font color="red">Bitcoins</font> devalued if a similar event would occur again. Despite all of the technological capabilities, cryptographic enhancements, and novel proof-of-work protections, <font color="red">Bitcoin</font> will still be at the mercy of the popular perception of its value.</p>
+<p><strong>The Future of Virtual Currency</strong></p>
+<p>Whether or not <font color="red">Bitcoin</font> succeeds in its goals in the long term, the <font color="red">protocol</font> has crossed a threshold of popularity that will cement its place in the history of virtual currency. The contemporary social and political factors have created an environment that is well-served by a currency with <font color="red">Bitcoin</font>&#8217;s aims, and this will likely continue to drive its adoption. However, the <font color="red">threats</font> inherent to the system may represent risk significant enough to derail <font color="red">Bitcoin</font> and deny it longevity. Whatever its future, <font color="red">Bitcoin</font>&#8217;s success so far, and the technical methods used to bring it there, will either become its foundation for success or its contribution to the next iteration of virtual currency.</p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=security-2">security</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">9 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+			<li>
+			<div id="comment-180514">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://www.bitcoincreator.com' rel='external nofollow' class='url'>Bitcoin Creator</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">July 17, 2011 at 3:32 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Great info and well written.
+
+
+
+Bitcoin security is slowly improving. With every attack on a bitcoin miner, miner pool, exchange, node or website, the more secure the network becomes.  Everyone is being forced to beef up their security efforts or face a loss of customers or loss of bitcoins.
+
+
+
+Security is and has to be the number one priority of the bitcoin network.
+
+
+
+This is why we write and discuss this important subject often on our blog http://www.bitcoincreator.com.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike180514" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-179289">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://www.shitcoins.com' rel='external nofollow' class='url'>Beryl</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">July 15, 2011 at 2:43 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>A measured, but devastating critique. 
+
+Interesting that no-one has responded to the malware issues; and astounding to hear that Deepbit had more than 50 percent mining share on July 5.
+
+You mention that at the moment miners want $, while those who have $ want BitCoin. I think that the exchange rate established at the moment is due to artificially high demand for BitCoin, given its recent publicity, and hoarding by miners dreaming of quick riches. In the future, miners who want $ may well far outstrip dollar holders who want BitCoin, with unfortunate consequences.
+
+A note to Garzik: "Bitcoins are not a security, pretty much by definition."
+
+Yes, that's true. It wouldn't be the SEC that I would expect to go after BitCoin, it's the FBI (though it's hard to be sure _ the Treasury/Secret Service? The CTFC on a longshot?).
+
+BitCoin advocates are adamant that it is not a Ponzi scheme, and technically it doesn't meet the definition. However, I think there are many parallels.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike179289" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-178264">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						John						</span>
+						<br />
+						<span class="comment-meta commentmetadata">July 14, 2011 at 12:04 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Quote:
+
+
+
+&gt; "If anybody reading this article is interested in 
+
+&gt; obtaining some bitcoins to play with, I personally use 
+
+&gt; and recommend http://www.t*****.com to buy .... . They 
+
+&gt; have lower fees than the main exchange (mtgox), and .....
+
+&gt;
+
+&gt; Also, I happen to have a code that will get you 10% off 
+
+&gt; your trading fees at TradeHill for life: TH-R....."
+
+
+
+One Question: Why is it so hard to distinguish these referrals from spam?  And why do think people that anything else can be successful than providing a substantially better offer, in terms of trustworthyness, security. ease of use, legal provisions, translations, subsidiaries in every european, asian and arabian country, and many more things? 
+
+
+
+If greed would make people ingenious, we'd see a firework of brilliant ideas.... but what happens is that it's probably a mere symptom of dullness.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike178264" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-178066">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						É vedado o anonimato						</span>
+						<br />
+						<span class="comment-meta commentmetadata">July 14, 2011 at 7:39 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Nice article, congratulations!
+
+
+
+I particularly liked the final conclusion: "Whatever its future, Bitcoin’s success so far, and the technical methods used to bring it there, will either become its foundation for success or its contribution to the next iteration of virtual currency."</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike178066" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-177385">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						dacoinminster						</span>
+						<br />
+						<span class="comment-meta commentmetadata">July 13, 2011 at 6:20 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>This is an extremely well-thought-out article, and I agree with the analysis of risks and conclusions.
+
+
+
+While collusion between pool operators is very unlikely (they all have a strong interest in bitcoins staying valuable), an attack which compromises multiple pools and uses their power for evil is a realistic (if unlikely) scenario.
+
+
+
+I wonder if pool/mining software could be updated to allow individual miners in the pool to choose and/or veto transactions encoded by the pool? Perhaps a miner could be chosen at random to take responsibility for what is included in the next block. This would at least distribute the risk, although I'm doubtful that it can be done.
+
+
+
+If anybody reading this article is interested in obtaining some bitcoins to play with, I personally use and recommend http://www.tradehill.com to buy and sell bitcoins. They have lower fees than the main exchange (mtgox), and their website seems more professional, IMHO.
+
+
+
+Also, I happen to have a code that will get you 10% off your trading fees at TradeHill for life: TH-R1168
+
+
+
+Enjoy!</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike177385" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-177261">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://www.bitcoinminingaccidents.com' rel='external nofollow' class='url'>Bitcoin Mining Accidents</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">July 13, 2011 at 12:14 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Bitcoin is pretty secure technology. Many of its problems stem from user error (reformatting the wrong hard drive), or user's lack of security practices (using a short password for every site), or mining pools growing too large. Exchange sites need to be audited by a security firm on a regular basis. But the Bitcoin network, meanwhile, has a fabulous track record with security.
+
+
+
+However, bitcoin mining remains a very hazardous practice. Everyone knows that the real security threat is to the miner's well-being. Luckily www.bitcoinminingaccidents.com is there to help, with safety tips and incident reports so others learn what NOT to do. Let's make mining for bitcoins safer!</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike177261" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-177196">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						H. Peters						</span>
+						<br />
+						<span class="comment-meta commentmetadata">July 12, 2011 at 10:03 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Actually, bitcoin generation by malware does not seem to appear a problem. The reason is that today, the overwhelming mayority of computing power is delivered by graphic cards (GPUs), which are several hundred times faster for this purpose than standard CPUs. A normal PC would require several years to generate one bitcoin, that means that even a huge botnet with hundreds of thousands of compromised PCs cannot generate very much - and the required computing ppower is rising. Moreover, botnets can be used, and are used, to make money by other means, with the effect that bitcoin generation is not economical.
+
+
+
+Second, an attack to owners of gaming PCs with such graphic cards is more probable. It would be, however, very noticable due to the power spend and the heat generated by the GPU. What is important in this case is that the PCs have effective measures to prevent overheating and fire if the GPU becomes to hot. This will be especially important if children or animals are in that room, as there is a risk of physical injury. 
+
+
+
+The third threat - stealing bitcoins from a wallet on a regular PC - is far more substantial. It is aggravated by the fact that, for backup purposes, private keys are generated _in advance_. To protect the wallet, the confidentality of the wallet with its private key as well as the intgegrity of the host OS need to be protected WITHOUT ANY LAPSE. It turns out that this requirement is NOT fullfilled in the vast mayority of consumer PCs running some variant of Microsoft windows. These systems are tolerated to be infected by viruses occasionally and after a virus infection, it is tried to "remove" the malware. However, this is _not_ sufficient - after a malware infection, the system is basically compromised, the OS _must_ be installed again, and the money from the old wallet _must_ be transferred to a new wallet with uncompromised security. People who will not do that will lose any amount of money, because bitcoin is truly unforgiving in this respect.
+
+
+
+What is an alternative are systems which boot from read-only media, have a wallet on a flash medium and contain only the essential software to run the bitcoin client. Such systems which run usually a variety of Linux are already widely available (to name only one, Knoppix), and are likely to increase in sophistication. Basically, they can turn the regular PC in a single-purpose banking device which is relatively immune to malware.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike177196" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-177171">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://www.bitcoin.org/' rel='external nofollow' class='url'>Jeff Garzik</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">July 12, 2011 at 9:09 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Good post, but minor (if significant) correction:
+
+
+
+The SEC has nothing to do with bitcoins.
+
+
+
+Mt.Gox and other exchanges must comply with anti-money laundering laws (AML), which falls within the purview of the US Department of Treasury and FinCEN.  FinCEN sets the $1000/etc. limits nationally for MSBs, and each US state also has requirements, if you are based in the US.
+
+
+
+Bitcoins are not a security, pretty much by definition.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike177171" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-177120">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://www.internetsecuritydb.com/' rel='external nofollow' class='url'>DiamondGeeza @ Internet Security Blog</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">July 12, 2011 at 5:57 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Great article, thanks. Just to point out that theoretically the currency should not devalue over the long term, since there is a limited amount of the currency available (capped at 21 million bitcoins). This means that as it approaches and reaches this final limit, its value in terms of dollars should increase.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike177120" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Security:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogSecurity', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogSecurity" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Security</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscosecurity?ref=nf"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/ciscosecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://youtubecisco.com/security"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogSecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.cert.org/blogs/vuls/" target="_blank">CERT Vulnerability Analysis</a></li>
+                      <li><a href="http://blogs.technet.com/b/srd/" target="_blank">Microsoft Security Research & Defense</a></li>
+                      <li><a href="http://isc.sans.edu/index.html" target="_blank">SANS Internet Storm Center</a></li>
+                      <li><a href="http://www.schneier.com/" target="_blank">Schneier on Security</a></li>
+                  </ul>
+              <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="http://www.cisco.com/en/US/products/products_security_advisories_listing.html" target="_blank">Advisories and Responses</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/cyberRiskReport.x" target="_blank">Cyber Risk Reports</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/intelliPapers.x?i=55" target="_blank">Security Best Practices</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/home.x" target="_blank">Security Intelligence Operations</a></li>
+                        <li><a href="http://www.cisco.com/en/US/products/hw/vpndevc/index.html" target="_blank">Security Products</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscosecurity?ref=nf'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/ciscosecurity'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 36471;
+			var orig_count = 1;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1IvhjRD&text=Bitcoin Security Architecture: A Brief Overview&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/bitcoin-security-architecture-a-brief-overview&title=Bitcoin Security Architecture: A Brief Overview" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/bitcoin-security-architecture-a-brief-overview" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/bitcoin-security-architecture-a-brief-overview" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Bitcoin Security Architecture: A Brief Overview&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0ABitcoin Security Architecture: A Brief Overview%0A%0Ahttps://blogs.cisco.com/security/bitcoin-security-architecture-a-brief-overview%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

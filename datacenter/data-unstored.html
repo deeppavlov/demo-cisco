@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Data Unstored: The Story Behind the S-Series &#8230; and Workloads</title>
+
+	<meta property="og:image" content="https://alln-extcloud-storage.cisco.com/ciscoblogs/ssIMG_1362-460x230.jpeg"/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; Data Unstored: The Story Behind the S-Series &#8230; and Workloads Comments Feed" href="https://blogs.cisco.com/datacenter/data-unstored/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"207808"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Full Speed to Profitability: Keep the Momentum Going' href='https://blogs.cisco.com/partner/full-speed-to-profitability-keep-the-momentum-going' />
+<link rel='next' title='Safety Manufacturer Gets Agile Security' href='https://blogs.cisco.com/manufacturing/safety-manufacturer-gets-agile-security' />
+
+<link rel="canonical" href="https://blogs.cisco.com/datacenter/data-unstored" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=207808' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Data Unstored: The Story Behind the S-Series ... and Workloads"/>
+  <meta property="og:url" content="https://blogs.cisco.com/datacenter/data-unstored"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2016-11-10T13:00:04+00:00"/>
+  <meta property="article:modified_time" content="2016-11-14T16:34:55+00:00" />
+  <meta property="og:updated_time" content="2016-11-14T16:34:55+00:00" />
+  <meta property="article:section" content="Data Center"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Data Unstored: The Story Behind the S-Series ... and Workloads"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/datacenter/data-unstored"/>
+  <meta name="twitter:description" content="What does Data Unstored mean?  
+
+It begins with connecting the unconnected. That the world is undergoing digital transformation is without question. Billions of devices are connected to the internet, and billions
+
+more will be connected by 2020.
+
+Over three and a half billion people have internet ac"/>
+  <meta name="twitter:image" content="https://alln-extcloud-storage.cisco.com/ciscoblogs/ssIMG_1362.jpeg"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:creator" content="@https://twitter.com/raghu_nambiar"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521450019";
+		var sig = "5f135a25f6ac125cbec91af2ea790d15";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/2fB53o9&text=Story+Behind+%23CiscoUCS+%23S3260+%40CiscoDC+%23DigitalTransformation++%23Cisco_UCS_BDA+&via=raghu_nambiar" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/datacenter/data-unstored&title=Data Unstored: The Story Behind the S-Series &#8230; and Workloads" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/datacenter/data-unstored" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/datacenter/data-unstored" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Data Unstored: The Story Behind the S-Series &#8230; and Workloads&body=I saw this post on Cisco Data Center blog and thought you might like to read it.%0A%0AData Unstored: The Story Behind the S-Series &#8230; and Workloads%0A%0Ahttps://blogs.cisco.com/datacenter/data-unstored%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/datacenter/'>Data Center</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/ssIMG_1362-460x230.jpeg">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Data Center  						</span>
+						<h1 id="post-207808" class="kindle_title title">Data Unstored: The Story Behind the S-Series &#8230; and Workloads</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/raghunathnambiar.thumbnail.4f19a96923753.jpg"></div><div class="author_rewards_box">			<ul class = "nitro_author207808 bunchballAwards">
+		<li>
+			<div class = "nitro_badge badgenitro_author207808">
+			</div>
+			<div class = "nitro_points pointsnitro_author207808">
+			</div>
+		</li>
+		<script>
+var nitroName = 'rnambiar';
+var sessionKey = '';
+
+
+nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "postBadges", "nitro_author207808");</script>
+
+		</ul>
+		</ul>
+	<div class = "clear"></div>
+</div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/raghunathnambiar" title="Posts by Raghunath Nambiar" rel="author">Raghunath Nambiar</a> - November 10, 2016 - 4 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<h2><strong>What does <font color="red">Data</font> Unstored mean?  </strong></h2>
+<p><strong>It begins with connecting the unconnected.</strong> That the world is undergoing <font color="blue">digital transformation</font> is without question. Billions of devices are connected to the internet, and billions<br />
+more will be connected by 2020.<br />
+Over three and a half billion people have internet access today with another billion and a half coming online by 2020. Let’s not forget that <a href="http://blogs.cisco.com/<font color="red">data</font>center/towards-digital-transformation-1">when you bring something online it’s not just connected to the Internet – it is connected to everything else</a>.</p>
+<p><a href="http://blogs.cisco.com/<font color="red">data</font>center/towards-digital-transformation-1"><img class="wp-image-208077 alignright" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/2020-1-550x177.jpeg" alt="2020" width="513" height="165" /></a>This is connecting the unconnected and it is an implacable, unstoppable force that shows no mercy and takes no prisoners. With these connections comes an unprecedented volume of <font color="red">data</font> that successful companies are leveraging in innovative ways.</p>
+<p>Clearly, <strong>you can’t analyze <font color="red">data</font> you haven’t stored</strong>. But there’s more. Increasingly, companies are faced with the realization that they can’t analyze <font color="red">data</font> they have stored but have archived. They have to ‘unstore’ it first. Actually, first they have to find it, then restore it, then analyze it. All the while the clock’s ticking.</p>
+<p>And so as we move ahead connecting the unconnected, we find we also need to store the unstored. This includes new <font color="red">data</font> arriving in volumes never before seen, and data we already have and must have immediate access to. It’s no longer about simply accumulating data but constantly analyzing it, transforming it and creating value with it in new ways.</p>
+<p>When we store the unstored, we can:</p>
+<ul>
+<li>Make the world a safer place: schools, the workplace and public spaces can all benefit from <font color="red">video surveillance</font> and <font color="red">analytics</font></li>
+<li>Create smarter cities with optimized traffic flow and more efficient parking</li>
+<li>Help the environment by using energy more efficiently: in business, in our homes, in our schools, everywhere</li>
+<li>Make better, more informed decisions regarding health care, education and safety</li>
+<li>Serve customers better by knowing them better. More <font color="red">data</font> means deeper insights into <font color="red">customer behavior</font> and better inputs to recommendation engines.</li>
+<li>Manage partners more efficiently through supply chain optimization and improved asset management</li>
+<li>Improve information technology operational costs and efficiency by storing more for less</li>
+<li>Even create entire new lines of business</li>
+</ul>
+<p>&nbsp;</p>
+<h2><strong>Why the S-Series? </strong></h2>
+<p><font color="red">Digital transformation</font> demands higher capacity <font color="red">storage</font> at lower cost. Internet of Things (<font color="red">IoT</font>) devices such as smart sensors, connected machines and connected automobiles, mobile phones and social media, e-commerce and <font color="red">video surveillance systems</font>, etc. are all generating <font color="red">data</font> at an unprecedented scale. <font color="red">Data</font> <font color="red">storage</font> requirements are increasing in line with <strong>Moore’s law</strong> (in some cases faster) but the <img class="wp-image-208045 alignright" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/S3260-its-time-to-550x297.png" alt="S3260 its time to" width="322" height="174" /><font color="red">data center</font> footprint, IT staff and funding are not &#8211; a lot of optimization is required. So higher <font color="red">storage</font> capacity at lower cost is a must have.</p>
+<p><font color="red">Traditional storage</font> arrays are expensive and have limited scalability. The vision of <font color="red">Cisco</font>’s S-series is to address the every growing demand for dense, <font color="red">high performance</font> and highly scaleable <font color="red">storage</font> systems. The first <font color="red">server</font> in this series, the <font color="red">S3260</font>, is specifically addressing these requirements:</p>
+<ul>
+<li>Modular design enables independent upgrades of key <font color="red">server</font> components enabling long term <font color="red">investment protection</font></li>
+<li>High <font color="red">storage</font> density to accommodate <font color="red">data</font> growth without <font color="red">data center</font> expansion</li>
+<li>Lowest dollar per terabyte enabling <font color="red">data</font> ‘unstore’ economical</li>
+<li>Flexibility in the number of <font color="red">servers</font> and disk drives, and third party adapter options to meet a variety of <font color="red">workload</font> demands</li>
+<li>Advanced manageability as a single entity in a scale-out cluster environments even at 10’s of petabytes</li>
+<li><font color="red">High performance</font> <font color="red">network</font> connectivity, currently 4 x 40 GbE, and it’s 100 GbE-ready, massive scalability with <font color="red">Cisco</font> <font color="red">ACI</font></li>
+<li>High I/O <font color="red">Bandwidth</font> per <font color="red">server</font>. Perfect for <font color="red">data</font> intensive <font color="red">workloads</font>.</li>
+<li><font color="red">Data protection</font> through advanced RAID options and global hot spares, and  support for leading software defined <font color="red">storage</font> software stacks</li>
+</ul>
+<p>&nbsp;</p>
+<h2><strong><font color="red">Cisco</font> <font color="red">UCS</font> <font color="red">S3260</font> <font color="red">Storage Server</font></strong></h2>
+<p>The <font color="red">Cisco</font> <font color="red">UCS</font> <font color="red">S3260</font> <font color="red">Storage Server</font> is a modular platform designed for applications that need to store and process large amounts of <font color="red">data</font> and scale effortlessly as the applications demand. The system adds several innovations to the <font color="red">Cisco</font> <font color="red">Unified Computing</font> System improving<br />
+on the <font color="red">server</font>, fabric and advanced management.</p>
+<ul>
+<li><strong>Protect your Investment: </strong>The <font color="red">Cisco</font> <font color="red">UCS</font> <font color="red">S3260</font> <font color="red">Storage Server</font> helps you significantly reduce <font color="red">total cost</font> of ownership and long term <font color="red">investment protection</font>. The design allows you to upgrade individual components as technology advances. <font color="red">Network</font>, <font color="red">storage</font> and <font color="red">computing</font> components can all be independently <img class="wp-image-207860 alignright" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/S3260-550x256.png" alt="S3260" width="523" height="244" />upgraded. Never scrap a <font color="red">server</font> again.</li>
+<li><strong>Unparalleled Flexibility: </strong>The <font color="red">Cisco</font> <font color="red">UCS</font> <font color="red">S3260</font> <font color="red">Storage Server</font> is flexible enough to handle any <font color="red">workload</font>. It can be configured with one <font color="red">server</font> <font color="red">node</font> for capacity-intensive <font color="red">workloads</font>, or two <font color="red">server</font> <font color="red">nodes</font> when <font color="red">high performance</font> is needed. Designed for <font color="red">high performance</font> and capacity, each <font color="red">server</font> supports 8 GBytes/sec of I/O <font color="red">bandwidth</font>, two <font color="red">Intel</font> <font color="red">Xeon</font> E5-2600 series processors per <font color="red">server</font> <font color="red">node</font>, two <font color="red">server</font> <font color="red">nodes</font> per <font color="red">chassis</font>, and up to 600 terabytes of <font color="red">storage</font>, all in a 4RU <font color="red">form factor</font> and a 32-inch depth innovative design.</li>
+<li><strong>More Cost-Effective than <font color="red">Cloud</font> <font color="red">Storage</font>: </strong>A <a href="http://blogs.cisco.com/datacenter/understanding-the-cost-premium-of-public-cloud-for-active-data">recent analysis of the <font color="red">S3260</font></a> by <a href="http://blogs.cisco.com/author/billshields">Bill Shields</a> shows it is less than <strong>half</strong> the cost of equivalent <a href="http://www.cisco.com/web/solutions/trends/cloud/build-public-cloud.html" title="<font color="blue">public cloud</font>" target="_blank" class="seoal-link">public cloud</a> <font color="red">storage</font>. Not discussed in that analysis but equally important, is the <font color="red">cloud</font> is only <font color="red">storage</font>, no processing. If you want to analyze your <font color="red">data</font> you have to pay even more. With the <font color="red">S3260</font> you get the same <font color="red">storage</font> as the <font color="red">cloud</font> for half the price <strong>and</strong> the processing capability to analyze the <font color="red">data</font>.</li>
+<li><strong>A Lot Denser than Traditional Rack <font color="red">Servers</font>:</strong> A single 4RU <font color="red">chassis</font> is equivalent to four 2RU <font color="red">servers</font> in <font color="red">storage</font> capacity, and each <font color="red">server</font> is equipped with dual port 40 Gbps ethernet, employing a balanced, one-to-one core-to-spindle ratio delivering superior <font color="red">computing</font> performance and less <font color="red">server</font> based software licenses, and management points. Also compare 80 Gbps/28 disks (2.8) to 20 Gbps/24 disks (0.83) of a traditional 2RU systems which is critical for <font color="red">data</font> inject, <font color="red">data</font> replication and recovery in scale-out <font color="red">solutions</font>.</li>
+</ul>
+<hr />
+<p>On November 17th we&#8217;ll be holding a joint webinar with <font color="red">Intel</font> where we’ll discuss the challenges of <font color="red">data</font> intensive applications and the applications and hardware to address them. <span class="s1"><a href="https://www.brighttalk.com/webcast/10773/233515?utm_source=Intel+-+Data+Center+Group&amp;utm_medium=brighttalk&amp;utm_campaign=233515">Click here</a> to <span style="color: #993300">register</span> </span></p>
+<hr />
+<p>&nbsp;</p>
+<h2><strong><font color="red">Workloads</font> for <font color="red">S3260</font></strong></h2>
+<p>The <font color="red">Cisco</font> <font color="red">UCS</font> <font color="red">S3260</font> <font color="red">Storage Server</font> employs a modular design making it flexible enough to handle a wide variety of <font color="red">workloads</font>.</p>
+<h3><strong>1. <font color="red">Big Data</font> and Analytics <img class="wp-image-207861 alignright" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/big-data-1.jpg" alt="big data" width="181" height="185" /></strong></h3>
+<p><font color="red">Big data</font> is a big market. IDC estimates the <font color="red">big data</font> technology and services market will exceed $48 billion in 2019. Business intelligence used to mean collecting <font color="red">data</font>, warehousing it and reporting on it periodically. Now <font color="red">data</font> in huge volume is moving from source to consumer at lightning speed, streamed in real-time and analyzed for immediate use. Let me give you few examples.</p>
+<p style="padding-left: 30px"><strong>Finance:</strong> Financial institutions around the world are under pressure to both prevent financial crime, and meet regulatory and compliance requirements. This includes<a href="https://www.financierworldwide.com/forum-using-technology-and-big-data-to-tackle-fraud-and-money-laundering/#.WCVUy6IrI0o"> fraud <font color="red">detection</font>, money laundering, terrorist financing, identifying sanctioned entities and maintaining high quality <font color="red">data</font> lineage.</a> The industry is struggling to handle the volume, velocity and variety of <font color="red">data</font> that is fragmented across many silos.<img class="wp-image-207870 alignleft" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/fraud.jpg" alt="fraud" width="198" height="155" /></p>
+<p style="padding-left: 30px"><font color="red">Big data</font> technology allows financial institutions to consolidate their <font color="red">data</font> from different systems across different lines of business in a more efficient and cost effective way, providing a consolidated 360-degree view of their customer information and transactions. The <font color="red">storage</font> and use of this <font color="red">data</font> varies widely from real-time, low-latency fraud <font color="red">detection</font> to long-term archive <font color="red">storage</font> for compliance purposes.</p>
+<p style="padding-left: 30px">The <font color="red">Cisco</font> <font color="red">UCS</font> <font color="red">S3260</font> <font color="red">Storage Server</font> is uniquely positioned to aid financial institutions with its combination of high-density <font color="red">storage</font> and high-performance architecture. The modular design gives IT departments the flexibility to match the configuration to the need.</p>
+<p style="padding-left: 30px"><strong><font color="red">Manufacturing</font>: </strong>Many <font color="red">manufacturing industries</font> employ very complex processes to create their products. For example, pharmaceutical companies and semiconductor manufacturers both monitor <img class="wp-image-207869 alignleft" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/manuf.png" alt="manuf" width="175" height="166" />hundreds of dependent and independent variables as the material moves through the production line. Even small variations in the raw material and equipment processing can create very large changes in the final yield<a href="http://www.cisco.com/c/m/en_us/never-better/digital-business-1.html"><img class="wp-image-208046 alignright" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/Screen-Shot-2016-11-11-at-7.48.05-AM-550x357.png" alt="Screen Shot 2016-11-11 at 7.48.05 AM" width="202" height="131" /></a> and the quality of the product.</p>
+<p style="padding-left: 30px">Increasingly, companies are turning to <font color="red">big data</font> to address these issues, both preventing <font color="red">manufacturing</font> excursions using real-time processing, and in the identification of important relationships between variables to improve quality and yield. The <font color="red">S3260</font>’s ability to effortlessly store huge volumes of unstructured <font color="red">data</font>, process it live while the <font color="red">data</font> is in-motion, and analyze it after the fact when it’s at-rest, makes it the perfect choice to improve quality, increase yield and lower cost in complex <font color="red">manufacturing</font> environments.</p>
+<p style="padding-left: 30px"><strong>Health Care: </strong><font color="red">Big data</font> technology is quietly revolutionizing health care. Using applications built on <font color="red">big data</font>, people are able to live healthier lives and get the right care by the right provider at the right time.</p>
+<p style="padding-left: 30px"><img class=" wp-image-207868 alignleft" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/health.png" alt="health" width="161" height="199" />One provider implemented a system that stores and shares <font color="red">data</font> across all facilities and promotes the use of up-to-date electronic health records. The <font color="red">integrated system</font> has improved outcomes in cardiovascular disease and achieved an estimated $1 billion in savings from reduced office visits and lab tests. Another provider developed an <font color="red">integrated system</font> that delivers evidence-based care by coordinating doctors, hospitals and health plans using personalized <font color="red">data</font>.</p>
+<p style="padding-left: 30px">Others are conducting real world studies of chronic illnesses and common diseases, then combining the results with clinical trial <font color="red">data</font> for analysis to determine the most effective treatments. The same <font color="red">data</font> is also used to guide R&amp;D investment decisions.</p>
+<p style="padding-left: 30px">Hospitals are using <a href="https://hbr.org/2014/11/hospitals-are-finally-starting-to-put-real-time-<font color="red">data</font>-to-use">real-time data processing</a> in concert with <a href="https://hbr.org/2014/10/predictive-medicine-depends-on-<font color="red">analytics</font>">predictive analytics</a> tools to enable highly advanced, forward-looking and customized treatment plans for patients. Patient records aren’t just being digitized and stored. Diagnostic imaging <font color="red">data</font> is being analyzed in real time for faster and better outcomes<a href="http://www.cisco.com/c/en/us/solutions/enterprise/data-center-designs-cloud-computing/bigdata.html"><img class="wp-image-207944 alignright" src="https://alln-extcloud-<font color="red">storage</font>.cisco.com/ciscoblogs/cvd-2.png" alt="cvd" width="381" height="269" /></a></p>
+<p style="padding-left: 30px">All of these initiatives are driven by the large scale storage and processing of structured and unstructured <font color="red">data</font>. The volume of <font color="red">data</font> requires dense <font color="red">storage</font> to be cost-effective and high-performance to be timely. These are two features where the <font color="red">S3260</font> shines.</p>
+<p style="padding-left: 30px"><font color="red">Cisco</font> has published <a href="http://www.cisco.com/c/en/us/solutions/enterprise/data-center-designs-cloud-computing/bigdata.html">validated designs </a>with major <font color="red">ISVs</font> including Cloudera, Hortonworks, IBM, <font color="red">MapR</font>, SAP, <font color="red">Splunk</font> and others  consisting of systems and <font color="red">solutions</font> that have been designed, tested, and documented to facilitate faster, more reliable, and more predictable customer deployments and significantly lower the cost of ownership.</p>
+<h3><strong>2. Collaboration and <font color="red">Data Protection</font></strong></h3>
+<p><font color="red">Data</font> volumes are growing dramatically. Even mundane systems like email and file sharing are growing at an alarming rate. Traditionally, high-end proprietary (and expensive) systems are used for <font color="red">data protection</font>. The new trend is scale out at a significantly lower cost per terabyte.</p>
+<p>The need for <font color="red">data protection</font> <font color="red">solutions</font> is obvious. They are insurance for the business, reducing risk by storing and safeguarding the business <font color="red">data</font>, making it readily available when needed. This includes recovery from failure, both spot failures and disaster recovery, but also the increasingly important need to meet regulatory and compliance requirements by retaining <font color="red">data</font> for a specified retention period.<img class="wp-image-207866 alignright" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/bura-550x241.png" alt="bura" width="374" height="164" /></p>
+<p><font color="red">Cisco</font> provides tested <a href="https://www.cisco.com/c/dam/en/us/solutions/collateral/data-center-virtualization/data-protection-solutions/data-protection-solution.pdf"><font color="red">data protection</font> <font color="red">solutions</font></a> partnered with leading software vendors. These <font color="red">solutions</font> are offered across the <font color="red">entire data center</font> infrastructure: bare-metal, converged and hyper converged <font color="red">solutions</font>. The flexibility, <font color="red">high density</font> <font color="red">storage</font> with exceptional I/O, along with the state-of-the-art <font color="red">network</font> <font color="red">bandwidth</font> (4&#215;40 Gbps) make the <font color="red">S3260</font> ideal platform for <font color="red">data protection</font> <font color="red">solutions</font>.</p>
+<h3><strong>3. Content Distribution and <font color="red">Video</font> Analytics</strong></h3>
+<p><font color="red">Digital video</font> used to be solely a capacity problem but is changing to a compute processing challenge. <font color="red">Video surveillance</font> now routinely collects and stores terabytes of footage. These systems also share the <font color="red">video</font> across the <font color="red">network</font> providing the ability to actively access events like crimes or accidents. They enable safer schools, cities and workplaces. Other uses include traffic control and crowd control, with an emerging set of systems processing facial recognition and motion event triggers in real-time.<img class="wp-image-207863 alignright" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/VSS-550x240.png" alt="VSS" width="377" height="164" /></p>
+<p><font color="red">Digital video</font> <font color="red">analytics</font> needs <font color="red">high density</font> <font color="red">storage</font> and <font color="red">high performance computing</font> and networking. The <font color="red">S3260</font> is uniquely positioned to handle this <font color="red">workload</font> with <font color="red">high density</font> <font color="red">storage</font> per RU, the latest <font color="red">Intel</font> processors, 8 GBytes/sec I/O and 4 x 40 Gbps <font color="red">network</font> <font color="red">bandwidth</font>. A single <font color="red">S3260</font> <font color="red">chassis</font> with 600 TB of <font color="red">storage</font> can hold a full year’s worth of high quality HD <font color="red">video</font> for 23 cameras (1280 x 1024 x 30 fps, H.264).</p>
+<p><span style="color: #0000ff"><u><font color="red">Cisco</font> <font color="red">Video Surveillance</font> Manager with <font color="red">Cisco</font> <font color="red">UCS</font> <font color="red">S3260</font> <font color="red">Storage Server</font></u></span> provide a comprehensive <font color="red">video surveillance</font> <font color="red">solution</font>, making it easy for your security staff to remotely monitor, investigate and respond to incidents. This <font color="red">solution</font> combines <font color="red">high-performance computing</font> systems, high-density <font color="red">storage</font> and <font color="red">video surveillance</font> and remote management software.</p>
+<h3><strong>4. Software Defined and Object Store </strong></h3>
+<p><font color="red">Traditional storage</font> systems are limited in their ability to easily and cost-effectively scale to support massive amounts of unstructured <font color="red">data</font>. <font color="red">Object storage</font> is an approach that can handle both the lack of structure in the <font color="red">data</font> and the volume of <font color="red">data</font>. With about 80% of today’s <font color="red">data</font> being unstructured the need for a scalable <font color="red">solution</font> is paramount. The <font color="red">Cisco</font> <font color="red">UCS</font> <font color="red">S3260</font> <font color="red">Storage Server</font> is an excellent choice for the variety of different <font color="red">workloads</font> required by <font color="red">object storage</font> <font color="red">solutions</font>, including: web-scale applications, media <font color="red">storage</font>, file-based <font color="red">storage</font> and backup.<img class="wp-image-208085 alignright" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/sds.jpeg" alt="sds" width="199" height="199" /></p>
+<p>Managing <font color="red">data</font> that’s constantly flowing into your company requires combining capacity, performance and economics. Even more, creating insight from that <font color="red">data</font> quickly and reliably requires a <font color="red">server</font> optimized for both high-density <font color="red">storage</font> and high-performance. The <font color="red">Cisco</font> <font color="red">UCS</font> <font color="red">S3260</font> <font color="red">Storage Server</font> meets these requirements at the lowest cost while integrating seamlessly with <font color="red">Cisco</font> <font color="red">UCS</font> and its unparalleled ease of management.</p>
+<p><font color="red">Cisco</font> provides comprehensive tested and validated <font color="red">solutions</font> for <a href="http://www.cisco.com/c/dam/en/us/solutions/collateral/data-center-virtualization/software-defined-<font color="red">storage</font>-solutions/software-defined-solution.pdf">software defined storage</a> and <a href="http://www.cisco.com/c/dam/en/us/solutions/collateral/data-center-virtualization/software-defined-storage-solutions/scale-out-object-storage.pdf"><font color="red">object storage</font></a> <font color="red">solutions</font>.</p>
+<p>&nbsp;</p>
+<div class="page" title="Page 1"></div>
+<hr />
+<p>Click <a href="http://www.cisco.com/c/en/us/products/servers-unified-computing/ucs-s-series-storage-servers/index.html">HERE</a> to learn more about the UCS-S Series</p>
+<p><iframe width="500" height="281" src="https://www.youtube.com/embed/dYMknAsXgH4?feature=oembed" frameborder="0" allowfullscreen></iframe></p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=bigdata">BigData</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=cisco-iot">Cisco IoT</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=cisco-ucs">Cisco UCS</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=digital-transformation">Digital transformation</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=hadoop">Hadoop</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=s3260">S3260</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=software-defined-storage">software defined storage</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">4 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+			<li>
+			<div id="comment-2421570">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Guest						</span>
+						<br />
+						<span class="comment-meta commentmetadata">November 14, 2016 at 1:41 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Can you point me to Splunk offer</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2421570" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li>
+			<div id="comment-2423962">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Karthik Karupasamy						</span>
+						<br />
+						<span class="comment-meta commentmetadata">November 30, 2016 at 12:56 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Here are the Splunk resources:
+
+
+
+1. Splunk on Cisco UCS Integrated Infrastructure for Big Data and Analytics - based on UCS C-series/S-series Reference Architecture:
+
+https://www.cisco.com/c/dam/en/us/products/collateral/servers-unified-computing/ucs-s3260-storage-server/ucs-s3260-splunk-sb.pdf
+
+
+
+2. Splunk on UCS S3260 Petabyte Scale Solution: http://www.cisco.com/c/dam/en/us/td/docs/unified_computing/ucs/UCS_CVDs/Cisco_UCS_Petabyte_Scale_Solution_for_Splunk_Enterprise.pdf
+
+
+
+3. My blog about .conf 2016: http://blogs.cisco.com/datacenter/conf2016-beyond-machine-data-cisco-and-splunk-pave-the-way-for-digital-transformation
+
+
+
+For more information about the complete list of Big Data solutions on UCS, please visit: http://www.cisco.com/go/bigdata_design</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2423962" class = "commentLikeButton commentlike" data-nitro = >2 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+<li>
+			<div id="comment-2421173">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg' width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+							<a href = "https://blogs.cisco.com/rewards-profile/10467">Shital Naik</a>
+						</span>
+						<br />
+						<span class="comment-meta commentmetadata">November 11, 2016 at 12:18 pm</span>
+
+					</div>
+				<div class="comment_text">
+					<ul class = "comment_id2421173 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'shitalnaik1';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2421173");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2421173">
+								</div>
+								<div class = "nitro_points pointscomment_id2421173">
+								</div>
+							</li>
+							</ul>
+					<div class = "clear"></div> <p>Hey Great Raghunath !!!      Is UCS-S is supported as VOIP server to endpoint?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2421173" class = "commentLikeButton commentlike" data-nitro =shitalnaik1 >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li class="comment byuser comment-author-raghunathnambiar bypostauthor even depth-2" id="li-comment-2421569">
+				<div id="comment-2421569">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/raghunathnambiar.thumbnail.4f19a96923753.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/raghunathnambiar'>Raghunath Nambiar</a></span>
+							<br />
+							<span class="comment-meta commentmetadata">November 14, 2016 at 1:37 pm</span>
+
+						</div>
+						<div class="comment_text">
+							<p>Chital, yes, happy to chat more,
+
+thanks</p>						</div>
+						<div class = "roblike">
+					<a  href = "#" id = "clickLike2421569" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+						<div class="reply">
+													</div>
+
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+			</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Data Center:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogDataCenterNetworks', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogDataCenterNetworks" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Data Center</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscodc"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/CiscoDC"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco-data-center-and-cloud?trk=biz-brand-tree-co-name"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/114381144808300038585/posts"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/Ciscodatacenter/presentations"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://www.youtube.com/user/Cisco/videos?sort=dd&view=46&tag_id=UCEWiIE6Htd8mvlOR6YQez1g.3.data-center-virtualization"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogDataCenterNetworks"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+
+	<li id ="twitter_widget" class="widget">
+
+	<!-- white background -->
+	<div class="topContainer">
+	 <div class="twit_container">
+
+		<div id="twit_req">
+
+			<span class="widgetheading">
+				Tweets
+			</span>
+
+			<a href="https://twitter.com/" target="_blank"><span class="twit_logo"></span></a>
+							<div class="clear"></div>
+							</div>
+			<!-- <span class="twit_logo" href="#"></span> -->
+			<div class="clear"></div>
+		</div></div>
+		</li>
+
+<br class="clear" />
+
+<script type = "text/javascript">
+
+jQuery(document).ready(function() {
+ //Calling Twitter Widget
+var url = "https://tts-prod.cloudapps.cisco.com/ciscotweetsapp/api/v1/gettweets/ciscodc/response.jsonp";
+
+		loadSpotlightTweet(url);
+
+		//Metrics for each reply retweet and favorites(loop for each tweet)
+		cdc.util.addMetricsRule(".twit_reply", {linktext: "reply"});
+		cdc.util.addMetricsRule(".twit_retweet", {linktext: " retweet "});
+		cdc.util.addMetricsRule(".twit_favorite", {linktext: " favorite "});
+
+	   //lpos for all clicks inside twitter_widget
+		cdc.util.addMetricsRule("#twitter_widget a[href]", {lpos: "tweets"});
+
+});
+
+String.prototype.parseURL = function() {
+	var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+	return this.replace(exp, "<a href='$1' target='_blank'>$1</a>");
+};
+
+String.prototype.parseUsername = function() {
+	return this.replace(/[@]+[A-Za-z0-9-_]+/g, function(u) {
+		var username = u.replace("@", "");
+		// return u.link("http://twitter.com/" + username);
+		return '<a target="_blank" href="https://twitter.com/' + username
+				+ '">' + u + '</a>';
+		// return u.link(window.open('http://www.google.com', '_blank',
+		// 'toolbar=0,location=0,menubar=0'));
+	});
+
+};
+
+String.prototype.parseHashtag = function() {
+	return this.replace(/[#]+[A-Za-z0-9-_]+/g, function(t) {
+		var tag = t.replace("#", "%23");
+		// tag = tag.replace(tag,"<a href='$1' target='_blank'>$1</a>");
+		// return t.link("https://twitter.com/search?q=" + tag +
+		// "&src=hash");//https://twitter.com/search?q=%23retail&src=hash
+		return '<a target="_blank" href="https://twitter.com/search?q=' + tag
+				+ '&src=hash">' + t + '</a>';
+	});
+
+};
+
+function parseURLEntities(t, arg) {
+	for ( var j = 0; j < arg.length; j++) {
+		t = t.replace(arg[j].url, '<a target="_blank" href="' + arg[j].url
+				+ '">' + arg[j].displayURL + '</a>');
+	}
+	return t;
+}
+
+
+function parseDate(str) {
+	var v = str.split(' ');
+	return new Date(Date.parse(v[1] + " " + v[2] + ", " + v[5] + " " + v[3]
+			+ " UTC"));
+}
+
+function selectDay() {
+	var d = new Date();
+	var weekday = new Array(7);
+	weekday[0] = "Sun";
+	weekday[1] = "Mon";
+	weekday[2] = "Tue";
+	weekday[3] = "Wed";
+	weekday[4] = "Thu";
+	weekday[5] = "Fri";
+	weekday[6] = "Sat";
+
+	var n = weekday[d.getDay()];
+
+	return n;
+}
+
+
+var checkIE = function () {
+    var a = navigator.userAgent;
+    return {
+        ie: a.match(/MSIE\s([^;]*)/)
+    };
+}();
+
+
+function relative_time(time_value) {
+	//time_value is in millisecond (GMT)
+
+	var d = new Date(time_value);//converting to our local PST default Date Format
+	//console.log('PST : ' + d);
+
+	var values = d.toString().split(" ");
+	var time_value_format = values[1] + " " + values[2] + ", " + values[3] + " " + values[4];
+//	console.log(time_value_format);
+
+	var parsed_date = Date.parse(time_value_format);
+    var relative_to = (arguments.length > 1) ? arguments[1] : new Date();
+//    console.log(relative_to.getTime());
+    var delta = parseInt((relative_to.getTime() - parsed_date) / 1000);
+    //delta = delta + (relative_to.getTimezoneOffset() * 60); 	//Not Required: converting into GMT since we are getting in GMT Format
+
+   	if (delta < 60) {
+		return delta + 's';
+	} else if (delta < 120) {
+		return '1m';
+	} else if (delta < (60 * 60)) {
+		return (parseInt(delta / 60)).toString() + 'm';
+	} else if (delta < (120 * 60)) {
+		return '1h';
+	} else if (delta < (24 * 60 * 60)) {
+		return (parseInt(delta / 3600)).toString() + 'h';
+	} else if (delta < (48 * 60 * 60)) {
+		return values[2] + " " + values[1];
+	} else {
+		return values[2] + " " + values[1];
+	}
+
+}
+
+
+	function loadSpotlightTweet(tweetsURL)
+	{
+
+	try {
+		var req = jQuery.ajax({
+			url: tweetsURL,
+			async: false,
+			dataType : "jsonp",
+			timeout : 1000,
+
+		});
+
+			req
+				.success(function(data) {
+			var metricsUser= "";
+
+				  if(data == "")
+					  return;
+
+					var arr1 = [];
+					var displayVal = [];
+
+					for ( var i = data.length-1; i >= 0; i -= 1) {
+
+						arr1.push(data[i].createdAt);
+
+					}
+
+					arr1.sort();
+
+                // Sorting for tweets based on Time
+				for ( var i = arr1.length - 1; i >= 0; i -=1) {
+
+						for ( var j = 0; j < data.length; j++) {
+
+							if (arr1[i] == (data[j].createdAt)) {
+								displayVal.push(j);
+
+							}
+						}
+					}
+
+					//Tweets Multiple Display URL Links
+					var t1 = "";
+					var screen_Name = "";
+					var retweeted = "";
+
+					 // Retweets User/Screen Names.
+					 var RetScreenName = "";
+					 var RetUserName = "" ;
+					 var tUserName = "";
+                     var tScreenName = "";
+                     var profileImg = "";
+
+					var loopArr = [];
+
+					for ( var k = 0; k < displayVal.length; k++) {
+
+						if (data[displayVal[k]].urlEntities != null) {
+							t1 = parseURLEntities(data[displayVal[k]].text,
+									data[displayVal[k]].urlEntities);
+						} else {
+							t1 = (data[displayVal[k]].text)
+									.parseURL();
+						}
+
+						//End Tweets Links
+
+						// Check Re-tweeted Status
+                       retweeted = data[displayVal[k]].retweet;
+
+						if(retweeted)
+						{
+                           RetScreenName = data[displayVal[k]].rtScreenName ;
+						   RetUserName = data[displayVal[k]].rtUserName;
+						   profileImg = data[displayVal[k]].rtProfileImageURL;
+						}
+						else
+						{
+                           RetScreenName = data[displayVal[k]].screenName ;
+						   RetUserName = data[displayVal[k]].userName;
+						   profileImg = data[displayVal[k]].profileImageURLHttps;
+						}
+
+						// Widget contents
+
+						jQuery('.twit_container')
+								.append(
+										 '<div class="single_tweet">'
+     									+ '<div id="twit_avatar" class="twit_avatar">'
+										+ '<img border="0" src="'
+										+ profileImg
+										+ '" width="40" height="40" style="border-radius:5px;"/></div>'
+
+										+ '<div class="twit_content"><div class ="twit_userinfo">'
+										+ '<a class="twit_realname" id="twit_realname" href="https://twitter.com/'
+										+ RetScreenName
+										+ '" target="_blank">'
+										+ RetUserName
+										+ '</a><br/>'
+										+ '<a id="twit_username" href="https://twitter.com/'
+										+ RetScreenName
+										+ '" target="_blank">@'
+										+ RetScreenName
+										+ '</a></div>'
+										+ '<div class ="timestamp"><a href="https://twitter.com/'
+										+ RetScreenName
+										+ '/status/'
+										+ data[displayVal[k]].id
+										+ '" target="_blank">'
+										+ relative_time(data[displayVal[k]].createdAt)
+									    + '</a></div>'
+										+ '<div class="clear"></div></div>'
+										+ '<div class="clear"></div>'
+
+                                        + '<div id="twit_text" class="twit_text">'
+												+ t1.parseUsername()
+														.parseHashtag()
+												+ '</div>'
+
+												//Retweeted Content
+												+ '<div class="re-tweet"><div class="retweet_img"><span class="retweet_badge"><a href="" class="retweeted_icon"></a><span class="retweet_text"> Retweeted By <a class="rtwit" href="https://twitter.com/'
+												+ data[displayVal[k]].screenName
+												+ '" target="_blank">'
+												+ data[displayVal[k]].userName
+												+ '</a></span></span></div></div>'
+
+												+ '<div class ="twit_actions">'
+
+												+ '<a class="twit_reply" href = "https://twitter.com/intent/tweet?in_reply_to='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+ '<a class="twit_retweet" href = "https://twitter.com/intent/retweet?tweet_id='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+ '<a class ="twit_favorite" href = "https://twitter.com/intent/favorite?tweet_id='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+'<span class="twit_follow"><a href="https://twitter.com/intent/follow?screen_name='
+												+ data[displayVal[k]].screenName
+												+ '" target="_blank"></a></span>'
+
+												+ '<div class ="clear"></div>'
+												+ '</div></div></div>');
+
+
+
+
+					// Retweeted Status Show/Hide
+					if (retweeted) {
+							jQuery(".re-tweet").eq(k).css("display", "inline");
+						} else {
+							jQuery(".re-tweet").eq(k).css("display", "none");
+						}
+
+
+	}
+
+					//End Widget Contents
+
+
+                // To sort and match properly
+	            jQuery('div.twit_container').find('.single_tweet:eq(0)').clone().appendTo('.twit_container');
+
+				// Metrics for each tweet <--link id to group links in each tweet content--->
+				// cdc.util.addMetricsRule('.single_tweet a[href]', {lid: '" + @twittusername+ "'});
+
+				jQuery(".single_tweet").each(function(i){
+				    var user = jQuery(this).find('#twit_username').text();
+				    var links = jQuery(".single_tweet:eq("+i+") a[href]").get();
+				    cdc.util.addMetricsRule(links, {lid: user });
+				});
+
+					// Loop Through Tweets
+					jQuery('.topContainer').css('display','block');
+					elems = jQuery('.single_tweet').hide().get();
+
+					(function loop() {
+						var i = 0, pointer = jQuery(elems).filter(':visible:last')[0]
+								|| jQuery(elems).last()[0];
+
+						jQuery(elems).hide();
+
+						while (i < 3) {
+							pointer = jQuery(pointer).next()[0]
+									|| jQuery(elems).first()[0];
+							jQuery(pointer).show();
+							i += 1;
+						}
+
+						setTimeout(loop, 12000); // 12 seconds 120000
+					})();
+
+				//End of looping three tweets
+
+
+
+});
+
+		// End of Reply/Retweet/Fav link mouse over/out
+
+		req
+				.error(function(msg) {
+					console.log("In Error of rate limit exception: " + msg);
+					//alert("Rate Limit Exceeded: Please Check after some time.Thank you for your patience. ");
+
+				});
+
+
+	} catch (err) {
+		txt = "There was an error on this page.\n\n";
+		txt += "Error description: " + err.message + "\n\n";
+		txt += "Click OK to continue.\n\n";
+		alert(txt);
+	}
+}
+</script>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.bladewatch.com/" target="_blank">Blade Watch</a></li>
+                      <li><a href="http://www.infoworld.com/?source=nav_BLOGS" target="_blank">InfoWorld</a></li>
+                      <li><a href="http://www.networkworld.com/blogs/" target="_blank">Network World</a></li>
+                      <li><a href="http://blogs.techrepublic.com.com/" target="_blank">TechRepublic</a></li>
+                      <li><a href="http://datacenterjournal.com/index.php" target="_blank">The Data Center Journal</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscodc'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/CiscoDC'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco-data-center-and-cloud?trk=biz-brand-tree-co-name'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/114381144808300038585/posts'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 207808;
+			var orig_count = 8;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/2fB53o9&text=Story+Behind+%23CiscoUCS+%23S3260+%40CiscoDC+%23DigitalTransformation++%23Cisco_UCS_BDA+&via=raghu_nambiar" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/datacenter/data-unstored&title=Data Unstored: The Story Behind the S-Series &#8230; and Workloads" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/datacenter/data-unstored" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/datacenter/data-unstored" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Data Unstored: The Story Behind the S-Series &#8230; and Workloads&body=I saw this post on Cisco Data Center blog and thought you might like to read it.%0A%0AData Unstored: The Story Behind the S-Series &#8230; and Workloads%0A%0Ahttps://blogs.cisco.com/datacenter/data-unstored%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

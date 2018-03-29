@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  usNIC inside Linux containers</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"166879"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='“Hold Me Closer, Tony Danza” Customer Experience and Cisco Context Service' href='https://blogs.cisco.com/collaboration/hold-me-closer-tony-danza-customer-experience-and-cisco-context-service' />
+<link rel='next' title='Accelerating Service Provider Services Innovation via Cisco Cloud &amp; Managed Services' href='https://blogs.cisco.com/cloud/accelerating-service-provider-services-innovation-via-cisco-cloud-managed-services' />
+
+<link rel="canonical" href="https://blogs.cisco.com/performance/usnic-inside-linux-containers" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=166879' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="usNIC inside Linux containers"/>
+  <meta property="og:url" content="https://blogs.cisco.com/performance/usnic-inside-linux-containers"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2015-04-20T08:00:22+00:00"/>
+  <meta property="article:modified_time" content="2015-04-20T08:23:52+00:00" />
+  <meta property="og:updated_time" content="2015-04-20T08:23:52+00:00" />
+  <meta property="article:section" content="High Performance Computing Networking"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="usNIC inside Linux containers"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/performance/usnic-inside-linux-containers"/>
+  <meta name="twitter:description" content="Linux containers, as a lighter virtualization alternative to virtual machines, are gaining momentum. The High Performance Computing (HPC) community is eyeing Linux containers with interest, hoping that they can provide the isolation and configurability of Virtual Machines, but without the performanc"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521445116";
+		var sig = "6794293a7d38287a9c9e326dc0d25e3e";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=https://blogs.cisco.com/performance/usnic-inside-linux-containers&text=usNIC inside Linux containers&via=Cisco" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/performance/usnic-inside-linux-containers&title=usNIC inside Linux containers" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/performance/usnic-inside-linux-containers" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/performance/usnic-inside-linux-containers" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: usNIC inside Linux containers&body=I saw this post on Cisco High Performance Computing Networking blog and thought you might like to read it.%0A%0AusNIC inside Linux containers%0A%0Ahttps://blogs.cisco.com/performance/usnic-inside-linux-containers%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/performance/'>High Performance Computing Networking</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category51.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							High Performance Computing Networking  						</span>
+						<h1 id="post-166879" class="kindle_title title">usNIC inside Linux containers</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1428508011-bpthumb.jpg"></div><div class="author_rewards_box"></div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/christianbenvenuti" title="Posts by Christian Benvenuti" rel="author">Christian Benvenuti</a> - April 20, 2015 - 0 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p><font color="red">Linux</font> <font color="red">containers</font>, as a lighter <font color="red">virtualization</font> alternative to <font color="red">virtual machines</font>, are gaining momentum. The <font color="red">High Performance Computing</font> (<font color="red">HPC</font>) community is eyeing <font color="red">Linux</font> <font color="red">containers</font> with interest, hoping that they can provide the isolation and configurability of <font color="red">Virtual Machines</font>, but without the performance penalties.</p>
+<p>In this article, I will show a simple example of <a href="http://libvirt.org/" target="_blank">libvirt</a>-based <font color="red">container</font> configuration in which I assign the <font color="red">container</font> one of the ultra-low latency (<a href="http://blogs.cisco.com/tags/usnic" target="_blank"><font color="red">usNIC</font></a>) enabled <font color="red">Ethernet</font> <font color="red">interfaces</font> available in the host. This allows bare-metal performance of <font color="red">HPC</font> applications, but within the confines of a <font color="red">Linux</font> <font color="red">container</font>.</p>
+<p><span id="more-166879"></span>Before we jump into the specific <font color="red">libvirt</font> configuration details, let&#8217;s first quickly review the following points:</p>
+<ol>
+<li>What &#8220;<font color="red">container</font>&#8221; means in the context of this article.</li>
+<li>What limitations exist making it impossible to rely solely on (the available) namespaces to assign host <font color="red">devices</font> to <font color="red">containers</font> and guarantee some kind of isolation.</li>
+<li>What tools can be used to bridge the above-mentioned gaps.</li>
+</ol>
+<p><strong>Introduction to <font color="red">Linux</font> Containers</strong></p>
+<p>Fun fact: there is no formal definition of a <font color="red">Linux</font> &#8220;<font color="red">container</font>.&#8221; Most people identify a <font color="red">Linux</font> <font color="red">container</font> with keywords like <a href="https://linuxcontainers.org/" target="_blank">LXC</a>, <a href="http://<font color="red">libvirt</font>.org/" target="_blank">libvirt</a>, <a href="https://www.docker.com/" target="_blank"><font color="red">Docker</font></a>, <a href="https://lwn.net/Articles/531114/#series_index" target="_blank">namespaces</a>, <a href="https://www.kernel.org/doc/Documentation/<font color="red">cgroups</font>/cgroups.txt" target="_blank">cgroups</a>, etc.</p>
+<p>Some of those keywords identify <font color="red">user space</font> tools used to configure and manage some form of <font color="red">containers</font> (LXC, <font color="red">libvirt</font>, and <font color="red">Docker</font>). Others identify some of the building blocks used to define a <font color="red">container</font> (namespaces and <font color="red">cgroups</font>).</p>
+<p>Even in the <font color="red">Linux</font> kernel, there is no definition of a &#8220;<font color="red">container</font>.&#8221;</p>
+<p>However, the kernel does provide a number of features that can be combined to define what many people call a &#8220;<font color="red">container</font>.&#8221; None of these features are mandatory, and depending on what level of sharing or isolation you need between <font color="red">containers</font> &#8212; or between the host and <font color="red">containers</font> &#8212; the definition/configuration of a &#8220;<font color="red">container</font>&#8221; will (or will not) make use of certain features.</p>
+<p>In the context of this article, I will focus on assignment of <a href="http://blogs.cisco.com/tags/usnic" target="_blank"><font color="red">usNIC</font></a> enabled <font color="red">devices</font> in libvirt-based LXC <font color="red">containers</font>. For simplicity, I will ignore all security-related aspects.</p>
+<p><strong><font color="red">Network namespaces</font>, <font color="red">PCI</font>, and <font color="red">filesystems</font></strong></p>
+<p>Given the relationship between <font color="red">devices</font> and the <font color="red">filesystem</font>, I will focus on <font color="red">filesystem</font> related aspects and ignore the other commonly configured parts of a <font color="red">container</font>, such as CPU, generic <font color="red">devices</font>, etc.</p>
+<p>Assigning <font color="red">containers</font> their own view of the <font color="red">filesystem</font>, with different degrees of sharing between host <font color="red">filesystem</font> and <font color="red">container</font> <font color="red">filesystem</font>, is already possible and easy to achieve (see</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">mount</div></div>
+<p>documentation for namespaces). However, what is still not possible is to partition or virtualize (i.e., make namespace-aware) certain parts of the <font color="red">filesystem</font>.</p>
+<p><font color="red">Filesystem</font> elements such as the virtual <font color="red">filesystems</font> commonly mounted in</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/proc</div></div>
+<p>,</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/<font color="red">sys</font></div></div>
+<p>, and</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/dev</div></div>
+<p>are examples that fall into that category. These special <font color="red">filesystems</font> provide a lot of information and configuration knobs that you may not want to share between the host and all <font color="red">containers</font>, or between <font color="red">containers</font>.</p>
+<p>Also, a number of <font color="red">device</font> drivers place special files in</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/dev</div></div>
+<p>that <font color="red">user space</font> can use to interact with the <font color="red">devices</font> via the <font color="red">device</font> driver.</p>
+<p>Even though <font color="red">network interfaces</font> do not normally need to add anything to</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/dev/</div></div>
+<p>(i.e., there is no</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/dev/enp7s0f0</div></div>
+<p>), <font color="red">usNIC</font> enabled <font color="red">Ethernet</font> <font color="red">interfaces</font> have entries in</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/dev</div></div>
+<p>because the <a href="http://ofiwg.github.io/libfabric/" target="_blank">Libfabric</a> and Verbs libraries require to access those entries.</p>
+<p><strong>Sidenote:</strong> For more information on why modern <font color="red">Linux</font> distribution do not use <font color="red">interface</font> names like</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">ethX</div></div>
+<p>any more, and how names like</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer"><font color="red">enp7s0f0</font></div></div>
+<p>are derived, <a href="http://www.freedesktop.org/wiki/Software/systemd/PredictableNetworkInterfaceNames/" target="_blank">see this document</a>.</p>
+<p>The tools you use to manage <font color="red">containers</font> may assign a <font color="red">new network namespace</font> to each <font color="red">container</font> you create by default, or may need you to explicitly ask for that. <font color="red">Libvirt</font>, <a href="http://libvirt.org/drvlxc.html#securenetworking" target="_blank">as explained here</a>, does that automatically when you assign a host <font color="red">network interface</font> to the <font color="red">container</font>. Specifically: when you create a <font color="red">new network namespace</font>, you have the option of moving into the <font color="red">container</font> any of the <font color="red">network interfaces</font> (e.g.,</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer"><font color="red">enp7s0f0</font></div></div>
+<p>) available in the host.</p>
+<p>You can do this by hand using the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer"><font color="red">ip</font> link</div></div>
+<p>command, or you can have that assignment taken care for you by one of the <font color="red">container</font> management tools. Later we will see how <font color="red">libvirt</font> does that for us.</p>
+<p>Once you have moved a <font color="red">network interface</font> into a <font color="red">container</font>, that <font color="blue">network device</font> will be only visible and usable inside that <font color="red">container</font>.</p>
+<div id="attachment_167750" style="max-width: 560px" class="wp-caption aligncenter"><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/figure11.jpg"><img class="wp-image-167750 size-large" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/figure11-550x245.jpg" alt="(a) (b) (c)" width="550" height="245" /></a><p class="wp-caption-text">Figure 1: (a) host with no <font color="red">containers</font> (b) <font color="red">container</font> that has been assigned a <font color="red">new network namespace</font> which shares all <font color="red">network interfaces</font> with the host (c) <font color="red">container</font> that has been assigned a <font color="red">new network namespace</font> and one of the host <font color="red">network interfaces</font> (no longer visible in the host)</p></div>
+<p>However, the <font color="red">Ethernet</font> adapter also has an identity as a <font color="red">PCI</font> <font color="red">device</font>. As such, it appears in</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/<font color="red">sys</font></div></div>
+<p>and can be seen via commands like</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">lspci</div></div>
+<p>from any <font color="red">network namespace</font> &#8212; not only from the one where the associated <font color="blue">network device</font> (</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer"><font color="red">enp7s0f0</font></div></div>
+<p>) lives.</p>
+<p>This gap derives from the fact that the <font color="red">Ethernet</font> <font color="red">device</font> is hooked to both the <font color="red">PCI</font> layer and the <font color="red">networking</font> layer, but only the latter has been assigned a namespace.</p>
+<div id="attachment_167751" style="max-width: 560px" class="wp-caption aligncenter"><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/figure21.jpg"><img class="wp-image-167751 size-large" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/figure21-550x320.jpg" alt="(a) (b) (c)" width="550" height="320" /></a><p class="wp-caption-text">Figure 2: (a) host with no <font color="red">containers</font> (b) <font color="red">container</font> that has been assigned a <font color="red">new network namespace</font> which can not access any of the host <font color="red">network interfaces</font> (c) <font color="red">container</font> that has been assigned a <font color="red">new network namespace</font> and one of the host <font color="red">network interfaces</font>.</p></div>
+<p><strong>Tools you can use to assign <font color="red">devices</font> to <font color="red">containers</font></strong></p>
+<p>You can classify <font color="red">containers</font> based on different criteria, such as based on what they will be used to run inside. At the two extremes, you have these options:</p>
+<ul>
+<li>Application <font color="red">container</font></li>
+<li>Distribution <font color="red">container</font></li>
+</ul>
+<p>In the first case, you only need to populate the <font color="red">container</font> <font color="red">filesystem</font> with what is strictly needed to run a given application. Most likely, not much more than a set of libraries. Other parts of the <font color="red">filesystem</font> may be shared with the host (including the virtual <font color="red">filesystems</font>), or may not be needed at all.</p>
+<p>In the second case, you want to assign the <font color="red">container</font> a full <font color="red">filesystem</font> and have less (if any) sharing with the host <font color="red">filesystem</font>, including the special entries like</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/proc</div></div>
+<p>,</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/<font color="red">sys</font></div></div>
+<p>,</p>
+<div class="codecolorer-<font color="red">container</font> text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/dev</div></div>
+<p>, etc.</p>
+<p>Even though full distribution container support is still not considered &#8220;ready for prime time&#8221; due to the limitations imposed by a few special <font color="red">filesystems</font> as discussed above, there are a number of generic tools available that can be used to provide some kind of device/resource assignments and isolation between <font color="red">containers</font>:</p>
+<ul>
+<li>Security infrastructures like selinux and apparmor</li>
+<li>Bind mounts</li>
+<li><font color="red">Cgroup</font> <font color="red">device controller</font> (via <font color="red">device</font> <font color="red">whitelists</font>)</li>
+<li>Etc.</li>
+</ul>
+<p>You can check <a href="http://www.ubuntu.com/cloud/tools/lxd" target="_blank">LXD</a> for an example of project whose goal is to add whatever is missing in order make <font color="red">containers</font> as isolated as <font color="red">virtual machines</font> in terms of resource usage/access.</p>
+<p>In section &#8220;<a href="#example">Example of <font color="red">libvirt</font> LXC <font color="red">container</font> configuration</a>&#8221; we will see a simple example of how you can tell <font color="red">libvirt</font> to use bind mounts and <font color="red">cgroup</font> <font color="red">device controllers</font> to assign a <font color="red">usNIC</font> enabled <font color="red">Ethernet</font> <font color="red">interface</font> to a <font color="red">container</font>.</p>
+<p>Support for bind mounts has been available for long time (see</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">man mount</div></div>
+<p>for the details).</p>
+<p><font color="red">cgroup</font> <font color="red">device controller</font> support may already be enabled on your distro by default. But if not, you can enable it with this kernel configuration option:</p>
+<ul>
+<li>General setup
+<ul>
+<li>Control Group support
+<ul>
+<li><font color="red">Device controller</font> for <font color="red">cgroups</font></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>You can find some documentation about this feature in the kernel file <a href="https://www.kernel.org/doc/Documentation/<font color="red">cgroups</font>/devices.txt" target="_blank">Documentation/<font color="red">cgroups</font>/devices.txt</a>. We will not configure it manually as described in that document; instead, we will tell <font color="red">libvirt</font> to do that for us.</p>
+<p><strong>Loading the required kernel modules and understanding the role of key <font color="red">filesystem</font> entries</strong></p>
+<p>For a detailed description of how to deploy <font color="red">usNIC</font> you can refer to the <a href="http://www.cisco.com/c/en/us/td/docs/unified_computing/ucs/usnic/b/deployment/2_2/b_Cisco_<font color="red">usNIC</font>_Deployment_Guide_For_B-Series_Blade_Servers.html" target="_blank">usNIC deployment guide</a> (available at cisco.com). Keep in mind that:</p>
+<ol>
+<li>The installation of the kernel modules is only needed in the host (not the <font color="red">container</font>).</li>
+<li>In the <font color="red">container</font> <font color="red">filesystem</font>, you only need to install the <font color="red">user space</font> libraries and packages.</li>
+</ol>
+<p>The only missing point, which is the focus of this article, is to make sure certain files created by step 1) will be visible and usable inside the <font color="red">container</font>&#8217;s <font color="red">filesystem</font>.</p>
+<p>Normally, users do not need to have a detailed knowledge of what files are created by the kernel modules and used by the <font color="red">user space</font> libraries. In our case, however, we <em>do</em> need to have some knowledge about these files in order to properly populate the <font color="red">container</font> <font color="red">filesystem</font>.</p>
+<p>Before I show you the <font color="red">libvirt</font> <font color="red">XML</font> configuration, let&#8217;s first discuss the role of three key file/directories we will need to tell <font color="red">libvirt</font> about.</p>
+<p>Once you have created a &#8220;Virtual <font color="red">NIC</font>&#8221; (vNIC) on the <font color="red">Cisco</font> <font color="red">UCS</font> Virtual <font color="red">Interface</font> Card (VIC) and enabled the <font color="red">usNIC</font> feature in it (per the <font color="red">Cisco</font> documentation cited above), you will see the following three <font color="red">filesystem</font> entries in the host:</p>
+<ol>
+<li>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/dev/infiniband/uverbsX</div></div>
+<p>This is a character <font color="red">device</font> used by the <font color="red">user space</font> library to configure a <font color="red">usNIC</font> enabled <font color="red">network interface</font>.</li>
+<li>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/sys/class/infiniband/usnic_X/</div></div>
+<p>This is a directory used by the <font color="red">usNIC</font> <font color="red">kernel driver</font> to export a number of configuration parameters. For example, the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">iface</div></div>
+<p>file in this directory tells you with which <font color="red">network interface</font> (visible with</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">ifconfig</div></div>
+<p>) this <font color="red">usNIC</font> entry is associated to.</li>
+<li>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/sys/class/infiniband_verbs/uverbsX/</div></div>
+<p>Among the <font color="red">data</font> exported here by the <font color="red">Linux</font> Verbs <font color="red">API</font>, you may find useful these two files:</p>
+<ul>
+<li>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">dev</div></div>
+<p>This is the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">major:minor</div></div>
+<p><font color="red">device</font> <font color="red">ID</font> which will match with what you will see in</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/dev/infiniband/uverbsX</div></div>
+<p>. You can refer back to this information when/if you want to check if <font color="red">libvirt</font> configures the <font color="red">cgroup</font> <font color="red">device</font> <font color="red">whitelist</font> properly (see example, below).</li>
+<li>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">ibdev</div></div>
+<p>This is the associated usnic_X entry in</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/sys/class/infiniband/usnic_X/</div></div>
+</li>
+</ul>
+</li>
+</ol>
+<p>Note that:</p>
+<ul>
+<li>The
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/sys/class/infiniband/usnic_X/</div></div>
+<p>directory will be populated when you load the <font color="red">usNIC</font> <font color="red">kernel driver</font> module (i.e.,</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">usnic_verbs.ko</div></div>
+<p>).</li>
+<li>The
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/dev/infiniband/</div></div>
+<p>and</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/sys/class/infiniband_verbs/</div></div>
+<p>directories also will be populated when you load the <font color="red">usNIC</font> <font color="red">kernel driver</font> module.</li>
+</ul>
+<p>In order to find the mapping between one of the <font color="red">network interfaces</font> visible with ifconfig and the associated</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">uverbsX</div></div>
+<p>entry in</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/dev/infiniband</div></div>
+<p>, you can either use the files in</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/<font color="red">sys</font></div></div>
+<p>described above, or use the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">usd_devinfo</div></div>
+<p>command that comes with the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">usnic-utils</div></div>
+<p>package.</p>
+<p><a name="example"></a><strong>Example of <font color="red">libvirt</font> LXC <font color="red">container</font> configuration</strong></p>
+<p><font color="red">Libvirt</font> describes the configuration of <font color="red">containers</font> (as well as <font color="red">virtual machines</font>) with an <font color="red">XML</font> file. Here is a link to <a href="http://<font color="red">libvirt</font>.org/drvlxc.html" target="_blank">detailed documentation of all libvirt&#8217;s <font color="red">XML</font> options</a>. In the context of this article, I recommend reading the following sections of that documentation:</p>
+<ul>
+<li><font color="red">Filesystem</font> mounts</li>
+<li><font color="red">Device</font> nodes</li>
+<li><font color="red">Filesystem</font> isolation</li>
+<li><font color="red">Device access</font></li>
+</ul>
+<p>Let&#8217;s start with a simple <font color="red">container</font> configuration and add the delta needed to assign one <font color="red">usNIC</font> enabled host <font color="red">Ethernet</font> <font color="red">interface</font> to the <font color="red">container</font>. This example shows how to create a <font color="red">container</font> on a <a href="http://www.cisco.com/c/en/us/products/servers-unified-computing/ucs-c240-m3-rack-server/index.html" target="_blank"><font color="red">Cisco</font> <font color="red">UCS</font> C240-M3 <font color="red">rack server</font> running Centos 7.</a></p>
+<p>Here is a stripped-down version of the <font color="red">container</font> <font color="red">XML</font>; I have removed the details that are not relevant for this discussion:</p>
+<hr />
+<pre>&lt;domain type='lxc'&gt;
+
+  &lt;name&gt;container_1&lt;/name&gt;
+
+  &lt;memory unit='GiB'&gt;8&lt;/memory&gt;
+
+  &lt;currentMemory unit='GiB'&gt;0&lt;/currentMemory&gt;
+
+  &lt;os&gt;
+
+    &lt;type arch='x86_64'&gt;<font color="red">exe</font>&lt;/type&gt;
+
+    &lt;init&gt;/sbin/init&lt;/init&gt;
+
+  &lt;/os&gt;
+
+  &lt;devices&gt;
+
+    &lt;filesystem type='mount' accessmode='passthrough'&gt;
+
+      &lt;source dir='/usr/local/var/lib/lxc/<font color="red">container</font>_1/rootfs'/&gt;
+
+      &lt;target dir='/'/&gt;
+
+    &lt;/<font color="red">filesystem</font>&gt;
+
+  &lt;console type='pty'/&gt;
+
+  &lt;/devices&gt;
+
+&lt;/domain&gt;
+
+</pre>
+<hr />
+<p>&nbsp;</p>
+<p>The only detail worth noting is that the container root filesystem is located at</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/usr/local/var/lib/lxc/container_1/rootfs</div></div>
+<p>in the host.</p>
+<p>Note that with this basic configuration, and according to the section &#8220;<font color="red">Device</font> Nodes&#8221; mentioned above, the <font color="red">container</font>&#8217;s</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/dev</div></div>
+<p>tree will not contain any of the special entries from the host&#8217;s</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/dev</div></div>
+<p>tree, including the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/dev/infiniband</div></div>
+<p>directory that we need for <font color="red">usNIC</font>:</p>
+<hr />
+<pre><span style="color: #0000ff">[container_1]#</span> ls /dev/infiniband
+
+ ls: cannot access /dev/infiniband: No such file or directory</pre>
+<hr />
+<p>&nbsp;</p>
+<p>However, since</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/<font color="red">sys</font></div></div>
+<p>is shared with the host, you can see the entries associated to <font color="red">usNIC</font> enabled <font color="red">Ethernet</font> <font color="red">interfaces</font>:</p>
+<hr />
+<pre><span style="color: #0000ff">[container_1]#</span> find /sys/class -name uverbs*
+
+ /sys/class/infiniband_verbs/uverbs0
+
+ /sys/class/infiniband_verbs/uverbs1
+
+ /sys/class/infiniband_verbs/uverbs2
+
+ /sys/class/infiniband_verbs/uverbs3
+
+<span style="color: #0000ff">[container_1]#</span> find /sys/class -name <font color="red">usnic</font>*
+
+ /sys/class/infiniband/usnic_0
+
+ /sys/class/infiniband/usnic_1
+
+ /sys/class/infiniband/usnic_2
+
+ /sys/class/infiniband/usnic_3</pre>
+<hr />
+<p>&nbsp;</p>
+<p>But notice that none of the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/dev/infiniband/uverbsX</div></div>
+<p><font color="red">devices</font> are present (yet) in the <font color="red">container</font>. Running a simple <font color="red">usNIC</font> diagnostic program in the <font color="red">container</font> shows warnings (one for each <font color="red">device</font> I have configured on my server):</p>
+<hr />
+<pre><span style="color: #0000ff">[container_1]#</span> /opt/cisco/usnic/bin/usd_devinfo
+
+ usd_open_for_attrs: No such <font color="red">device</font>
+
+ usd_open_for_attrs: No such <font color="red">device</font>
+
+ usd_open_for_attrs: No such <font color="red">device</font>
+
+ usd_open_for_attrs: No such <font color="red">device</font></pre>
+<hr />
+<p>&nbsp;</p>
+<p>Since we did not assign any host <font color="red">network interface</font> to the <font color="red">container</font>, by default, <font color="red">libvirt</font> allowed the <font color="red">container</font> to see all <font color="red">Ethernet</font> <font color="red">interfaces</font> (i.e., <a href="http://libvirt.org/drvlxc.html#securenetworking" target="_blank">it did not create a <font color="red">new network namespace</font></a>):</p>
+<hr />
+<pre><span style="color: #0000ff">[container_1]#</span> <font color="red">ip</font> link
+
+ 1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; <font color="red">mtu</font> 65536 qdisc noqueue state UNKNOWN mode DEFAULT
+
+ link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+
+ 8: enp6s0f0: &lt;<font color="red">BROADCAST</font>,<font color="red">MULTICAST</font>,UP,LOWER_UP&gt; <font color="red">mtu</font> 9000 <font color="red">qdisc mq state</font> UP mode DEFAULT qlen 1000
+
+ link/ether 00:25:b5:00:00:04 brd ff:ff:ff:ff:ff:ff
+
+ 9: <font color="red">enp7s0f0</font>: &lt;<font color="red">BROADCAST</font>,<font color="red">MULTICAST</font>,UP,LOWER_UP&gt; <font color="red">mtu</font> 9000 <font color="red">qdisc mq state</font> UP mode DEFAULT qlen 1000
+
+ link/ether 00:25:b5:00:00:14 brd ff:ff:ff:ff:ff:ff
+
+ 10: enp8s0f0: &lt;<font color="red">BROADCAST</font>,<font color="red">MULTICAST</font>,UP,LOWER_UP&gt; <font color="red">mtu</font> 9000 <font color="red">qdisc mq state</font> UP mode DEFAULT qlen 1000
+
+ link/ether 00:25:b5:00:00:24 brd ff:ff:ff:ff:ff:ff
+
+ 11: enp9s0f0: &lt;<font color="red">BROADCAST</font>,<font color="red">MULTICAST</font>,UP,LOWER_UP&gt; <font color="red">mtu</font> 9000 <font color="red">qdisc mq state</font> UP mode DEFAULT qlen 1000
+
+ link/ether 00:25:b5:01:01:0f brd ff:ff:ff:ff:ff:ff</pre>
+<hr />
+<p>&nbsp;</p>
+<p>Now we edit the <font color="red">libvirt</font> configuration to assign one <font color="red">usNIC</font> enabled <font color="red">interface</font> to the <font color="red">container</font>. This means that inside the <font color="red">container</font>:</p>
+<ol>
+<li>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/dev/infiniband/</div></div>
+<p>will show an entry for the assigned <font color="red">usNIC</font> enabled <font color="red">interface</font></li>
+<li>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">ifconfig</div></div>
+<p>will also show the <font color="red">usNIC</font> enabled <font color="red">Ethernet</font> <font color="red">interface</font> .</li>
+</ol>
+<p>Let&#8217;s assign</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer"><font color="red">enp7s0f0</font></div></div>
+<p>(i.e., </p>
+<div class="codecolorer-<font color="red">container</font> text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">usnic_1</div></div>
+<p>) to the container. Here is the new <font color="red">libvirt</font> LXC <font color="red">container</font> configuration (the changes compared to</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">container_1</div></div>
+<p>are shown in red):</p>
+<hr />
+<pre>&lt;domain type='lxc'&gt;
+
+  &lt;name&gt;<span style="color: #ff0000">container_2</span>&lt;/name&gt;
+
+  &lt;memory unit='GiB'&gt;8&lt;/memory&gt;
+
+  &lt;currentMemory unit='GiB'&gt;0&lt;/currentMemory&gt;
+
+  &lt;os&gt;
+
+    &lt;type arch='x86_64'&gt;<font color="red">exe</font>&lt;/type&gt;
+
+    &lt;init&gt;/sbin/init&lt;/init&gt;
+
+  &lt;/os&gt;
+
+  &lt;devices&gt;
+
+    &lt;filesystem type='mount' accessmode='passthrough'&gt;
+
+      &lt;source dir='/usr/local/var/lib/lxc/centos_container/rootfs'/&gt;
+
+      &lt;target dir='/'/&gt;
+
+    &lt;/filesystem&gt;
+
+    <span style="color: #ff0000">&lt;hostdev mode='capabilities' type='misc'&gt;
+
+      &lt;source&gt;
+
+        &lt;char&gt;/dev/infiniband/uverbs1&lt;/char&gt;
+
+      &lt;/source&gt;
+
+    &lt;/hostdev&gt;
+
+    &lt;hostdev mode='capabilities' type='net'&gt;
+
+      &lt;source&gt;
+
+        &lt;interface&gt;<font color="red">enp7s0f0</font>&lt;/interface&gt;
+
+      &lt;/source&gt;
+
+    &lt;/hostdev&gt;</span>
+
+  &lt;console type='pty'/&gt;
+
+  &lt;/devices&gt;
+
+&lt;/domain&gt;
+
+</pre>
+<hr />
+<p>&nbsp;</p>
+<p>You can find more details about the above two new pieces of configuration <a href="https://libvirt.org/formatdomain.html#elementsHostDevCaps" target="_blank">here</a>.</p>
+<p>If I start the <font color="red">container</font> with the new &#8220;container_2&#8221; configuration, this is what I can see now from within it:</p>
+<ol>
+<li>Only one <font color="red">network interface</font> (
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer"><font color="red">enp7s0f0</font></div></div>
+<p>)</li>
+<li>The <font color="red">device</font> node 
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/dev/infiniband/uverbs1</div></div>
+</li>
+<li>The same four entries in
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/<font color="red">sys</font></div></div>
+<p>(as with the previous configuration</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">container_1</div></div>
+<p>)</li>
+</ol>
+<p>Specifically:</p>
+<hr />
+<pre><span style="color: #0000ff">[container_2]#</span> <font color="red">ip</font> link
+
+ 1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; <font color="red">mtu</font> 65536 qdisc noqueue state UNKNOWN mode DEFAULT
+
+ link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+
+ 9: <font color="red">enp7s0f0</font>: &lt;<font color="red">BROADCAST</font>,<font color="red">MULTICAST</font>,UP,LOWER_UP&gt; <font color="red">mtu</font> 9000 <font color="red">qdisc mq state</font> UP mode DEFAULT qlen 1000
+
+ link/ether 00:25:b5:00:00:14 brd ff:ff:ff:ff:ff:ff
+
+<span style="color: #0000ff">[container_2]#</span> ls -ls /dev/infiniband/
+
+total 0
+
+ 0 crwx------. 1 <font color="red">root root</font> 231, 193 Apr 1 20:44 uverbs1
+
+<span style="color: #0000ff">[container_2]#</span> find /sys/class -name uverbs*
+
+ /sys/class/infiniband_verbs/uverbs0
+
+ /sys/class/infiniband_verbs/uverbs1
+
+ /sys/class/infiniband_verbs/uverbs2
+
+ /sys/class/infiniband_verbs/uverbs3
+
+<span style="color: #0000ff">[container_2]#</span> find /sys/class -name <font color="red">usnic</font>*
+
+ /sys/class/infiniband/usnic_0
+
+ /sys/class/infiniband/usnic_1
+
+ /sys/class/infiniband/usnic_2
+
+ /sys/class/infiniband/usnic_3</pre>
+<hr />
+<p>&nbsp;</p>
+<p>Here is how the <font color="red">usNIC</font> diagnostic command</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">usd_devinfo</div></div>
+<p>shows the information about the visible <font color="red">usNIC</font> enabled <font color="red">network interfaces</font> (there are still some warnings because of the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">uverbsX</div></div>
+<p>entries that are present in</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/<font color="red">sys</font></div></div>
+<p>but not in</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/dev/infiniband</div></div>
+<p>):</p>
+<hr />
+<pre><span style="color: #0000ff">[container_2]#</span> /opt/cisco/usnic/bin/usd_devinfo           
+
+usd_open_for_attrs: No such <font color="red">device</font>
+
+usnic_1:
+
+        <font color="red">Interface</font>:               <font color="red">enp7s0f0</font>
+
+        <font color="red">MAC Address</font>:             00:25:b5:00:00:14
+
+        <font color="red">IP</font> Address:              10.0.7.1
+
+        Netmask:                 255.255.255.0
+
+        Prefix len:              24
+
+        <font color="red">MTU</font>:                     9000
+
+        Link State:              UP
+
+        Bandwidth:               10 Gb/s
+
+        <font color="red">Device</font> <font color="red">ID</font>:               UCSB-PCIE-CSC-02 [VIC 1225] [0x0085]
+
+        Firmware:                2.2(2.5)
+
+        VFs:                     64
+
+        CQ per VF:               6
+
+        QP per VF:               6
+
+        Max CQ:                  256
+
+        Max CQ Entries:          65535
+
+        Max QP:                  384
+
+        Max Send Credits:        4095
+
+        Max Recv Credits:        4095
+
+        Capabilities:
+
+          CQ sharing: yes
+
+          PIO Sends:  no
+
+usd_open_for_attrs: No such <font color="red">device</font>
+
+usd_open_for_attrs: No such <font color="red">device</font></pre>
+<hr />
+<p>&nbsp;</p>
+<p>Let&#8217;s compare the content of</p>
+<div class="codecolorer-<font color="red">container</font> text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/dev/infiniband</div></div>
+<p>in the host and in the container:</p>
+<hr />
+<pre><span style="color: #0000ff">[container_2]#</span> ls -ls /dev/infiniband/
+
+total 0
+
+ 0 crwx------. 1 <font color="red">root root</font> 231, 193 Apr 1 20:44 uverbs1</pre>
+<hr />
+<pre><span style="color: #ff00ff">[host]#</span> ls -ls /dev/infiniband/
+
+total 0
+
+ 0 crw-rw-rw-. 1 <font color="red">root root</font> 231, 192 Mar 31 17:30 uverbs0
+
+ 0 crw-rw-rw-. 1 <font color="red">root root</font> 231, 193 Mar 31 17:30 uverbs1
+
+ 0 crw-rw-rw-. 1 <font color="red">root root</font> 231, 194 Mar 31 17:30 uverbs2
+
+ 0 crw-rw-rw-. 1 <font color="red">root root</font> 231, 195 Mar 31 17:30 uverbs3</pre>
+<hr />
+<p>&nbsp;</p>
+<p>As you can see,</p>
+<div class="codecolorer-<font color="red">container</font> text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">uverbs1</div></div>
+<p>&#8212; and only</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">uverbs1</div></div>
+<p>&#8212; is visible in the container. The <font color="red">device</font> major number for all</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">uverbsX</div></div>
+<p>entries is 231, while the <font color="red">device</font> minors are 192/193/194/195.</p>
+<p>Let&#8217;s now compare the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer"><font color="red">device</font>.list</div></div>
+<p>device <font color="red">whitelist</font> for the <font color="red">container</font> and for the host:</p>
+<hr />
+<pre><span style="color: #0000ff">[container_2]#</span> cat /sys/fs/cgroup/devices/devices.list
+
+ c 1:3 rwm
+
+ c 1:5 rwm
+
+ c 1:7 rwm
+
+ c 1:8 rwm
+
+ c 1:9 rwm
+
+ c 5:0 rwm
+
+ c 5:2 rwm
+
+ c 10:229 rwm
+
+ c 231:193 rwm c 136:* rwm</pre>
+<hr />
+<pre><span style="color: #ff00ff">[host]#</span> cat /sys/fs/cgroup/devices/devices.list
+
+ a *:* rwm</pre>
+<hr />
+<p>&nbsp;</p>
+<p>As you can see from the two commands above:</p>
+<ul>
+<li>The hostdev/misc entry in the <font color="red">libvirt</font> <font color="red">XML</font> config added the 231:193 rule to the <font color="red">container</font> <font color="red">device</font> <font color="red">whitelist</font></li>
+<li>The rest of the <font color="red">devices</font> are the default ones added by <font color="red">libvirt</font></li>
+</ul>
+<p>We can see that &#8220;ping&#8221; works just fine from inside the <font color="red">container</font> (using the <font color="red">enp7s0f0</font> <font color="red">interface</font>):</p>
+<hr />
+<pre><span style="color: #0000ff">[container_2]#</span> <font color="red">ip</font> addr show dev <font color="red">enp7s0f0</font>
+
+9: <font color="red">enp7s0f0</font>: &lt;<font color="red">BROADCAST</font>,<font color="red">MULTICAST</font>,UP,LOWER_UP&gt; <font color="red">mtu</font> 9000 <font color="red">qdisc mq state</font> UP qlen 1000
+
+    link/ether 00:25:b5:00:00:14 brd ff:ff:ff:ff:ff:ff
+
+    inet 10.0.7.1/24 brd 10.0.7.255 scope global <font color="red">enp7s0f0</font>
+
+       valid_lft forever preferred_lft forever
+
+    inet6 fe80::225:b5ff:fe00:14/64 scope link 
+
+       valid_lft forever preferred_lft forever
+
+<span style="color: #0000ff">[container_2]#</span> ping -c 1 10.0.7.2
+
+ PING 10.0.7.2 (10.0.7.2) 56(84) <font color="red">bytes</font> of <font color="red">data</font>.
+
+ 64 <font color="red">bytes</font> from 10.0.7.2: icmp_seq=1 ttl=64 time=0.279 ms
+
+--- 10.0.7.2 ping statistics ---
+
+ 1 <font color="red">packets</font> transmitted, 1 received, 0% <font color="red">packet loss</font>, time 0ms
+
+ rtt min/avg/max/mdev = 0.279/0.279/0.279/0.000 ms</pre>
+<hr />
+<p>&nbsp;</p>
+<p>We can test the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">usnic_1</div></div>
+<p><font color="red">interface</font> using the</p>
+<div class="codecolorer-<font color="red">container</font> text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">usd_pingpong</div></div>
+<p>command to another container, similarly configured with <font color="red">usNIC</font> enabled <font color="red">interface</font> on another <font color="red">Cisco</font> <font color="red">UCS</font> C240-M3 <font color="red">rack server</font> connected on a regular IP/Ethernet <font color="red">network</font>:</p>
+<hr />
+<pre><span style="color: #0000ff">[container_2]#</span> /opt/cisco/usnic/bin/usd_pingpong -d usnic_1 -h 10.0.7.2
+
+open usnic_1 OK, <font color="red">IP</font>=10.0.7.1
+
+QP create OK, addr -h 10.0.7.1 -p 3333
+
+sending params...
+
+payload_size=4, pkt_size=46
+
+posted 63 RX buffers, size=64 (4)
+
+100000 pkts, <span style="color: red">1.790 us / HRT</span></pre>
+<hr />
+<p>&nbsp;</p>
+<p>The 1.79 microsecond half-round trip ping-pong time (show in red, above) shows that we are getting bare-metal performance inside of the <font color="red">container</font>.</p>
+<p><strong>Wrapup</strong></p>
+<p>As <font color="red">Linux</font> <font color="red">containers</font> become more mainstream &#8212; potentially even in <font color="red">HPC</font> &#8212; it will become more important to understand how to expose native hardware functionality properly.  Documentation and &#8220;best practice&#8221; knowledge is still somewhat scarce in the rapidly-evolving <font color="red">Linux</font> <font color="red">containers</font> ecosystem; this <font color="red">blog entry</font> explains some of the underlying concepts and shows some examples of how adding just a few lines of <font color="red">XML</font> allows bare-metal performance with the isolation and configurability of <font color="red">Linux</font> <font color="red">containers</font>.</p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=hpc">HPC</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=linux">Linux</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=linux-containers">Linux Containers</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=usnic">USNIC</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+		</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to High Performance Computing Networking:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogHighPerformanceComputingNetworking', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogHighPerformanceComputingNetworking" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with High Performance Computing Networking</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/Cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/Cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://youtube.com/Cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogHighPerformanceComputingNetworking"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.twit.tv/FLOSS" target="_blank">FLOSS Weekly</a></li>
+                      <li><a href="http://www.hpcwire.com/" target="_blank">HPCwire</a></li>
+                      <li><a href="http://insidehpc.com/" target="_blank">insideHPC</a></li>
+                      <li><a href="http://www.rce-cast.com/" target="_blank">RCE-cast</a></li>
+                      <li><a href="http://perilsofparallel.blogspot.com/" target="_blank">The Perils of Parallel</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/Cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/Cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 166879;
+			var orig_count = 0;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=https://blogs.cisco.com/performance/usnic-inside-linux-containers&text=usNIC inside Linux containers&via=Cisco" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/performance/usnic-inside-linux-containers&title=usNIC inside Linux containers" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/performance/usnic-inside-linux-containers" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/performance/usnic-inside-linux-containers" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: usNIC inside Linux containers&body=I saw this post on Cisco High Performance Computing Networking blog and thought you might like to read it.%0A%0AusNIC inside Linux containers%0A%0Ahttps://blogs.cisco.com/performance/usnic-inside-linux-containers%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

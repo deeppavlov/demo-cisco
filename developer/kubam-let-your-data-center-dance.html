@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  KUBAM: Let your Data Center Dance!</title>
+
+	<meta property="og:image" content="https://alln-extcloud-storage.cisco.com/ciscoblogs/59f20af556267-460x230.png"/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"236552"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Vulnerability Spotlight: Multiple Vulnerabilities in Cesanta Mongoose Server' href='https://blogs.cisco.com/security/talos/vulnerability-spotlight-multiple-vulnerabilities-in-cesanta-mongoose-server' />
+<link rel='next' title='One Secure Network for Industrie 4.0' href='https://blogs.cisco.com/manufacturing/one-secure-network-for-industrie-4-0' />
+
+<link rel="canonical" href="https://blogs.cisco.com/developer/kubam-let-your-data-center-dance" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=236552' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="KUBAM: Let your Data Center Dance!"/>
+  <meta property="og:url" content="https://blogs.cisco.com/developer/kubam-let-your-data-center-dance"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2017-10-31T08:33:13+00:00"/>
+  <meta property="article:modified_time" content="2017-10-31T08:33:13+00:00" />
+  <meta property="og:updated_time" content="2017-10-31T08:33:13+00:00" />
+  <meta property="article:section" content="Developer"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="KUBAM: Let your Data Center Dance!"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/developer/kubam-let-your-data-center-dance"/>
+  <meta name="twitter:description" content="Over the last few months I&#039;ve been writing posts about a simplified manner in which we can automate solutions on UCS called KUBAM.  Everything we&#039;ve done has been open and available on Github to solicit feedback and let the community know what we are doing.  We haven&#039;t been super vocal about it thou"/>
+  <meta name="twitter:image" content="https://alln-extcloud-storage.cisco.com/ciscoblogs/59f20af556267.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521507946";
+		var sig = "292f1d700b2e0fa19b2299632b290ea7";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/2iODBZG&text=Automate+solutions+on+UCS+with+KUBAM.+%40Vallard+shows+you+how.+%23DevNet+%23containers+%23devops+%23cloud&via=ciscodevnet" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/developer/kubam-let-your-data-center-dance&title=KUBAM: Let your Data Center Dance!" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/developer/kubam-let-your-data-center-dance" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/developer/kubam-let-your-data-center-dance" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: KUBAM: Let your Data Center Dance!&body=I saw this post on Cisco Developer blog and thought you might like to read it.%0A%0AKUBAM: Let your Data Center Dance!%0A%0Ahttps://blogs.cisco.com/developer/kubam-let-your-data-center-dance%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/developer/'>Developer</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/59f20af556267-460x230.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Developer  						</span>
+						<h1 id="post-236552" class="kindle_title title">KUBAM: Let your Data Center Dance!</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1508864511-bpthumb.jpg"></div><div class="author_rewards_box"></div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/vallardbenincosa" title="Posts by Vallard Benincosa" rel="author">Vallard Benincosa</a> - October 31, 2017 - 0 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p>Over the last few months I&#8217;ve been writing <a class="jive-link-blog-small" href="https://communities.cisco.com/community/technology/datacenter/compute-and-storage/ucs_management/blog/2017/06/09/kubam--kubernetes-on-ucs-bare-metal">posts</a> about a simplified manner in which we can automate <font color="red">solutions</font> on <font color="red">UCS</font> called <a class="jive-link-external-small" href="http://kubam.io/" target="_blank" rel="nofollow noopener"><font color="red">KUBAM</font></a>.  Everything we&#8217;ve done has been open and available on <a class="jive-link-external-small" href="http://github.com/CiscoUcs/KUBaM" target="_blank" rel="nofollow noopener">Github</a> to solicit feedback and let the community know what we are doing.  We haven&#8217;t been super vocal about it though as the velocity of how it works has been changing extremely fast.  We are, however, now to a point where the groundwork is laid and we can begin to broadcast the awesomeness of <font color="red">KUBAM</font>.  Please note that the documentation on the <font color="red">KUBAM</font> website hasn&#8217;t been updated yet to reflect this.  This is a work in progress.  If you have questions, want to get involved in helping, or get stuck testing, please leave a comment on this post or hit me up on <a class="jive-link-external-small" href="https://twitter.com/vallard" target="_blank" rel="nofollow noopener">twitter</a>.</p>
+<p><strong>Vision</strong></p>
+<p><font color="red">KUBAM</font> aims to let your <font color="red">data center</font> dance.  We want the process of <font color="red">deploying</font> <font color="red">solutions</font> to <font color="red">UCS</font> to be as simple and painless as possible.  We want to remove any friction you may have with <font color="red">deploying</font> a <font color="red">UCS</font> <font color="red">solution</font>.  We can do this because of the following:</p>
+<ul>
+<li><font color="red">UCS</font> has the most complete <font color="red">API</font> of any <font color="red">server platform</font>.  With this obscene power, we can automate all aspects of it.</li>
+<li><font color="red">Container technologies</font> have become more advanced to allow simple software provisioning and packaging.  This means you can install complicated software using <font color="red">containers</font> that work instantly.  Dependency trenching  is not for you.  That&#8217;s for the past.</li>
+</ul>
+<p>All <font color="red">solutions</font> on <font color="red">UCS</font> start with <font color="red">deploying</font> an <font color="red">operating system</font>.  You might use <font color="red">VMware</font> <font color="red">ESXi</font>, Microsoft Windows, or your favorite distribution of Linux.  This is the first problem we need to make painless.  Up until now it hasn&#8217;t been that awesome.  It&#8217;s not just <font color="red">UCS</font>, its every <font color="red">bare metal</font> <font color="red">server</font> on the planet.  You rationalize it though, by saying:  &#8220;Well, we only do it once&#8221;.  But we think it should be different.</p>
+<p>When you provision a machine instance on a <font color="red">cloud</font> or virtual environment the process of installing an <font color="red">operating system</font> is painless.  It&#8217;s built in.  You go to the <a href="http://www.cisco.com/web/solutions/trends/cloud/build-public-cloud.html" title="<font color="red">cloud providers</font>" target="_blank" class="seoal-link">cloud providers</a> website or use an <font color="red">API</font> to accomplish this.  For many people even this step is becoming unnecessary.  As the industry move towards <a class="jive-link-external-small" href="https://martinfowler.com/articles/serverless.html" target="_blank" rel="nofollow noopener">serverless architectures</a>, <font color="red">deploying</font> code on a runtime is the only thing you really care about.   This is what we want to accomplish with <font color="red">KUBAM</font>.  A <font color="red">seamless experiences</font> using advanced software to make these <font color="red">solutions</font> possible.  We&#8217;re starting with the <font color="red">Operating System</font>.</p>
+<p><strong><img class="aligncenter size-large wp-image-236554" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/59f0ceca868aa-550x306.png" alt="" width="550" height="306" /><font color="red">KUBAM</font> Today</strong></p>
+<p>In the beginning of October 2017 we finished the first <a class="jive-link-external-small" href="https://docs.<font color="red">docker</font>.com/compose/overview/" target="_blank" rel="nofollow noopener">docker compose</a> file that includes a front end web interface and an <font color="red">API</font>.  As of this blog post, you can download that, plug it into your environment and <font color="red">deploy</font> CentOS 7.3 or <font color="red">ESXi</font> 6.0/6.5 with lots more coming.</p>
+<p>Here are the requirements to get started:</p>
+<ol>
+<li>You have an existing <font color="red">UCS</font> environment that has <font color="red">Fabric Interconnects</font> that is connected to either blades or rack mount <font color="red">servers</font></li>
+<li>You have a <font color="red">VM</font> or machine running somewhere that has <font color="red">docker</font> installed as well as docker-compose that can access the <font color="red">UCS</font>.  This can either run on <font color="red">UCS</font> or be stand alone somewhere else in the <font color="red">data center</font>.  This will be the <font color="red">KUBAM</font> <font color="red">node</font>.</li>
+<li>You have an ISO image of the required <font color="red">Operating system</font> (CentOS Linux, etc) that is required for your <font color="red">solution</font>.</li>
+</ol>
+<p>That&#8217;s basically it.  We wanted to make the requirements and the friction as easy as possible.  Now what do you do next to get running?</p>
+<p>You simply run:</p>
+<pre># curl https://raw.githubusercontent.com/CiscoUcs/KUBaM/master/docker-compose.yml --output docker-compose.yml
+
+# docker-compose up -d</pre>
+<p>At that point you point your web browser to the <font color="red">IP</font> address of the <font color="red">server</font> you ran the <font color="red">docker</font> compose command on.  (You could even run this on your laptop!).  The picture below is what <font color="red">KUBAM</font> looks like at first glance:<img class="aligncenter size-large wp-image-236557" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/59f0d25d8dbd5-550x316.png" alt="" width="550" height="316" /></p>
+<p>As you can see the first thing it asks you is for the credentials and <font color="red">IP</font> address of your <font color="red">UCS</font> environment.  Today <font color="red">KUBAM</font> only handles one <font color="red">UCS</font> domain.  Once this is entered there are a few more easy steps.</p>
+<p><strong><font color="red">Network Information</font></strong></p>
+<p><font color="red">KUBAM</font> asks for the <font color="red">UCS</font> <font color="red">VLAN</font> that you wish to install over.  This is the <font color="red">VLAN</font> the <font color="red">servers</font> will <font color="red">network</font> boot from.  This <font color="red">VLAN</font> can have a <font color="red">DHCP</font> <font color="red">server</font> or other services running on it. <font color="red">KUBAM</font> doesn&#8217;t care.  It won&#8217;t interfere with any of these settings since <font color="red">KUBAM</font> doesn&#8217;t use <font color="red">DHCP</font> nor mapped <font color="red">MAC addresses</font> to <font color="red">deploy</font> the <font color="red">solutions</font>.  <font color="red">KUBAM</font> is a ninja.  These <font color="red">networks</font> can even be in production.  <font color="red">KUBAM</font> could care less.</p>
+<p>In this menu <font color="red">KUBAM</font> wants to know what <font color="red">network</font> settings the newly provisioned <font color="red">operating systems</font> will need.  Netmask, <font color="red">DNS</font>, and router information.  We recommend <font color="red">DNS</font> point to <a class="jive-link-external-small" href="https://www.opendns.com/" target="_blank" rel="nofollow noopener">OpenDNS</a> name <font color="red">servers</font> 208.67.222.222.  In this way you get even more security built in!</p>
+<p><img class="aligncenter size-large wp-image-236558" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/59f0d59a92968-550x375.png" alt="" width="550" height="375" /></p>
+<p><strong><font color="red">Server</font> Instances</strong></p>
+<p>When all the <font color="red">network</font> settings appear to be in place <font color="red">KUBAM</font> wants to know which <font color="red">servers</font> you would like to be provisioned.  Here you select the <font color="red">UCS</font> <font color="red">servers</font> to place in the <font color="red">KUBAM</font> pool.  You are then instructed to give each <font color="red">server</font> an <font color="red">IP</font> address, operating system, and role of what <font color="red">solution</font> should be installed on this <font color="red">server</font>.  <font color="red">KUBAM</font> knows you hate typing <font color="red">IP</font> addresses and sequential hostnames, so it tries to be intuitive by auto populating hostnames and <font color="red">IP</font> addresses for you.  Giddy Up!</p>
+<p><img class="aligncenter size-large wp-image-236559" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/59f0d5e372ca0-550x431.png" alt="" width="550" height="431" /></p>
+<p><strong>Operating System and Deployment</strong></p>
+<p>Once the <font color="red">Operating system</font> is extracted and boot images are created, you simply press &#8220;<font color="red">Deploy</font>&#8221; and <font color="red">KUBAM</font> goes to work.  It creates <font color="red">service profiles</font> automatically and maps the installation media using the automated vMedia policies.  After waiting several minutes, your machines are ready to carry out your inner most desires.  Want to run an app that controls drones?  Create an ICO? Invent something entirely new?  <font color="red">KUBAM</font> is ok with that.  It doesn&#8217;t give it a single thought.  It just does what you want and stays out of the way.</p>
+<p>At present time <font color="red">KUBAM</font> is pretty slow.  The entire process can take about 25 minutes, including the time taken to download the <font color="red">docker</font> images and <font color="red">deploy</font>.  <font color="red">KUBAM</font> knows you don&#8217;t like to wait.  Fortunately for you there&#8217;s no extra steps.  You just hang out, grab coffee, or see if your crypto currency is increasing in value while it does it all for you.  Once you press that &#8220;<font color="red">Deploy</font>&#8221; button you do nothing else but wait.  Soon, whether it be an automated ESX <font color="red">VSAN</font> cluster or a brand new Kubernetes cluster it will be ready for you.  It is the most simple way you could ever <font color="red">deploy</font> a <font color="red">solution</font> like this in your own <font color="red">datacenter</font>.  It is also a process we are constantly looking to further simplify and make life easier for <font color="red">UCS</font> customers.</p>
+<p><strong>Under the Hood</strong></p>
+<p><font color="red">KUBAM</font> aims to inject so much lubrication into your <font color="red">data center</font> that you will think you need to strap down your racks to the cage.   <font color="red">KUBAM</font> doesn&#8217;t want you to even care about how it works but just know that it works, and works well.  However, <font color="red">KUBAM</font> understands that you are searching for answers and that you can handle the truth.  That is one reason <font color="red">KUBAM</font> is <font color="red">open source</font>.  <font color="red">KUBAM</font> will give you the truth and not tell you to &#8220;stay tuned&#8221; nor wait any longer.</p>
+<p><font color="red">KUBAM</font> is built with two <font color="red">containers</font>.  One <font color="red">container</font> (<a class="jive-link-external-small" href="https://github.com/CiscoUcs/KUBAM-Frontend" target="_blank" rel="nofollow noopener">the front end</a>) is a simple <a class="jive-link-external-small" href="http://redux.js.org/" target="_blank" rel="nofollow noopener">React-Redux</a> application written in <font color="red">node</font> (javascript, lots of javascript)  This is your <font color="red">easy button</font> view to the world.  By itself the front end <font color="red">container</font> is powerless but sexy.  It gets its power by making calls to the <a class="jive-link-external-small" href="https://github.com/CiscoUcs/KUBaM" target="_blank" rel="nofollow noopener"><font color="red">KUBAM</font> <font color="red">api</font> <font color="red">container</font>.</a>  Since you are curious to know, the <font color="red">API</font> <font color="red">container</font> is written in python and uses the UCSM SDK.  It also uses tricks to mount ISO images and make them run.  Things that are not obvious how to do in <font color="red">containers</font>.  You may be interested in learning how to do this yourself, and <font color="red">KUBAM</font> has answers for you there as well.  Go ahead and visit <font color="red">KUBAM</font>&#8217;s friend, the <a href="https://developer.cisco.com/site/ucs-dev-center/?utm_source=Vallard_Kubam&amp;utm_medium=blog_cisco_dev" target="_blank" rel="noopener"><font color="red">UCS</font> <font color="red">Programmable Infrastructure</font> page on <font color="red">DEVNET</font></a> where you could learn about sample code, learning labs, and <font color="red">sandboxes</font>.</p>
+<p>State for <font color="red">KUBAM</font> is kept inside a mounted volume in the ~/<font color="red">kubam</font> directory on the <font color="red">server</font> where the <font color="red">containers</font> run.  A kubam.yaml file is automatically updated when the <font color="red">API</font> <font color="red">server</font> is called with certain POST requests.  In this way, the <font color="red">KUBAM</font> architecture could fit easily into a <font color="red">solution</font> like <font color="red">Cisco</font> <font color="red">Cloud</font> Center, <font color="red">UCS</font> Director, or <a class="jive-link-external-small" href="https://www.cisco.com/c/en/us/products/servers-unified-computing/intersight/index.html" target="_blank" rel="nofollow noopener"><font color="red">Cisco</font> <font color="red">Intersight</font></a>.  <font color="red">KUBAM</font> aims to play nice with its fellow <font color="red">Cisco</font> products.</p>
+<p><strong>Future</strong></p>
+<p><font color="red">KUBAM</font> is an <font color="red">open source</font> tool made to allow <font color="red">UCS</font> systems to dance.  <font color="red">KUBAM</font> only supports <font color="red">UCS</font> because only <font color="red">UCS</font> has the <font color="red">APIs</font> that are powerful enough to automate end to end <font color="red">datacenter</font> <font color="red">solutions</font>.  <font color="red">KUBAM</font> will expand to other operating systems as well as other roles.  At present <font color="red">KUBAM</font> is working on simplifying Kubernetes, <font color="red">Docker</font> <font color="red">Data Center</font> as well as <font color="red">ESXi</font> with <font color="red">VSAN</font>.  <font color="red">ACI</font> integration is on the roadmap as well.  While these <font color="red">solutions</font> are currently used by many of our customers today, <font color="red">KUBAM</font> is also looking to <font color="red">deploy</font> more forward looking <font color="red">solutions</font> that might give a <font color="red">public cloud experience</font> in your own <font color="red">UCS</font> <font color="red">datacenter</font>.  <font color="red">KUBAM</font> would love your input.  Version one is rough and raw. <font color="red">KUBAM</font> is scrappy, but is reacting and responding quickly.</p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=devnet">#DevNet</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=aci">ACI</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=api">API</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=bare-metal">bare metal</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=docker">docker</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=ucs">UCS</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+		</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Developer:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=DeveloperCiscoBlog', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="DeveloperCiscoBlog" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Developer</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscodevnet/"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/ciscodevnet"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="https://www.linkedin.com/groups/6609150/profile"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="https://www.youtube.com/channel/UChRmUH4H5hiYzPiFhvNoCIg"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/ciscodevnet/"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/DeveloperCiscoBlog"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">DevNet Dev Centers</li>
+<li class="roll_heading">What We're Reading</li>
+
+            <li><a href="https://developer.cisco.com/site/analytics-automation/" target="_blank">Analytics & Automation</a></li>
+                      <li><a href="https://developer.cisco.com/site/cloud/" target="_blank">Cloud</a></li>
+                      <li><a href="https://developer.cisco.com/site/collaboration" target="_blank">Collaboration</a></li>
+                      <li><a href="https://developer.cisco.com/site/data-center/" target="_blank">Data Center</a></li>
+                      <li><a href="https://developer.cisco.com/site/iot/" target="_blank">IoT</a></li>
+                      <li><a href="https://developer.cisco.com/site/mobility" target="_blank">Mobility</a></li>
+                      <li><a href="https://developer.cisco.com/site/networking/" target="_blank">Networking</a></li>
+                      <li><a href="https://developer.cisco.com/site/opensource" target="_blank">Open Source</a></li>
+                      <li><a href="https://developer.cisco.com/site/security/" target="_blank">Security</a></li>
+                  </ul>
+              <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="https://communities.cisco.com/community/developer" target="_blank">Developer Community</a></li>
+                        <li><a href="https://developer.cisco.com" target="_blank">DevNet</a></li>
+                        <li><a href="https://devnetcreate.io" target="_blank">DevNet Create</a></li>
+                        <li><a href="https://learninglabs.cisco.com" target="_blank">DevNet Learning Labs</a></li>
+                        <li><a href="https://developer.cisco.com/site/devnet/sandbox/" target="_blank">Sandbox</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscodevnet/'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/ciscodevnet'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='https://www.linkedin.com/groups/6609150/profile'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 236552;
+			var orig_count = 8;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/2iODBZG&text=Automate+solutions+on+UCS+with+KUBAM.+%40Vallard+shows+you+how.+%23DevNet+%23containers+%23devops+%23cloud&via=ciscodevnet" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/developer/kubam-let-your-data-center-dance&title=KUBAM: Let your Data Center Dance!" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/developer/kubam-let-your-data-center-dance" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/developer/kubam-let-your-data-center-dance" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: KUBAM: Let your Data Center Dance!&body=I saw this post on Cisco Developer blog and thought you might like to read it.%0A%0AKUBAM: Let your Data Center Dance!%0A%0Ahttps://blogs.cisco.com/developer/kubam-let-your-data-center-dance%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

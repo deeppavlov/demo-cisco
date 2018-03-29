@@ -1,0 +1,2323 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Apache Darkleech Compromises</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; Apache Darkleech Compromises Comments Feed" href="https://blogs.cisco.com/security/apache-darkleech-compromises/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"108358"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Partners, Are You Learning Faster than Your Competitors?' href='https://blogs.cisco.com/partner/partners-are-you-learning-faster-than-your-competitors' />
+<link rel='next' title='Cisco Live 2013 – a Showcase for IPv6 Technology' href='https://blogs.cisco.com/sp/cisco-live-2013-a-showcase-for-ipv6-technology' />
+
+<link rel="canonical" href="https://blogs.cisco.com/security/apache-darkleech-compromises" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=108358' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Apache Darkleech Compromises"/>
+  <meta property="og:url" content="https://blogs.cisco.com/security/apache-darkleech-compromises"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2013-04-02T11:40:56+00:00"/>
+  <meta property="article:modified_time" content="2013-04-19T10:44:25+00:00" />
+  <meta property="og:updated_time" content="2013-04-19T10:44:25+00:00" />
+  <meta property="article:section" content="Security"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Apache Darkleech Compromises"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/security/apache-darkleech-compromises"/>
+  <meta name="twitter:description" content="Dan Goodin, editor at Ars Technica, has been tracking and compiling info on an elusive series of website compromises that could be impacting tens of thousands of otherwise perfectly legitimate sites. While various researchers have reported various segments of the attacks, until Dan&#039;s article, no one"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521513620";
+		var sig = "3d3948e193fd55f41be327bd2eabc33e";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1JDUZ5l&text=Apache Darkleech Compromises&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/apache-darkleech-compromises&title=Apache Darkleech Compromises" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/apache-darkleech-compromises" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/apache-darkleech-compromises" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Apache Darkleech Compromises&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0AApache Darkleech Compromises%0A%0Ahttps://blogs.cisco.com/security/apache-darkleech-compromises%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/security/'>Security</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category50.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Security  						</span>
+						<h1 id="post-108358" class="kindle_title title">Apache Darkleech Compromises</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/MaryLandesman.thumbnail.4cb724e3cbbf5.jpg"></div><div class="author_rewards_box"></div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/marylandesman" title="Posts by Mary Landesman" rel="author">Mary Landesman</a> - April 2, 2013 - 18 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p>Dan Goodin, editor at Ars Technica, has been <a href="http://arstechnica.com/security/2013/04/exclusive-ongoing-malware-attack-targeting-apache-hijacks-20000-sites/">tracking and compiling info on an elusive series of website <font color="red">compromises</font></a> that could be impacting tens of thousands of otherwise perfectly legitimate sites. While various researchers have reported various segments of the <font color="red">attacks</font>, until <a href="http://arstechnica.com/security/2013/04/exclusive-ongoing-malware-attack-targeting-apache-hijacks-20000-sites/">Dan&#8217;s article</a>, no one had connected the dots and linked them all together.</p>
+<p>Dubbed &#8220;Darkleech,&#8221; thousands of Web <font color="red">servers</font> across the globe running <font color="red">Apache</font> 2.2.2 and above are infected with an SSHD backdoor that allows <font color="red">remote attackers</font> to upload and configure malicious <font color="red">Apache</font> <font color="red">modules</font>. These <font color="red">modules</font> are then used to turn hosted sites into <font color="red">attack</font> sites, dynamically injecting <font color="red">iframes</font> in real-time, only at the moment of visit.</p>
+<p>Because the <font color="red">iframes</font> are dynamically injected only when the pages are accessed, this makes discovery and <font color="red">remediation</font> particularly difficult. Further, the <font color="red">attackers</font> employ a sophisticated array of conditional criteria to avoid <font color="red">detection</font>:</p>
+<ul>
+<li>Checking <font color="red">IP</font> addresses and blacklisting security researchers, site owners, and the <font color="red">compromised</font> hosting <font color="red">providers</font>;</li>
+<li>Checking User Agents to target specific operating systems (to date, Windows systems);</li>
+<li>Blacklisting search engine spiders;</li>
+<li>Checking cookies to &#8220;wait list&#8221; recent visitors;</li>
+<li>Checking referrer URLs to ensure visitor is coming in via valid search engine results.<span id="more-108358"></span></li>
+</ul>
+<p>When the <font color="red">iframe</font> is injected on the page, the convention used for the reference link in the injected <font color="red">iframe</font> is IP/hex/q.php. For example:</p>
+<p>129.121.179.168/d42ee14e4af7a0a7b1033b8f8f1eb18a/q.php</p>
+<p>The nature of the <font color="red">compromise</font> coupled with the sophisticated conditional criteria presents several challenges:</p>
+<ul>
+<li>Website owners/operators will not be able to detect or clean the <font color="red">compromise</font> as (a) it is not actually on their website, and (b) most will not have root-level access to the web<font color="red">server</font>;</li>
+<li>Even if website owners/operators suspect the host server may be the source, they would still need to convince the hosting <font color="red">provider</font>, who may discount their report;</li>
+<li>Even if the hosting <font color="red">provider</font> is responsive, the malicious <font color="red">Apache</font> <font color="red">modules</font> and associated SSHD backdoor may be difficult to ferret out, and the exact method will vary depending on <font color="red">server</font> configuration;</li>
+<li>Since SSHD is <font color="red">compromised</font>, <font color="red">remediation</font> of the <font color="red">attack</font> and preventing further occurrences may require considerable procedural changes that, if not carried out properly, could cause a privilege lockout for valid administrators or be ineffective and lead to continued <font color="red">compromise</font>.</li>
+</ul>
+<p>The magnitude of the problem becomes clear when one considers how widespread these <font color="red">attacks</font> are.  The following chart illustrates the geographic location of <font color="red">infected host</font> <font color="red">servers</font> observed from February 1–March 15, 2013. (Click the chart to view in full size).</p>
+<p><img class="alignnone size-large wp-image-108357" alt="Apache_injection_attacks" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/Apache_injection_attacks-550x533.png" width="550" height="533" /></p>
+<p>For additional info and links to specific <font color="red">remediation</font> advice, see: <a href="http://arstechnica.com/security/2013/04/exclusive-ongoing-<font color="red">malware</font>-<font color="red">attack</font>-targeting-apache-hijacks-20000-sites/">Ongoing malware attack targeting <font color="red">Apache</font> hijacks 20,000 sites</a></p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=apache">apache</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=apache-darkleech-compromise">apache darkleech compromise</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=apache-module-injection-attacks">apache module injection attacks</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=cisco-security">Cisco Security</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=cisco-sio">cisco sio</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=sshd-backdoor">SSHD backdoor</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=trac">TRAC</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">18 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+			<li>
+			<div id="comment-740195">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://www.ruchirablog.com' rel='external nofollow' class='url'>Ruchira Sahan</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">May 23, 2013 at 1:33 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>It seems that darkleech attacks are increasing on a rapid phase. Time to update the servers</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike740195" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-721916">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://www,cisco.com' rel='external nofollow' class='url'>Mary Landesman</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">April 19, 2013 at 6:48 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>@Yep: The iPhone log is a crash report that has nothing whatsoever to do with the DarkLeech infections discussed in the blog post.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike721916" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-717995">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Zooey						</span>
+						<br />
+						<span class="comment-meta commentmetadata">April 12, 2013 at 3:28 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Mind you I only have two apps and I only use the mobile for texting with my BFF... However, I tried to upload to the virus scan, but my cyberstalker will not allow it.... Keeps rdr me out of the pg.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike717995" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-717993">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Zooey Glass						</span>
+						<br />
+						<span class="comment-meta commentmetadata">April 12, 2013 at 3:25 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Incident Identifier: 03FD5244-9C0E-41F5-A10B-F6F17E9D51BA
+
+CrashReporter Key:   c699790ed660939fb4f24fcafa8c4b888520d272
+
+Hardware Model:      iPhone4,1
+
+Process:         MobileMail [93]
+
+Path:            /Applications/MobileMail.app/MobileMail
+
+Identifier:      MobileMail
+
+Version:         ??? (???)
+
+Code Type:       ARM (Native)
+
+Parent Process:  launchd [1]
+
+
+
+Date/Time:       2013-04-12 14:13:18.946 -0400
+
+OS Version:      iOS 6.1.3 (10B329)
+
+Report Version:  104
+
+
+
+Exception Type:  EXC_BAD_ACCESS (SIGSEGV)
+
+Exception Codes: KERN_INVALID_ADDRESS at 0x80000008
+
+Crashed Thread:  0
+
+
+
+Thread 0 name:  Dispatch queue: com.apple.main-thread
+
+Thread 0 Crashed:
+
+0   libobjc.A.dylib               	0x3a9ae5b0 0x3a9ab000 + 13744
+
+1   UIKit                         	0x34be5080 0x34a90000 + 1396864
+
+2   UIKit                         	0x34df47dc 0x34a90000 + 3557340
+
+3   UIKit                         	0x34df8150 0x34a90000 + 3572048
+
+4   libdispatch.dylib             	0x3adcb11c 0x3adc9000 + 8476
+
+5   libdispatch.dylib             	0x3adca4b4 0x3adc9000 + 5300
+
+6   libdispatch.dylib             	0x3adcf1b8 0x3adc9000 + 25016
+
+7   CoreFoundation                	0x32c5ef36 0x32bc9000 + 614198
+
+8   CoreFoundation                	0x32bd1eb8 0x32bc9000 + 36536
+
+9   CoreFoundation                	0x32bd1d44 0x32bc9000 + 36164
+
+10  GraphicsServices              	0x367aa2e6 0x367a5000 + 21222
+
+11  UIKit                         	0x34ae72fc 0x34a90000 + 357116
+
+12  MobileMail                    	0x00039ea6 0x37000 + 11942
+
+13  libdyld.dylib                 	0x3adeab1c 0x3ade9000 + 6940
+
+
+
+Thread 1 name:  Dispatch queue: com.apple.libdispatch-manager
+
+Thread 1:
+
+0   libsystem_kernel.dylib        	0x3aea1648 0x3aea0000 + 5704
+
+1   libdispatch.dylib             	0x3add1974 0x3adc9000 + 35188
+
+2   libdispatch.dylib             	0x3add1654 0x3adc9000 + 34388
+
+
+
+Thread 2 name:  WebThread
+
+Thread 2:
+
+0   libsystem_kernel.dylib        	0x3aeb10fc 0x3aea0000 + 69884
+
+1   libsystem_c.dylib             	0x3adfa124 0x3adf9000 + 4388
+
+2   WebCore                       	0x38be7418 0x38bdb000 + 50200
+
+3   WebCore                       	0x38be734a 0x38bdb000 + 49994
+
+4   CoreFoundation                	0x32c606ca 0x32bc9000 + 620234
+
+5   CoreFoundation                	0x32c5e9bc 0x32bc9000 + 612796
+
+6   CoreFoundation                	0x32c5ede8 0x32bc9000 + 613864
+
+7   CoreFoundation                	0x32bd1eb8 0x32bc9000 + 36536
+
+8   CoreFoundation                	0x32bd1d44 0x32bc9000 + 36164
+
+9   WebCore                       	0x38be5500 0x38bdb000 + 42240
+
+10  libsystem_c.dylib             	0x3ae0a30e 0x3adf9000 + 70414
+
+11  libsystem_c.dylib             	0x3ae0a1d4 0x3adf9000 + 70100
+
+
+
+Thread 3:
+
+0   libsystem_kernel.dylib        	0x3aea0eb4 0x3aea0000 + 3764
+
+1   libsystem_kernel.dylib        	0x3aea1048 0x3aea0000 + 4168
+
+2   CoreFoundation                	0x32c60040 0x32bc9000 + 618560
+
+3   CoreFoundation                	0x32c5ed9e 0x32bc9000 + 613790
+
+4   CoreFoundation                	0x32bd1eb8 0x32bc9000 + 36536
+
+5   CoreFoundation                	0x32bd1d44 0x32bc9000 + 36164
+
+6   Foundation                    	0x334f4f92 0x334f1000 + 16274
+
+7   Foundation                    	0x33598860 0x334f1000 + 686176
+
+8   Message                       	0x36f1f69c 0x36f19000 + 26268
+
+9   libsystem_c.dylib             	0x3ae0a30e 0x3adf9000 + 70414
+
+10  libsystem_c.dylib             	0x3ae0a1d4 0x3adf9000 + 70100
+
+
+
+Thread 4:
+
+0   libsystem_kernel.dylib        	0x3aea0eb4 0x3aea0000 + 3764
+
+1   libsystem_kernel.dylib        	0x3aea1048 0x3aea0000 + 4168
+
+2   CoreFoundation                	0x32c60040 0x32bc9000 + 618560
+
+3   CoreFoundation                	0x32c5ed9e 0x32bc9000 + 613790
+
+4   CoreFoundation                	0x32bd1eb8 0x32bc9000 + 36536
+
+5   CoreFoundation                	0x32bd1d44 0x32bc9000 + 36164
+
+6   Foundation                    	0x334f4f92 0x334f1000 + 16274
+
+7   Foundation                    	0x33598860 0x334f1000 + 686176
+
+8   Foundation                    	0x335a1e80 0x334f1000 + 724608
+
+9   libsystem_c.dylib             	0x3ae0a30e 0x3adf9000 + 70414
+
+10  libsystem_c.dylib             	0x3ae0a1d4 0x3adf9000 + 70100
+
+
+
+Thread 5 name:  com.apple.CFSocket.private
+
+Thread 5:
+
+0   libsystem_kernel.dylib        	0x3aeb1594 0x3aea0000 + 71060
+
+1   CoreFoundation                	0x32c641f2 0x32bc9000 + 635378
+
+2   libsystem_c.dylib             	0x3ae0a30e 0x3adf9000 + 70414
+
+3   libsystem_c.dylib             	0x3ae0a1d4 0x3adf9000 + 70100
+
+
+
+Thread 6 name:  JavaScriptCore::BlockFree
+
+Thread 6:
+
+0   libsystem_kernel.dylib        	0x3aeb108c 0x3aea0000 + 69772
+
+1   libsystem_c.dylib             	0x3ae02d2a 0x3adf9000 + 40234
+
+2   libsystem_c.dylib             	0x3ae02aa0 0x3adf9000 + 39584
+
+3   JavaScriptCore                	0x36ba0c70 0x36b45000 + 375920
+
+4   JavaScriptCore                	0x36cb2552 0x36b45000 + 1496402
+
+5   JavaScriptCore                	0x36cc4fa8 0x36b45000 + 1572776
+
+6   libsystem_c.dylib             	0x3ae0a30e 0x3adf9000 + 70414
+
+7   libsystem_c.dylib             	0x3ae0a1d4 0x3adf9000 + 70100
+
+
+
+Thread 7 name:  JavaScriptCore::Marking
+
+Thread 7:
+
+0   libsystem_kernel.dylib        	0x3aeb108c 0x3aea0000 + 69772
+
+1   libsystem_c.dylib             	0x3ae02d2a 0x3adf9000 + 40234
+
+2   libsystem_c.dylib             	0x3ae0cf14 0x3adf9000 + 81684
+
+3   JavaScriptCore                	0x36c45f3c 0x36b45000 + 1052476
+
+4   JavaScriptCore                	0x36c45e7c 0x36b45000 + 1052284
+
+5   JavaScriptCore                	0x36cc4fa8 0x36b45000 + 1572776
+
+6   libsystem_c.dylib             	0x3ae0a30e 0x3adf9000 + 70414
+
+7   libsystem_c.dylib             	0x3ae0a1d4 0x3adf9000 + 70100
+
+
+
+Thread 8 name:  com.apple.NSURLConnectionLoader
+
+Thread 8:
+
+0   libsystem_kernel.dylib        	0x3aea0eb4 0x3aea0000 + 3764
+
+1   libsystem_kernel.dylib        	0x3aea1048 0x3aea0000 + 4168
+
+2   CoreFoundation                	0x32c60040 0x32bc9000 + 618560
+
+3   CoreFoundation                	0x32c5ed9e 0x32bc9000 + 613790
+
+4   CoreFoundation                	0x32bd1eb8 0x32bc9000 + 36536
+
+5   CoreFoundation                	0x32bd1d44 0x32bc9000 + 36164
+
+6   Foundation                    	0x3351e3d0 0x334f1000 + 185296
+
+7   Foundation                    	0x335a1e80 0x334f1000 + 724608
+
+8   libsystem_c.dylib             	0x3ae0a30e 0x3adf9000 + 70414
+
+9   libsystem_c.dylib             	0x3ae0a1d4 0x3adf9000 + 70100
+
+
+
+Thread 9 name:  WebCore: CFNetwork Loader
+
+Thread 9:
+
+0   libsystem_kernel.dylib        	0x3aea0eb4 0x3aea0000 + 3764
+
+1   libsystem_kernel.dylib        	0x3aea1048 0x3aea0000 + 4168
+
+2   CoreFoundation                	0x32c60040 0x32bc9000 + 618560
+
+3   CoreFoundation                	0x32c5ed9e 0x32bc9000 + 613790
+
+4   CoreFoundation                	0x32bd1eb8 0x32bc9000 + 36536
+
+5   CoreFoundation                	0x32bd1d44 0x32bc9000 + 36164
+
+6   WebCore                       	0x38c7fd02 0x38bdb000 + 675074
+
+7   JavaScriptCore                	0x36cc4fa8 0x36b45000 + 1572776
+
+8   libsystem_c.dylib             	0x3ae0a30e 0x3adf9000 + 70414
+
+9   libsystem_c.dylib             	0x3ae0a1d4 0x3adf9000 + 70100
+
+
+
+Thread 10 name:  Dispatch queue: com.apple.TextInput.background-loading
+
+Thread 10:
+
+0   libsystem_kernel.dylib        	0x3aea0eb4 0x3aea0000 + 3764
+
+1   libsystem_kernel.dylib        	0x3aea1048 0x3aea0000 + 4168
+
+2   libsystem_kernel.dylib        	0x3aea1a0c 0x3aea0000 + 6668
+
+3   libdispatch.dylib             	0x3add035c 0x3adc9000 + 29532
+
+4   libdispatch.dylib             	0x3adce832 0x3adc9000 + 22578
+
+5   TextInput                     	0x383bd2b4 0x38395000 + 164532
+
+6   libdispatch.dylib             	0x3adcb11c 0x3adc9000 + 8476
+
+7   libdispatch.dylib             	0x3adceeca 0x3adc9000 + 24266
+
+8   libdispatch.dylib             	0x3adcedbc 0x3adc9000 + 23996
+
+9   libdispatch.dylib             	0x3adcf91a 0x3adc9000 + 26906
+
+10  libdispatch.dylib             	0x3adcfabc 0x3adc9000 + 27324
+
+11  libsystem_c.dylib             	0x3adffa0e 0x3adf9000 + 27150
+
+12  libsystem_c.dylib             	0x3adff8a0 0x3adf9000 + 26784
+
+
+
+Thread 11:
+
+0   libsystem_kernel.dylib        	0x3aeb1d98 0x3aea0000 + 73112
+
+1   libsystem_c.dylib             	0x3adffcf6 0x3adf9000 + 27894
+
+2   libsystem_c.dylib             	0x3adffa12 0x3adf9000 + 27154
+
+3   libsystem_c.dylib             	0x3adff8a0 0x3adf9000 + 26784
+
+
+
+Thread 12:
+
+0   libsystem_kernel.dylib        	0x3aeb108c 0x3aea0000 + 69772
+
+1   libsystem_c.dylib             	0x3ae02d2a 0x3adf9000 + 40234
+
+2   libsystem_c.dylib             	0x3ae0cf14 0x3adf9000 + 81684
+
+3   Foundation                    	0x3351e4d2 0x334f1000 + 185554
+
+4   Foundation                    	0x334f5572 0x334f1000 + 17778
+
+5   Foundation                    	0x334f5088 0x334f1000 + 16520
+
+6   MobileMail                    	0x0005b32e 0x37000 + 148270
+
+7   CoreFoundation                	0x32c8e9c0 0x32bc9000 + 809408
+
+8   CoreFoundation                	0x32be5fe6 0x32bc9000 + 118758
+
+9   Message                       	0x36f288bc 0x36f19000 + 63676
+
+10  Message                       	0x36f285fc 0x36f19000 + 62972
+
+11  Foundation                    	0x335a1e80 0x334f1000 + 724608
+
+12  libsystem_c.dylib             	0x3ae0a30e 0x3adf9000 + 70414
+
+13  libsystem_c.dylib             	0x3ae0a1d4 0x3adf9000 + 70100
+
+
+
+Thread 13:
+
+0   libsystem_kernel.dylib        	0x3aeb1d98 0x3aea0000 + 73112
+
+1   libsystem_c.dylib             	0x3adffcf6 0x3adf9000 + 27894
+
+2   libsystem_c.dylib             	0x3adffa12 0x3adf9000 + 27154
+
+3   libsystem_c.dylib             	0x3adff8a0 0x3adf9000 + 26784
+
+
+
+Thread 14:
+
+0   libsystem_kernel.dylib        	0x3aeb1d98 0x3aea0000 + 73112
+
+1   libsystem_c.dylib             	0x3adffcf6 0x3adf9000 + 27894
+
+2   libsystem_c.dylib             	0x3adffa12 0x3adf9000 + 27154
+
+3   libsystem_c.dylib             	0x3adff8a0 0x3adf9000 + 26784
+
+
+
+Thread 0 crashed with ARM Thread State (32-bit):
+
+    r0: 0x20335f00    r1: 0x3874d2ae      r2: 0x34f61668      r3: 0x3b2f85fc
+
+    r4: 0x80000000    r5: 0x34f61668      r6: 0x3b3dd274      r7: 0x2fdc8fe0
+
+    r8: 0x00000054    r9: 0x0e1d34ab     r10: 0x21e367b0     r11: 0x000000b4
+
+    ip: 0x3b333d64    sp: 0x2fdc8e88      lr: 0x34be5085      pc: 0x3a9ae5b0
+
+  cpsr: 0x20000030
+
+
+
+Binary Images:
+
+   0x37000 -   0x131fff +MobileMail armv7   /Applications/MobileMail.app/MobileMail
+
+ 0x3dfd000 -  0x3e01fff  AccessibilitySettingsLoader armv7   /System/Library/AccessibilityBundles/AccessibilitySettingsLoader.bundle/AccessibilitySettingsLoader
+
+ 0x412b000 -  0x4132fff  GAXClient armv7   /System/Library/AccessibilityBundles/GAXClient.bundle/GAXClient
+
+ 0x69a0000 -  0x69cffff  AppleAccountSettings armv7   /System/Library/PreferenceBundles/AccountSettings/AppleAccountSettings.bundle/AppleAccountSettings
+
+0x2fee7000 - 0x2ff07fff  dyld armv7   /usr/lib/dyld
+
+0x31bbf000 - 0x31c90fff  RawCamera armv7   /System/Library/CoreServices/RawCamera.bundle/RawCamera
+
+0x31c99000 - 0x31da2fff  IMGSGX543GLDriver armv7   /System/Library/Extensions/IMGSGX543GLDriver.bundle/IMGSGX543GLDriver
+
+0x31dac000 - 0x31e92fff  AVFoundation armv7   /System/Library/Frameworks/AVFoundation.framework/AVFoundation
+
+0x31e93000 - 0x31e93fff  Accelerate armv7   /System/Library/Frameworks/Accelerate.framework/Accelerate
+
+0x31e94000 - 0x31fd2fff  vImage armv7   /System/Library/Frameworks/Accelerate.framework/Frameworks/vImage.framework/vImage
+
+0x31fd3000 - 0x320b6fff  libBLAS.dylib armv7   /System/Library/Frameworks/Accelerate.framework/Frameworks/vecLib.framework/libBLAS.dylib
+
+0x320b7000 - 0x3236cfff  libLAPACK.dylib armv7   /System/Library/Frameworks/Accelerate.framework/Frameworks/vecLib.framework/libLAPACK.dylib
+
+0x3236d000 - 0x323c6fff  libvDSP.dylib armv7   /System/Library/Frameworks/Accelerate.framework/Frameworks/vecLib.framework/libvDSP.dylib
+
+0x323c7000 - 0x323d8fff  libvMisc.dylib armv7   /System/Library/Frameworks/Accelerate.framework/Frameworks/vecLib.framework/libvMisc.dylib
+
+0x323d9000 - 0x323d9fff  vecLib armv7   /System/Library/Frameworks/Accelerate.framework/Frameworks/vecLib.framework/vecLib
+
+0x323da000 - 0x323ebfff  Accounts armv7   /System/Library/Frameworks/Accounts.framework/Accounts
+
+0x323ed000 - 0x32451fff  AddressBook armv7   /System/Library/Frameworks/AddressBook.framework/AddressBook
+
+0x32452000 - 0x3250cfff  AddressBookUI armv7   /System/Library/Frameworks/AddressBookUI.framework/AddressBookUI
+
+0x32657000 - 0x328dffff  AudioToolbox armv7   /System/Library/Frameworks/AudioToolbox.framework/AudioToolbox
+
+0x328e0000 - 0x329a5fff  CFNetwork armv7   /System/Library/Frameworks/CFNetwork.framework/CFNetwork
+
+0x329a6000 - 0x329fcfff  CoreAudio armv7   /System/Library/Frameworks/CoreAudio.framework/CoreAudio
+
+0x32a10000 - 0x32bc8fff  CoreData armv7   /System/Library/Frameworks/CoreData.framework/CoreData
+
+0x32bc9000 - 0x32cfbfff  CoreFoundation armv7   /System/Library/Frameworks/CoreFoundation.framework/CoreFoundation
+
+0x32cfc000 - 0x32e34fff  CoreGraphics armv7   /System/Library/Frameworks/CoreGraphics.framework/CoreGraphics
+
+0x32e36000 - 0x32e71fff  libCGFreetype.A.dylib armv7   /System/Library/Frameworks/CoreGraphics.framework/Resources/libCGFreetype.A.dylib
+
+0x33055000 - 0x33070fff  libRIP.A.dylib armv7   /System/Library/Frameworks/CoreGraphics.framework/Resources/libRIP.A.dylib
+
+0x33071000 - 0x33126fff  CoreImage armv7   /System/Library/Frameworks/CoreImage.framework/CoreImage
+
+0x33127000 - 0x3317ffff  CoreLocation armv7   /System/Library/Frameworks/CoreLocation.framework/CoreLocation
+
+0x331b4000 - 0x33219fff  CoreMedia armv7   /System/Library/Frameworks/CoreMedia.framework/CoreMedia
+
+0x3321a000 - 0x332a2fff  CoreMotion armv7   /System/Library/Frameworks/CoreMotion.framework/CoreMotion
+
+0x332a3000 - 0x332f9fff  CoreTelephony armv7   /System/Library/Frameworks/CoreTelephony.framework/CoreTelephony
+
+0x332fa000 - 0x3335cfff  CoreText armv7   /System/Library/Frameworks/CoreText.framework/CoreText
+
+0x3335d000 - 0x3336cfff  CoreVideo armv7   /System/Library/Frameworks/CoreVideo.framework/CoreVideo
+
+0x3336d000 - 0x33421fff  EventKit armv7   /System/Library/Frameworks/EventKit.framework/EventKit
+
+0x33422000 - 0x334e2fff  EventKitUI armv7   /System/Library/Frameworks/EventKitUI.framework/EventKitUI
+
+0x334f1000 - 0x336b4fff  Foundation armv7   /System/Library/Frameworks/Foundation.framework/Foundation
+
+0x3386f000 - 0x338b8fff  IOKit armv7   /System/Library/Frameworks/IOKit.framework/Versions/A/IOKit
+
+0x338b9000 - 0x33a91fff  ImageIO armv7   /System/Library/Frameworks/ImageIO.framework/ImageIO
+
+0x33b0b000 - 0x33ca5fff  MediaPlayer armv7   /System/Library/Frameworks/MediaPlayer.framework/MediaPlayer
+
+0x33ca6000 - 0x33f20fff  MediaToolbox armv7   /System/Library/Frameworks/MediaToolbox.framework/MediaToolbox
+
+0x33f21000 - 0x33fa7fff  MessageUI armv7   /System/Library/Frameworks/MessageUI.framework/MessageUI
+
+0x33fa8000 - 0x34001fff  MobileCoreServices armv7   /System/Library/Frameworks/MobileCoreServices.framework/MobileCoreServices
+
+0x3402e000 - 0x340effff  GLEngine armv7   /System/Library/Frameworks/OpenGLES.framework/GLEngine.bundle/GLEngine
+
+0x340f0000 - 0x340f7fff  OpenGLES armv7   /System/Library/Frameworks/OpenGLES.framework/OpenGLES
+
+0x340f9000 - 0x340f9fff  libCVMSPluginSupport.dylib armv7   /System/Library/Frameworks/OpenGLES.framework/libCVMSPluginSupport.dylib
+
+0x340fa000 - 0x340fcfff  libCoreFSCache.dylib armv7   /System/Library/Frameworks/OpenGLES.framework/libCoreFSCache.dylib
+
+0x340fd000 - 0x340fffff  libCoreVMClient.dylib armv7   /System/Library/Frameworks/OpenGLES.framework/libCoreVMClient.dylib
+
+0x34100000 - 0x34104fff  libGFXShared.dylib armv7   /System/Library/Frameworks/OpenGLES.framework/libGFXShared.dylib
+
+0x34105000 - 0x34142fff  libGLImage.dylib armv7   /System/Library/Frameworks/OpenGLES.framework/libGLImage.dylib
+
+0x34143000 - 0x34268fff  libGLProgrammability.dylib armv7   /System/Library/Frameworks/OpenGLES.framework/libGLProgrammability.dylib
+
+0x3483d000 - 0x34952fff  QuartzCore armv7   /System/Library/Frameworks/QuartzCore.framework/QuartzCore
+
+0x34953000 - 0x349a0fff  QuickLook armv7   /System/Library/Frameworks/QuickLook.framework/QuickLook
+
+0x349a1000 - 0x349cffff  Security armv7   /System/Library/Frameworks/Security.framework/Security
+
+0x34a3e000 - 0x34a4dfff  StoreKit armv7   /System/Library/Frameworks/StoreKit.framework/StoreKit
+
+0x34a4e000 - 0x34a8dfff  SystemConfiguration armv7   /System/Library/Frameworks/SystemConfiguration.framework/SystemConfiguration
+
+0x34a90000 - 0x34fe4fff  UIKit armv7   /System/Library/Frameworks/UIKit.framework/UIKit
+
+0x34fe5000 - 0x35023fff  VideoToolbox armv7   /System/Library/Frameworks/VideoToolbox.framework/VideoToolbox
+
+0x350f2000 - 0x350f3fff  ActiveSyncSettings armv7   /System/Library/PreferenceBundles/AccountSettings/ActiveSyncSettings.bundle/ActiveSyncSettings
+
+0x350f8000 - 0x350fcfff  CalDAVSettings armv7   /System/Library/PreferenceBundles/AccountSettings/CalDAVSettings.bundle/CalDAVSettings
+
+0x350fd000 - 0x35101fff  CardDAVSettings armv7   /System/Library/PreferenceBundles/AccountSettings/CardDAVSettings.bundle/CardDAVSettings
+
+0x35108000 - 0x35109fff  HotmailSettings armv7   /System/Library/PreferenceBundles/AccountSettings/HotmailSettings.bundle/HotmailSettings
+
+0x3510a000 - 0x3510ffff  LDAPSettings armv7   /System/Library/PreferenceBundles/AccountSettings/LDAPSettings.bundle/LDAPSettings
+
+0x35116000 - 0x3513ffff  MobileMailSettings armv7   /System/Library/PreferenceBundles/AccountSettings/MobileMailSettings.bundle/MobileMailSettings
+
+0x35140000 - 0x35143fff  SubscribedCalendarSettings armv7   /System/Library/PreferenceBundles/AccountSettings/SubscribedCalendarSettings.bundle/SubscribedCalendarSettings
+
+0x3526a000 - 0x3526efff  AOSNotification armv7   /System/Library/PrivateFrameworks/AOSNotification.framework/AOSNotification
+
+0x35297000 - 0x352b8fff  AccessibilityUtilities armv7   /System/Library/PrivateFrameworks/AccessibilityUtilities.framework/AccessibilityUtilities
+
+0x352b9000 - 0x352c5fff  AccountSettings armv7   /System/Library/PrivateFrameworks/AccountSettings.framework/AccountSettings
+
+0x352c6000 - 0x352e0fff  AccountSettingsUI armv7   /System/Library/PrivateFrameworks/AccountSettingsUI.framework/AccountSettingsUI
+
+0x3530c000 - 0x3530ffff  ActorKit armv7   /System/Library/PrivateFrameworks/ActorKit.framework/ActorKit
+
+0x35311000 - 0x35314fff  AggregateDictionary armv7   /System/Library/PrivateFrameworks/AggregateDictionary.framework/AggregateDictionary
+
+0x353fd000 - 0x35410fff  AirTraffic armv7   /System/Library/PrivateFrameworks/AirTraffic.framework/AirTraffic
+
+0x35740000 - 0x3577bfff  AppSupport armv7   /System/Library/PrivateFrameworks/AppSupport.framework/AppSupport
+
+0x3577c000 - 0x357a0fff  AppleAccount armv7   /System/Library/PrivateFrameworks/AppleAccount.framework/AppleAccount
+
+0x357ad000 - 0x357bafff  ApplePushService armv7   /System/Library/PrivateFrameworks/ApplePushService.framework/ApplePushService
+
+0x357ee000 - 0x357f7fff  AssetsLibraryServices armv7   /System/Library/PrivateFrameworks/AssetsLibraryServices.framework/AssetsLibraryServices
+
+0x357f8000 - 0x35811fff  AssistantServices armv7   /System/Library/PrivateFrameworks/AssistantServices.framework/AssistantServices
+
+0x35827000 - 0x3583efff  BackBoardServices armv7   /System/Library/PrivateFrameworks/BackBoardServices.framework/BackBoardServices
+
+0x35841000 - 0x35847fff  BluetoothManager armv7   /System/Library/PrivateFrameworks/BluetoothManager.framework/BluetoothManager
+
+0x35848000 - 0x3586cfff  Bom armv7   /System/Library/PrivateFrameworks/Bom.framework/Bom
+
+0x3587f000 - 0x358aefff  BulletinBoard armv7   /System/Library/PrivateFrameworks/BulletinBoard.framework/BulletinBoard
+
+0x358af000 - 0x358e3fff  CalDAV armv7   /System/Library/PrivateFrameworks/CalDAV.framework/CalDAV
+
+0x358ec000 - 0x358f3fff  CaptiveNetwork armv7   /System/Library/PrivateFrameworks/CaptiveNetwork.framework/CaptiveNetwork
+
+0x358f4000 - 0x359befff  Celestial armv7   /System/Library/PrivateFrameworks/Celestial.framework/Celestial
+
+0x359bf000 - 0x359cafff  CertInfo armv7   /System/Library/PrivateFrameworks/CertInfo.framework/CertInfo
+
+0x359cb000 - 0x359cffff  CertUI armv7   /System/Library/PrivateFrameworks/CertUI.framework/CertUI
+
+0x35a75000 - 0x35a8efff  ChunkingLibrary armv7   /System/Library/PrivateFrameworks/ChunkingLibrary.framework/ChunkingLibrary
+
+0x35a8f000 - 0x35a93fff  CloudRecents armv7   /System/Library/PrivateFrameworks/CloudRecents.framework/CloudRecents
+
+0x35aa2000 - 0x35aa7fff  CommonUtilities armv7   /System/Library/PrivateFrameworks/CommonUtilities.framework/CommonUtilities
+
+0x35aa8000 - 0x35afbfff  CommunicationsSetupUI armv7   /System/Library/PrivateFrameworks/CommunicationsSetupUI.framework/CommunicationsSetupUI
+
+0x35afc000 - 0x35b2bfff  Conference armv7   /System/Library/PrivateFrameworks/Conference.framework/Conference
+
+0x35b2c000 - 0x35b5cfff  ContentIndex armv7   /System/Library/PrivateFrameworks/ContentIndex.framework/ContentIndex
+
+0x35b5d000 - 0x35badfff  CoreDAV armv7   /System/Library/PrivateFrameworks/CoreDAV.framework/CoreDAV
+
+0x35d4f000 - 0x35d6cfff  CoreServicesInternal armv7   /System/Library/PrivateFrameworks/CoreServicesInternal.framework/CoreServicesInternal
+
+0x35d6d000 - 0x35d6efff  CoreSurface armv7   /System/Library/PrivateFrameworks/CoreSurface.framework/CoreSurface
+
+0x35dd6000 - 0x35ddafff  CoreTime armv7   /System/Library/PrivateFrameworks/CoreTime.framework/CoreTime
+
+0x35ddb000 - 0x35de0fff  CrashReporterSupport armv7   /System/Library/PrivateFrameworks/CrashReporterSupport.framework/CrashReporterSupport
+
+0x35de1000 - 0x35e1dfff  DataAccess armv7   /System/Library/PrivateFrameworks/DataAccess.framework/DataAccess
+
+0x35e29000 - 0x35e61fff  DACalDAV armv7   /System/Library/PrivateFrameworks/DataAccess.framework/Frameworks/DACalDAV.framework/DACalDAV
+
+0x35e73000 - 0x35e78fff  DACardDAV armv7   /System/Library/PrivateFrameworks/DataAccess.framework/Frameworks/DACardDAV.framework/DACardDAV
+
+0x35e94000 - 0x35e95fff  DACoreDAVGlue armv7   /System/Library/PrivateFrameworks/DataAccess.framework/Frameworks/DACoreDAVGlue.framework/DACoreDAVGlue
+
+0x35eec000 - 0x35f7afff  DAEAS armv7   /System/Library/PrivateFrameworks/DataAccess.framework/Frameworks/DAEAS.framework/DAEAS
+
+0x35f92000 - 0x35f9afff  DALDAP armv7   /System/Library/PrivateFrameworks/DataAccess.framework/Frameworks/DALDAP.framework/DALDAP
+
+0x35fa9000 - 0x35fb1fff  DASubCal armv7   /System/Library/PrivateFrameworks/DataAccess.framework/Frameworks/DASubCal.framework/DASubCal
+
+0x35fb2000 - 0x35fc4fff  DataAccessExpress armv7   /System/Library/PrivateFrameworks/DataAccessExpress.framework/DataAccessExpress
+
+0x35fc5000 - 0x35fd7fff  DataAccessUI armv7   /System/Library/PrivateFrameworks/DataAccessUI.framework/DataAccessUI
+
+0x35fd8000 - 0x35fedfff  DataDetectorsCore armv7   /System/Library/PrivateFrameworks/DataDetectorsCore.framework/DataDetectorsCore
+
+0x35fef000 - 0x36002fff  DataDetectorsUI armv7   /System/Library/PrivateFrameworks/DataDetectorsUI.framework/DataDetectorsUI
+
+0x36003000 - 0x36004fff  DataMigration armv7   /System/Library/PrivateFrameworks/DataMigration.framework/DataMigration
+
+0x36007000 - 0x36020fff  DictionaryServices armv7   /System/Library/PrivateFrameworks/DictionaryServices.framework/DictionaryServices
+
+0x36028000 - 0x36040fff  EAP8021X armv7   /System/Library/PrivateFrameworks/EAP8021X.framework/EAP8021X
+
+0x36050000 - 0x36054fff  FTClientServices armv7   /System/Library/PrivateFrameworks/FTClientServices.framework/FTClientServices
+
+0x36055000 - 0x36092fff  FTServices armv7   /System/Library/PrivateFrameworks/FTServices.framework/FTServices
+
+0x36093000 - 0x364a6fff  FaceCoreLight armv7   /System/Library/PrivateFrameworks/FaceCoreLight.framework/FaceCoreLight
+
+0x364f3000 - 0x364f8fff  libGPUSupportMercury.dylib armv7   /System/Library/PrivateFrameworks/GPUSupport.framework/libGPUSupportMercury.dylib
+
+0x364f9000 - 0x365e8fff  AVConference armv7   /System/Library/PrivateFrameworks/GameKitServices.framework/Frameworks/AVConference.framework/AVConference
+
+0x365f3000 - 0x3660dfff  ICE armv7   /System/Library/PrivateFrameworks/GameKitServices.framework/Frameworks/ICE.framework/ICE
+
+0x3660e000 - 0x3660efff  LegacyHandle armv7   /System/Library/PrivateFrameworks/GameKitServices.framework/Frameworks/LegacyHandle.framework/LegacyHandle
+
+0x3660f000 - 0x36616fff  SimpleKeyExchange armv7   /System/Library/PrivateFrameworks/GameKitServices.framework/Frameworks/SimpleKeyExchange.framework/SimpleKeyExchange
+
+0x36617000 - 0x36625fff  ViceroyTrace armv7   /System/Library/PrivateFrameworks/GameKitServices.framework/Frameworks/ViceroyTrace.framework/ViceroyTrace
+
+0x36626000 - 0x36627fff  snatmap armv7   /System/Library/PrivateFrameworks/GameKitServices.framework/Frameworks/snatmap.framework/snatmap
+
+0x36628000 - 0x3669dfff  GameKitServices armv7   /System/Library/PrivateFrameworks/GameKitServices.framework/GameKitServices
+
+0x3669e000 - 0x366aafff  GenerationalStorage armv7   /System/Library/PrivateFrameworks/GenerationalStorage.framework/GenerationalStorage
+
+0x366ab000 - 0x367a4fff  GeoServices armv7   /System/Library/PrivateFrameworks/GeoServices.framework/GeoServices
+
+0x367a5000 - 0x367b0fff  GraphicsServices armv7   /System/Library/PrivateFrameworks/GraphicsServices.framework/GraphicsServices
+
+0x3681f000 - 0x3689afff  HomeSharing armv7   /System/Library/PrivateFrameworks/HomeSharing.framework/HomeSharing
+
+0x3689b000 - 0x368a5fff  IAP armv7   /System/Library/PrivateFrameworks/IAP.framework/IAP
+
+0x368f3000 - 0x3695cfff  IMAVCore armv7   /System/Library/PrivateFrameworks/IMAVCore.framework/IMAVCore
+
+0x3695d000 - 0x369d5fff  IMCore armv7   /System/Library/PrivateFrameworks/IMCore.framework/IMCore
+
+0x36a9c000 - 0x36ae8fff  IMFoundation armv7   /System/Library/PrivateFrameworks/IMFoundation.framework/IMFoundation
+
+0x36aef000 - 0x36af0fff  IOAccelerator armv7   /System/Library/PrivateFrameworks/IOAccelerator.framework/IOAccelerator
+
+0x36af1000 - 0x36af6fff  IOMobileFramebuffer armv7   /System/Library/PrivateFrameworks/IOMobileFramebuffer.framework/IOMobileFramebuffer
+
+0x36af7000 - 0x36afbfff  IOSurface armv7   /System/Library/PrivateFrameworks/IOSurface.framework/IOSurface
+
+0x36b40000 - 0x36b44fff  IncomingCallFilter armv7   /System/Library/PrivateFrameworks/IncomingCallFilter.framework/IncomingCallFilter
+
+0x36b45000 - 0x36cebfff  JavaScriptCore armv7   /System/Library/PrivateFrameworks/JavaScriptCore.framework/JavaScriptCore
+
+0x36cec000 - 0x36d10fff  LDAP armv7   /System/Library/PrivateFrameworks/LDAP.framework/LDAP
+
+0x36d11000 - 0x36d1bfff  Librarian armv7   /System/Library/PrivateFrameworks/Librarian.framework/Librarian
+
+0x36d1c000 - 0x36d52fff  MIME armv7   /System/Library/PrivateFrameworks/MIME.framework/MIME
+
+0x36d91000 - 0x36d9bfff  MailServices armv7   /System/Library/PrivateFrameworks/MailServices.framework/MailServices
+
+0x36db7000 - 0x36e0ffff  ManagedConfiguration armv7   /System/Library/PrivateFrameworks/ManagedConfiguration.framework/ManagedConfiguration
+
+0x36e10000 - 0x36e15fff  Marco armv7   /System/Library/PrivateFrameworks/Marco.framework/Marco
+
+0x36e26000 - 0x36e9cfff  MediaControlSender armv7   /System/Library/PrivateFrameworks/MediaControlSender.framework/MediaControlSender
+
+0x36e9d000 - 0x36ea6fff  MediaRemote armv7   /System/Library/PrivateFrameworks/MediaRemote.framework/MediaRemote
+
+0x36ebc000 - 0x36f0dfff  IMAP armv7   /System/Library/PrivateFrameworks/Message.framework/MailServices/IMAP.framework/IMAP
+
+0x36f0e000 - 0x36f18fff  POP armv7   /System/Library/PrivateFrameworks/Message.framework/MailServices/POP.framework/POP
+
+0x36f19000 - 0x36fd2fff  Message armv7   /System/Library/PrivateFrameworks/Message.framework/Message
+
+0x36fdb000 - 0x36fddfff  MessageSupport armv7   /System/Library/PrivateFrameworks/MessageSupport.framework/MessageSupport
+
+0x36fe6000 - 0x37013fff  MobileAsset armv7   /System/Library/PrivateFrameworks/MobileAsset.framework/MobileAsset
+
+0x37017000 - 0x37035fff  MobileBackup armv7   /System/Library/PrivateFrameworks/MobileBackup.framework/MobileBackup
+
+0x37036000 - 0x3703efff  MobileBluetooth armv7   /System/Library/PrivateFrameworks/MobileBluetooth.framework/MobileBluetooth
+
+0x37040000 - 0x3704ffff  MobileDeviceLink armv7   /System/Library/PrivateFrameworks/MobileDeviceLink.framework/MobileDeviceLink
+
+0x37050000 - 0x37057fff  MobileIcons armv7   /System/Library/PrivateFrameworks/MobileIcons.framework/MobileIcons
+
+0x37058000 - 0x3705bfff  MobileInstallation armv7   /System/Library/PrivateFrameworks/MobileInstallation.framework/MobileInstallation
+
+0x3705c000 - 0x37062fff  MobileKeyBag armv7   /System/Library/PrivateFrameworks/MobileKeyBag.framework/MobileKeyBag
+
+0x3709b000 - 0x370befff  MobileSync armv7   /System/Library/PrivateFrameworks/MobileSync.framework/MobileSync
+
+0x370bf000 - 0x370c2fff  MobileSystemServices armv7   /System/Library/PrivateFrameworks/MobileSystemServices.framework/MobileSystemServices
+
+0x370da000 - 0x370e3fff  MobileWiFi armv7   /System/Library/PrivateFrameworks/MobileWiFi.framework/MobileWiFi
+
+0x370e4000 - 0x370ecfff  MobileWirelessSync armv7   /System/Library/PrivateFrameworks/MobileWirelessSync.framework/MobileWirelessSync
+
+0x370fd000 - 0x37241fff  MusicLibrary armv7   /System/Library/PrivateFrameworks/MusicLibrary.framework/MusicLibrary
+
+0x37259000 - 0x37272fff  Notes armv7   /System/Library/PrivateFrameworks/Notes.framework/Notes
+
+0x37273000 - 0x37275fff  OAuth armv7   /System/Library/PrivateFrameworks/OAuth.framework/OAuth
+
+0x379af000 - 0x379d4fff  OpenCL armv7   /System/Library/PrivateFrameworks/OpenCL.framework/OpenCL
+
+0x37d35000 - 0x37d52fff  PersistentConnection armv7   /System/Library/PrivateFrameworks/PersistentConnection.framework/PersistentConnection
+
+0x37faf000 - 0x37fe7fff  Preferences armv7   /System/Library/PrivateFrameworks/Preferences.framework/Preferences
+
+0x37fe8000 - 0x38010fff  PrintKit armv7   /System/Library/PrivateFrameworks/PrintKit.framework/PrintKit
+
+0x38011000 - 0x38085fff  ProofReader armv7   /System/Library/PrivateFrameworks/ProofReader.framework/ProofReader
+
+0x38086000 - 0x3808efff  ProtocolBuffer armv7   /System/Library/PrivateFrameworks/ProtocolBuffer.framework/ProtocolBuffer
+
+0x3808f000 - 0x380aafff  RemoteUI armv7   /System/Library/PrivateFrameworks/RemoteUI.framework/RemoteUI
+
+0x380ab000 - 0x38103fff  SAObjects armv7   /System/Library/PrivateFrameworks/SAObjects.framework/SAObjects
+
+0x381ca000 - 0x381dbfff  SpringBoardServices armv7   /System/Library/PrivateFrameworks/SpringBoardServices.framework/SpringBoardServices
+
+0x3823d000 - 0x38318fff  StoreServices armv7   /System/Library/PrivateFrameworks/StoreServices.framework/StoreServices
+
+0x3835f000 - 0x38365fff  SyncedDefaults armv7   /System/Library/PrivateFrameworks/SyncedDefaults.framework/SyncedDefaults
+
+0x38366000 - 0x38368fff  TCC armv7   /System/Library/PrivateFrameworks/TCC.framework/TCC
+
+0x38369000 - 0x38386fff  TelephonyUI armv7   /System/Library/PrivateFrameworks/TelephonyUI.framework/TelephonyUI
+
+0x38387000 - 0x38394fff  TelephonyUtilities armv7   /System/Library/PrivateFrameworks/TelephonyUtilities.framework/TelephonyUtilities
+
+0x38395000 - 0x387b9fff  TextInput armv7   /System/Library/PrivateFrameworks/TextInput.framework/TextInput
+
+0x387ba000 - 0x387e8fff  ToneLibrary armv7   /System/Library/PrivateFrameworks/ToneLibrary.framework/ToneLibrary
+
+0x387e9000 - 0x387fafff  ToneLibraryNoUI armv7   /System/Library/PrivateFrameworks/ToneLibraryNoUI.framework/ToneLibraryNoUI
+
+0x38817000 - 0x388b7fff  UIFoundation armv7   /System/Library/PrivateFrameworks/UIFoundation.framework/UIFoundation
+
+0x388b8000 - 0x388d0fff  Ubiquity armv7   /System/Library/PrivateFrameworks/Ubiquity.framework/Ubiquity
+
+0x38a55000 - 0x38b3cfff  VideoProcessing armv7   /System/Library/PrivateFrameworks/VideoProcessing.framework/VideoProcessing
+
+0x38b8d000 - 0x38ba3fff  VoiceServices armv7   /System/Library/PrivateFrameworks/VoiceServices.framework/VoiceServices
+
+0x38bbb000 - 0x38bdafff  WebBookmarks armv7   /System/Library/PrivateFrameworks/WebBookmarks.framework/WebBookmarks
+
+0x38bdb000 - 0x3950afff  WebCore armv7   /System/Library/PrivateFrameworks/WebCore.framework/WebCore
+
+0x3950b000 - 0x395e8fff  WebKit armv7   /System/Library/PrivateFrameworks/WebKit.framework/WebKit
+
+0x39693000 - 0x3969afff  XPCObjects armv7   /System/Library/PrivateFrameworks/XPCObjects.framework/XPCObjects
+
+0x397ed000 - 0x39828fff  iCalendar armv7   /System/Library/PrivateFrameworks/iCalendar.framework/iCalendar
+
+0x3993f000 - 0x39977fff  iTunesStore armv7   /System/Library/PrivateFrameworks/iTunesStore.framework/iTunesStore
+
+0x3a228000 - 0x3a22efff  libAccessibility.dylib armv7   /usr/lib/libAccessibility.dylib
+
+0x3a22f000 - 0x3a245fff  libCRFSuite.dylib armv7   /usr/lib/libCRFSuite.dylib
+
+0x3a25d000 - 0x3a269fff  libMobileGestalt.dylib armv7   /usr/lib/libMobileGestalt.dylib
+
+0x3a27b000 - 0x3a27bfff  libSystem.B.dylib armv7   /usr/lib/libSystem.B.dylib
+
+0x3a39d000 - 0x3a3a9fff  libbsm.0.dylib armv7   /usr/lib/libbsm.0.dylib
+
+0x3a3aa000 - 0x3a3b3fff  libbz2.1.0.dylib armv7   /usr/lib/libbz2.1.0.dylib
+
+0x3a3b4000 - 0x3a3fefff  libc++.1.dylib armv7   /usr/lib/libc++.1.dylib
+
+0x3a3ff000 - 0x3a412fff  libc++abi.dylib armv7   /usr/lib/libc++abi.dylib
+
+0x3a43f000 - 0x3a442fff  libgermantok.dylib armv7   /usr/lib/libgermantok.dylib
+
+0x3a443000 - 0x3a530fff  libiconv.2.dylib armv7   /usr/lib/libiconv.2.dylib
+
+0x3a531000 - 0x3a67afff  libicucore.A.dylib armv7   /usr/lib/libicucore.A.dylib
+
+0x3a682000 - 0x3a682fff  liblangid.dylib armv7   /usr/lib/liblangid.dylib
+
+0x3a685000 - 0x3a68cfff  liblockdown.dylib armv7   /usr/lib/liblockdown.dylib
+
+0x3a7c9000 - 0x3a96cfff  libmecabra.dylib armv7   /usr/lib/libmecabra.dylib
+
+0x3a96d000 - 0x3a982fff  libmis.dylib armv7   /usr/lib/libmis.dylib
+
+0x3a9ab000 - 0x3aaa9fff  libobjc.A.dylib armv7   /usr/lib/libobjc.A.dylib
+
+0x3ab6d000 - 0x3ab82fff  libresolv.9.dylib armv7   /usr/lib/libresolv.9.dylib
+
+0x3aba7000 - 0x3ac2cfff  libsqlite3.dylib armv7   /usr/lib/libsqlite3.dylib
+
+0x3ac2d000 - 0x3ac78fff  libstdc++.6.dylib armv7   /usr/lib/libstdc++.6.dylib
+
+0x3ac79000 - 0x3ac9ffff  libtidy.A.dylib armv7   /usr/lib/libtidy.A.dylib
+
+0x3aca3000 - 0x3ad50fff  libxml2.2.dylib armv7   /usr/lib/libxml2.2.dylib
+
+0x3ad51000 - 0x3ad71fff  libxslt.1.dylib armv7   /usr/lib/libxslt.1.dylib
+
+0x3ad72000 - 0x3ad7efff  libz.1.dylib armv7   /usr/lib/libz.1.dylib
+
+0x3ad7f000 - 0x3ad82fff  libcache.dylib armv7   /usr/lib/system/libcache.dylib
+
+0x3ad83000 - 0x3ad89fff  libcommonCrypto.dylib armv7   /usr/lib/system/libcommonCrypto.dylib
+
+0x3ad8a000 - 0x3ad8cfff  libcompiler_rt.dylib armv7   /usr/lib/system/libcompiler_rt.dylib
+
+0x3ad8d000 - 0x3ad92fff  libcopyfile.dylib armv7   /usr/lib/system/libcopyfile.dylib
+
+0x3ad93000 - 0x3adc8fff  libcorecrypto.dylib armv7   /usr/lib/system/libcorecrypto.dylib
+
+0x3adc9000 - 0x3ade6fff  libdispatch.dylib armv7   /usr/lib/system/libdispatch.dylib
+
+0x3ade7000 - 0x3ade8fff  libdnsinfo.dylib armv7   /usr/lib/system/libdnsinfo.dylib
+
+0x3ade9000 - 0x3adeafff  libdyld.dylib armv7   /usr/lib/system/libdyld.dylib
+
+0x3adeb000 - 0x3adebfff  libkeymgr.dylib armv7   /usr/lib/system/libkeymgr.dylib
+
+0x3adec000 - 0x3adf1fff  liblaunch.dylib armv7   /usr/lib/system/liblaunch.dylib
+
+0x3adf2000 - 0x3adf5fff  libmacho.dylib armv7   /usr/lib/system/libmacho.dylib
+
+0x3adf6000 - 0x3adf7fff  libremovefile.dylib armv7   /usr/lib/system/libremovefile.dylib
+
+0x3adf8000 - 0x3adf8fff  libsystem_blocks.dylib armv7   /usr/lib/system/libsystem_blocks.dylib
+
+0x3adf9000 - 0x3ae7ffff  libsystem_c.dylib armv7   /usr/lib/system/libsystem_c.dylib
+
+0x3ae80000 - 0x3ae86fff  libsystem_dnssd.dylib armv7   /usr/lib/system/libsystem_dnssd.dylib
+
+0x3ae87000 - 0x3ae9ffff  libsystem_info.dylib armv7   /usr/lib/system/libsystem_info.dylib
+
+0x3aea0000 - 0x3aeb6fff  libsystem_kernel.dylib armv7   /usr/lib/system/libsystem_kernel.dylib
+
+0x3aeb7000 - 0x3aed3fff  libsystem_m.dylib armv7   /usr/lib/system/libsystem_m.dylib
+
+0x3aed4000 - 0x3aee2fff  libsystem_network.dylib armv7   /usr/lib/system/libsystem_network.dylib
+
+0x3aee3000 - 0x3aeeafff  libsystem_notify.dylib armv7   /usr/lib/system/libsystem_notify.dylib
+
+0x3aeeb000 - 0x3aeecfff  libsystem_sandbox.dylib armv7   /usr/lib/system/libsystem_sandbox.dylib
+
+0x3aeed000 - 0x3aeedfff  libunwind.dylib armv7   /usr/lib/system/libunwind.dylib
+
+0x3aeee000 - 0x3af03fff  libxpc.dylib armv7   /usr/lib/system/libxpc.dylib
+
+
+
+
+
+
+
+THIS IS HOW THEY INFECTING IOS 4S....
+
+Is been most difficult to find assistance, but I hope that this info helps the good people defend us... I'm not sure it this will help you, but infected I am. Is difficult to find help when everybody keeps on telling me is impossible for an iPhone to be hacked or phreak ... I beg to differ...</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike717993" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li>
+			<div id="comment-721860">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Yep						</span>
+						<br />
+						<span class="comment-meta commentmetadata">April 19, 2013 at 3:20 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Yeah can someone please comment on the iPhone log post above? I Have to say I had the identical conclusion but freely admit my knowledge in the area to be sorely lacking and am unable determine its validity, so if someone who is cool like that could please elaborate I would be so damn happy</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike721860" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-715824">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://megahost.ro' rel='external nofollow' class='url'>megahost</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">April 8, 2013 at 6:22 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>is this realy related to the SSHD Rootkit described at http://www.webhostingtalk.com/showthread.php?t=1235797&amp;page=97 ?
+
+i thought that was the end of it but it looks we have to see more.
+
+we haven't been infected but this is making us enforcing our security policies even more. advisable for everyone in fact. never use root passwords, use SSH keys on non-standard SSH ports !</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike715824" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-715019">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Ejikeme Princely						</span>
+						<br />
+						<span class="comment-meta commentmetadata">April 6, 2013 at 8:48 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Good and great post</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike715019" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-714165">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Tony Wright						</span>
+						<br />
+						<span class="comment-meta commentmetadata">April 4, 2013 at 11:45 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Hi Mary,
+
+Sent this stuff to DanG and would have sent it privately but couldn't find an email address I was sure would work.
+
+Some further information about how bads guys are getting root on these web servers.
+
+In Jan - Feb 13 there was a spate of web servers sending out spam. Turned out they had been rooted via SSHD and were sending out spam (I know Darkleech is serving web pages but once you have root you can choose your tool).
+
+
+
+There was also the cPanel compromise (ARS passim) wherein a tech support workstation got infected which was able to compromise the proxy server the workstation was sat behind and lots of people who had given cPanel Support SSH passwords got their servers compromised in the same way -- libkeyutils library.
+
+
+
+But lots of machines without cPanel were getting infected the same way so how?
+
+WebHostingTalk did a lot of investigation into this (it's 97 pages) and the following points emerged (Igor Seletskiy of Cloudlinux and Steven Ciaburri participated extensively):
+
+-- Those servers where SSH keys were used to login and SSH passwords were disabled didn't get infected.
+
+-- Those servers where SSH login was restricted to a particular set of IP addresses didn't get infected.
+
+-- Other than that it didn't matter what kind of Linux you used or which web server (Apache,NGinx, etc.) -- but the BSDs were unaffected and they use a different SSH mechanism.
+
+-- Their conclusion is that the workstations used to login to the web servers over SSH were infected with a trojan/keystroke logger. (They actually found a workstation which was used to SSH into the web server and discovered the keylogger). They also observed a malicious SSH login while it was going on.
+
+
+
+Meanwhile Bojan Zdrnja at ISC has also been investigating this and finds similarities with the Ebury Trojan of 2011 -- he thinks a large part of the Ebury code is re-used but there is a crucial difference: in Ebury it patched the whole SSHD which made it easier to discover and was vulnerable to 
+
+being over-written during routine patching. The libkeyutils library is not changed that often so much less chance of being over-written.
+
+
+
+References:
+
+Webhosting Talk
+
+http://www.webhostingtalk.com/showthread.php?t=1235797&amp;page=97
+
+(This is the last page -- see Patrick's summary)
+
+
+
+ISC
+
+https://isc.sans.edu/diary/SSHD+rootkit+in+the+wild/15229
+
+
+
+Cloudlinux
+
+http://www.cloudlinux.com/blog/clnews/sshd-exploit.php
+
+(See Igor's last Comment)
+
+
+
+Best wishes,</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike714165" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-714030">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						ciscolover						</span>
+						<br />
+						<span class="comment-meta commentmetadata">April 4, 2013 at 5:45 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>the pie chart is really cute!</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike714030" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-713930">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://HTTPStatus404-/DeviceServices/iOS/OpenEnrollment.aspxtypeStatusreportmessage/DeviceServices/iOS/OpenEnrollment.aspxdescriptionTherequestedresource(/DeviceServices/iOS/OpenEnrollment.aspx)isnota' rel='external nofollow' class='url'>Zooey Glass</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">April 4, 2013 at 12:43 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>I have been infected </p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike713930" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li>
+			<div id="comment-714002">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://malwaremustdie.org' rel='external nofollow' class='url'>Hendrik ADRIAN (@unixfreaxjp)</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">April 4, 2013 at 4:23 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>&gt; I have been infected 
+
+
+
+Very sorry to hear it. Hope you handle it well.
+
+Please upload the malware *.so sample into <a href="http://I" rel="nofollow">Virus Total</a>? So the AV products can make signature of the latest variant?
+
+
+
+The lack of malware samples was making many Linux AV scanner could not detect this threat at the time AV scanning is needed most at the infected servers.
+
+
+
+You kindly help is greatly appreciated, with thank's.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike714002" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li>
+			<div id="comment-717985">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Zooey						</span>
+						<br />
+						<span class="comment-meta commentmetadata">April 12, 2013 at 3:14 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>I will be glad to post... I thought I had submitted it with my previous posting but I have a cyberstalker that rules my moves.... I have more Trojans than  Helen... The malware is beyond anything I have previously seen.... And very well hidden...</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike717985" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-713640">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Doug Dexter						</span>
+						<br />
+						<span class="comment-meta commentmetadata">April 3, 2013 at 5:47 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Have a look at Qualys' Malware Detection Service.  Basically, they have VMs visit all the links on your website, and check to see if anything malicious happens when clicking those liinks and provide results about questionable links. Not to sound like a shill - this is the tool we use to review Cisco.com
+
+
+
+They have a link to a 14-day free trial.
+
+
+
+https://www.qualys.com/forms/trials/stopmalware/
+
+
+
+Doug Dexter
+
+Infosec Audit Manager</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike713640" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-713561">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://www.malwaremustdie.org' rel='external nofollow' class='url'>Hendrik Adrian</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">April 3, 2013 at 1:04 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>People know me as @unixfreaxjp in twitter and I post in MalwareMustDie blog.
+
+This threat is important to follow and allow me to share my investigated case here. As additional to the Jemery and Denis posts, which was stated:
+
+
+
+&gt; Via exploiting CMS vulns, web applications and SQL.
+
+&gt; 1. Attacker get access to server by exploiting 
+
+&gt; vulnerability in web server scripts (outdated CMS\ 
+
+&gt; buggy scripts\SQLi etc) – level of access – nobody
+
+
+
+The above opinion is practically true. 
+
+In practical, hackers actually gained root access in a snap. I supervised hundreads servers infected by this malware module and found that the penetration was made via Parallell's Plesk Panel, which is not CMS nor mere application but is the Web Admin Panel which is having the root authority to perform server's maintainance via web.
+
+
+
+After cross checking forensics analysis of the penetrated servers which I posted in case of (which was included in Ars Technica)
+
+<a>http://malwaremustdie.blogspot.jp/2013/03/the-evil-came-back-darkleechs-apache.html</a>
+
+
+
+I found that the "CVE-2012-1557" vulnerability was used to gain control of root in servers in the snap by hackers. The details of the CVE is: Vulnerability in admin/plib/api-rpc/Agent.php in Parallels Plesk Panel 7.x and 8.x before 8.6 MU#2, 9.x before 9.5 MU#11, 10.0.x before MU#13, 10.1.x before MU#22, 10.2.x before MU#16, and 10.3.x before MU#5 allows remote attackers to execute arbitrary SQL commands via unspecified vectors.
+
+
+
+I have corresponsense with the first researcher who cover the malware module about this vulnarability and he found the cPanel was similar bug in cPanel was used too.
+
+
+
+The conclusion is the hacker in this case was having an MO for  aiming administration panel to gain root priviledge in a snap, which is the point that we should highlight to mitigate the same problem in the future.
+
+
+
+If you wonder why there are so many ISP/Hosting portals got compromised in this attack, more than cooporate or individual servers is because ISP have lag in providing latest version of web administration panel in their infrastructure, and the hackers KNOWS this. Is time that we SHOULD start to care about this too.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike713561" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-713545">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://ondailybasis.com' rel='external nofollow' class='url'>Denis Laskov</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">April 3, 2013 at 12:06 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Mary - thx for article and Erik - thx for mention my blog.
+
+Unfortunately, there are plenty of ways to get root access on shared servers.
+
+Path usually looks like this:
+
+1. Attacker get access to server by exploiting vulnerability in web server scripts (outdated CMS\ buggy scripts\SQLi etc) - level of access - nobody
+
+2. via uploaded shell, attacker exploit one of vulnerabilities that published and not patched to gain root on machine. then rootkit installed and\or user with root \su privileges created.
+
+3. In case kernel or system itself is not vulnerable till now - then bruteforce attack launched or targeted attack against server management team, or many other variations as well, to get access to local computers of server administrator. Then password sniffed from there.
+
+
+
+Regarding the article topic - well, Darkleech known in malware researchers community for quite long, but today, thx to ArsTechnica, it hit the news :) 
+
+Regards
+
+Denis Laskov</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike713545" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-713383">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Jeremy T						</span>
+						<br />
+						<span class="comment-meta commentmetadata">April 2, 2013 at 4:21 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Via exploiting CMS vulns, web applications and SQL.
+
+
+
+Mary, Apache likely has absoutly nothing to do with the infection other than after the intruder gains access via a web application vuln, they use it to persist via installing a module.
+
+
+
+So, in reality, it has more to do with the inadequacy of web application security and web security products being used by these clients than it does by the fact that they use what the majority of the world uses for a web server.
+
+
+
+"Landesman picked a random sample of 1,239 compromised websites and found all were running Apache version 2.2.22 or higher, mostly on a variety of Linux distributions. "
+
+
+
+The fact that they are different versions of Apache and running different distros should be an indicator its not Apache or Linux to blame.
+
+
+
+Also, this has been written on since blackhole exploit kit started using it... [sic] rogue-apache-modules-iframe-blackhole-exploit-kit</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike713383" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-713347">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Mary Landesman						</span>
+						<br />
+						<span class="comment-meta commentmetadata">April 2, 2013 at 1:17 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Hi Erik: Thank you for your comment. The module you reference is named "Darkleech", hence the title of this post. I'm not sure I understand what you mean when you say "I find it hard to believe no one took the 5 minutes to google this", etc. The question at hand is how are the attackers obtaining root, not what they do after they've got it.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike713347" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-713343">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Erik Ginorio						</span>
+						<br />
+						<span class="comment-meta commentmetadata">April 2, 2013 at 12:53 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>http://ondailybasis.com/blog/?p=1368
+
+
+
+It's an old blackmarket module for apache. It requires you already have root on the system to install.
+
+
+
+I find it hard to believe no one took the 5 minutes to google this, find the site, and buy a copy of it if they were so inclined. :(</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike713343" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Security:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogSecurity', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogSecurity" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Security</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscosecurity?ref=nf"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/ciscosecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://youtubecisco.com/security"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogSecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.cert.org/blogs/vuls/" target="_blank">CERT Vulnerability Analysis</a></li>
+                      <li><a href="http://blogs.technet.com/b/srd/" target="_blank">Microsoft Security Research & Defense</a></li>
+                      <li><a href="http://isc.sans.edu/index.html" target="_blank">SANS Internet Storm Center</a></li>
+                      <li><a href="http://www.schneier.com/" target="_blank">Schneier on Security</a></li>
+                  </ul>
+              <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="http://www.cisco.com/en/US/products/products_security_advisories_listing.html" target="_blank">Advisories and Responses</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/cyberRiskReport.x" target="_blank">Cyber Risk Reports</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/intelliPapers.x?i=55" target="_blank">Security Best Practices</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/home.x" target="_blank">Security Intelligence Operations</a></li>
+                        <li><a href="http://www.cisco.com/en/US/products/hw/vpndevc/index.html" target="_blank">Security Products</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscosecurity?ref=nf'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/ciscosecurity'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 108358;
+			var orig_count = 1;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1JDUZ5l&text=Apache Darkleech Compromises&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/apache-darkleech-compromises&title=Apache Darkleech Compromises" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/apache-darkleech-compromises" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/apache-darkleech-compromises" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Apache Darkleech Compromises&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0AApache Darkleech Compromises%0A%0Ahttps://blogs.cisco.com/security/apache-darkleech-compromises%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

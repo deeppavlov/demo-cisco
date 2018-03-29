@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  The Napkin Dialogues: Lossless iSCSI</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content="We bring out the napkins again to discuss lossless iSCSI and its design implications"/><meta name="description" content="We bring out the napkins again to discuss lossless iSCSI and its design implications"/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; The Napkin Dialogues: Lossless iSCSI Comments Feed" href="https://blogs.cisco.com/datacenter/the-napkin-dialogues-lossless-iscsi/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"103988"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Upcoming Webcast with Microsoft MVP Will Shed Light on Nexus 1000V for Hyper-V and SCVMM Integration' href='https://blogs.cisco.com/datacenter/upcoming-webcast-with-microsoft-mvp-will-shed-light-on-nexus-1000v-for-hyper-v-and-scvmm-integration' />
+<link rel='next' title='Higher Education Innovation Highlighted at Cisco Virtual Forum for Education Leaders' href='https://blogs.cisco.com/education/higher-education-innovation-highlighted-at-cisco-virtual-forum-for-education-leaders' />
+
+<link rel="canonical" href="https://blogs.cisco.com/datacenter/the-napkin-dialogues-lossless-iscsi" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=103988' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="The Napkin Dialogues: Lossless iSCSI"/>
+  <meta property="og:url" content="https://blogs.cisco.com/datacenter/the-napkin-dialogues-lossless-iscsi"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2013-03-02T10:14:02+00:00"/>
+  <meta property="article:modified_time" content="2013-03-05T12:03:16+00:00" />
+  <meta property="og:updated_time" content="2013-03-05T12:03:16+00:00" />
+  <meta property="article:section" content="Data Center"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="The Napkin Dialogues: Lossless iSCSI"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/datacenter/the-napkin-dialogues-lossless-iscsi"/>
+  <meta name="twitter:description" content="We bring out the napkins again to discuss lossless iSCSI and its design implications"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:creator" content="@http:/twitter.com/drjmetz"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521453612";
+		var sig = "599cbbe4c8b7d2199cd98b3aab293c3c";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1G2Snir&text=The Napkin Dialogues: Lossless iSCSI&via=CiscoDC" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/datacenter/the-napkin-dialogues-lossless-iscsi&title=The Napkin Dialogues: Lossless iSCSI" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/datacenter/the-napkin-dialogues-lossless-iscsi" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/datacenter/the-napkin-dialogues-lossless-iscsi" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: The Napkin Dialogues: Lossless iSCSI&body=I saw this post on Cisco Data Center blog and thought you might like to read it.%0A%0AThe Napkin Dialogues: Lossless iSCSI%0A%0Ahttps://blogs.cisco.com/datacenter/the-napkin-dialogues-lossless-iscsi%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/datacenter/'>Data Center</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category5.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Data Center  						</span>
+						<h1 id="post-103988" class="kindle_title title">The Napkin Dialogues: Lossless iSCSI</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/JMichelMetz.thumbnail.jpg"></div><div class="author_rewards_box"></div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/jmichelmetz" title="Posts by J Metz" rel="author">J Metz</a> - March 2, 2013 - 8 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p>What do you get when you cross <font color="red">iSCSI</font> with <font color="red">lossless</font> <font color="red">Ethernet</font>? A lot of confusion.</p>
+<p>I do quite a lot of presentations regarding converged <font color="red">networks</font>, including <font color="red">Fibre Channel</font>, whether native or over <font color="red">Ethernet</font> (i.e., <font color="red">FCoE</font>), <font color="red">iSCSI</font>, NAS, etc. The hardest part about these presentations are combating some of the expectations that audiences have, considering they may come from <font color="red">server</font> backgrounds, <font color="red">network</font> backgrounds, or <font color="red">storage</font> backgrounds.</p>
+<p>Why is this important? Quite frankly, because like fish who don&#8217;t know they live in the water, they have come to grow unaware of their own environmental backgrounds. They tend to forget the assumptions with which they make their decisions. <font color="red">Ethernet</font> and <font color="red">Fibre Channel</font> <font color="red">networking</font> people have <i>very</i> different fundamental philosophies about the way their <font color="red">networks</font> run.</p>
+<p>In the world of converged <font color="red">networks</font>, this can cause some, er, unintended consequences. <span id="more-103988"></span></p>
+<p><b>The Confusion</b></p>
+<p>Recently I had a friend &#8211; we&#8217;ll call him Pete (because that&#8217;s the first fictional name that came to mind) stop by while I was having lunch and ask if he could &#8220;ask a quick question.&#8221;</p>
+<p>(Why is it that the questions are quick, but the answers are so, so long? Just one of those ponderables of life, I suppose.)</p>
+<p>&#8220;Sure, what&#8217;s up?&#8221; I said. It&#8217;s not like I was hungry anyway.</p>
+<p>&#8220;I&#8217;ve been trying to figure out this whole converged networking thing,&#8221; Pete said, and I could see he wasn&#8217;t sure what the right words to use were.</p>
+<p>&#8220;You mean <font color="red">FCoE</font>?&#8221; I asked. Usually most of the questions I get surround <font color="red">FCoE</font>. Go figure. <i>Quelle Surprise!</i></p>
+<p>&#8220;No, actually, <font color="red">iSCSI</font>.&#8221;</p>
+<p>&#8220;Okay, sure,&#8221; I said. &#8220;What&#8217;s the question?&#8221; Technically speaking, <font color="red">iSCSI</font> <i>is</i> a <font color="red">convergence</font> technology. You can run block-level <font color="red">storage</font> on a <font color="red">VLAN</font> running over the same equipment that handles traditional <font color="red">Ethernet</font>. We&#8217;ve been doing this for <i>years</i>.</p>
+<p>Pete took a deep breath, and then blurted out, &#8220;I&#8217;ve been told that you can do converged <font color="red">networks</font> with <font color="red">iSCSI</font>, but in order to do converged <font color="red">networks</font> we need to use <font color="red">DCB</font>, so does that mean that we have to run <font color="red">iSCSI</font> over <font color="red">DCB</font>?&#8221;</p>
+<p>Now it was my turn to be confused. &#8220;I&#8217;m confused,&#8221; I said. Coy about my feelings, I am. &#8220;By <font color="red">DCB</font>, do you mean <font color="red">lossless</font> <font color="red">Ethernet</font>?&#8221;</p>
+<p>Pete nodded.</p>
+<p>&#8220;Well,&#8221; I said, &#8220;It may be that the problem you&#8217;re having is that <font color="red">DCB</font> is not the same thing as <font color="red">lossless</font>.&#8221;</p>
+<p>Pete looked like he was about to cry. &#8220;<i>What?!</i>&#8221; he said. &#8220;But everyone keeps saying that you need <font color="red">DCB</font> for <font color="red">FCoE</font> because it&#8217;s <font color="red">lossless</font> and that&#8217;s how you get converged <font color="red">networks</font>…&#8221; His voice trailed off.</p>
+<p>I motioned for him to take a seat. He did. I reached over to grab a <font color="red">napkin</font> and pulled out a pen. &#8220;Let me try to clarify a couple of things,&#8221; I said. Indicating the <font color="red">napkin</font> I said, &#8220;I hope you don&#8217;t mind, I tend to think visually.&#8221;</p>
+<p>He nodded. I swear, he was pouting. &#8220;Cheer up,&#8221; I said. &#8220;We&#8217;ll get you on the right page.&#8221;</p>
+<p><b>Clearing up the Terminology</b></p>
+<p>Let&#8217;s try to break it down a little. &#8220;<font color="red">DCB</font>&#8221; is actually a category of standard documents. It&#8217;s not just one particular thing,&#8221; I said, starting to write everything down.</p>
+<div id="attachment_104003" style="max-width: 560px" class="wp-caption aligncenter"><img class="size-large wp-image-104003" alt="The <font color="red">DCB</font> &quot;Family&quot; of Standard Docs" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/Standards-550x471.png" width="550" height="471" /><p class="wp-caption-text">The <font color="red">DCB</font> &#8220;Family&#8221; of Standard Docs</p></div>
+<p>&#8220;You see,&#8221; I said, tapping at each of the different lines, &#8220;there are many parts of DCB, not just <font color="red">lossless</font>. The important thing to keep in mind is that just because something is included as part of the standard, doesn&#8217;t mean it&#8217;s required for every single case.&#8221;</p>
+<p>Pete nodded. I took a bite of my food, and instantly regretted it. I hate talking with my mouth full.</p>
+<p>&#8220;Take thith, for exthample,&#8221; I said, trying not to spit food across the table, and swallowed hurriedly. I pointed to the last line on the <font color="red">napkin</font>. &#8220;While this is part of the <font color="red">DCB</font>, <a href="http://blogs.cisco.com/datacenter/the-napkin-dialogues-fcoe-vs-qcn/" target="_blank">it doesn&#8217;t apply in all <font color="red">convergence</font> cases. You don&#8217;t need this for <font color="red">FCoE</font>, for example.</a>&#8221;</p>
+<p>&#8220;Why not?&#8221; Pete asked.</p>
+<p>I waved my hand. &#8220;It&#8217;s a bit long to get into it, but I&#8217;ll send you the link to that later. For now, let&#8217;s just say that these documents are designed to help you understand a way to solve a problem. It&#8217;s not necessarily the <i>only</i> way, just a way that the industry had standardized. Make sense?&#8221;</p>
+<p>&#8220;So far,&#8221; he admitted.</p>
+<p>&#8220;So,&#8221; I continued. &#8220;When someone says that you need <font color="red">DCB</font>, they may be talking about one of the solutions in <i>one</i> of these documents, or two, but not necessarily any <i>specific </i>one of them. You certainly don&#8217;t need to do <i>all</i> of them for every possible problem.&#8221;</p>
+<p>&#8220;Okay,&#8221; he said. &#8220;So what are they talking about when they say they need <font color="red">DCB</font> for <font color="red">iSCSI</font>?&#8221;</p>
+<p><b><font color="red">iSCSI</font> and <font color="red">DCB</font></b></p>
+<p>&#8220;That&#8217;s a good question,&#8221; I admitted. &#8220;I&#8217;m not sure <i>what</i> they mean. We&#8217;ve been doing converged <font color="red">networks</font> with <font color="red">iSCSI</font> and <font color="red">LAN</font> for a while now, and we certainly don&#8217;t need to do <font color="red">DCB</font> in order for that to work.&#8221;</p>
+<p>&#8220;But I keep hearing about &#8216;<font color="red">Lossless</font> <font color="red">iSCSI</font>,'&#8221; he protested. &#8220;Don&#8217;t you need <font color="red">DCB</font> to do that?&#8221;</p>
+<p>&#8220;Well, yeah,&#8221; I said. &#8220;That&#8217;s kind of written into the name, isn&#8217;t it? But do you need <i>all</i> of <font color="red">DCB</font> to make it work? Or just the <font color="red">lossless</font> part?&#8221;</p>
+<p>He thought about that for a minute. &#8220;A fair point,&#8221; he said.</p>
+<p>&#8220;It seems to me that if you&#8217;re going to be making a <font color="red">DCB</font> argument for <font color="red">iSCSI</font> &#8211; assuming we&#8217;re <em>not</em> talking <font color="red">lossless</font> here &#8211; then you really could use the ETS part of the standard for guaranteeing minimum <font color="red">bandwidth</font>.&#8221;</p>
+<p>&#8220;What do you mean?&#8221;</p>
+<p>&#8220;When you start looking at running <font color="red">iSCSI</font> on 10GbE links,&#8221; I said, drawing, &#8220;If you want to set aside a minimum amount of <font color="red">bandwidth</font>, well, ETS can help with that.&#8221;</p>
+<div id="attachment_103998" style="max-width: 560px" class="wp-caption aligncenter"><img class="size-large wp-image-103998" alt="You can guarantee a minimum <font color="red">bandwidth</font> setting with ETS" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/iSCSI-ETS-550x300.png" width="550" height="300" /><p class="wp-caption-text">You can guarantee a minimum <font color="red">bandwidth</font> setting with ETS</p></div>
+<p>&#8220;What does it do?&#8221; Peter asked.</p>
+<p>&#8220;Effectively it allows you to place <font color="red">bandwidth</font> into groups and assign bandwidth percentages to those groups,&#8221; I said. &#8220;For instance, if you want to give <font color="red">iSCSI</font> 30% of the <font color="red">bandwidth</font> of this pipe, you could do that. With <font color="red">Cisco</font> <font color="red">switches</font> we accomplish this through our <font color="red">QoS</font> settings.&#8221;</p>
+<p>Peter stroked his chin thoughtfully. &#8220;And you don&#8217;t need <font color="red">DCB</font> &#8211; I mean, <font color="red">lossless</font> &#8211; for this?&#8221;</p>
+<p>&#8220;Not unless you want to run <font color="red">lossless</font> <font color="red">iSCSI</font>,&#8221; I said. &#8220;But you have to be very clear on why you would want to do that.&#8221;</p>
+<p>Peter&#8217;s eyes grew wide. &#8220;Yes, exactly!&#8221; he said. &#8220;That&#8217;s what I need to know!&#8221;</p>
+<p>I took this as an opportunity to grab another bite of my lunch. &#8220;Can you be more specific?&#8221; I asked, grimacing at the food. It was cold. I should have ordered a salad.</p>
+<p>&#8220;So if we can have <font color="red">lossless traffic</font> for <font color="red">Fibre Channel</font> and <font color="red">FCoE</font>, won&#8217;t it help with <font color="red">iSCSI</font> too? Why don&#8217;t we run all <font color="red">iSCSI</font> <font color="red">traffic</font> over <font color="red">lossless</font> <font color="red">Ethernet</font>?&#8221;</p>
+<p>&#8220;Because we have different <font color="red">design principles</font> for lossy <font color="red">traffic</font> like <font color="red">iSCSI</font> than we do for <font color="red">lossless traffic</font> like <font color="red">Fibre Channel</font> and <font color="red">FCoE</font>,&#8221; I replied.</p>
+<p>&#8220;But it&#8217;s all <font color="red">block storage</font>, right?&#8221; he asked.</p>
+<p>&#8220;Yes, that&#8217;s true,&#8221; I said. &#8220;But how a <font color="red">server</font> accesses <font color="red">data</font> on a <font color="red">storage</font> array is a separate issue than how we <font color="red">network</font> that access to the <font color="red">storage</font>.&#8221;</p>
+<p>I could see by the look on his face that I lost him. Out came <font color="red">napkin</font> number 3.</p>
+<p>&#8220;Look at it this way,&#8221; I said. &#8220;One of the things that makes <font color="red">iSCSI</font> so popular is that it doesn&#8217;t require all the know-how that <font color="red">Fibre Channel</font> does. It&#8217;s not as specialized, right?&#8221;</p>
+<p>Peter nodded.</p>
+<p>&#8220;One of the beautiful things about <font color="red">iSCSI</font> is that, not only is it cheap, but the <font color="red">network</font> itself does a lot of the heavy lifting for you. All you need are the <font color="red">IP</font> addresses of the host and target and then the <font color="red">network</font> takes care of the rest.&#8221;</p>
+<p>He frowned. &#8220;There&#8217;s more to it than that,&#8221; he said.</p>
+<p>&#8220;Yes, I know,&#8221; I said, a little more dismissively than I meant. &#8220;But in essence setting up <font color="red">iSCSI</font> is easy because there are a lot of things you <i>don&#8217;t</i> have to do that you would in a <font color="red">Fibre Channel</font> <font color="red">environment</font>.&#8221;</p>
+<p>&#8220;True.&#8221;</p>
+<p><b>The Tyranny of <font color="red">SCSI</font></b></p>
+<p>&#8220;Okay,&#8221; I continued. &#8220;Let&#8217;s start off with <font color="red">SCSI</font>. <font color="red">SCSI</font> makes some assumptions about the way these two devices talk to each other. For instance, <font color="red">SCSI</font> assumes that there is a 1-to-1 relationship between host and target, and that the exchanges between the two devices are always in sequence.&#8221;</p>
+<div id="attachment_103997" style="max-width: 560px" class="wp-caption aligncenter"><img class="size-large wp-image-103997" alt="<font color="red">SCSI</font> needs a one-to-one connection" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/i<font color="red">SCSI</font>-1-1-550x412.png" width="550" height="412" /><p class="wp-caption-text">SCSI needs a one-to-one connection</p></div>
+<p>&#8220;And SCSI can&#8217;t do error correction,&#8221; Peter interjected.</p>
+<p>&#8220;Well,&#8221; I said, hesitantly, &#8220;technically it <i>can</i>, but it&#8217;s so difficult and can be done in so few cases that for all intents and purposes it&#8217;s useless for what we&#8217;re trying to do here.&#8221;</p>
+<p>&#8220;Thanks,&#8221; Peter said sarcastically. &#8220;Way to be pedantic.&#8221;</p>
+<p>I looked at him for a moment. &#8220;Anywaaaaaay…&#8221;</p>
+<div id="attachment_103999" style="max-width: 560px" class="wp-caption aligncenter"><img class="size-large wp-image-103999" alt="Even in a <font color="red">network</font>, <font color="red">SCSI</font> thinks it's a 1:1 relationship" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/iSCSI-Network-550x412.png" width="550" height="412" /><p class="wp-caption-text">Even in a <font color="red">network</font>, SCSI thinks it&#8217;s a 1:1 relationship</p></div>
+<p>&#8220;When we moved the disk outside of the host and inserted a network in between them,&#8221; I continued drawing on the <font color="red">napkin</font> until I had a respectable mockup of a <font color="red">network</font> (sometimes my artwork amazes even myself). &#8220;We still had to maintain that 1:1 relationship, right?&#8221;</p>
+<p>&#8220;Right.&#8221;</p>
+<p>&#8220;So, this is one of the reasons why <font color="red">FC</font> requires a <font color="red">lossless</font> <font color="red">network</font> in the first place: it is very difficult to fix the <font color="red">data</font> if it gets out of sequence or if frames get dropped. But that&#8217;s not what happens in <font color="red">iSCSI</font>.&#8221;</p>
+<p>&#8220;With <font color="red">iSCSI</font> we use TCP to create <font color="red">sessions</font> between the host and the target, so that when <font color="red">Ethernet</font> <font color="red">packets</font> get sent all crazy-like over the <font color="red">network</font> -&#8221; I drew squiggles across the <font color="red">napkin</font> &#8211; &#8220;TCP will keep track of the sequence and reassemble them in order and present it to the <font color="red">SCSI</font> layer.&#8221;</p>
+<div id="attachment_104000" style="max-width: 560px" class="wp-caption aligncenter"><img class="size-large wp-image-104000" alt="I could have sworn this was the way to Alburquerque!" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/i<font color="red">SCSI</font>-Squiggles-550x412.png" width="550" height="412" /><p class="wp-caption-text">I could have sworn this was the way to Alburquerque!</p></div>
+<p>&#8220;Voilá!&#8221; I grinned. &#8220;In-order SCSI &#8211; over a lossy <font color="red">Ethernet</font> <font color="red">network</font>! I&#8217;m exaggerating a bit, of course, but the point here is that no matter which way the <font color="red">packets</font> take to get to the <font color="red">storage</font>, <font color="red">SCSI</font> still needs to be happy.&#8221;</p>
+<p>&#8220;Very nice,&#8221; Peter said. &#8220;So why do people want <font color="red">lossless</font> <font color="red">iSCSI</font>?&#8221;</p>
+<p><b><font color="red">Lossless</font> <font color="red">iSCSI</font></b></p>
+<p>I shrugged. &#8220;Traditionally, <font color="red">iSCSI</font> has suffered from performance concerns when compared to <font color="red">Fibre Channel</font>. It made sense a while ago, back when <font color="red">Ethernet</font> was running at 1Gig speeds while <font color="red">FC</font> went from 2 to 4 to 8 Gb. The extra serialization in a TCP/IP header also means that there were some impacts on <font color="red">latency</font>.&#8221;</p>
+<p>&#8220;But we&#8217;re using 10Gb <font color="red">Ethernet</font> now. Even 40Gb,&#8221; he countered.</p>
+<p>&#8220;Yes, that&#8217;s true. But <font color="red">bandwidth</font> is not the same thing as <font color="red">latency</font>,&#8221; I said. &#8220;Having the extra <font color="red">bandwidth</font> is very useful for all kinds of <font color="red">traffic</font>, it&#8217;s true. A <font color="red">lossless</font> <font color="red">iSCSI</font> connection would mean, in theory, that you could simply use the lower <font color="red">latency</font> capabilities of <font color="red">lossless</font> <font color="red">Ethernet</font> to make <font color="red">iSCSI</font> really sing.&#8221;</p>
+<p>&#8220;But you can&#8217;t?&#8221; Peter asked.</p>
+<p>I shook my head. &#8220;No, of course you can. But whether you&#8217;re talking about <font color="red">Fibre Channel</font> or <font color="red">FCoE</font> or any other type of <font color="red">lossless environment</font>, you design for the <i><font color="red">lossless environment</font></i>, not the protocol. Otherwise you can wind up getting really bad performance.&#8221;</p>
+<p>&#8220;Why?</p>
+<p>I pointed to the latest <font color="red">napkin</font>. &#8220;See this squiggle here? I know this isn&#8217;t drawn to scale, but if you were to take this to a <font color="red">Fibre Channel</font> or <font color="red">FCoE</font> <font color="red">storage</font> architect he would freak. We simply don&#8217;t allow <font color="red">traffic</font> to do this in a <font color="red">lossless</font> world.</p>
+<p>&#8220;But what about <font color="red">iSCSI</font>?&#8221; I asked, rhetorically. &#8220;Effectively any kind of <font color="red">traffic</font> pattern that could happen in a TCP/IP world could affect <font color="red">iSCSI</font>, right?&#8221;</p>
+<p>He nodded.</p>
+<p>&#8220;Which means that right from the start we have very different architectures to take into consideration,&#8221; I said. &#8220;You&#8217;ve seen some of the <font color="red">Ethernet</font> <font color="red">networks</font>. How many <font color="red">switches</font> might you have between a host and a <font color="red">storage</font> target using <font color="red">Ethernet</font>?&#8221;</p>
+<p>He shrugged. &#8220;I have no idea.&#8221;</p>
+<p>&#8220;Exactly,&#8221; I said, nodding. &#8220;Could be one, could be one hundred. Who knows?&#8221;</p>
+<p>&#8220;Well, maybe not a hundred,&#8221; he said, drawing his words out, skeptically.</p>
+<p>&#8220;Now who&#8217;s being pedantic?&#8221; I retorted, smiling. &#8220;You get the idea. We just <i>don&#8217;t know</i>. In <font color="red">lossless environments</font>, however, we <i>do</i> know.&#8221;</p>
+<p>I started drawing on a new <font color="red">napkin</font>.</p>
+<p>&#8220;With <font color="red">lossless</font>, whether we&#8217;re talking about <font color="red">FC</font> or <font color="red">FCoE</font>,&#8221; I said, struggling to talk and draw at the same time. Thank God I wasn&#8217;t trying to chew gum. &#8220;We have a very clear set of <font color="red">topologies</font> that we play with. We want to make sure our <font color="red">storage</font> is close to the host, because that gives us the best performance. As a result we usually only have one or two <font color="red">switches</font> in between.&#8221;</p>
+<div id="attachment_104001" style="max-width: 560px" class="wp-caption aligncenter"><img class="size-large wp-image-104001" alt="Keep your <font color="red">storage</font> close, and your <font color="red">switches</font> closer. Or something." src="https://alln-extcloud-storage.cisco.com/ciscoblogs/Lossless-FC-or-FCoE-550x412.png" width="550" height="412" /><p class="wp-caption-text">Keep your storage close, and your switches closer. Or something.</p></div>
+<p>&#8220;That&#8217;s the &#8216;edge-core-edge&#8217; <font color="red">topology</font>,&#8221; Peter offered.</p>
+<p>&#8220;Right,&#8221; I agreed. &#8220;Really large <font color="red">environments</font> can have three, but it&#8217;s very, <i>very</i> rare to have any more than that. We do this so that we can keep our <font color="red">bandwidth</font> under tight control with low <font color="red">oversubscription</font> and fan-in ratios.&#8221;</p>
+<p>Peter blinked.</p>
+<p>I paused, and realized I&#8217;d need to explain a little more. I drew a few more lines on the <font color="red">napkin</font> for emphasis. &#8220;Different applications have different types of <font color="red">traffic</font>. Some times they&#8217;re very bursty, or irregular. Sometimes they&#8217;re sustained,&#8221; I said. &#8220;Since we want to make sure that all our <font color="red">traffic</font> is processed, we need to make sure we strike a balance between the number of <font color="red">servers</font> we have and the amount of <font color="red">bandwidth</font> we have going to the <font color="red">storage</font>.&#8221;</p>
+<p>&#8220;How do you know the right numbers to use?&#8221; Peter asked.</p>
+<p>&#8220;<font color="red">Storage</font> vendors generally provide guidance in this process,&#8221; I admitted. &#8220;It depends heavily on what kind of applications we&#8217;re talking about. Usually the ratios are between 4-to-1 to around 20-to-1.&#8221;</p>
+<div id="attachment_104002" style="max-width: 560px" class="wp-caption aligncenter"><img class="size-large wp-image-104002" alt="Keep fan-in ratios down to avoid problems with <font color="red">lossless traffic</font>" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/Oversubscription-550x412.png" width="550" height="412" /><p class="wp-caption-text">Keep fan-in ratios down to avoid problems with lossless traffic</p></div>
+<p>I tapped the <font color="red">napkin</font>. &#8220;The key thing to remember is that every time we design a <font color="red">Fibre Channel</font> or <font color="red">FCoE</font> SAN we have to take into account the <font color="red">oversubscription</font> ratio. Take this example. Here we have 60 <font color="red">servers</font> running at 4G speeds connecting to 3 8G<font color="red">FC</font> ISLs connected to six 4Gb FC links to <font color="red">storage</font>. The fan-in ratio &#8211; that is, the number of <font color="red">bandwidth</font> from <font color="red">servers</font> to <font color="red">bandwidth</font> to <font color="red">storage</font> &#8211; is at the ratio of 10:1.&#8221;</p>
+<p>Peter looked troubled. &#8220;I thought that <a href="http://blogs.cisco.com/datacenter/3-for-2-the-fcoe-bandwidth-bonus/" target="_blank">it wasn&#8217;t <i>true </i>8G</a>, though.&#8221;</p>
+<p>&#8220;You&#8217;re right,&#8221; I said. &#8220;But the important part here is the ratio, which is correct.&#8221;</p>
+<p>&#8220;Okay,&#8221; he said. &#8220;But can&#8217;t we do this with <font color="red">iSCSI</font>?</p>
+<p>&#8220;Well, if we&#8217;re going to do <font color="red">lossless</font> <font color="red">iSCSI</font>, we pretty much have to take these same issues into consideration. But the fan-in ratio can be an order of magnitude greater &#8211; or more!&#8221;</p>
+<p><b>Head-of-Line Blocking</b></p>
+<p>&#8220;So what would happen if you did this with <font color="red">iSCSI</font>?&#8221; Peter asked.</p>
+<p>&#8220;There&#8217;s always a chance in a <font color="red">lossless</font> <font color="red">network</font> for Head of Line Blocking,&#8221; I said as I pulled another <font color="red">napkin</font>, realizing I had started quite a collection. &#8220;Let me give you an example.&#8221;</p>
+<p>&#8220;Let&#8217;s suppose that you have 1G connections from your <font color="red">servers</font> into a 10G array,&#8221; I tried to sketch something out quickly so as not to lose momentum. &#8220;And let&#8217;s say, for the sake of simplicity, that you have steady <font color="red">traffic</font> from all of these <font color="red">servers</font> going up to the target.&#8221;</p>
+<div id="attachment_103994" style="max-width: 560px" class="wp-caption aligncenter"><img class="size-large wp-image-103994" alt="Steady as she goes..." src="https://alln-extcloud-storage.cisco.com/ciscoblogs/1G-HOLB-550x569.png" width="550" height="569" /><p class="wp-caption-text">Steady as she goes&#8230;</p></div>
+<p>&#8220;So far, everything looks copacetic, right?</p>
+<p>&#8220;Yup,&#8221; Peter confirmed.</p>
+<p>&#8220;What happens when you start getting a bursty <font color="red">traffic</font> from a source, like this guy here on the left, that saturates the link?&#8221; I said, with melodramatic suspense.</p>
+<div id="attachment_103995" style="max-width: 560px" class="wp-caption aligncenter"><img class="size-large wp-image-103995" alt="Whoa! Hyperactive <font color="red">server</font>! Boom! Goes the dynamite!" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/10G-Burst-550x569.png" width="550" height="569" /><p class="wp-caption-text">Whoa! Hyperactive server! Boom! Goes the dynamite!</p></div>
+<p>&#8220;We&#8217;ve got congestion,&#8221; Peter offered.</p>
+<p>&#8220;You got it,&#8221; I confirmed. &#8220;Normally what happens is that the TCP <font color="red">session</font> will renegotiate with the host in order to reduce the transmission window sizes. But since that&#8217;s layer 4, and <font color="red">lossless traffic</font> happens at layer 2, this will happen before TCP gets a chance to kick in.&#8221;</p>
+<p>I pointed to the top <font color="red">switch</font>. &#8220;This guy is getting hit pretty hard. He&#8217;s got 12G coming in, but can only process 10G at a time. So, the <font color="red">lossless</font> &#8220;no-drop&#8221; <font color="red">traffic</font> is queued and the <font color="red">buffers</font> begin to fill up.&#8221;</p>
+<p>I raised my hands to demonstrate a rising water level. &#8220;When we get to that high water mark, PFC kicks in, and sends PAUSE frames down the links,&#8221; I said, drawing on the <font color="red">napkin</font> again.</p>
+<div id="attachment_103996" style="max-width: 560px" class="wp-caption aligncenter"><img class="size-large wp-image-103996" alt="Just watch the champagne fill the glasses as it flows from the top..." src="https://alln-extcloud-storage.cisco.com/ciscoblogs/HOLB-PAUSED-550x569.png" width="550" height="569" /><p class="wp-caption-text">Just watch the champagne fill the glasses as it flows from the top&#8230;</p></div>
+<p>&#8220;So,&#8221; I said, looking up from the <font color="red">napkin</font>. &#8216;Congratulations. Everything is flow controlled.&#8221;</p>
+<p>Peter looked confused. &#8220;But everything is paused!&#8221;</p>
+<p>&#8220;Yup. It&#8217;s controlled.&#8221; I couldn&#8217;t suppress a sardonic smirk.</p>
+<p>&#8220;So this happens in <font color="red">Fibre Channel</font>?&#8221; he asked, dubious.</p>
+<p>&#8220;It can,&#8221; I admitted, &#8220;which is why we control for these types of behaviors with predetermined <font color="red">traffic</font> engineering for our SANs. We carefully calculate the <font color="red">oversubscription</font> ratios, the fan-in ratios, and make sure that we&#8217;re operating within tight parameters.&#8221;</p>
+<p>&#8220;Besides,&#8221; I said, collecting the <font color="red">napkins</font>, &#8220;in <font color="red">Fibre Channel</font> this Head-of-Line-Blocking is a transitory event. Once some BB Credits are returned to the blocked port, the port can send again. In a PAUSE situation, though, there are no BB_Credits. With PAUSE, it&#8217;s on a timer.&#8221;</p>
+<p>&#8220;But what about TCP?&#8221; he asked.</p>
+<p>I shrugged. &#8220;TCP isn&#8217;t invoked immediately, because frames are PAUSED, not dropped. At this point, TCP doesn&#8217;t enter into it. But you raise an excellent point: what about TCP?&#8221;</p>
+<p><b>What About TCP?</b></p>
+<p>&#8220;See, TCP is <i>session-based</i>,&#8221; I said, tapping the pen between the host and the target. &#8220;This means a couple of things.</p>
+<p>&#8220;First, in a normal <font color="red">iSCSI</font> <font color="red">environment</font> TCP would handle all the appropriate window sizing between the two entities here. That means that in this <font color="red">lossless environment</font> you can wind up locking out all of the hosts as the PAUSE timers work themselves out, instead of letting TCP do its job.</p>
+<p>&#8220;Second, and most importantly,&#8221; I said, &#8220;If you&#8217;re not careful, there is the potential for really messing up the <font color="red">session</font> altogether and closing it, even possibly losing <font color="red">data</font>.&#8221;</p>
+<p>Peter&#8217;s eyes widened. &#8220;What? How?&#8221;</p>
+<p>&#8220;Simple, son.&#8221; I said in my best Strother Martin impression. &#8220;What we have here, is a failure to communicate.&#8221;</p>
+<p>Peter looked at me blankly.</p>
+<p>&#8220;Cool Hand Luke?&#8221; I asked. &#8220;No?&#8221; I sighed. <i>No one appreciates the classics any more</i>.</p>
+<p>&#8220;If you&#8217;re interested, we can probably go through this another time,&#8221; I said, glancing at my food. Longingly. &#8220;For now, let&#8217;s keep it simple. TCP adjusts its transmission window based upon how much <font color="red">data</font> it can process at any given time.&#8221;</p>
+<p>&#8220;Because of this, the window can <i>shrink</i> just as easily as it can grow. But, in order to do this, it has to send information back to the host. But what if that connection is PAUSEd?&#8221; I hinted.</p>
+<p>&#8220;The client might not know that it can&#8217;t send as much <font color="red">data</font>,&#8221; Peter was nodding as he was speaking. He was starting to get it.</p>
+<p>&#8220;RIght,&#8221; I said. &#8220;So, if the client has already sent out information, but is paused somewhere in the <font color="red">network</font>, the target can&#8217;t take the additional information and anything over and beyond that will need to be dropped. Not only does this really defeat the purpose of a <i>no-drop</i> transmission, but will force the client to retransmit the <font color="red">data</font> and there goes the efficiency.&#8221;</p>
+<p>&#8220;Can&#8217;t you prevent the window from shrinking?&#8221; Peter asked.</p>
+<p>I nodded. &#8220;Yes, in fact TCP has a simple knob that does just that: you can force a device to not be allowed allowed to shrink the window. In order to do that, though, you have to make the target <i>more</i> patient. That is, it has to wait longer to reduce the <font color="red">buffer</font> size, which of course prolongs the congestion time.&#8221;</p>
+<p>&#8220;Not only that, but sometimes TCP will reduce the window size all the way down to zero. Since the same window is negotiated on both the host and the target, you are effectively shutting down the <font color="red">storage</font> connection altogether. This may be fine for file-based <font color="red">storage</font>, but with block-based <font color="red">storage</font> &#8211; especially booting-from-SAN &#8211; you&#8217;re going to find yourself in some pretty sticky situations if that happens.&#8221;</p>
+<p>Peter gulped. &#8220;Can&#8217;t you just reopen the window?&#8221;</p>
+<p>I nodded. &#8220;Of course, but the problem is that the host is dependent upon receipt of the &#8220;window opening&#8221; segment. If that <font color="red">traffic</font> is PAUSEd…&#8221;</p>
+<p>Peter nodded and finished the thought for me. &#8220;The host terminates the connection.&#8221;</p>
+<p>I tapped my nose and pointed at him. &#8220;Spot on,&#8221; I said. &#8220;There are ways to prevent this from happening &#8211; or try to &#8211; like sending special probes out, but even this isn&#8217;t perfect. When the target decides to reopen the window, it might reopen it at too small a value, which in turn creates many small segments, which in turn reduces the overall efficiency. And that&#8217;s just at the TCP level, which assumes that the <font color="red">traffic</font> is flowing at Layer 2.&#8221;</p>
+<p>&#8220;And this type of <font color="red">environment</font>,&#8221; Peter said, thinking it through, &#8220;is exactly the kind of situation to be impacted by <font color="red">traffic</font> being PAUSEd at Layer 2.&#8221;</p>
+<p>&#8220;Yup,&#8221; I agreed. &#8220;Or to put it another way, in theory the exact same congestion event which would create this TCP window problem is the one which would initiate PAUSE frames. This &#8216;perfect storm&#8217; of problems could &#8212; theoretically at least &#8212; happen any time there is congestion, especially in large sprawling <font color="red">iSCSI</font> <font color="red">networks</font>.&#8221;</p>
+<p>&#8220;Like the ones that often exist today,&#8221; he mused. &#8220;This reminds me of the &#8216;<font color="red">buffer</font> bloat&#8217; problem with TCP.&#8221;</p>
+<p>I wasn&#8217;t as familiar with this, and it must have shown on my face. &#8220;When congestion occurs,&#8221; he continued, &#8220;TCP <font color="red">traffic</font> can get stashed in <font color="red">buffers</font> for so long that the sender assumes the recipient never got it, and retransmits.&#8221;</p>
+<p>&#8220;Ah,&#8221; I said. &#8220;And once again, there goes your efficiency.&#8221;</p>
+<p>&#8220;Right,&#8221; he said. &#8220;But <font color="red">buffer</font> bloat is generally found in the scenario of slow <font color="red">WAN</font> links and a bazillion hops, with wait times as high as thousands of milliseconds. You&#8217;re talking about what sounds like a relatively brief moment of congestion.&#8221;</p>
+<p>&#8220;From the TCP side, sure,&#8221; I said. &#8220;But when we&#8217;re using PAUSE we&#8217;re talking about a fixed timer. And remember, we&#8217;re talking about flow controlling in a somewhat cascaded fashion, where all of these hosts-target <font color="red">sessions</font> are being PAUSED simultaneously. Will the congestion and resulting PAUSE be quick enough &#8211; for all the nodes that have been PAUSEd and then unPAUSEd &#8211; that TCP is not disrupted?&#8221;</p>
+<p>&#8220;So,&#8221; he said thoughtfully, &#8220;the question is whether the extended congestion lasts long enough to cause TCP to react in an oversubscribed scenario.&#8221;</p>
+<p>I nodded.</p>
+<p><b>To Use or Not to Use <font color="red">Lossless</font> <font color="red">iSCSI</font></b></p>
+<p>&#8220;So you shouldn&#8217;t use <font color="red">iSCSI</font> in a <font color="red">lossless environment</font>?&#8221; Peter asked.</p>
+<p>I shook my head. &#8220;No, I&#8217;m not saying that,&#8221; I said. &#8220;Obviously, the technology works. But what I think you have to understand is that the key <font color="red">design principle</font> here is <i><font color="red">lossless</font></i>, not the <font color="red">iSCSI</font> part.&#8221;</p>
+<p>I took a sip of my drink, which gave me a second to gather my thoughts. &#8220;Look, I would hope that it&#8217;s a really rare event. But generally in <font color="red">lossless environments</font> we historically actively <em>avoid</em> those events, rather than <em>hope</em> it doesn&#8217;t happen.</p>
+<p>&#8220;It seems to me that what people <i>want</i> is the convenience of setting up <font color="red">iSCSI</font> but the better performance they have seen with <font color="red">lossless environments</font> like <font color="red">FC</font> or <font color="red">FCoE</font>. That&#8217;s fine, but I think that they are forgetting the reason why they liked <font color="red">iSCSI</font> in the first place.</p>
+<p>&#8220;It doesn&#8217;t matter what protocol you decide to use &#8211; you still need to do the math for <font color="red">lossless environments</font>, and you still need to be pre-deterministic with the <font color="red">traffic</font>. You can&#8217;t have dozens of <font color="red">switches</font> between your hosts and your targets, especially if you&#8217;ve got fan-in ratios in the triple digits.&#8221;</p>
+<p><img class="aligncenter size-large wp-image-104372" alt="summary" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/summary-550x432.png" width="550" height="432" /></p>
+<p>I shrugged again. &#8220;<font color="red">Lossless</font> <font color="red">iSCSI</font> works &#8211; with the appropriate caveats. A single-switch scenario? Sure! Go for it!&#8221; I held my hands up in a conceding gesture. &#8220;You&#8217;re likely to be well under the subscription ratios in that type of <font color="red">environment</font>. Of course, it means a little extra configuration on the <font color="red">switch</font>, but that&#8217;s no big deal if you want to squeeze every nanosecond you can out of your <font color="red">latency</font>.</p>
+<p>&#8220;But I haven&#8217;t seen anyone really push <font color="red">lossless</font> <font color="red">iSCSI</font> <font color="red">environments</font> to the same scale that we do in traditional deployments. For me, it&#8217;s just conjecture at this point. I&#8217;ve seen testing with one <font color="red">switch</font>, or two <font color="red">switches</font>, but not the extended sprawl that we have come to see in typical situations.&#8221;</p>
+<p>&#8220;But at least I know it&#8217;s <i>not</i> required,&#8221; Peter said, grinning. &#8220;So, <font color="red">iSCSI</font> shops need to think about what they are really trying to achieve with their specific <font color="red">topology</font> by implementing <font color="red">DCB</font> elements to enforce <font color="red">lossless</font> <font color="red">Ethernet</font>.&#8221;</p>
+<p>&#8220;Yes, absolutely,&#8221; I agreed.</p>
+<p>&#8220;Fantastic,&#8221; he said. &#8220;I really appreciate this. I really owe you one.&#8221;</p>
+<p><i>You owe me a lunch!</i> &#8220;No problem, glad to help out.&#8221;</p>
+<p>He indicated the <font color="red">napkins</font> strewn about the table, and I motioned for him to take them. In retrospect, it&#8217;s a shame I didn&#8217;t keep them myself. They would have made for a great visual in a blog article.</p>
+<p>&nbsp;</p>
+<p>[<em>Author&#8217;s note: Special thanks to <a href="https://twitter.com/ecbanks" target="_blank">Ethan Banks</a> and <a href="https://twitter.com/asholomon" target="_blank">Andy Sholomon</a> for their extremely valuable insights and thought-provoking comments/questions.</em>]</p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=dcb">DCB</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=ets">ETS</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=fcoe">FCoE</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=iscsi">iSCSI</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=lossless">Lossless</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=pfc">PFC</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">8 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+			<li>
+			<div id="comment-700444">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Marc Abel						</span>
+						<br />
+						<span class="comment-meta commentmetadata">March 9, 2013 at 7:47 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>My question is how is it performing in the real world. We can debate this academically but more to the point is: Are people doing non DCB iSCSI in med-large environments? What kind of performance are they getting? Are people doing iSCSI with DCB in a converged network, what kind of performance are they getting?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike700444" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-698907">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Tony Ansley						</span>
+						<br />
+						<span class="comment-meta commentmetadata">March 5, 2013 at 3:10 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>By the way, sorry my quotes don't look as good as yours :D</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike698907" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-698903">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						TonyAtDell (First Name)						</span>
+						<br />
+						<span class="comment-meta commentmetadata">March 5, 2013 at 12:00 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>J,
+
+
+
+I want to thank you for opening this great discussion.  As a vendor of iSCSI storage solutions, obviously I - and Dell - has a vested interest in this topic :)
+
+
+
+That being said, I would ask your to clarify your position that iSCSI is a "converged solution" by definition.  Simply because it leverages a common standard transport protocol, does not automatically mean that it should be converged with non-storage traffic. 
+
+
+
+Simply by deciding to use iSCSI (as opposed to FC or FCoE)does not mean I should abandon very valid and necessary storage design best practices.  I would still want to be in control of the network design including Fan-in, and flow control.  All of the same design point we have all learned from FC design apply for any Enterprise class storage solution regardless of protocol.
+
+
+
+I agree that haphazardly plugging an iSCSI storage array into an existing network, without any idea of how that network was designed would be risky at best and disasterous at worst.
+
+
+
+With a well designed, dedicated network, iSCSI is an very capable and comparable storage technology to FC...especially at 10Gb
+
+
+
+We believe that "converged networks" = "data center bridged" networks.  We would not recommend trying to merge storage and non-storage traffic in any situation without the level of QoS control that DCB can provide. The ability to actively manage iSCSI via ETS and PFC is just as important to iSCSI as it is for FCoE.
+
+
+
+Again, thanks for the discussion.  I would encourage you to review our whitepaper on iSCSI over DCB here:  http://en.community.dell.com/techcenter/storage/w/wiki/4355.configuring-dcb-with-equallogic-sans.aspx
+
+
+
+Thanks again!
+
+Tony Ansley</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike698903" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li class="comment byuser comment-author-jmichelmetz bypostauthor even depth-2" id="li-comment-698904">
+				<div id="comment-698904">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/JMichelMetz.thumbnail.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/jmichelmetz'>J Metz</a></span>
+							<br />
+							<span class="comment-meta commentmetadata">March 5, 2013 at 12:25 pm</span>
+
+						</div>
+						<div class="comment_text">
+							<p>Hi Tony, thanks for taking the time to reply. :)
+
+Also, thanks for confirming much of what I wrote. Obviously, I agree with the first five paragraphs of your reply. :) To the rest, let me try to answer your questions in turn. 
+
+<blockquote>I would ask your to clarify your position that iSCSI is a “converged solution” by definition. Simply because it leverages a common standard transport protocol, does not automatically mean that it should be converged with non-storage traffic.</blockquote>
+
+Converged Networks typically means that you are taking storage and LAN and running it on the same transport mechanism, as opposed to separate networks (such as native FC and Ethernet LAN). NAS, iSCSI, SMB, etc. allow customers to have different types of traffic running over Ethernet, but it's the block-storage that originally took its own switches or links that now can be run simultaneously over the same ones.
+
+<blockquote>We believe that “converged networks” = “data center bridged” networks</blockquote>
+
+I think the question must be raised - which part of DCB? As I mention above, there are multiple documents in DCB and not all of them are required for any given solution. You do not <em>need</em>, for instance, to run the DCB version of DCBX (CEE version works just fine, considering it's what every vendor uses right now). QCN is not a requirement. Technically non-ETS QoS would work equally fine for sharing iSCSI traffic as well as anything else on the same link.
+
+Saying that Converged Networks "equal" DCB is like saying that Streets = Transportation. Yes, there is an intersection there, but as described above, you can use elements of one without requiring everything else that could possibly fall under that category (streets don't need to accommodate trains, Airbus 380s, etc.). As you point out, iSCSI works just fine and dandy on higher bandwidth networks without the need for interference at Layer 2 (which is where PFC lives).
+
+<blockquote>We would not recommend trying to merge storage and non-storage traffic in any situation without the level of QoS control that DCB can provide.</blockquote>
+
+IIRC, ETS doesn't define the mechanism by which bandwidth groups are defined or allocated. It just so happens that the way vendors do this is through QoS. 
+
+<blockquote>The ability to actively manage iSCSI via ETS and PFC is just as important to iSCSI as it is for FCoE.</blockquote>
+
+Why? The logical corollary is that iSCSI doesn't work without PFC. PFC is 100% completely independent of ETS/QoS. They have absolutely nothing to do with each other. So, if we were not using ETS/QoS on a link (that is, only had iSCSI traffic), why would you "need" to have PFC? As it turns out, the millions of iSCSI ports that are available on the market do not use PFC, and since there is no difference (from a L3/L4 perspective) between 1GbE, 10GbE, 40GbE or 100GbE, why does iSCSI suddenly have to change it's behavior when the L1 parameters are changed? Isn't that the whole purpose of a layered system?
+
+Moreover, FCoE has a explicit requirement for lossless behavior. It's written into the standard spec (FC-BB-5). Not so for iSCSI. And since we're talking about the use of standards (i.e., DCB), those specifics can make a huge difference.
+
+Thanks for the link to the white paper. I look forward to reading it. :)
+
+Best,
+J</p>						</div>
+						<div class = "roblike">
+					<a  href = "#" id = "clickLike698904" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+						<div class="reply">
+													</div>
+
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+			</li><!-- #comment-## -->
+
+			<li class="comment byuser comment-author-jmichelmetz bypostauthor odd alt depth-2" id="li-comment-698905">
+				<div id="comment-698905">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/JMichelMetz.thumbnail.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/jmichelmetz'>J Metz</a></span>
+							<br />
+							<span class="comment-meta commentmetadata">March 5, 2013 at 2:34 pm</span>
+
+						</div>
+						<div class="comment_text">
+							<p>Hey Tony, 
+
+I've been thinking more about this since I replied (see the earlier reply) and the more I think about it the more I'm convinced that "Converged Networking" can not <em>equal</em> "data center bridging."
+
+Right now you can put iSCSI (traditional, non-lossless) in one VLAN and ethernet traffic in another VLAN on the same 10G link. You do not need PFC, ETS, DCBX, or QCN to do this. The traffic will work just fine. Functionally the networks are converged exactly the same way because you are still running both traffic types over the same link.
+
+It seems to me that if you want to <em>improve</em> performance, you could guarantee the minimum bandwidth through the QoS mechanisms of ETS. But, this does not inherently change the nature of the network. It does not make it "more converged" just because you have guaranteed more (or less) bandwidth. Similarly, it doesn't make it "more converged" if you use DCBX or manually configure the devices yourself. It also doesn't make it "more converged" whether the traffic on that VLAN is lossy or lossless. It is what it is - a VLAN running on a link that is also running other VLANs.
+
+As a result, I think this is precisely the type of confusion that I was trying to address in my first paragraph of the blog. Thanks for helping me think through my explanation a little better. :)</p>						</div>
+						<div class = "roblike">
+					<a  href = "#" id = "clickLike698905" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+						<div class="reply">
+													</div>
+
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+			<ul class="children">
+
+			<li>
+			<div id="comment-698906">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Tony Ansley						</span>
+						<br />
+						<span class="comment-meta commentmetadata">March 5, 2013 at 3:07 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>J, Thanks for the response
+
+
+
+A few follow ups:
+
+
+
+"Right now you can put iSCSI (traditional, non-lossless) in one VLAN and ethernet traffic in another VLAN on the same 10G link. You do not need PFC, ETS, DCBX, or QCN to do this. The traffic will work just fine."
+
+
+
+I think the confusion is in the idea that because you CAN converged traffic does not necessarily mean you SHOULD. I would argue VLANs do nothing to ensure QoS...they only isolate traffic logically.  You still have to contend with non-storage traffic for fixed, limited switch resources.  Without having a mechanisme such as ETS to control bandwidth and PFC to ensure that the other traffic streams are not the cause of a blocked path, there is no way to guarantee the QoS of the iSCSI stream.
+
+
+
+ 
+
+"Moreover, FCoE has a explicit requirement for lossless behavior. It’s written into the standard spec (FC-BB-5). Not so for iSCSI."
+
+
+
+I would contend that all storage traffic should be lossless.  Without PFC (or even 802.3x flow control), relying on TCP - and its longer timeouts - to provide "guaranteed delivery" via TCP Retransmits, is a performance killer.  
+
+
+
+"ETS doesn’t define the mechanism by which bandwidth groups are defined or allocated. It just so happens that the way vendors do this is through QoS. "
+
+
+
+True...but the ETS standard does set certain behavioral expectations to support inter-device copperation and via DCBx the consistent application of ETS settings.
+
+
+
+"PFC is 100% completely independent of ETS/QoS"
+
+
+
+Not always true.  As you state in the  previous quote above, the mechanism to manage ETS and ensure that buffers don't become saturated does involve PFC.  ETS directly affects buffer utilization.  Many switch vendors use PFC to throttle their upstream senders to ensure that the switch can internally honor the ETS limitations.
+
+
+
+Bottom line, is that iSCSI can receive all of the same benefits from ETS, PFC, QCN, and DCBx (assuming the iscsi devices support these standards) as FCoE or RDMAoE.  You are correct that iSCSI does not technically require any of these to operate, but the advantages of these standards when attempting to share the network with non-iSCSI traffic is real.  
+
+
+
+Keep up the great work!  I totally enjoy your posts...very informative and thought provoking.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike698906" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li class="comment byuser comment-author-jmichelmetz bypostauthor even depth-4" id="li-comment-698908">
+				<div id="comment-698908">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/JMichelMetz.thumbnail.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/jmichelmetz'>J Metz</a></span>
+							<br />
+							<span class="comment-meta commentmetadata">March 5, 2013 at 3:58 pm</span>
+
+						</div>
+						<div class="comment_text">
+							<p>Hey Tony, more great stuff here.
+
+<blockquote>I think the confusion is in the idea that because you CAN converged traffic does not necessarily mean you SHOULD</blockquote>
+
+A favorite refrain of mine. :)
+
+<blockquote> I would argue VLANs do nothing to ensure QoS…they only isolate traffic logically</blockquote>
+
+Yes, precisely. But it works, and in some cases it works well (depending on the level of traffic you're talking about). Remember it's only when the aggregate bandwidth is above 10G that there is contention for resources. If you never push that much bandwidth guaranteeing a minimum is a pointless exercise. Host links are undersubscribed as it is (hence the reason why converging them often makes sense). 
+
+I'm going to conflate two things that you wrote into the same quote for simplicity sake:
+
+<blockquote>Without having a mechanisme such as ETS to control bandwidth and PFC to ensure that the other traffic streams are not the cause of a blocked path, there is no way to guarantee the QoS of the iSCSI stream.... As you state in the previous quote above, the mechanism to manage ETS and ensure that buffers don’t become saturated does involve PFC. Many switch vendors use PFC to throttle their upstream senders to ensure that the switch can internally honor the ETS limitations.</blockquote>
+
+I'm sorry, but that's simply not the way that PFC works. Priority Flow Control has absolutely nothing to do with managing buffers. The word "priority" in this sense is <strong>not</strong> the same thing as "priority" in a QoS sense. QoS manages the priority (i.e., the "importance") of traffic in a variety of possibilities. PFC determines whether or not to institute PAUSE <strong>on</strong> a priority (i.e., an 802.1Qp "lane"). It is a sad fact that the same word is used to indicate two completely different things, but there you go. :(
+
+The relationship with PFC and buffers can best be understood as a "read-only" mechanism. That is, when a "high water mark" is reached as the buffers fill, PFC is initiated to send a PAUSE to the sending device in enough time to prevent dropped frames while still allowing for the frames in flight to be delivered. This happens on dedicated lossless links (e.g., the FCoE line card on the MDS is FCoE-only, which uses PFC but has no need for QoS because there is only one traffic type).
+
+Personally, I can't speak with any confidence about the way other vendors implement PFC and ETS, though. The two standards documents are completely independent of one another, and I don't know for sure if/that anyone else creates such dependencies. It seems to me that if that is the case, though, then they are using the two technologies in a way that wasn't intended by the standards working group. If they had been designed to be co-related they would have been part of the same document, like ETS and DCBX (as you point out).
+
+<blockquote>I would contend that all storage traffic should be lossless.</blockquote>
+
+Really? All storage? SMB, NFS and CIFS too? It seems to me that this would be treating all storage as equal, when it really isn't. I'm curious as to whether or not you loathed iSCSI until PFC came around. :)
+
+<blockquote>Without PFC (or even 802.3x flow control), relying on TCP – and its longer timeouts – to provide “guaranteed delivery” via TCP Retransmits, is a performance killer.</blockquote>
+
+If that's the case, why use TCP at all? After all, TCP was designed because IP had no such guarantee. If you're looking at lossless behavior in your storage why bother with additional upper layer protocols that can increase latency?
+
+<blockquote>Bottom line, is that iSCSI can receive all of the same benefits from ETS, PFC, QCN, and DCBx (assuming the iscsi devices support these standards) as FCoE or RDMAoE.</blockquote>
+
+You'll note in my conclusion of the post that I agree with you here. Key word here is "can." There are distinct advantages to each of these technologies, and there is a fit for them in certain implications. <em>Certain, but not all</em>. Some of those advantages include cost, ease of use, performance, skill sets, tool kits, etc. Ultimately if customers create iSCSI environments without considering the unintended consequences (especially at massive scale), they can wind up worse off.
+
+More to the point, though, knowing what is <em>required</em> and knowing what is <em>recommended</em> are two completely different issues. Showing my bias a little here, it does customers a disservice to equate the two. Sort of like going to a mechanic and he tells you that an engine replacement is "required" just because you'd get better performance. :)
+
+<blockquote>By the way, sorry my quotes don’t look as good as yours </blockquote>
+
+One of the advantages of having access to the post admin tools. :)
+
+Thanks again!</p>						</div>
+						<div class = "roblike">
+					<a  href = "#" id = "clickLike698908" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+						<div class="reply">
+													</div>
+
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+			</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-698890">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Mitch Kumar						</span>
+						<br />
+						<span class="comment-meta commentmetadata">March 4, 2013 at 11:30 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Interesting details - thanks!
+
+
+
+Next time I will be careful when some one sets me up with a simple query: “ask a quick question.”</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike698890" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Data Center:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogDataCenterNetworks', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogDataCenterNetworks" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Data Center</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscodc"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/CiscoDC"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco-data-center-and-cloud?trk=biz-brand-tree-co-name"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/114381144808300038585/posts"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/Ciscodatacenter/presentations"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://www.youtube.com/user/Cisco/videos?sort=dd&view=46&tag_id=UCEWiIE6Htd8mvlOR6YQez1g.3.data-center-virtualization"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogDataCenterNetworks"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+
+	<li id ="twitter_widget" class="widget">
+
+	<!-- white background -->
+	<div class="topContainer">
+	 <div class="twit_container">
+
+		<div id="twit_req">
+
+			<span class="widgetheading">
+				Tweets
+			</span>
+
+			<a href="https://twitter.com/" target="_blank"><span class="twit_logo"></span></a>
+							<div class="clear"></div>
+							</div>
+			<!-- <span class="twit_logo" href="#"></span> -->
+			<div class="clear"></div>
+		</div></div>
+		</li>
+
+<br class="clear" />
+
+<script type = "text/javascript">
+
+jQuery(document).ready(function() {
+ //Calling Twitter Widget
+var url = "https://tts-prod.cloudapps.cisco.com/ciscotweetsapp/api/v1/gettweets/ciscodc/response.jsonp";
+
+		loadSpotlightTweet(url);
+
+		//Metrics for each reply retweet and favorites(loop for each tweet)
+		cdc.util.addMetricsRule(".twit_reply", {linktext: "reply"});
+		cdc.util.addMetricsRule(".twit_retweet", {linktext: " retweet "});
+		cdc.util.addMetricsRule(".twit_favorite", {linktext: " favorite "});
+
+	   //lpos for all clicks inside twitter_widget
+		cdc.util.addMetricsRule("#twitter_widget a[href]", {lpos: "tweets"});
+
+});
+
+String.prototype.parseURL = function() {
+	var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+	return this.replace(exp, "<a href='$1' target='_blank'>$1</a>");
+};
+
+String.prototype.parseUsername = function() {
+	return this.replace(/[@]+[A-Za-z0-9-_]+/g, function(u) {
+		var username = u.replace("@", "");
+		// return u.link("http://twitter.com/" + username);
+		return '<a target="_blank" href="https://twitter.com/' + username
+				+ '">' + u + '</a>';
+		// return u.link(window.open('http://www.google.com', '_blank',
+		// 'toolbar=0,location=0,menubar=0'));
+	});
+
+};
+
+String.prototype.parseHashtag = function() {
+	return this.replace(/[#]+[A-Za-z0-9-_]+/g, function(t) {
+		var tag = t.replace("#", "%23");
+		// tag = tag.replace(tag,"<a href='$1' target='_blank'>$1</a>");
+		// return t.link("https://twitter.com/search?q=" + tag +
+		// "&src=hash");//https://twitter.com/search?q=%23retail&src=hash
+		return '<a target="_blank" href="https://twitter.com/search?q=' + tag
+				+ '&src=hash">' + t + '</a>';
+	});
+
+};
+
+function parseURLEntities(t, arg) {
+	for ( var j = 0; j < arg.length; j++) {
+		t = t.replace(arg[j].url, '<a target="_blank" href="' + arg[j].url
+				+ '">' + arg[j].displayURL + '</a>');
+	}
+	return t;
+}
+
+
+function parseDate(str) {
+	var v = str.split(' ');
+	return new Date(Date.parse(v[1] + " " + v[2] + ", " + v[5] + " " + v[3]
+			+ " UTC"));
+}
+
+function selectDay() {
+	var d = new Date();
+	var weekday = new Array(7);
+	weekday[0] = "Sun";
+	weekday[1] = "Mon";
+	weekday[2] = "Tue";
+	weekday[3] = "Wed";
+	weekday[4] = "Thu";
+	weekday[5] = "Fri";
+	weekday[6] = "Sat";
+
+	var n = weekday[d.getDay()];
+
+	return n;
+}
+
+
+var checkIE = function () {
+    var a = navigator.userAgent;
+    return {
+        ie: a.match(/MSIE\s([^;]*)/)
+    };
+}();
+
+
+function relative_time(time_value) {
+	//time_value is in millisecond (GMT)
+
+	var d = new Date(time_value);//converting to our local PST default Date Format
+	//console.log('PST : ' + d);
+
+	var values = d.toString().split(" ");
+	var time_value_format = values[1] + " " + values[2] + ", " + values[3] + " " + values[4];
+//	console.log(time_value_format);
+
+	var parsed_date = Date.parse(time_value_format);
+    var relative_to = (arguments.length > 1) ? arguments[1] : new Date();
+//    console.log(relative_to.getTime());
+    var delta = parseInt((relative_to.getTime() - parsed_date) / 1000);
+    //delta = delta + (relative_to.getTimezoneOffset() * 60); 	//Not Required: converting into GMT since we are getting in GMT Format
+
+   	if (delta < 60) {
+		return delta + 's';
+	} else if (delta < 120) {
+		return '1m';
+	} else if (delta < (60 * 60)) {
+		return (parseInt(delta / 60)).toString() + 'm';
+	} else if (delta < (120 * 60)) {
+		return '1h';
+	} else if (delta < (24 * 60 * 60)) {
+		return (parseInt(delta / 3600)).toString() + 'h';
+	} else if (delta < (48 * 60 * 60)) {
+		return values[2] + " " + values[1];
+	} else {
+		return values[2] + " " + values[1];
+	}
+
+}
+
+
+	function loadSpotlightTweet(tweetsURL)
+	{
+
+	try {
+		var req = jQuery.ajax({
+			url: tweetsURL,
+			async: false,
+			dataType : "jsonp",
+			timeout : 1000,
+
+		});
+
+			req
+				.success(function(data) {
+			var metricsUser= "";
+
+				  if(data == "")
+					  return;
+
+					var arr1 = [];
+					var displayVal = [];
+
+					for ( var i = data.length-1; i >= 0; i -= 1) {
+
+						arr1.push(data[i].createdAt);
+
+					}
+
+					arr1.sort();
+
+                // Sorting for tweets based on Time
+				for ( var i = arr1.length - 1; i >= 0; i -=1) {
+
+						for ( var j = 0; j < data.length; j++) {
+
+							if (arr1[i] == (data[j].createdAt)) {
+								displayVal.push(j);
+
+							}
+						}
+					}
+
+					//Tweets Multiple Display URL Links
+					var t1 = "";
+					var screen_Name = "";
+					var retweeted = "";
+
+					 // Retweets User/Screen Names.
+					 var RetScreenName = "";
+					 var RetUserName = "" ;
+					 var tUserName = "";
+                     var tScreenName = "";
+                     var profileImg = "";
+
+					var loopArr = [];
+
+					for ( var k = 0; k < displayVal.length; k++) {
+
+						if (data[displayVal[k]].urlEntities != null) {
+							t1 = parseURLEntities(data[displayVal[k]].text,
+									data[displayVal[k]].urlEntities);
+						} else {
+							t1 = (data[displayVal[k]].text)
+									.parseURL();
+						}
+
+						//End Tweets Links
+
+						// Check Re-tweeted Status
+                       retweeted = data[displayVal[k]].retweet;
+
+						if(retweeted)
+						{
+                           RetScreenName = data[displayVal[k]].rtScreenName ;
+						   RetUserName = data[displayVal[k]].rtUserName;
+						   profileImg = data[displayVal[k]].rtProfileImageURL;
+						}
+						else
+						{
+                           RetScreenName = data[displayVal[k]].screenName ;
+						   RetUserName = data[displayVal[k]].userName;
+						   profileImg = data[displayVal[k]].profileImageURLHttps;
+						}
+
+						// Widget contents
+
+						jQuery('.twit_container')
+								.append(
+										 '<div class="single_tweet">'
+     									+ '<div id="twit_avatar" class="twit_avatar">'
+										+ '<img border="0" src="'
+										+ profileImg
+										+ '" width="40" height="40" style="border-radius:5px;"/></div>'
+
+										+ '<div class="twit_content"><div class ="twit_userinfo">'
+										+ '<a class="twit_realname" id="twit_realname" href="https://twitter.com/'
+										+ RetScreenName
+										+ '" target="_blank">'
+										+ RetUserName
+										+ '</a><br/>'
+										+ '<a id="twit_username" href="https://twitter.com/'
+										+ RetScreenName
+										+ '" target="_blank">@'
+										+ RetScreenName
+										+ '</a></div>'
+										+ '<div class ="timestamp"><a href="https://twitter.com/'
+										+ RetScreenName
+										+ '/status/'
+										+ data[displayVal[k]].id
+										+ '" target="_blank">'
+										+ relative_time(data[displayVal[k]].createdAt)
+									    + '</a></div>'
+										+ '<div class="clear"></div></div>'
+										+ '<div class="clear"></div>'
+
+                                        + '<div id="twit_text" class="twit_text">'
+												+ t1.parseUsername()
+														.parseHashtag()
+												+ '</div>'
+
+												//Retweeted Content
+												+ '<div class="re-tweet"><div class="retweet_img"><span class="retweet_badge"><a href="" class="retweeted_icon"></a><span class="retweet_text"> Retweeted By <a class="rtwit" href="https://twitter.com/'
+												+ data[displayVal[k]].screenName
+												+ '" target="_blank">'
+												+ data[displayVal[k]].userName
+												+ '</a></span></span></div></div>'
+
+												+ '<div class ="twit_actions">'
+
+												+ '<a class="twit_reply" href = "https://twitter.com/intent/tweet?in_reply_to='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+ '<a class="twit_retweet" href = "https://twitter.com/intent/retweet?tweet_id='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+ '<a class ="twit_favorite" href = "https://twitter.com/intent/favorite?tweet_id='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+'<span class="twit_follow"><a href="https://twitter.com/intent/follow?screen_name='
+												+ data[displayVal[k]].screenName
+												+ '" target="_blank"></a></span>'
+
+												+ '<div class ="clear"></div>'
+												+ '</div></div></div>');
+
+
+
+
+					// Retweeted Status Show/Hide
+					if (retweeted) {
+							jQuery(".re-tweet").eq(k).css("display", "inline");
+						} else {
+							jQuery(".re-tweet").eq(k).css("display", "none");
+						}
+
+
+	}
+
+					//End Widget Contents
+
+
+                // To sort and match properly
+	            jQuery('div.twit_container').find('.single_tweet:eq(0)').clone().appendTo('.twit_container');
+
+				// Metrics for each tweet <--link id to group links in each tweet content--->
+				// cdc.util.addMetricsRule('.single_tweet a[href]', {lid: '" + @twittusername+ "'});
+
+				jQuery(".single_tweet").each(function(i){
+				    var user = jQuery(this).find('#twit_username').text();
+				    var links = jQuery(".single_tweet:eq("+i+") a[href]").get();
+				    cdc.util.addMetricsRule(links, {lid: user });
+				});
+
+					// Loop Through Tweets
+					jQuery('.topContainer').css('display','block');
+					elems = jQuery('.single_tweet').hide().get();
+
+					(function loop() {
+						var i = 0, pointer = jQuery(elems).filter(':visible:last')[0]
+								|| jQuery(elems).last()[0];
+
+						jQuery(elems).hide();
+
+						while (i < 3) {
+							pointer = jQuery(pointer).next()[0]
+									|| jQuery(elems).first()[0];
+							jQuery(pointer).show();
+							i += 1;
+						}
+
+						setTimeout(loop, 12000); // 12 seconds 120000
+					})();
+
+				//End of looping three tweets
+
+
+
+});
+
+		// End of Reply/Retweet/Fav link mouse over/out
+
+		req
+				.error(function(msg) {
+					console.log("In Error of rate limit exception: " + msg);
+					//alert("Rate Limit Exceeded: Please Check after some time.Thank you for your patience. ");
+
+				});
+
+
+	} catch (err) {
+		txt = "There was an error on this page.\n\n";
+		txt += "Error description: " + err.message + "\n\n";
+		txt += "Click OK to continue.\n\n";
+		alert(txt);
+	}
+}
+</script>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.bladewatch.com/" target="_blank">Blade Watch</a></li>
+                      <li><a href="http://www.infoworld.com/?source=nav_BLOGS" target="_blank">InfoWorld</a></li>
+                      <li><a href="http://www.networkworld.com/blogs/" target="_blank">Network World</a></li>
+                      <li><a href="http://blogs.techrepublic.com.com/" target="_blank">TechRepublic</a></li>
+                      <li><a href="http://datacenterjournal.com/index.php" target="_blank">The Data Center Journal</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscodc'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/CiscoDC'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco-data-center-and-cloud?trk=biz-brand-tree-co-name'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/114381144808300038585/posts'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 103988;
+			var orig_count = 0;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1G2Snir&text=The Napkin Dialogues: Lossless iSCSI&via=CiscoDC" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/datacenter/the-napkin-dialogues-lossless-iscsi&title=The Napkin Dialogues: Lossless iSCSI" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/datacenter/the-napkin-dialogues-lossless-iscsi" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/datacenter/the-napkin-dialogues-lossless-iscsi" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: The Napkin Dialogues: Lossless iSCSI&body=I saw this post on Cisco Data Center blog and thought you might like to read it.%0A%0AThe Napkin Dialogues: Lossless iSCSI%0A%0Ahttps://blogs.cisco.com/datacenter/the-napkin-dialogues-lossless-iscsi%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

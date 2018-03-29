@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Behind the Scenes at the Ciscolive! Network Operations Center</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; Behind the Scenes at the Ciscolive! Network Operations Center Comments Feed" href="https://blogs.cisco.com/enterprise/behind-the-scenes-at-the-ciscolive-network-operations-center/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"120498"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Relationships, Relationships, Relationships: Cisco at Microsoft Worldwide Partner Conference' href='https://blogs.cisco.com/datacenter/relationships-relationships-relationships-cisco-at-microsoft-worldwide-partner-conference' />
+<link rel='next' title='Cisco Hacks: Notes from the CMX Hackathon' href='https://blogs.cisco.com/wireless/cisco-hacks-notes-from-the-cmx-hackathon' />
+
+<link rel="canonical" href="https://blogs.cisco.com/enterprise/behind-the-scenes-at-the-ciscolive-network-operations-center" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=120498' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Behind the Scenes at the Ciscolive! Network Operations Center"/>
+  <meta property="og:url" content="https://blogs.cisco.com/enterprise/behind-the-scenes-at-the-ciscolive-network-operations-center"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2013-07-10T04:45:37+00:00"/>
+  <meta property="article:modified_time" content="2013-07-15T05:57:04+00:00" />
+  <meta property="og:updated_time" content="2013-07-15T05:57:04+00:00" />
+  <meta property="article:section" content="Enterprise Networks"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Behind the Scenes at the Ciscolive! Network Operations Center"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/enterprise/behind-the-scenes-at-the-ciscolive-network-operations-center"/>
+  <meta name="twitter:description" content="I have been privileged to be part of a very dedicated team of networking subject matter experts for the past 5 years in prepping and running the Ciscolive! event  network.  Before 2008 the network was installed and monitored by a commercial events networking company.  However, it became clear with t"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:creator" content="@https://twitter.com/SNMPguy"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521443079";
+		var sig = "baa423b242e4149204298e18d31f15cb";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1FaPsn3&text=Behind the Scenes at the Ciscolive! Network Operations Center&via=CiscoEnterprise" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/enterprise/behind-the-scenes-at-the-ciscolive-network-operations-center&title=Behind the Scenes at the Ciscolive! Network Operations Center" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/enterprise/behind-the-scenes-at-the-ciscolive-network-operations-center" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/enterprise/behind-the-scenes-at-the-ciscolive-network-operations-center" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Behind the Scenes at the Ciscolive! Network Operations Center&body=I saw this post on Cisco Enterprise Networks blog and thought you might like to read it.%0A%0ABehind the Scenes at the Ciscolive! Network Operations Center%0A%0Ahttps://blogs.cisco.com/enterprise/behind-the-scenes-at-the-ciscolive-network-operations-center%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/enterprise/'>Enterprise Networks</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category7.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Enterprise Networks  						</span>
+						<h1 id="post-120498" class="kindle_title title">Behind the Scenes at the Ciscolive! Network Operations Center</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1479.thumbnail.51b90753a9f50.jpg"></div><div class="author_rewards_box">			<ul class = "nitro_author120498 bunchballAwards">
+		<li>
+			<div class = "nitro_badge badgenitro_author120498">
+			</div>
+			<div class = "nitro_points pointsnitro_author120498">
+			</div>
+		</li>
+		<script>
+var nitroName = 'jadavis';
+var sessionKey = '';
+
+
+nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "postBadges", "nitro_author120498");</script>
+
+		</ul>
+		</ul>
+	<div class = "clear"></div>
+</div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/jasondavis" title="Posts by Jason Davis" rel="author">Jason Davis</a> - July 10, 2013 - 10 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p><i></i>I have been privileged to be part of a very dedicated team of <font color="red">networking</font> subject matter experts for the past 5 years in prepping and running the <font color="red">Ciscolive</font>! event  <font color="red">network</font>.  Before 2008 the <font color="red">network</font> was installed and monitored by a commercial events <font color="red">networking</font> company.  However, it became clear with the number of Technical Marketing Engineers, Services Engineers and product developers on-site for <font color="red">Ciscolive</font>! that we were well equipped to take on the responsibility in addition to our speaking responsibilities.</p>
+<p><i><span style="text-decoration: underline">Planning</span></i></p>
+<p>The preparation for <font color="red">Ciscolive</font>! starts many months before the event with weekly, collaborative <font color="red">Webex</font> sessions to discuss design criteria, venue particulars and product/feature configurations.  Generally the teams align into core Route/Switch, <font color="red">Data Center</font>, Security, <font color="red">Wireless</font>, and <font color="red">Network</font> Management/Operations, however we work collaboratively to design and implement the best <font color="red">show network</font> possible.  We have individuals that are part of our <font color="red">Cisco</font> <font color="red">Remote Management</font> Services (<a href="http://www.cisco.com/web/services/portfolio/operations-management/remote-management-rms/index.html">RMS</a>) team, <font color="red">Video Surveillance</font> and <font color="red">partner</font> support from our CenturyLink Internet <font color="red">Service Provider</font> and <font color="red">NetApp</font> storage vendor.</p>
+<p>A small part of the <font color="red">NOC</font> staff will travel to the venue to survey the <font color="red">wireless</font>, power and Internet <font color="red">service</font> capabilities several months beforehand.</p>
+<p><span id="more-120498"></span> The following hardware was planned for <font color="red">Ciscolive</font>! Orlando:</p>
+<p>410 x <a href="http://www.cisco.com/en/US/products/ps11983/index.html" target="_blank"><font color="red">Cisco</font> 3602 <font color="red">Wireless Access Points</font></a> [AIR-CAP3602I-x-K9] for OCCC and Peabody halls and <font color="red">conference rooms</font><br />
+180 x <a href="http://www.cisco.com/en/US/products/ps10981/index.html" target="_blank"><font color="red">Cisco</font> 3502P <font color="red">Wireless Access Points</font></a> [AIR-CAP3502P-A-K9] with <a href="http://www.cisco.com/en/US/prod/collateral/wireless/ps7183/ps469/at_a_glance_c45-513837.pdf" target="_blank">AIR-ANT2513NP-R stadium antennas</a> for <font color="red">Keynote</font> and <i>World of Solutions</i> halls<br />
+10 x <a href="http://www.cisco.com/en/US/products/ps10315/index.html" target="_blank"><font color="red">Cisco</font> 5508 <font color="red">Wireless</font> <font color="red">LAN</font> Controllers</a><br />
+200 x <a href="http://www.cisco.com/en/US/products/ps11290/index.html" target="_blank"><font color="red">Catalyst</font> 3560CG</a> access <font color="red">switches</font> and <a href="http://www.cisco.com/en/US/products/ps10745/index.html" target="_blank"><font color="red">Catalyst</font> 3750-X</a> aggregation <font color="red">switches</font><br />
+6 x <a href="http://www.cisco.com/en/US/products/hw/switches/ps708/index.html" target="_blank"><font color="red">Catalyst</font> 6504-E/6509-E/6513-E</a> VSS distribution and core <font color="red">switches</font><br />
+6 x <a href="http://www.cisco.com/en/US/products/ps6120/index.html" target="_blank">ASA5585-X</a><br />
+2 x <a href="http://www.cisco.com/en/US/products/ps9402/index.html" target="_blank"><font color="red">Nexus</font> 7000</a> <font color="red">data center</font> <font color="red">switches</font><br />
+2 x <a href="http://www.cisco.com/en/US/products/ps10280/index.html" target="_blank"><font color="red">UCS</font> 5108 chassis</a>, fully loaded<br />
+6 x <a href="http://www.cisco.com/en/US/products/ps10493/index.html" target="_blank"><font color="red">UCS</font> C-Series <font color="red">servers</font></a> for <font color="red">Video Surveillance</font> and other miscellaneous <font color="red">services</font><br />
+2 x <font color="red">NetApp</font> <font color="red">controllers</font> and disk trays (14 TB)<br />
+45 x <a href="http://www.cisco.com/en/US/products/ps9716/index.html" target="_blank"><font color="red">Cisco</font> <font color="red">Video Surveillance</font> 4500 Series <font color="red">IP</font> Cameras</a><br />
+24 x <a href="http://www.cisco.com/web/telepresence/products/endpoints/solutions-platform.html" target="_blank">CTS video codecs</a> for session recording</p>
+<p>&nbsp;</p>
+<p><i><span style="text-decoration: underline">Staging</span></i></p>
+<p>The event <font color="red">network</font> is typically staged in San Jose.  Much of the team engages remotely, some internationally, however the San Jose personnel are able to physically visit the equipment.  We configure the distribution and access-layer devices, along with <font color="red">wireless</font> <font color="red">LAN</font> <font color="red">controllers</font> and <font color="red">APs</font> with as much practical staging configuration as possible.  However, the event <font color="red">network</font> can be dynamic, so we have to be prepared to make mass changes.</p>
+<p>A month out Joe Clarke, a peer Distinguished Services Engineer, and I started to install and configure the various <font color="red">network management</font> and support <font color="red">service</font> applications.  With an abundance of <font color="red">UCS</font> compute and <font color="red">NetApp</font> storage, we tend to run many <font color="red">Cisco</font> management applications, including beta releases.  However, some of the primary applications we deployed were:</p>
+<table width="643" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr>
+<td valign="top" width="230"><a href="http://cisco.com/go/lms" target="_blank"><font color="red">Cisco</font> Prime <font color="red">LAN</font> Management Solution</a> (LMS) v4.2.3</td>
+<td valign="top" width="212">Element Management</td>
+</tr>
+<tr>
+<td valign="top" width="230"><a href="http://www.cisco.com/en/US/products/ps12239/index.html" target="_blank"><font color="red">Cisco</font> Prime Infrastructure</a> v1.3</td>
+<td valign="top" width="212">Element Management</td>
+</tr>
+<tr>
+<td valign="top" width="230"><font color="red">Cisco</font> Prime Infrastructure v2.0 beta</td>
+<td valign="top" width="212">Beta Testing Element Management</td>
+</tr>
+<tr>
+<td valign="top" width="230"><a href="http://www.cisco.com/en/US/products/ps11808/index.html" target="_blank"><font color="red">Cisco</font> Prime <font color="red">Network</font> Registrar</a> v8.1.2</td>
+<td valign="top" width="212">DNS/DHCP Services (x8 <font color="red">servers</font>)</td>
+</tr>
+<tr>
+<td valign="top" width="230"><a href="http://www.cisco.com/en/US/products/ps9911/tsd_products_support_series_home.html" target="_blank">CiscoSecure <font color="red">Access Control</font> <font color="red">Server</font></a> (ACS) v5.4</td>
+<td valign="top" width="212">AAA/TACACS <font color="red">services</font> (x2 <font color="red">servers</font>)</td>
+</tr>
+<tr>
+<td valign="top" width="230"><a href="http://cisco.com/go/nam" target="_blank"><font color="red">Cisco</font> Prime <font color="red">Network</font> Analysis Module</a> (NAM) Appliance</td>
+<td valign="top" width="212"><font color="red">Packet Capture</font>, <font color="red">Netflow</font></td>
+</tr>
+<tr>
+<td valign="top" width="230"><a href="http://www.cisco.com/web/strategy/us_government/unified_communication.html" target="_blank"><font color="red">Cisco</font> Unified Communications Manager</a></td>
+<td valign="top" width="212">Unified Comms <font color="red">services</font></td>
+</tr>
+<tr>
+<td valign="top" width="230"><a href="http://www.cisco.com/en/US/products/ps12363/index.html" target="_blank"><font color="red">Cisco</font> Prime <font color="red">Collaboration</font></a></td>
+<td valign="top" width="212">Unified Comms monitoring/provisioning</td>
+</tr>
+<tr>
+<td valign="top" width="230"><a href="http://www.cisco.com/en/US/products/ps13206/index.html" target="_blank"><font color="red">Cisco</font> <font color="red">Service</font> Portal</a> v9.4.1 R2</td>
+<td valign="top" width="212"><font color="red">Service</font> Request Management (ordering)</td>
+</tr>
+<tr>
+<td valign="top" width="230"><a href="http://www.cisco.com/en/US/products/ps11100/index.html" target="_blank"><font color="red">Cisco</font> Process <font color="red">Orchestrator</font></a> v2.3.5</td>
+<td valign="top" width="212">Automation/Orchestration</td>
+</tr>
+<tr>
+<td valign="top" width="230">FreeBSD</td>
+<td valign="top" width="212">Syslog/NetFlow multiplexing and jumphost</td>
+</tr>
+</tbody>
+</table>
+<p>Other <font color="red">NOC</font> SMEs in Security, <font color="red">Video Surveillance</font> and Unified <font color="red">Collaboration</font> also install their own monitoring and management applications in our UCS/NetApp environment.</p>
+<p>The <font color="red">core network</font> is staged and stays up until shipment.  The <font color="red">wireless access points</font> and access <font color="red">switches</font> get staged, but then are shut down so we don’t have hundreds of devices crowding a lab.  Typically 10 days from the start of <font color="red">Ciscolive</font>! the equipment is shut down and loaded onto trucks for transport to the venue.</p>
+<p>&nbsp;</p>
+<p><i><span style="text-decoration: underline">Onsite</span></i></p>
+<p>Although the show was to run June 23 &#8211; 27, we needed to be “show-ready” by 3pm on Saturday (6/22) when registration opened.  I arrived Tuesday (6/18) morning with the plan to start working in earnest on Wednesday.  However, our 6-rack <font color="red">core network</font> was already staged in a <font color="red">conference room</font> and I thought you might as well jump in!</p>
+<p>The <font color="red">conference room</font> would later be reconfigured as a training <font color="red">breakout</font> room.  With ‘behind-the-scenes’ access I’m often impressed to see how the venues can bring in large, mobile power panels to serve the requirements of our equipment.  We’re not talking simple 3-pin NEMA 5–15 outlets here!</p>
+<p><img class="alignnone size-full wp-image-120516" alt="occcstage" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/occcstage.png" width="331" height="440" />  <img class="alignnone size-full wp-image-120515" alt="power" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/power.png" width="331" height="440" /></p>
+<p>&nbsp;</p>
+<p>Much of the <font color="red">wireless</font> <font color="red">APs</font>, antennas and pole mounts were still in boxes and needed to be broken down.  We had nearly 2 Million square feet of floor-space in the Orange County Convention Center.  This venue was 30% larger than the previous year’s San Diego Convention Center.  There would be a LOT of walking to deploy and fix misconfigured equipment.  We relied heavily on the <font color="red">Cisco</font> <font color="red">Academy</font> ‘Dream Team’ of around 40 college students to help us with configuration, device placement and troubleshooting.  It was very rewarding to spend time mentoring students that are just getting started in their careers.  Thanks <font color="red">Cisco</font> <font color="red">Network</font> <font color="red">Academy</font> team!</p>
+<p><img class="alignnone size-full wp-image-120514" alt="occcstage2" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/occcstage2.png" width="334" height="250" /><img class="alignnone size-full wp-image-120513" alt="netacad" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/netacad.png" width="334" height="250" /></p>
+<p>&nbsp;</p>
+<p>For the next several days we worked long hours to ensure the <font color="red">network</font> was configured to the topology seen below.</p>
+<p><img class="alignnone size-full wp-image-120512" alt="CLUS13-O_topo" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/CLUS13-O_topo.png" width="654" height="350" /></p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/CL13_Network_Topology.pdf">CL13_Network_Topology</a></p>
+<p>The main <font color="red">network</font> was in the Orlando County Convention Center (OCCC), however we also had a <font color="red">network</font> extension to the Peabody Hotel next-door for executive meetings.  This was the first year we extended the <font color="red">wireless network</font> into the <i>World of Solutions</i> and <font color="red">keynote</font> halls.</p>
+<p>Some <font color="red">breakout</font> rooms had to be visited to troubleshoot why some CTS systems were not registering.  Oftentimes the problems were related to <font color="red">port configuration</font> changes, physical patching or incorrect trunk configuration.  We also identified and remediated a potential spanning-tree loop before it became service-impacting to the show.</p>
+<p>As mentioned earlier, it’s interesting to get ‘behind-the-scenes’ of the show.  The main key-note area has some incredible audio/visual technology behind the main stage to serve the venue audio, ultra-wide screens, image magnification and demos.</p>
+<p><img class="alignnone size-large wp-image-120511" alt="keynote" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/keynote-550x319.png" width="550" height="319" /></p>
+<p>&nbsp;</p>
+<p>Sometimes you have to go to lengths to ensure <font color="red">network connectivity</font>.  We had 8 <font color="red">wireless access points</font> being served <font color="red">PoE</font>  and <font color="red">network connectivity</font> by two <font color="red">Catalyst</font> 3560CGs in the 2,600 seat Chapin Theatre.  The <font color="red">APs</font> and <font color="red">switches</font> were on a catwalk allowing access to the stage lighting, 60 feet up.  Anyone afraid of <font color="red">heights</font> AND the dark need not apply.</p>
+<p>Ken and I hit the catwalks to fix some <font color="red">switch</font> <font color="red">connectivity</font>.</p>
+<p><img class="alignnone size-full wp-image-120510" alt="catwalk1" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/catwalk1.png" width="452" height="603" /></p>
+<p>&nbsp;</p>
+<p>Extreme console <font color="red">connectivity</font></p>
+<p><img class="alignnone size-full wp-image-120509" alt="catwalk2" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/catwalk2.png" width="459" height="259" /></p>
+<p>&nbsp;</p>
+<p>The 6 racks of equipment that was temporarily staged in a <font color="red">breakout</font> room was our <font color="red">core network</font> and compute/storage for the <font color="red">show network</font> and <font color="red">services</font>.  Thursday evening we shut it all down and moved it into the <i>World of Solutions</i> in Hall B.  Onsite attendees may recall this equipment was located in a miniature, enclosed data-center in the rear of the <i>World of Solutions</i> at the <font color="red">Network</font> Operations Center.  OCCC Hall B did not get air-conditioning until late Sunday in preparation for the show.  During this time the loading bay doors were open to allow fork-lifts and other machinery to bring equipment in and out.</p>
+<p><img class="alignnone size-large wp-image-120507" alt="wos_stage" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/wos_stage-550x152.png" width="645" height="177" /></p>
+<p>&nbsp;</p>
+<p>The racks were put into the ‘plexiglass data-center’ with air handlers because it was more economical to create a mini cooling eco-system, rather than turn on A/C for the whole <i>World of Solutions</i> with the loading bays open.</p>
+<p><img class="alignnone size-full wp-image-120505" alt="noc_stage" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/noc_stage.png" width="507" height="675" /></p>
+<p>&nbsp;</p>
+<p>The last couple days before the show started was spent updating <font color="red">port configurations</font> and ensuring our <font color="red">data</font> collection was started.  In events such as <font color="red">Ciscolive</font>! the room configurations can be dynamic and require us to do switchport changes to accommodate different needs.  We may need to add <font color="red">access points</font>, <font color="red">digital signage</font> or accommodate a router for <font color="red">VPN</font> purposes.  This year we used our <font color="red">Cisco</font> <font color="red">Service</font> Portal (<font color="red">CSP</font>) and <font color="red">Cisco</font> Process <font color="red">Orchestrator</font> (CPO) tools from our <a href="http://cisco.com/go/ia" target="_blank"><font color="red">Intelligent</font> Automation</a> portfolio.   Rather than train up the <font color="red">Cisco</font> <font color="red">Academy</font> volunteers on <font color="red">Cisco</font> Prime LMS/Infrastructure we optimized <font color="red">port configuration</font> changes by developing a simplified and customized portal in <font color="red">CSP</font> that linked with <font color="red">Cisco</font> Process <font color="red">Orchestrator</font> to automate the changes using <font color="red">Cisco</font> Prime LMS.</p>
+<p><img class="alignnone size-large wp-image-120504" alt="aeclnoc" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/aeclnoc-550x449.png" width="550" height="449" /></p>
+<p>&nbsp;</p>
+<p>The result was a system that extracted a list of <font color="red">switches</font> we were managing, presenting them in a drop-down selector.  The <font color="red">NOC</font> staffer would then see a dynamically updated list of <font color="red">switch</font> ports, based on the port count of a <font color="red">Catalyst</font> 3560CG or 3750-X.  They could select one or more ports, then a port profile, such as ‘Wired Access, <font color="red">Wireless</font> <font color="red">AP</font>, <font color="red">Digital Signage</font>, <font color="red">IP</font> Phone, <font color="red">IP</font> Camera, or Trunk’.  A list of <font color="red">VLANs</font> was presented and a data-retrieval rule showed the application of the <font color="red">VLAN</font> with name, <font color="red">service</font>, location and <font color="red">IP</font> subnet it served.  Once the ‘order’ was submitted <font color="red">CSP</font> would transfer the selections to CPO.  CPO would build the ‘job’ that could be consumed by <font color="red">Cisco</font> Prime LMS, then monitor the status of the job, finally sending an email to the NOS staff.</p>
+<p><img class="alignnone size-full wp-image-120503" alt="aeclnoc2" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/aeclnoc2.png" width="445" height="450" /></p>
+<p>We deployed a couple hundred port changes throughout the event.</p>
+<p>Circle back in a couple weeks when I’ll have another blog about what happened during and after <font color="red">Ciscolive</font>!.</p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=ciscolive">ciscolive</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=ciscolive-2013-orlando">CiscoLive 2013 Orlando</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=intelligent-automation">intelligent automation</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=noc">NOC</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">10 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+			<li>
+			<div id="comment-760231">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Marvin						</span>
+						<br />
+						<span class="comment-meta commentmetadata">July 13, 2013 at 12:20 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Thanks for the article.
+
+
+
+I believe your tool list table should note that your LMS was 4.2.3 instead of 1.3.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike760231" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li class="comment byuser comment-author-jasondavis bypostauthor even depth-2" id="li-comment-760678">
+				<div id="comment-760678">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1479.thumbnail.51b90753a9f50.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/jasondavis'>Jason Davis</a></span>
+							<br />
+							<span class="comment-meta commentmetadata">July 15, 2013 at 5:58 am</span>
+
+						</div>
+						<div class="comment_text">
+							<p>Indeed!  Thanks for the catch, Marvin.  I guess 'cut and paste' tripped me up again.  :)
+
+
+
+Fixed in the blog.</p>						</div>
+						<div class = "roblike">
+					<a  href = "#" id = "clickLike760678" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+						<div class="reply">
+													</div>
+
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+			</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-759898">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Erik Hennerfors						</span>
+						<br />
+						<span class="comment-meta commentmetadata">July 12, 2013 at 7:51 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Are there any better picture of the topology? The one in the post is quite tiny :)</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike759898" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li class="comment byuser comment-author-jasondavis bypostauthor odd alt depth-2" id="li-comment-759910">
+				<div id="comment-759910">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1479.thumbnail.51b90753a9f50.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/jasondavis'>Jason Davis</a></span>
+							<br />
+							<span class="comment-meta commentmetadata">July 12, 2013 at 8:44 am</span>
+
+						</div>
+						<div class="comment_text">
+							<p>Apologies for that, Erik!  There was a finite amount of screen real-estate to work with.  :)
+
+
+
+I updated the blog post.  If you look at the image now, right below is a hyperlink to a PDF of the network topology.  Hope that helps!</p>						</div>
+						<div class = "roblike">
+					<a  href = "#" id = "clickLike759910" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+						<div class="reply">
+													</div>
+
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+			</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-759554">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						stephen						</span>
+						<br />
+						<span class="comment-meta commentmetadata">July 11, 2013 at 12:37 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>it all looks amazing when are you likely to come and make the same presentation in africa areas like zimbabwe , any plans in that direction</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike759554" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li class="comment byuser comment-author-jasondavis bypostauthor even depth-2" id="li-comment-759617">
+				<div id="comment-759617">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1479.thumbnail.51b90753a9f50.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/jasondavis'>Jason Davis</a></span>
+							<br />
+							<span class="comment-meta commentmetadata">July 11, 2013 at 7:27 am</span>
+
+						</div>
+						<div class="comment_text">
+							<p>Hi Stephen,
+
+Here is the list of upcoming Ciscolive! events.
+
+http://www.ciscolive.com/global/
+
+I don't see Zimbabwe, Africa in the list, but Milan, Italy and Melbourne, Australia are upcoming.</p>						</div>
+						<div class = "roblike">
+					<a  href = "#" id = "clickLike759617" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+						<div class="reply">
+													</div>
+
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+			</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-759487">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Anonymous						</span>
+						<br />
+						<span class="comment-meta commentmetadata">July 10, 2013 at 6:14 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>I wonder why ISE wasn't used...</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike759487" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li class="comment byuser comment-author-jasondavis bypostauthor odd alt depth-2" id="li-comment-759615">
+				<div id="comment-759615">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1479.thumbnail.51b90753a9f50.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/jasondavis'>Jason Davis</a></span>
+							<br />
+							<span class="comment-meta commentmetadata">July 11, 2013 at 7:21 am</span>
+
+						</div>
+						<div class="comment_text">
+							<p>Hello Anonymous,
+
+ISE would have been used if we were providing differentiated services to users by their 'classification' - eg. Event Staff, Attendee, Speaker, World of Solutions Vendor, etc.
+
+However, we did not break down traffic and access (policy) by user.  That would have required device registration and assignment into policy groups (and AD groups).  We were running the network pretty open as far as 'registration' went.  You'll note there was no captive portal/BBSM-like service in place.  This was intentional.
+
+
+
+We did secure the network by VLAN/subnet.  So if you were on the wireless 'ciscolive2013' network (and the associated VLAN), you were restricted from the show/NOC service network by the ASA.  Other networks were only allowed to the Internet and no where else.
+
+
+
+CiscoSecure ACS was used to provide the AAA/TACACS+ logins to the routers/switches and centralized login authentication to the various management applications that could source AAA/TACACS+.</p>						</div>
+						<div class = "roblike">
+					<a  href = "#" id = "clickLike759615" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+						<div class="reply">
+													</div>
+
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+			</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-759429">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Pablo						</span>
+						<br />
+						<span class="comment-meta commentmetadata">July 10, 2013 at 1:54 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>The event was amazing so is the Cisco people AND the network. Thanks for sharing the exerience.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike759429" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li class="comment byuser comment-author-jasondavis bypostauthor even depth-2" id="li-comment-759436">
+				<div id="comment-759436">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1479.thumbnail.51b90753a9f50.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/jasondavis'>Jason Davis</a></span>
+							<br />
+							<span class="comment-meta commentmetadata">July 10, 2013 at 2:22 pm</span>
+
+						</div>
+						<div class="comment_text">
+							<p>Thank you for the compliment, Pablo!  We're honored to be a part of your experience.</p>						</div>
+						<div class = "roblike">
+					<a  href = "#" id = "clickLike759436" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+						<div class="reply">
+													</div>
+
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+			</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Enterprise Networks:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogBorderlessNetworks', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogBorderlessNetworks" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Enterprise Networks</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/CiscoBorderlessNetworks"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/CiscoEnterprise"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://youtubecisco.com/borderlessnetworks"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogBorderlessNetworks"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+
+	<li id ="twitter_widget" class="widget">
+
+	<!-- white background -->
+	<div class="topContainer">
+	 <div class="twit_container">
+
+		<div id="twit_req">
+
+			<span class="widgetheading">
+				Tweets
+			</span>
+
+			<a href="https://twitter.com/" target="_blank"><span class="twit_logo"></span></a>
+							<div class="clear"></div>
+							</div>
+			<!-- <span class="twit_logo" href="#"></span> -->
+			<div class="clear"></div>
+		</div></div>
+		</li>
+
+<br class="clear" />
+
+<script type = "text/javascript">
+
+jQuery(document).ready(function() {
+ //Calling Twitter Widget
+var url = "https://tts-prod.cloudapps.cisco.com/ciscotweetsapp/api/v1/gettweets/ciscoenterprise/response.jsonp";
+
+		loadSpotlightTweet(url);
+
+		//Metrics for each reply retweet and favorites(loop for each tweet)
+		cdc.util.addMetricsRule(".twit_reply", {linktext: "reply"});
+		cdc.util.addMetricsRule(".twit_retweet", {linktext: " retweet "});
+		cdc.util.addMetricsRule(".twit_favorite", {linktext: " favorite "});
+
+	   //lpos for all clicks inside twitter_widget
+		cdc.util.addMetricsRule("#twitter_widget a[href]", {lpos: "tweets"});
+
+});
+
+String.prototype.parseURL = function() {
+	var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+	return this.replace(exp, "<a href='$1' target='_blank'>$1</a>");
+};
+
+String.prototype.parseUsername = function() {
+	return this.replace(/[@]+[A-Za-z0-9-_]+/g, function(u) {
+		var username = u.replace("@", "");
+		// return u.link("http://twitter.com/" + username);
+		return '<a target="_blank" href="https://twitter.com/' + username
+				+ '">' + u + '</a>';
+		// return u.link(window.open('http://www.google.com', '_blank',
+		// 'toolbar=0,location=0,menubar=0'));
+	});
+
+};
+
+String.prototype.parseHashtag = function() {
+	return this.replace(/[#]+[A-Za-z0-9-_]+/g, function(t) {
+		var tag = t.replace("#", "%23");
+		// tag = tag.replace(tag,"<a href='$1' target='_blank'>$1</a>");
+		// return t.link("https://twitter.com/search?q=" + tag +
+		// "&src=hash");//https://twitter.com/search?q=%23retail&src=hash
+		return '<a target="_blank" href="https://twitter.com/search?q=' + tag
+				+ '&src=hash">' + t + '</a>';
+	});
+
+};
+
+function parseURLEntities(t, arg) {
+	for ( var j = 0; j < arg.length; j++) {
+		t = t.replace(arg[j].url, '<a target="_blank" href="' + arg[j].url
+				+ '">' + arg[j].displayURL + '</a>');
+	}
+	return t;
+}
+
+
+function parseDate(str) {
+	var v = str.split(' ');
+	return new Date(Date.parse(v[1] + " " + v[2] + ", " + v[5] + " " + v[3]
+			+ " UTC"));
+}
+
+function selectDay() {
+	var d = new Date();
+	var weekday = new Array(7);
+	weekday[0] = "Sun";
+	weekday[1] = "Mon";
+	weekday[2] = "Tue";
+	weekday[3] = "Wed";
+	weekday[4] = "Thu";
+	weekday[5] = "Fri";
+	weekday[6] = "Sat";
+
+	var n = weekday[d.getDay()];
+
+	return n;
+}
+
+
+var checkIE = function () {
+    var a = navigator.userAgent;
+    return {
+        ie: a.match(/MSIE\s([^;]*)/)
+    };
+}();
+
+
+function relative_time(time_value) {
+	//time_value is in millisecond (GMT)
+
+	var d = new Date(time_value);//converting to our local PST default Date Format
+	//console.log('PST : ' + d);
+
+	var values = d.toString().split(" ");
+	var time_value_format = values[1] + " " + values[2] + ", " + values[3] + " " + values[4];
+//	console.log(time_value_format);
+
+	var parsed_date = Date.parse(time_value_format);
+    var relative_to = (arguments.length > 1) ? arguments[1] : new Date();
+//    console.log(relative_to.getTime());
+    var delta = parseInt((relative_to.getTime() - parsed_date) / 1000);
+    //delta = delta + (relative_to.getTimezoneOffset() * 60); 	//Not Required: converting into GMT since we are getting in GMT Format
+
+   	if (delta < 60) {
+		return delta + 's';
+	} else if (delta < 120) {
+		return '1m';
+	} else if (delta < (60 * 60)) {
+		return (parseInt(delta / 60)).toString() + 'm';
+	} else if (delta < (120 * 60)) {
+		return '1h';
+	} else if (delta < (24 * 60 * 60)) {
+		return (parseInt(delta / 3600)).toString() + 'h';
+	} else if (delta < (48 * 60 * 60)) {
+		return values[2] + " " + values[1];
+	} else {
+		return values[2] + " " + values[1];
+	}
+
+}
+
+
+	function loadSpotlightTweet(tweetsURL)
+	{
+
+	try {
+		var req = jQuery.ajax({
+			url: tweetsURL,
+			async: false,
+			dataType : "jsonp",
+			timeout : 1000,
+
+		});
+
+			req
+				.success(function(data) {
+			var metricsUser= "";
+
+				  if(data == "")
+					  return;
+
+					var arr1 = [];
+					var displayVal = [];
+
+					for ( var i = data.length-1; i >= 0; i -= 1) {
+
+						arr1.push(data[i].createdAt);
+
+					}
+
+					arr1.sort();
+
+                // Sorting for tweets based on Time
+				for ( var i = arr1.length - 1; i >= 0; i -=1) {
+
+						for ( var j = 0; j < data.length; j++) {
+
+							if (arr1[i] == (data[j].createdAt)) {
+								displayVal.push(j);
+
+							}
+						}
+					}
+
+					//Tweets Multiple Display URL Links
+					var t1 = "";
+					var screen_Name = "";
+					var retweeted = "";
+
+					 // Retweets User/Screen Names.
+					 var RetScreenName = "";
+					 var RetUserName = "" ;
+					 var tUserName = "";
+                     var tScreenName = "";
+                     var profileImg = "";
+
+					var loopArr = [];
+
+					for ( var k = 0; k < displayVal.length; k++) {
+
+						if (data[displayVal[k]].urlEntities != null) {
+							t1 = parseURLEntities(data[displayVal[k]].text,
+									data[displayVal[k]].urlEntities);
+						} else {
+							t1 = (data[displayVal[k]].text)
+									.parseURL();
+						}
+
+						//End Tweets Links
+
+						// Check Re-tweeted Status
+                       retweeted = data[displayVal[k]].retweet;
+
+						if(retweeted)
+						{
+                           RetScreenName = data[displayVal[k]].rtScreenName ;
+						   RetUserName = data[displayVal[k]].rtUserName;
+						   profileImg = data[displayVal[k]].rtProfileImageURL;
+						}
+						else
+						{
+                           RetScreenName = data[displayVal[k]].screenName ;
+						   RetUserName = data[displayVal[k]].userName;
+						   profileImg = data[displayVal[k]].profileImageURLHttps;
+						}
+
+						// Widget contents
+
+						jQuery('.twit_container')
+								.append(
+										 '<div class="single_tweet">'
+     									+ '<div id="twit_avatar" class="twit_avatar">'
+										+ '<img border="0" src="'
+										+ profileImg
+										+ '" width="40" height="40" style="border-radius:5px;"/></div>'
+
+										+ '<div class="twit_content"><div class ="twit_userinfo">'
+										+ '<a class="twit_realname" id="twit_realname" href="https://twitter.com/'
+										+ RetScreenName
+										+ '" target="_blank">'
+										+ RetUserName
+										+ '</a><br/>'
+										+ '<a id="twit_username" href="https://twitter.com/'
+										+ RetScreenName
+										+ '" target="_blank">@'
+										+ RetScreenName
+										+ '</a></div>'
+										+ '<div class ="timestamp"><a href="https://twitter.com/'
+										+ RetScreenName
+										+ '/status/'
+										+ data[displayVal[k]].id
+										+ '" target="_blank">'
+										+ relative_time(data[displayVal[k]].createdAt)
+									    + '</a></div>'
+										+ '<div class="clear"></div></div>'
+										+ '<div class="clear"></div>'
+
+                                        + '<div id="twit_text" class="twit_text">'
+												+ t1.parseUsername()
+														.parseHashtag()
+												+ '</div>'
+
+												//Retweeted Content
+												+ '<div class="re-tweet"><div class="retweet_img"><span class="retweet_badge"><a href="" class="retweeted_icon"></a><span class="retweet_text"> Retweeted By <a class="rtwit" href="https://twitter.com/'
+												+ data[displayVal[k]].screenName
+												+ '" target="_blank">'
+												+ data[displayVal[k]].userName
+												+ '</a></span></span></div></div>'
+
+												+ '<div class ="twit_actions">'
+
+												+ '<a class="twit_reply" href = "https://twitter.com/intent/tweet?in_reply_to='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+ '<a class="twit_retweet" href = "https://twitter.com/intent/retweet?tweet_id='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+ '<a class ="twit_favorite" href = "https://twitter.com/intent/favorite?tweet_id='
+												+ data[displayVal[k]].id
+												+ '" target="_blank"></a>'
+
+												+'<span class="twit_follow"><a href="https://twitter.com/intent/follow?screen_name='
+												+ data[displayVal[k]].screenName
+												+ '" target="_blank"></a></span>'
+
+												+ '<div class ="clear"></div>'
+												+ '</div></div></div>');
+
+
+
+
+					// Retweeted Status Show/Hide
+					if (retweeted) {
+							jQuery(".re-tweet").eq(k).css("display", "inline");
+						} else {
+							jQuery(".re-tweet").eq(k).css("display", "none");
+						}
+
+
+	}
+
+					//End Widget Contents
+
+
+                // To sort and match properly
+	            jQuery('div.twit_container').find('.single_tweet:eq(0)').clone().appendTo('.twit_container');
+
+				// Metrics for each tweet <--link id to group links in each tweet content--->
+				// cdc.util.addMetricsRule('.single_tweet a[href]', {lid: '" + @twittusername+ "'});
+
+				jQuery(".single_tweet").each(function(i){
+				    var user = jQuery(this).find('#twit_username').text();
+				    var links = jQuery(".single_tweet:eq("+i+") a[href]").get();
+				    cdc.util.addMetricsRule(links, {lid: user });
+				});
+
+					// Loop Through Tweets
+					jQuery('.topContainer').css('display','block');
+					elems = jQuery('.single_tweet').hide().get();
+
+					(function loop() {
+						var i = 0, pointer = jQuery(elems).filter(':visible:last')[0]
+								|| jQuery(elems).last()[0];
+
+						jQuery(elems).hide();
+
+						while (i < 3) {
+							pointer = jQuery(pointer).next()[0]
+									|| jQuery(elems).first()[0];
+							jQuery(pointer).show();
+							i += 1;
+						}
+
+						setTimeout(loop, 12000); // 12 seconds 120000
+					})();
+
+				//End of looping three tweets
+
+
+
+});
+
+		// End of Reply/Retweet/Fav link mouse over/out
+
+		req
+				.error(function(msg) {
+					console.log("In Error of rate limit exception: " + msg);
+					//alert("Rate Limit Exceeded: Please Check after some time.Thank you for your patience. ");
+
+				});
+
+
+	} catch (err) {
+		txt = "There was an error on this page.\n\n";
+		txt += "Error description: " + err.message + "\n\n";
+		txt += "Click OK to continue.\n\n";
+		alert(txt);
+	}
+}
+</script>
+</ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/CiscoBorderlessNetworks'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/CiscoEnterprise'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 120498;
+			var orig_count = 0;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1FaPsn3&text=Behind the Scenes at the Ciscolive! Network Operations Center&via=CiscoEnterprise" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/enterprise/behind-the-scenes-at-the-ciscolive-network-operations-center&title=Behind the Scenes at the Ciscolive! Network Operations Center" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/enterprise/behind-the-scenes-at-the-ciscolive-network-operations-center" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/enterprise/behind-the-scenes-at-the-ciscolive-network-operations-center" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Behind the Scenes at the Ciscolive! Network Operations Center&body=I saw this post on Cisco Enterprise Networks blog and thought you might like to read it.%0A%0ABehind the Scenes at the Ciscolive! Network Operations Center%0A%0Ahttps://blogs.cisco.com/enterprise/behind-the-scenes-at-the-ciscolive-network-operations-center%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

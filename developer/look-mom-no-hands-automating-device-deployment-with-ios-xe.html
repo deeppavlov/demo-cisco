@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Look Mom&#8230;No Hands!  Automating Device Deployment with IOS XE</title>
+
+	<meta property="og:image" content="https://alln-extcloud-storage.cisco.com/ciscoblogs/iStock-528389651-key-460x230.jpg"/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; Look Mom&#8230;No Hands!  Automating Device Deployment with IOS XE Comments Feed" href="https://blogs.cisco.com/developer/look-mom-no-hands-automating-device-deployment-with-ios-xe/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"231439"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='ACI Anywhere!' href='https://blogs.cisco.com/news/aci-anywhere' />
+<link rel='next' title='Where Video Systems and Self-Driving Cars Converge' href='https://blogs.cisco.com/collaboration/new_cisco_spark_room_55' />
+
+<link rel="canonical" href="https://blogs.cisco.com/developer/look-mom-no-hands-automating-device-deployment-with-ios-xe" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=231439' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Look Mom...No Hands! Automating Device Deployment with IOS XE"/>
+  <meta property="og:url" content="https://blogs.cisco.com/developer/look-mom-no-hands-automating-device-deployment-with-ios-xe"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2017-08-21T12:24:43+00:00"/>
+  <meta property="article:modified_time" content="2017-08-23T22:25:48+00:00" />
+  <meta property="og:updated_time" content="2017-08-23T22:25:48+00:00" />
+  <meta property="article:section" content="Developer"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Look Mom...No Hands! Automating Device Deployment with IOS XE"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/developer/look-mom-no-hands-automating-device-deployment-with-ios-xe"/>
+  <meta name="twitter:description" content="For those of you who have followed earlier blogs, you will have seen the major enhancements we have been making in open IOS XE. Jeff McLaughlin mentioned Day Zero deployment in his recent blog.
+
+
+
+Day Zero is a critical step in automation. In the past, in order to install a new network device, a hig"/>
+  <meta name="twitter:image" content="https://alln-extcloud-storage.cisco.com/ciscoblogs/iStock-528389651-key.jpg"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:creator" content="@https://twitter.com/adamradford123"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521507995";
+		var sig = "b17d52903b1bf0de1df6134a2cd0fb4b";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/2vfzUNZ&text=Read+%40adamradford123+%23DevNet+blog+on+Automating+Device+Deployment+with+IOS+XE+%23network+%23programmability&via=ciscodevnet" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/developer/look-mom-no-hands-automating-device-deployment-with-ios-xe&title=Look Mom&#8230;No Hands!  Automating Device Deployment with IOS XE" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/developer/look-mom-no-hands-automating-device-deployment-with-ios-xe" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/developer/look-mom-no-hands-automating-device-deployment-with-ios-xe" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Look Mom&#8230;No Hands!  Automating Device Deployment with IOS XE&body=I saw this post on Cisco Developer blog and thought you might like to read it.%0A%0ALook Mom&#8230;No Hands!  Automating Device Deployment with IOS XE%0A%0Ahttps://blogs.cisco.com/developer/look-mom-no-hands-automating-device-deployment-with-ios-xe%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/developer/'>Developer</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/iStock-528389651-key-460x230.jpg">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Developer  						</span>
+						<h1 id="post-231439" class="kindle_title title">Look Mom&#8230;No Hands!  Automating Device Deployment with IOS XE</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1503501116-bpthumb.jpg"></div><div class="author_rewards_box"></div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/adamradford" title="Posts by Adam Radford" rel="author">Adam Radford</a> - August 21, 2017 - 9 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p>For those of you who have followed earlier blogs, you will have seen the major enhancements we have been making in open <a href="https://developer.cisco.com/site/ios-xe/?utm_source=AR_ZTP&amp;utm_medium=blog_cisco&amp;utm_campaign=dnamarketing" target="_blank" rel="noopener"><font color="red">IOS</font> <font color="red">XE</font></a>. Jeff McLaughlin mentioned Day Zero <font color="red">deployment</font> in <a href="https://blogs.cisco.com/developer/the-new-network-its-for-developers" target="_blank" rel="noopener">his recent blog</a>.</p>
+<p><strong>Day Zero is a critical step in <font color="red">automation</font></strong>. In the past, in order to install a <font color="red">new network</font> <font color="red">device</font>, a highly skilled <font color="red">network</font> engineer would go out on site, connect and configure the <font color="red">device</font>. This process was quite manual (cut/paste) and hence error prone. A great opportunity for <font color="red">automation</font>.</p>
+<p>There has been lots of interest in <a href="https://developer.cisco.com/site/network-plug-n-play/?utm_source=AR_ZTP&amp;utm_medium=blog_cisco&amp;utm_campaign=dnamarketing" target="_blank" rel="noopener"><font color="red">Network</font> Plug and Play</a> (<font color="red">PnP</font>) over the past few years and the <font color="red">PnP</font> protocol is widely supported on <font color="red">Cisco</font> <font color="red">switches</font>, <font color="red">routers</font> and <font color="red">Access Points</font>. I have been working with customers who have saved hundreds of hours with <font color="red">PnP</font> <font color="red">deployments</font>.</p>
+<p>Today I want to introduce you to the most recent <font color="red">automation</font> capability in open <font color="red">IOS</font> <font color="red">XE</font> 16.6 &#8211; Zero Touch Provisioning (<font color="red">ZTP</font>).</p>
+<p>You are probably asking an obvious question, &#8220;Why another protocol for day zero <font color="red">deployment</font>?&#8221; Good question. There are some subtle, yet important differences. <font color="red">Network</font> <font color="red">PnP</font> provides a powerful and simple <font color="blue">user experience</font>. It has an intuitive UI on <a href="https://developer.cisco.com/site/apic-em/?utm_source=AR_ZTP&amp;utm_medium=blog_cisco&amp;utm_campaign=dnamarketing" target="_blank" rel="noopener">APIC-EM controller</a>, a smart phone application and a sophisticated agent on the <font color="red">device</font> that manages security and serviceability. The workflow (certificate – for security, image upgrade, configuration push) is fixed and it is a turnkey solution.</p>
+<p><font color="red">ZTP</font> by contrast is open (I just provide a URL for a <font color="red">python script</font> via <font color="red">DHCP</font>) and extremely flexible. It is not a turn-key solution like <font color="red">PnP</font> with a UI and <font color="red">cloud</font> component. With <font color="red">ZTP</font> I can implement any workflow I like all through a <font color="red">python script</font>. Anything I can do through <font color="red">python</font>, I can do to the <font color="red">device</font>.</p>
+<p>Let&#8217;s take a look at some use-cases for <font color="red">ZTP</font> <font color="red">deployment</font>.</p>
+<p><strong>Simple Configuration &#8211; bootstrap</strong><br />
+I will start with a very simple <font color="red">use case</font>. I want the <font color="red">device</font> to boot up, and apply a default set of credentials (or configure an authentication <font color="red">server</font>) so I can connect to it with another <font color="red">automation</font> tool. This is essentially a bootstrap configuration.</p>
+<p style="text-align: center;"><img class="aligncenter size-large wp-image-231460" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/599b3235d7beb-550x353.jpg" alt="" width="550" height="353" /><em>Figure 1 Basic <font color="red">ZTP</font> <font color="red">Use Case</font></em></p>
+<p>The <font color="red">device</font> boots up, uses <font color="red">DHCP</font> to obtain an <font color="red">IP</font> address (Step 1). The <font color="red">DHCP</font> response contains a URL in option 67 which is the location of a <font color="red">python script</font>.<br />
+Step 2 downloads this <font color="red">script</font>, starts an on-box guestshell, and runs the <font color="red">python script</font> locally.</p>
+<p>Here is a simple example of this base <font color="red">script</font>. The code below simply configures base credentials for the <font color="red">device</font> using the built-in <font color="red">cli</font> <font color="red">python</font> library.</p>
+<p><img class="aligncenter size-large wp-image-231461" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/599b328fccd0f-550x197.jpg" alt="" width="550" height="197" /></p>
+<p>When the <font color="red">device</font> boots, I see the following messages on the console. I have cut out other messages for brevity.</p>
+<p style="text-align: center;"><img class="aligncenter size-large wp-image-231464" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/599b32aedb899-550x169.jpg" alt="" width="550" height="169" /><em>Figure 2 – Log messages during <font color="red">device</font> boot process</em></p>
+<p>You can see the <font color="red">switch</font> booting up, then it looks at option 67 for a <font color="red">python script</font> to download. It then starts the guest-shell, and runs the <font color="red">python script</font>.</p>
+<p>Remember to save the configuration, in your <font color="red">script</font>, if you want it to persist.</p>
+<p>You can learn more about on-box <font color="red">Python</font> and Guestshell on the <a href="https://developer.cisco.com/site/python/#sdk?utm_source=AR_ZTP&amp;utm_medium=blog&amp;utm_campaign=dnamarketing" target="_blank" rel="noopener"><font color="red">Cisco</font> <font color="red">DevNet</font> <font color="red">Python</font> <font color="red">Network Automation</font> site</a>. Read on for some more examples!</p>
+<p><strong>Dynamic Configuration – Serial Number</strong><br />
+The next example takes this a little further and uses the serial number of the <font color="red">device</font> to make a REST <font color="red">API</font> call to collect parameters such as <font color="red">IP</font> address/mask used to configure the <font color="red">device</font>. This could contain other attributes such as a <font color="red">configuration file</font> URL. My web-service (implemented in node-red) has a DB of serial numbers and attributes.</p>
+<p style="text-align: center;"><img class="aligncenter size-large wp-image-231466" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/599b32ec5ca9e-550x414.jpg" alt="" width="550" height="414" /><em>Figure 3 Dynamic <font color="red">Use Case</font></em></p>
+<p style="text-align: left;">The <font color="red">device</font> uses <font color="red">ZTP</font> as in the previous use-case. In step 2, the <font color="red">python script</font> will get the serial number of the <font color="red">device</font> and make a REST <font color="red">API</font> call to the <font color="red">server</font> (step 3). The <font color="red">server</font> will return a list of parameters for the <font color="red">script</font> to use in configuration (step 4). In this example the <font color="red">IP</font> address of the <font color="red">management interface</font>, <font color="red">network</font> mask, and <font color="red">default gateway</font> are returned.</p>
+<p>There are lots of options to extend this. For example, the <font color="red">API</font> could return a URL for the <font color="red">configuration file</font> to be used for the <font color="red">device</font>. The <font color="red">script</font> could download that file and use that to configure the <font color="red">device</font>.</p>
+<p><strong>Advanced Configuration – <font color="red">Switch</font> Stacking Order</strong><br />
+One of the benefits of <font color="red">ZTP</font> is you can interact with the <font color="red">device</font> before you apply a configuration. There are a couple of situations where this is important, and <font color="red">switch</font> stacking is a big one.</p>
+<p>The key point with stacking is the order of the stack members determines the names of <font color="red">device</font> <font color="red">interfaces</font>. For example, all of the <font color="red">interfaces</font> on <font color="red">switch</font> #1 will start with &#8220;1&#8221; (e.g. GigabitEthernet1/0/1). This can cause challenges as often uplink connections will only be on a subset of the stack members. You need to know in advance the order the <font color="red">switches</font> are connected, and you need to reboot to change the order of the stack members.</p>
+<p>I have extended use-case #2 to handle a list of serial numbers. The <font color="red">API</font> will return the serial number of the <font color="red">device</font> which should be &#8220;top of stack&#8221;. The <font color="red">python script</font> will renumber the <font color="red">switches</font> (if required) and reboot. If no renumbering is required, the <font color="red">device</font> will go straight to step 7.</p>
+<p style="text-align: center;"><img class="aligncenter size-large wp-image-231468" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/599b332d89300-550x346.jpg" alt="" width="550" height="346" /><em>Figure 4 Stacking</em></p>
+<p>The first 3 steps are identical to use-case #2. The big difference is step number 4, where the <font color="red">python script</font> detects that the serial number returned is not currently the top of stack, so it needs to renumber and reboot.</p>
+<p>When the stack comes back up, it redoes the <font color="red">ZTP</font> process (step 5) and makes the <font color="red">API</font> call again (step 6). This time the top of stack matches, so the <font color="red">script</font> proceeds to configure the <font color="red">device</font> (step 7). This process is deliberately stateless to make it more robust.</p>
+<p>As in the earlier example, you could also download a complete <font color="red">configuration file</font> from a http(s) <font color="red">server</font> at the completion of the stack re-order.</p>
+<p>There are a number of other examples where a <font color="red">device</font> may need to have something done to it before it can be provisioned. Software upgrade is an obvious one, but there are others. For example, ether-switch modules in <font color="red">ISR</font> <font color="red">routers</font> require a reboot before the internal <font color="red">interface</font> can be provisioned.</p>
+<p><strong>Conclusion</strong><br />
+<font color="red">ZTP</font> is a powerful addition to your <font color="red">automation</font> toolset. These examples give you a taste of the many possibilities for using <font color="red">ZTP</font>. I have published sample <font color="red">scripts</font> in a Github repository <a href="https://github.com/aradford123/ZTP-samples" target="_blank" rel="noopener">https://github.com/aradford123/ZTP-samples</a> to help you get started. I also included a node-red flow in the repository.<br />
+And, as I mentioned earlier, if you would like to get some tutorial style information about how to do this, the <a href="https://developer.cisco.com/site/python/#sdk?utm_source=AR_ZTP&amp;utm_medium=blog&amp;utm_campaign=dnamarketing" target="_blank" rel="noopener"><font color="red">Cisco</font> <font color="red">DevNet</font> <font color="red">Python</font> <font color="red">Network Automation</font> site</a> is just waiting for you to sign in and get started.</p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=devnet">#DevNet</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=configuration">configuration</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=device-management">device management</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=ios-xe">IOS XE</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=network-programmability">Network programmability</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=network-provisioning">network provisioning</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=programming-with-python">Programming with Python</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=sdn">SDN</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=zero-touch-deployment">zero touch deployment</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">9 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+			<li>
+			<div id="comment-2471183">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Prem Chandran						</span>
+						<br />
+						<span class="comment-meta commentmetadata">September 22, 2017 at 9:17 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Thanks Andrew. Very informative. 
+
+You have mentioned PnP and it looks like  ZTP can do this in a more flexible way. So am wondering when do customers use PnP vs ZTP.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2471183" class = "commentLikeButton commentlike" data-nitro = >3 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+<li>
+			<div id="comment-2471245">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/photo_1503609828.jpg' width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+							<a href = "https://blogs.cisco.com/rewards-profile/6473">Adam Radford</a>
+						</span>
+						<br />
+						<span class="comment-meta commentmetadata">September 22, 2017 at 7:55 pm</span>
+
+					</div>
+				<div class="comment_text">
+					<ul class = "comment_id2471245 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'aradford';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2471245");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2471245">
+								</div>
+								<div class = "nitro_points pointscomment_id2471245">
+								</div>
+							</li>
+							</ul>
+					<div class = "clear"></div> <p>With ZTP you need to do all the work yourself.  You need to run a web server, create a python script, match a serial number etc.  There is no UI, you would need to build this
+
+
+
+PnP has a complete workflow with a UI already done.  You can upload config files, create rules all through the UI (or the REST API).
+
+
+
+PnP also has built in certificate management for the device and a SUDI check option to make sure the device has a valid manufacturing certificate.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2471245" class = "commentLikeButton commentlike" data-nitro =aradford >3 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li>
+			<div id="comment-2471444">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Prem Chandran						</span>
+						<br />
+						<span class="comment-meta commentmetadata">September 24, 2017 at 8:31 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Thanks Andrew.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2471444" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2470672">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Yogesh Shetty						</span>
+						<br />
+						<span class="comment-meta commentmetadata">September 17, 2017 at 10:49 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Very nice blog Adam, as always short and very informative.
+
+With the flexibility of ZTP to write any functionality via scripts, our customers would hugely benefit from custom Day0 provisioning that suits their env.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2470672" class = "commentLikeButton commentlike" data-nitro = >3 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+<li>
+			<div id="comment-2470675">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/photo_1503609828.jpg' width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+							<a href = "https://blogs.cisco.com/rewards-profile/6473">Adam Radford</a>
+						</span>
+						<br />
+						<span class="comment-meta commentmetadata">September 18, 2017 at 12:34 am</span>
+
+					</div>
+				<div class="comment_text">
+					<ul class = "comment_id2470675 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'aradford';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2470675");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2470675">
+								</div>
+								<div class = "nitro_points pointscomment_id2470675">
+								</div>
+							</li>
+							</ul>
+					<div class = "clear"></div> <p>Thanks Yogesh.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2470675" class = "commentLikeButton commentlike" data-nitro =aradford >2 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2470288">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Patrick Saldou						</span>
+						<br />
+						<span class="comment-meta commentmetadata">September 11, 2017 at 10:48 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Looking at CCO, only the C9Ks are at 16.6.  4510s, 3850s, 6800 are still at 15.x. 4300 routers are at 16.3.  This makes this solution pretty much unusable in the near future except for a narrow band of products.  Maybe we can use TCL scripting?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2470288" class = "commentLikeButton commentlike" data-nitro = >3 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+<li>
+			<div id="comment-2470331">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/photo_1503609828.jpg' width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+							<a href = "https://blogs.cisco.com/rewards-profile/6473">Adam Radford</a>
+						</span>
+						<br />
+						<span class="comment-meta commentmetadata">September 12, 2017 at 1:41 pm</span>
+
+					</div>
+				<div class="comment_text">
+					<ul class = "comment_id2470331 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'aradford';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2470331");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2470331">
+								</div>
+								<div class = "nitro_points pointscomment_id2470331">
+								</div>
+							</li>
+							</ul>
+					<div class = "clear"></div> <p>Hi Patrick,
+
+
+
+Thanks for the comment.
+
+
+
+16.6 runs on more platforms than the cat 9k.  The 3650, 3850 switch also run 16.6.
+
+
+
+In addition all of the ASR1k, ISR4k, CSR routers run 16.6
+
+
+
+There will be broader support overtime.
+
+
+
+Adam</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2470331" class = "commentLikeButton commentlike" data-nitro =aradford >2 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2470287">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Patrick Saldou						</span>
+						<br />
+						<span class="comment-meta commentmetadata">September 11, 2017 at 10:35 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Interesting in that this solution is very scalable.  very similar to POAP.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2470287" class = "commentLikeButton commentlike" data-nitro = >3 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li class="comment even thread-even depth-1" id="li-comment-2466633">
+				<div id="comment-2466633">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1486568506-bpthumb.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/johnmcdonough'>John McDonough</a></span><br />
+							<span class="comment-meta commentmetadata">August 24, 2017 at 9:05 am</span>
+
+						</div>
+						<div class="comment_text">
+							<ul class = "comment_id2466633 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'jomcdono';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2466633");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2466633">
+								</div>
+								<div class = "nitro_points pointscomment_id2466633">
+								</div>
+							</li>
+							</ul>
+							<div class = "clear"></div>
+							<p>As always an excellent detailed explanation of the various scenarios and methodologies.</p>						</div>
+
+							<div class = "roblike">
+					<a  href = "#" id = "clickLike2466633" class = "commentLikeButton commentlike" data-nitro =jomcdono >5 likes</a>				</div>
+				<div class="reply">
+															</div>
+							<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+	</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Developer:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=DeveloperCiscoBlog', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="DeveloperCiscoBlog" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Developer</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscodevnet/"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/ciscodevnet"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="https://www.linkedin.com/groups/6609150/profile"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="https://www.youtube.com/channel/UChRmUH4H5hiYzPiFhvNoCIg"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/ciscodevnet/"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/DeveloperCiscoBlog"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">DevNet Dev Centers</li>
+<li class="roll_heading">What We're Reading</li>
+
+            <li><a href="https://developer.cisco.com/site/analytics-automation/" target="_blank">Analytics & Automation</a></li>
+                      <li><a href="https://developer.cisco.com/site/cloud/" target="_blank">Cloud</a></li>
+                      <li><a href="https://developer.cisco.com/site/collaboration" target="_blank">Collaboration</a></li>
+                      <li><a href="https://developer.cisco.com/site/data-center/" target="_blank">Data Center</a></li>
+                      <li><a href="https://developer.cisco.com/site/iot/" target="_blank">IoT</a></li>
+                      <li><a href="https://developer.cisco.com/site/mobility" target="_blank">Mobility</a></li>
+                      <li><a href="https://developer.cisco.com/site/networking/" target="_blank">Networking</a></li>
+                      <li><a href="https://developer.cisco.com/site/opensource" target="_blank">Open Source</a></li>
+                      <li><a href="https://developer.cisco.com/site/security/" target="_blank">Security</a></li>
+                  </ul>
+              <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="https://communities.cisco.com/community/developer" target="_blank">Developer Community</a></li>
+                        <li><a href="https://developer.cisco.com" target="_blank">DevNet</a></li>
+                        <li><a href="https://devnetcreate.io" target="_blank">DevNet Create</a></li>
+                        <li><a href="https://learninglabs.cisco.com" target="_blank">DevNet Learning Labs</a></li>
+                        <li><a href="https://developer.cisco.com/site/devnet/sandbox/" target="_blank">Sandbox</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscodevnet/'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/ciscodevnet'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='https://www.linkedin.com/groups/6609150/profile'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 231439;
+			var orig_count = 7;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/2vfzUNZ&text=Read+%40adamradford123+%23DevNet+blog+on+Automating+Device+Deployment+with+IOS+XE+%23network+%23programmability&via=ciscodevnet" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/developer/look-mom-no-hands-automating-device-deployment-with-ios-xe&title=Look Mom&#8230;No Hands!  Automating Device Deployment with IOS XE" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/developer/look-mom-no-hands-automating-device-deployment-with-ios-xe" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/developer/look-mom-no-hands-automating-device-deployment-with-ios-xe" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Look Mom&#8230;No Hands!  Automating Device Deployment with IOS XE&body=I saw this post on Cisco Developer blog and thought you might like to read it.%0A%0ALook Mom&#8230;No Hands!  Automating Device Deployment with IOS XE%0A%0Ahttps://blogs.cisco.com/developer/look-mom-no-hands-automating-device-deployment-with-ios-xe%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

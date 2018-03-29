@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  On Information Entropy</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; On Information Entropy Comments Feed" href="https://blogs.cisco.com/security/on_information_entropy/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"9301"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Telemedicine makes UK a global teaching hospital' href='https://blogs.cisco.com/video/telemedicine-makes-uk-a-global-teaching-hospital' />
+<link rel='next' title='Can Video Help Build Your Business?' href='https://blogs.cisco.com/smallbusiness/can_video_help_build_your_business' />
+
+<link rel="canonical" href="https://blogs.cisco.com/security/on_information_entropy" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=9301' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="On Information Entropy"/>
+  <meta property="og:url" content="https://blogs.cisco.com/security/on_information_entropy"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2010-08-16T12:00:00+00:00"/>
+  <meta property="article:modified_time" content="2010-11-24T08:56:07+00:00" />
+  <meta property="og:updated_time" content="2010-11-24T08:56:07+00:00" />
+  <meta property="article:section" content="Security"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="On Information Entropy"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/security/on_information_entropy"/>
+  <meta name="twitter:description" content="In this blog post you will learn about entropy within the domain of information theory. You will learn what entropy is and how to compute it. You will be shown some simple C code snippets to bring theory into application. Also, you will be shown why it is an important measurement in the field of com"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521514326";
+		var sig = "6018428931f002230637a90f4fb1ac3b";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1Fb3Hsj&text=On Information Entropy&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/on_information_entropy&title=On Information Entropy" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/on_information_entropy" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/on_information_entropy" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: On Information Entropy&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0AOn Information Entropy%0A%0Ahttps://blogs.cisco.com/security/on_information_entropy%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/security/'>Security</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category50.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Security  						</span>
+						<h1 id="post-9301" class="kindle_title title">On Information Entropy</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/MikeSchiffman.thumbnail.4cb4c4a1b2f7b.jpg"></div><div class="author_rewards_box"></div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/MikeSchiffman" title="Posts by Mike Schiffman" rel="author">Mike Schiffman</a> - August 16, 2010 - 3 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p>In this blog post you will learn about <em><font color="red">entropy</font></em> within the domain of information theory. You will learn what <font color="red">entropy</font> is and how to compute it. You will be shown some simple C code snippets to bring theory into application. Also, you will be shown why it is an important measurement in the field of <font color="red">computer security</font>. Finally, we will cover some practical applications of <font color="red">entropy</font> calculation and analysis.</p>
+<p><span id="more-9301"></span></p>
+<h2>Introduction</h2>
+<p><font color="red">Entropy</font> is a measurement of uncertainty. It is a way to assign <a href="http://en.wikipedia.org/wiki/<font color="red">Entropy</font>_(information_theory)#Definition" target="_blank">a score of uncertainty to a stochastic variable</a>. Entropy is a key component of <a href="http://en.wikipedia.org/wiki/Information_theory" target="_blank">information theory</a>, a branch of mathematics designed to quantify information. It first came of age in 1948 with the publication of Claude Shannon&#8217;s paper &#8220;<a href="http://cm.bell-labs.com/cm/ms/what/shannonday/paper.html" target="_blank">A Mathematical Theory of Communication</a>.&#8221;</p>
+<p>Before we can adequately define <font color="red">entropy</font>, we need to first define <em>information</em>. Information, for our purposes, is what you get when the uncertainty about something is diminished or erased. Take a <a href="http://en.wikipedia.org/wiki/Fair_coin" target="_blank">fair coin</a>. Before we flip the coin, we are uncertain about what will happen when we flip it. After we flip the coin, our uncertainty about that coin flip is effectively 0 since we know the outcome (heads or tails). We&#8217;ve gained information. But how do we measure the uncertainty about the coin flip before it happens? How do we quantify that uncertainty? The answer is <font color="red">entropy</font>.</p>
+<p>Consider an <font color="red">information source</font> X that can produce, with equal probability, 6 symbols (also known as outcomes): A, B, C, D, E, and F. Given that we know the probability of each outcome (1/6) and the alphabet size (6), information theory and <font color="red">entropy</font> enable us to confidently calculate the uncertainty associated with that <font color="red">information source</font> (in this example, as we&#8217;ll see, it&#8217;s about 2.6 bits). It is important to make the distinction that <font color="red">entropy</font> is <em>not</em> information. <font color="red">Entropy</font>, which is typically measured in bits, is actually a measurement of how much information is NOT available when we don&#8217;t know the outcome of an <font color="red">information source</font>.</p>
+<p><font color="red">Entropy</font> gives us a way to quantify the average number of bits needed to convey a message when considering all possible outcomes. For example, the <font color="red">entropy</font> of a coin flip with 2 equally likely outcomes is less than that of the roll of  die with 6 equally likely outcomes. This will be explained in further detail.</p>
+<h3>Nomenclature Clarification</h3>
+<p>According to Internet lore, at the time of discovery, Shannon didn&#8217;t know what to call his new unit of measure and so he asked the famous mathematician <a href="http://en.wikipedia.org/wiki/John_von_Neumann" target="_blank">John von Neumman</a>. Von Neumann told him he should call it the &#8220;<font color="red">entropy</font>&#8221; because nobody really knows what <font color="red">entropy</font> is (indeed it does appear to be a <a href="http://www.merriam-webster.com/dictionary/<font color="red">entropy</font>" target="_blank">loaded term</a>) and thus Shannon would have an advantage when debating his burgeoning field with pundits. Hitherto this has led to much confusion since the term entropy also plays a central role in many areas of science, including thermodynamics, heat, and energy. To be technically correct, this article is about Shannon <font color="red">Entropy</font>, shortened here as &#8220;<font color="red">entropy</font>&#8221;.</p>
+<h2>Pith</h2>
+<p>Now that we have a slightly better than <a href="http://marvel.com/universe/Entropy" target="_blank">comic book understanding of what <font color="red">entropy</font> is</a>, let&#8217;s look at how to calculate it. Shannon&#8217;s classic formula for computing <font color="red">entropy</font> is shown below.</p>
+<p><img src="/upload/images/<font color="red">entropy</font>1.jpg" alt="" width="319" height="114" /></p>
+<p>The <font color="red">entropy</font> <strong>H</strong> of a random variable <strong>X</strong> with possible outcomes of {<em><strong>X1</strong></em> &#8230; <strong>X</strong><em><strong>n</strong></em>} is the product of the probability of outcome <em><strong>i</strong></em> times the base 2 logarithm of one over the probability of outcome <em><strong>i</strong></em>. The Greek letter Sigma (∑) indicates <a href="http://www.mathlesstraveled.com/?page_id=50" target="_blank">summation notation</a>, and as such, the formula is repeated for every possible outcome of <strong><em>i</em></strong> and summed. The overall result is the <font color="red">entropy</font> measured in bits. The base 2 logarithm (also known as the <a href="http://en.wikipedia.org/wiki/Binary_logarithm" target="_blank">binary logarithm</a>) is most often used to compute <font color="red">entropy</font> because of its close connection with the binary numbering system, and this has become the standard unit of measure when discussing information entropy.</p>
+<h3>A Common <font color="red">Information Source</font></h3>
+<p>Consider our <font color="red">information source</font> from above with an alphabet size of 6 equally probable symbols. This source is commonly found in many different games in many different cultures, typically referred to as a <strong>die</strong>.  We can easily compute the <font color="red">entropy</font> of any fair, untampered die. It  has 6 possible outcomes, each one as probable as the next. 1/6 is expressed decimally as the repeating number .1666&#8230;  The <font color="red">entropy</font> formula is applied and calculated as per the following:</p>
+<p><img src="/upload/images/<font color="red">entropy</font>-3.jpg" alt="" width="427" height="419" /></p>
+<p>The roll of a die has approximately 2.6 bits of <font color="red">entropy</font>. Let&#8217;s cogitate on that. Recall that entropy gives us a way to quantify the average number of bits needed to convey a message.  Therefore, we know that, on average, we would need around 2.6 bits to represent all possible messages from this <font color="red">information source</font>. Let&#8217;s look at that graphically:</p>
+<p style="text-align: left;"><img src="/upload/images/entropy-4.jpg" alt="" width="313" height="249" /></p>
+<p>We can see that 2 bits is not enough to represent all of the possible messages and 3 bits is just a little too much. As you can see from the graphic, 2.6 bits is approximately in the middle of these two, which is exactly what we expect. <font color="red">Entropy</font> tells us that we can encode all the information a die has to give us in just under 3 bits.</p>
+<h3>Coin Flips and Beyond</h3>
+<p>A coin flip has 1 bit of <font color="red">entropy</font>. You can encode all possible outcomes using a single bit of information. This makes sense, even without math. It&#8217;s either heads or tails, 1 or 0. Considering the example of the roll of the die, which has about 2.6 bits of <font color="red">entropy</font>, and the flip of a coin, which has 1 bit of <font color="red">entropy</font>, we can see that as the number of equally possible outcomes grows, so does the <font color="red">entropy</font>. This is intuitive, the larger number of possible outcomes means that, on average, as our uncertainty grows, we will need more information to be able to describe it.</p>
+<h2>A C Program to Calculate File <font color="red">Entropy</font></h2>
+<p>Once we understand the formula, it&#8217;s quite easy to build a short C program to calculate <font color="red">entropy</font>. Our example program will calculate the <font color="red">entropy</font> across an entire file. In this section, some code snippets from a standalone <font color="red">entropy</font> calculation tool &#8220;<strong>doe</strong>&#8221; (determine overall <font color="red">entropy</font>) are examined.</p>
+<p>In the first piece of code, a buffer is filled from a previously opened file (code not shown). We can see that this will repeat as many times as necessary until the entire file is read.</p>
+<pre>/* read a brick of <font color="red">data</font> */
+
+while ((i = read(<font color="red">fd</font>, <font color="red">buf</font>, sizeof (<font color="red">buf</font>))))
+
+{
+
+    if (i == -1)
+
+    {
+
+        fprintf(stderr, "Can't read %s (%s)\n", file, strerror(errno));
+
+        close(<font color="red">fd</font>);
+
+        break;
+
+    }
+
+ </pre>
+<p>In the next piece of code, a frequency array, an unsigned integer array with a length of 256, is populated. The program steps through the file buffer and records the number of times it sees each <font color="red">byte</font> (an outcome).</p>
+<pre>    for (k = 0; k &lt; i; k++)
+
+    {
+
+        /**
+
+          *  For each brick of <font color="red">data</font> we siphon from the file, record
+
+          *  the number of instances of each observed value into
+
+          *  the frequency array.
+
+          */
+
+          fa[<font color="red">buf</font>[k]]++;
+
+          c++;
+
+    }
+
+}
+
+close(<font color="red">fd</font>);
+
+ </pre>
+<p>In the final piece, we compute the <font color="red">entropy</font> across the frequency array. Recall that we need to turn the frequency distribution of each outcome into a probability distribution. This is done by dividing the frequency with which each symbol occurs with the total size of the sample set (the number of <font color="red">bytes</font> in our file). After we have a symbol&#8217;s probability, we can compute the <font color="red">entropy</font> for that outcome and add it to the accumulator. The final result is the overall <font color="red">entropy</font> for the entire file, measured in bits.</p>
+<pre>for (k = 0; k &lt; ALPHABETSIZE; k++)
+
+{
+
+    /** ignore empty slots */
+
+    if (fa[k])
+
+    {
+
+       /** convert frequency array entry -&gt; probability distribution
+
+       prob = (double)fa[k] / (double)c;
+
+       /** the famous Shannon <font color="red">Entropy</font> formula */
+
+       <font color="red">entropy</font> += prob * log2(1/prob);
+
+    }
+
+}
+
+ </pre>
+<p>Using <strong>doe</strong>, the following files&#8217; <font color="red">entropy</font> is computed:</p>
+<ol>
+<li>Worm.Padobot.M: The <font color="red">malware</font> known as <em>Padobot.M</em>. This is a Windows-based <font color="red">PE32</font> <font color="red">executable file</font> that is not packed or compressed.</li>
+<li>an-encrypted-file.enc: A random text file that is encrypted using AES.</li>
+<li>e45bf45464d0f5e041f8876e77472e3b.MD5: A trojan downloader <font color="red">malware</font>; it has no common name so its <font color="red">MD5</font> hash is used. This is a Windows-based <font color="red">PE32</font> <font color="red">executable file</font>. It is packed using <a href="http://www.aspack.com/" target="_blank">ASPack</a>.</li>
+<li>webster-dictionary.txt: This is a plaintext file filled with 311,141 English words from Webster&#8217;s dictionary.</li>
+<li>wordpad.exe: The wordpad <font color="red">executable</font> from a standard Windows Vista install. This is a Windows-based <font color="red">PE32</font> <font color="red">executable file</font> that is not packed or compressed.</li>
+</ol>
+<pre>[snarkbox:~/Projects/Entropy/doe] mike% ./doe examples/*
+
+examples/Worm.Padobot.M                       : 5.97 bits/byte
+
+examples/an-encrypted-file.enc                : 7.88 bits/byte
+
+examples/e45bf45464d0f5e041f8876e77472e3b.<font color="red">MD5</font> : 7.87 bits/byte
+
+examples/webster-dictionary.txt               : 4.42 bits/byte
+
+examples/wordpad.exe                          : 6.55 bits/byte
+
+ </pre>
+<p>We can now empirically verify what we&#8217;ve learned above. The files with the most uniformity and redundancy will have lower <font color="red">entropy</font> scores. English text and uncompressed <font color="red">executables</font> tend to have a lot of predictable and repeatable sequences that bring down their uncertainty and the average number of bits needed to represent them, and therefore result in low <font color="red">entropy</font> scores.</p>
+<p>As expected, the encrypted and packed files have the highest <font color="red">entropy</font> scores. This is because of the high level of unpredictability or randomness throughout the file. An <font color="red">entropy</font> score that is asymptotic to 8 bits per <font color="red">byte</font> means that, on average, the possible outcome of each symbol is equally as likely as any other. A theoretically perfectly random one-time pad would have the highest <font color="red">entropy</font>.</p>
+<h2>Practical Applications</h2>
+<p>So far we&#8217;ve learned what <font color="red">entropy</font> is and how to calculate it. In addition to it being the lynchpin of Information Theory, <font color="red">entropy</font> does indeed have practical applications and is quite important in the field of <font color="red">computer security</font>. Let&#8217;s spend some time exploring a few areas where <font color="red">entropy</font> has direct value.</p>
+<h3>Quality of Randomness</h3>
+<p>As we&#8217;ve learned, <font color="red">entropy</font> is a measure of uncertainty. It can also be looked at as a measure of randomness. Cryptography requires randomness and the more a given cryptosystem has to work with, the more secure it is said to be. <a href="http://www.schneier.com/book-applied.html" target="_blank">Schneier</a> asserts the <font color="red">entropy</font> of a cryptosystem is a measure of the size of the keyspace. This is intuitively cogent when you consider the generalization that a cryptosystem gets more secure as the number of possible keys used to encrypt it grows larger. But how we can also use <font color="red">entropy</font> calculations is to determine the quality of values such as <a href="http://en.wikipedia.org/wiki/Key_(cryptography)" target="_blank">key material</a>,  <a href="http://en.wikipedia.org/wiki/Salt_(cryptography)" target="_blank">salts</a>, <a href="http://en.wikipedia.org/wiki/Initialization_vector" target="_blank">IVs</a>, and <a href="http://en.wikipedia.org/wiki/Cryptographic_nonce" target="_blank">nonces</a>. It&#8217;s important that these values, along with the means used to generate them, be as unpredictable as possible.  Therefore, we can use what we&#8217;ve learned here to determine the &#8220;quality of randomness&#8221; for <font color="red">cryptographic</font> material.</p>
+<h3>Detecting Packed <font color="red">Executables</font></h3>
+<p>Packers are an obfuscation and evasion tool used by <font color="red">malware</font> authors to add <a href="/security/comments/a_brief_history_of_<font color="red">malware</font>_obfuscation_part_1_of_2/" target="_blank">polymorphism, armoring, metamorphism, EPO, and a host of other techniques</a> aimed at evading antivirus scanners. They compress and encrypt malware such that the original <font color="red">executable</font> is then completely unrecognizable. <font color="red">Entropy</font> scanning can be an effective tool to help detect such files. Wu, Chiueh and Zhao describe an <font color="red">entropy</font>-based scanning technique in their paper &#8220;<a href="http://portal.acm.org/citation.cfm?id=1574127.1574171" target="_blank">Efficient and Automatic Instrumentation for Packed Binaries</a>,&#8221; which details a tool called &#8220;Uncover&#8221; that performs static entropy calculations combined with some runtime analysis. Lyda and Hamrock also discuss another entropy-based solution in their paper &#8220;<a href="http://portal.acm.org/citation.cfm?id=1262676" target="_blank">Using <font color="red">Entropy</font> Analysis to Find Encrypted and Packed <font color="red">Malware</font></a>&#8220;.</p>
+<h3>Finding <font color="red">Cryptographic</font> Material</h3>
+<p>You can also use <font color="red">entropy</font> scanning to look for <font color="red">cryptographic</font> keys, messages, or seeds in otherwise normal <font color="red">data</font> streams. One such <a href="http://blog.dkbza.org/2007/05/scanning-data-for-<font color="red">entropy</font>-anomalies.html" target="_blank">tool</a>, written in Python by Ero Carrera, looks for areas of high entropy within files to spot <font color="red">cryptographic</font> material. Obviously this will only work if the file scanned is uncompressed and unencrypted.</p>
+<h3><font color="red">Network</font> <font color="red">Anomaly Detection</font></h3>
+<p>Another novel use of <font color="red">entropy</font> scanning lies in detecting when it&#8217;s not there, or more specifically, lower than expected. Consider an encrypted channel such as an SSH tunnel or an HTTPS <font color="red">network</font> connection. After connection setup and <font color="red">key exchange</font>, as we&#8217;ve seen, the <font color="red">entropy</font> of such an encrypted channel should hover around 8 bits per <font color="red">byte</font>. However, when misuse occurs, such as the <a href="http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2002-0656" target="_blank"><font color="red">OpenSSL</font> attack</a>, <a href="http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2002-0083" target="_blank">OpenSSH attack</a>, or unencrypted <a href="http://gray-world.net/projects/papers/html/cctde.html" target="_blank">covert channel</a> usage, the <font color="red">entropy</font> will dip below 8. The <a href="https://orchids.dnsalias.net/trac/olivain/net-entropy/" target="_blank">Net <font color="red">Entropy</font></a> tool, written by Julien Olivain, is an open-source <font color="red">network</font> scanner that performs real-time <font color="red">entropy</font> scanning of <font color="red">network</font> connections designed to alert against such attacks. According to his <a href="https://orchids.dnsalias.net/trac/olivain/net-<font color="red">entropy</font>/wiki/NetEntropySample" target="_blank">findings</a>, the entropy scores will drop to around 6 bits per <font color="red">byte</font> during misuse.</p>
+<p>Also useful, the Net <font color="red">Entropy</font> tool can be repurposed to detect high <font color="red">entropy</font> scores across what should be low <font color="red">entropy</font> <font color="red">network</font> channels. This can be useful to detect ad hoc encrypted connections, which may be indicative of suspicious goings-on.</p>
+<h2>Denouement</h2>
+<p>I hope you enjoyed this short treatise on <font color="red">entropy</font> and learned why it is an important tool in the <font color="red">information security</font> practitioner&#8217;s kit.</p>
+		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">3 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+			<li>
+			<div id="comment-62578">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Fahim						</span>
+						<br />
+						<span class="comment-meta commentmetadata">November 23, 2010 at 6:17 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Is doe open source ;) ? need to download and test, if thats possible please? Thanks</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike62578" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-62576">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Fahim						</span>
+						<br />
+						<span class="comment-meta commentmetadata">November 23, 2010 at 6:13 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Nice article, loved the quick brief review of entropy application to security. I have a question. Since entropy measures uncertainity, then is it okay to state that:
+
+
+
+Certainity = 1 - entropy (i.e. information entropy)
+
+
+
+p.s.
+
+Please do fix the code part, its flying off the column side (im on FF, havnt tested other browsers though)</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike62576" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-37322">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://wirewatcher.wordpress.com' rel='external nofollow' class='url'>Alec Waters</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">August 16, 2010 at 8:18 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Whoops, I meant detector"", not ""generator"" :)"</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike37322" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Security:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogSecurity', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogSecurity" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Security</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscosecurity?ref=nf"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/ciscosecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://youtubecisco.com/security"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogSecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.cert.org/blogs/vuls/" target="_blank">CERT Vulnerability Analysis</a></li>
+                      <li><a href="http://blogs.technet.com/b/srd/" target="_blank">Microsoft Security Research & Defense</a></li>
+                      <li><a href="http://isc.sans.edu/index.html" target="_blank">SANS Internet Storm Center</a></li>
+                      <li><a href="http://www.schneier.com/" target="_blank">Schneier on Security</a></li>
+                  </ul>
+              <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="http://www.cisco.com/en/US/products/products_security_advisories_listing.html" target="_blank">Advisories and Responses</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/cyberRiskReport.x" target="_blank">Cyber Risk Reports</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/intelliPapers.x?i=55" target="_blank">Security Best Practices</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/home.x" target="_blank">Security Intelligence Operations</a></li>
+                        <li><a href="http://www.cisco.com/en/US/products/hw/vpndevc/index.html" target="_blank">Security Products</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscosecurity?ref=nf'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/ciscosecurity'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 9301;
+			var orig_count = 1;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1Fb3Hsj&text=On Information Entropy&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/on_information_entropy&title=On Information Entropy" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/on_information_entropy" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/on_information_entropy" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: On Information Entropy&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0AOn Information Entropy%0A%0Ahttps://blogs.cisco.com/security/on_information_entropy%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

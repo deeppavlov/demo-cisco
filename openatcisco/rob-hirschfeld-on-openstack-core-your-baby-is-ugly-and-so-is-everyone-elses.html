@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Rob Hirschfeld on OpenStack Core: Your baby is ugly, and so is everyone else’s.</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"161477"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='2015 Is the Year of Hyper-Relevant Retail: Winning Shoppers with Efficiency, Savings, and Engagement' href='https://blogs.cisco.com/retail/2015-is-the-year-of-hyper-relevant-retail-winning-shoppers-with-efficiency-savings-and-engagement' />
+<link rel='next' title='Geopolitical Trends in Cybersecurity for 2015' href='https://blogs.cisco.com/security/geopolitical-trends-in-cybersecurity-for-2015' />
+
+<link rel="canonical" href="https://blogs.cisco.com/openatcisco/rob-hirschfeld-on-openstack-core-your-baby-is-ugly-and-so-is-everyone-elses" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=161477' />
+<meta property="og:image" content="http://i.ytimg.com/vi/hATdPkQ66J0/default.jpg" />
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Rob Hirschfeld on OpenStack Core: Your baby is ugly, and so is everyone else’s."/>
+  <meta property="og:url" content="https://blogs.cisco.com/openatcisco/rob-hirschfeld-on-openstack-core-your-baby-is-ugly-and-so-is-everyone-elses"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2015-01-14T15:15:22+00:00"/>
+  <meta property="article:modified_time" content="2015-01-14T15:15:22+00:00" />
+  <meta property="og:updated_time" content="2015-01-14T15:15:22+00:00" />
+  <meta property="article:section" content="Open at Cisco"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Rob Hirschfeld on OpenStack Core: Your baby is ugly, and so is everyone else’s."/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/openatcisco/rob-hirschfeld-on-openstack-core-your-baby-is-ugly-and-so-is-everyone-elses"/>
+  <meta name="twitter:description" content="Rob’s not talking about real babies of course—he’s talking about OpenStack Core and how shiny new projects that need nurturing and care—like babies do—are not good candidates for it—no matter how beautiful and chock-full of potential they may to be their doting supporters in the community. Core is a"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:creator" content="@https://twitter.com/nikiacosta"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521441750";
+		var sig = "a195da9bd6b9312c941a24d4bae60843";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://cs.co/9007xO8P&text=Rob Hirschfeld on OpenStack Core: Your baby is ugly, and so is everyone else’s.&via=Cisco" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/openatcisco/rob-hirschfeld-on-openstack-core-your-baby-is-ugly-and-so-is-everyone-elses&title=Rob Hirschfeld on OpenStack Core: Your baby is ugly, and so is everyone else’s." data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/openatcisco/rob-hirschfeld-on-openstack-core-your-baby-is-ugly-and-so-is-everyone-elses" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/openatcisco/rob-hirschfeld-on-openstack-core-your-baby-is-ugly-and-so-is-everyone-elses" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Rob Hirschfeld on OpenStack Core: Your baby is ugly, and so is everyone else’s.&body=I saw this post on Cisco Open at Cisco blog and thought you might like to read it.%0A%0ARob Hirschfeld on OpenStack Core: Your baby is ugly, and so is everyone else’s.%0A%0Ahttps://blogs.cisco.com/openatcisco/rob-hirschfeld-on-openstack-core-your-baby-is-ugly-and-so-is-everyone-elses%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/openatcisco/'>Open at Cisco</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category3110.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Open at Cisco  						</span>
+						<h1 id="post-161477" class="kindle_title title">Rob Hirschfeld on OpenStack Core: Your baby is ugly, and so is everyone else’s.</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/2027.thumbnail.jpg"></div><div class="author_rewards_box"></div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/nikiacosta" title="Posts by Niki Acosta" rel="author">Niki Acosta</a> - January 14, 2015 - 0 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p>Rob’s not talking about real babies of course—he’s talking about <font color="red">OpenStack</font> Core and how shiny new projects that need nurturing and care—like babies do—are not good candidates for it—no matter how beautiful and chock-full of potential they may to be their doting supporters in the community. Core is a place for mature, stable projects that people can depend on.</p>
+<p>And that’s just a tiny little preview of the spot-on insights Rob shared during our interview with him on <font color="red">OpenStack</font> <font color="red">Podcast</font> #14. He also spoke about:</p>
+<ul>
+<li>How Crowbar came to be and what it does</li>
+<li>The perils of saying “Yes” to everybody</li>
+<li>The mission of <font color="red">DefCore</font></li>
+<li>How a benevolent dictator might help contributors focus on what the <font color="red">OpenStack</font> community really needs</li>
+<li>How the <font color="red">OpenStack</font> Product Group can serve as a bridge between <font color="red">developers</font> and customers</li>
+<li>Why having code designated as “Core” kind of sucks</li>
+<li>Why the word “the” can be problematic</li>
+</ul>
+<div class = "video_player">
+<div id="hATdPkQ66J0" class = "youTubePlay"></div>
+<p><script type = 'text/javascript'>
+	<font color="red">var tag</font> = document.createElement('<font color="red">script</font>');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    <font color="red">var firstScriptTag</font> = document.getElementsByTagName('<font color="red">script</font>')[0];
+    <font color="red">firstScriptTag</font>.parentNode.insertBefore(tag, firstScriptTag);
+    <font color="red">var player</font>;
+    <font color="red">function onYouTubeIframeAPIReady</font>() { 
+    	<font color="red">jQuery</font>('.<font color="red">youTubePlay</font>').each(function() {
+    		<font color="red">var iframeID</font> = <font color="red">jQuery</font>(this).<font color="red">attr</font>('id');
+    		player = new YT.Player(<font color="red">iframeID</font>, { 
+    		 	height: '390',
+          		<font color="red">width</font>: '640',
+    			<font color="red">videoId</font>: <font color="red">iframeID</font>, 	
+          		events: {         
+            		'<font color="red">onStateChange</font>': <font color="red">onPlayerStateChange</font>
+        		}      
+    		});
+    	});
+      }   
+      <font color="red">function onPlayerStateChange</font>(event) {
+        if (event.data == 0) {
+          <font color="red">sendVideo</font>();
+          cdc_event_tracker("View Video");
+        }
+      }
+</script>
+</div>
+<p>To see who we&#8217;re interviewing next, or to sign-up for the <font color="red">OpenStack</font> <font color="red">Podcast</font>, <a href="http://www.nextcast.net/openstackpod/">check out the show schedule</a>! Interested in participating? Tweet us at <a href="https://twitter.com/nextcast">@nextcast </a>and <a href="https://twitter.com/nikiacosta">@nikiacosta</a>.</p>
+<p><strong><em>For a full transcript of the interview, click read more below.</em></strong></p>
+<p><span id="more-161477"></span></p>
+<p>Niki Acosta:               All right and we are live. Good morning viewing audience or good afternoon depending on wherever you may be. I am Niki Acosta from <font color="red">Cisco</font> and I am serving today for Jeff Dickey of Redapt. We are here with a very awesome guest today, we are super excited to have Rob. Rob, introduce yourself.</p>
+<p>Rob Hirschfeld:        My name is Rob Hirschfeld. I am an <font color="red">OpenStack</font> board member, I&#8217;m also the founder of the OpenCrowbar Project which is a <font color="red">physical infrastructure</font> provisioning project. I recently stepped out of Dell where I was leading the <font color="red">OpenStack</font> and <font color="red">Hadoop</font> technical project to pursue OpenCrowbar full time. We&#8217;ve built this company called RackN or RackN as we like to say where we&#8217;re working on building up that as a supported platform and really being able to help customers leverage the potential we’ve opened up with Crowbar.</p>
+<p>Niki Acosta:               Wow. Rob, I&#8217;ve known you for quite some time. Talk about somebody who&#8217;s been involved in <font color="red">OpenStack</font> from the very beginning and I definitely want to talk to you about that. Before we do that let&#8217;s go back a little bit further. Obviously you and I are in the same city-ish. Talk to us about your &#8230; How you got into tech.</p>
+<p>Rob Hirschfeld:        Sure. Let me start where I got into <font color="red">Cloud</font>. I got into <font color="red">Cloud</font> and believe it or not in New Orleans in ‘99 with partner in crime Dave McCrory, who is pretty well known in certain circles for his <font color="red">data</font> gravity work. He and I basically started at what was at the time called an application service provider back in ‘99. We would now call it an IS or a <font color="red">Cloud</font>. I&#8217;ve been playing at this game for quite awhile, trying to make it work, trying to figure out what the right way is to make infrastructure more available.</p>
+<p>Niki Acosta:               Where are your roots? Are your roots in systems administration? Are they in devops? What do you classify as your roots?</p>
+<p>Rob Hirschfeld:        I&#8217;m an engineer by training, industrial engineering, which might sound very strange, &#8220;How does an industrial engineer get into <font color="red">Cloud</font>?&#8221; What I found over time is that <font color="red">Cloud</font> is about process, it&#8217;s about automation and recently I&#8217;ve been really involved in lean, agile, that type of process. That type of process translates into what we do in <font color="red">Cloud</font>&#8211;it&#8217;s actually a natural evolution. For the same type of revolution we saw an industry in the 90&#8217;s where we moved into just in time manufacturing.</p>
+<p><font color="red">Cloud</font> has been creating the same overall change in the industry as just in time and lean <font color="red">deployment</font> have. In operations we&#8217;ve really changed the way we operate IT. I put that frame on, I usually consider myself a <font color="red">developer</font>. I&#8217;ve been doing ops since 99 because I found it was so hard to be a <font color="red">developer</font> and actually deploy things. I&#8217;ve been trying to make that part of my job easier ever since.</p>
+<p>If you look at my career it&#8217;s always been about how do we take great ideas people can write as code and then make them usable for people at scale. Sometimes that scale has two users at a time, sometimes that can be hundreds or thousands. It&#8217;s a significant gap. It&#8217;s much easier to write code than deploy code unfortunately.</p>
+<p>Niki Acosta:               How was the Crowbar project&#8230; I guess you&#8230; It might be great to sum that up for people what intentionally it was. But how did that get started and fast forward now to where you are today with it.</p>
+<p>Rob Hirschfeld:        Crowbar started frankly because my team was up against the ropes at Dell. Not through anything we expected, we had a new class of servers from Dell that were cloud-enabled. We were dealing with (this was pre- <font color="red">OpenStack</font>) we were dealing with the Azures and the Eucalyptuses and the early Hadoops, some of the early big <font color="red">data</font> plays. We had the software, we had the <font color="red">hardware</font>, but we would go to customers with it and fall apart. It was just really, really hard.</p>
+<p>What we discovered was&#8230; This is the same time devops was getting defined as a word. What we found was this huge gap between the software and the <font color="red">hardware</font>, we had to fill it with some automation, otherwise we would be doing one-off <font color="red">deployments</font> every single time. Crowbar came out of those battle scars of: We can&#8217;t walk into a <font color="red">data center</font> and hope to get the install right in a reasonable amount of time. We had to automate our processes and do it in a repeatable way.</p>
+<p>So we could duplicate it in our lab, we could duplicate it in the field and then we could go back to that site six months later and have them still be successful. Crowbar was really taking those best practices and automating the best practices, that&#8217;s really how we see Crowbar. When we did it for <font color="red">OpenStack</font> people &#8230; We described it as an <font color="red">OpenStack</font> installer. That&#8217;s really sort of what we needed to describe it as. But when you look at what Crowbar is really doing, it&#8217;s really an orchestration system that sequences physical operations as part of provisioning.</p>
+<p>So it&#8217;s really a system tool. I wouldn&#8217;t call it system management&#8211;that has its own meaning&#8211;but it really is responsible for coordinating all the operational activities and start doing scale <font color="red">deployment</font>.</p>
+<p>Niki Acosta:               That is used for&#8230; Namely for installation and then what, for scaling as well?</p>
+<p>Rob Hirschfeld:        This is one of the things, you asked me about a little bit of history. We started Crowbar back in&#8230; The 2011 time frame is when we&#8217;d OpenSource and we had our first <font color="red">OpenStack</font> install. Crowbar was actually the first <font color="red">OpenStack</font> install back in the Cactus days. I&#8217;ve been doing <font color="red">OpenStack</font> and <font color="red">OpenStack</font> installs for a long time. When we took the feedback and literally re-architected Crowbar into OpenCrowbar.</p>
+<p>Niki Acosta:               Oh, oh—we lost you?</p>
+<p>Rob Hirschfeld:        You lost my audio?</p>
+<p>Niki Acosta:               We&#8217;re losing a little bit. There we go. We&#8217;re back.</p>
+<p>Rob Hirschfeld:        Okay. We literally re-architected Crowbar &#8211; Crowbar2 and in that process we defined something called ready state and it&#8217;s been a really important thing for us. We found that in order to do <font color="red">OpenStack</font> <font color="red">deployments</font> there are a lot of ways to deploy <font color="red">OpenStack</font>, Chef, Puppet, Ansible, Salt, and there&#8217;s a whole bunch of installers out in the market. Packstack is a good example of one that we&#8217;ve been playing with a little bit.</p>
+<p>What we found was that all of the installers for them to work had to get to a point where there was a good ready state. The networking was set up, all of the infrastructure was passed out, keys were set up, all of that work. One of the things I know we want to talk about is how do you make this successful <font color="red">OpenStack</font>, what are my favorite parts of <font color="red">OpenStack</font>?</p>
+<p>One of the things I really feel like is that for the community to come together around these installers we have to have a baseline so that somebody can say, &#8220;I did it this way,&#8221; and you can get to the same place and break in the same place when they&#8217;re doing installs. That&#8217;s a lot of what we want OpenCrowbar to be about. It&#8217;s about getting you to a baseline, a repeatable baseline and then you build on top of that. Then you can build all sorts of different ways on top of that.</p>
+<p>We&#8217;re very flexible from that and what&#8217;s fun is that you don&#8217;t have to just build <font color="red">OpenStack</font> on top of it because of this ready state boundary. You could build <font color="red">Cloud</font> Foundry on top or Ceph on top or <font color="red">Hadoop</font> or Mesos, or Kubernetes. Our goal is to take all of that pain from the <font color="red">physical infrastructure</font>, be vendor-agnostic so you can swap out different types of <font color="red">hardware</font> but your <font color="red">scripts</font> above that would still run. Sort of a long answer but it&#8217;s a big vision. It&#8217;s really an important thing to help make operations more consistent for a community like <font color="red">OpenStack</font>.</p>
+<p>Niki Acosta:               Being open I&#8217;m imagining that there would be a mechanism by which different types of <font color="red">hardware</font> would be compatible with OpenCrowbar. Is that right?</p>
+<p>Rob Hirschfeld:        Exactly. Crowbar was designed to have basically an <font color="red">abstraction</font> layer for <font color="red">hardware</font> and so we can deal with the fact that you have a Dell gear, HP, <font color="red">Cisco</font>. It really doesn&#8217;t matter from that perspective because what we do is we break out the control actions into very small pieces. Then each piece can be run separately. If it&#8217;s a Dell, actually Dell has two types of gear that we&#8217;ve dealt with.</p>
+<p>One type you have to make all your changes and corrections internal to the system what we call the side band or in-band change. Then some types of gear you only&#8230; You control bass through their BMC networks in their out of band <font color="red">control planes</font>. That&#8217;s perfectly typical. We find the amount of gear, variety of gear, very high and we just have to deal with it. We have to deal with it inside of Dell, we have to deal with in every <font color="red">data center</font>.</p>
+<p>We can&#8217;t… practically… maybe if you want to buy for only one <font color="red">vendor</font> and only one model you could have a completely homogeneous system. You get to a thousand nodes and even from one <font color="red">vendor</font> there&#8217;s a fair bit of variety.</p>
+<p>Niki Acosta:               Now, speaking of <font color="red">vendors</font> you obviously spent a long time at Dell and there&#8217;s always been this notion&#8211;at least how Rackspace founded <font color="red">OpenStack</font>&#8211;there was a notion that the <font color="red">hardware</font> really shouldn&#8217;t matter. You should be able to put whatever kind of <font color="red">hardware</font> you want or make your own or buy in mass quantities from some black label provider. Do you believe that&#8217;s true? How much does <font color="red">hardware</font> matter in <font color="red">OpenStack</font>?</p>
+<p>Rob Hirschfeld:        Really interesting question. Um, the <font color="red">hardware</font> &#8230; The <font color="red">hardware</font> shouldn&#8217;t matter at all to the end user of course. The whole purpose of <font color="red">OpenStack</font> is to make all of the mess that is a physical <font color="red">data center</font> go away. Unfortunately when you&#8217;re building something like <font color="red">OpenStack</font>, <font color="red">Hadoop</font> is a really good example, Ceph, Swift inside of <font color="red">OpenStack</font>. All really care about the physical topology, the infrastructure.</p>
+<p>You care about your switch layouts, you care about your hard drive configurations, you care about which machines are next to each other in the racks. Because they have &#8230; they’re in the same power zones. Those details do matter, the <font color="red">vendor</font> doesn&#8217;t matter. The <font color="red">vendor</font> is much more specific just from your operational needs and what you&#8217;re trying to accomplish but there&#8217;s a really interesting movement called OpenCompute that we started to play in a little bit where people try to <font color="red">open source</font> the <font color="red">hardware</font> designs.</p>
+<p>Even with <font color="red">open source</font> the <font color="red">hardware</font> still comes from a <font color="red">vendor</font>. It&#8217;s still Supermicro or Dell or HP or Quanta making those boards. It&#8217;s not until you get to Facebook scale that you go directly to the OEM and tell them what to make. The <font color="red">hardware</font>&#8230; We thought that we could make <font color="red">hardware</font> not matter. When you&#8217;re dealing at the <font color="red">hardware</font> level, the <font color="red">hardware</font> matters. You have to get it right, you have to create an <font color="red">abstraction</font> for it.</p>
+<p>What we had to do is we decided that we needed a boundary and to say, &#8220;All right, we’re gonna let &#8230; We&#8217;re going to try keep all <font color="red">hardware</font> details below this level, this ready state level. Then focus our <font color="red">scripts</font> on dealing with the <font color="red">abstraction</font> above it. I think we&#8217;re getting to a point where there&#8217;s sort of three layers, right. There&#8217;s a <font color="red">cloud</font> user level where you&#8217;re using <font color="red">OpenStack</font> and that <font color="red">OpenStack</font> infrastructure is very portable and homogeneous. There&#8217;s a level below that where you&#8217;re doing physical ops on top of an <font color="red">abstraction</font> boundary so that the <font color="red">scripts</font> should be the same site to site.</p>
+<p>Then there&#8217;s the actual physical ops themselves where you have to deal with the variety of <font color="red">NICs</font> and rate cards and topologies and how people want to manage their gear.</p>
+<p>Niki Acosta:               In <font color="red">Cisco</font> probably more so then working at Rackspace. When I joined Metacloud we dealt with a ton of enterprise users and it seems like the enterprise users actually do care what the <font color="red">hardware</font> is but I&#8217;m not sure it&#8217;s for the right reasons. Obviously your <font color="red">data center</font> guys and your infrastructure teams have probably been working with the same <font color="red">vendors</font> for eons and have these big <font color="red">vendor</font> relationships.</p>
+<p>What happens to all the intelligence that people have laid down on all their boxes? Does that go away in the Crowbar scenario or do they still have access to that, the tools and different things that they can use to troubleshoot <font color="red">hardware</font>?</p>
+<p>Rob Hirschfeld:        From our perspective a lot of those tools we&#8217;ve tried to preserve and work with. Crowbar&#8217;s job is not to be very opinionated. We started off more opinionated and we heard very clearly that we were way too opinionated by selecting Chef. What we found is that there&#8217;s a couple of aspects, one is that people are heterogeneous by design. Most <font color="red">data centers</font>, to prevent themselves from being locked in to one <font color="red">vendor</font>, pick multiple suppliers. They do it for business continuity reasons. In some cases they&#8217;ve done it because they&#8217;ve acquired companies or do they have different projects and have bought different gear and they have to pull those together.</p>
+<p>Also very normal, we see that a lot in the devops tools. You&#8217;ll get a team that likes Chef and a team that likes Puppet and then they have to come together and live in harmony in the operations environment. What we&#8217;ve tried to do is make those things much more neutral and sort of be a neutral territory for that. When we were first building <font color="red">OpenStack</font> certified <font color="red">hardware</font>, building Dell&#8217;s first <font color="red">reference architecture</font>—and I know that I was working with your team at Rackspace when we were in that process.</p>
+<p>We would talk to one customer and they would have one opinion, so we’d morph to that opinion. Then we talk to somebody else and they&#8217;d have a second opinion and maybe even a third opinion. They&#8217;d be fighting internally. We found that it just wasn&#8217;t worth telling people they were wrong because they weren&#8217;t. There are six different correct ways to install <font color="red">OpenStack</font> at least&#8211;probably exponentially more than that. There&#8217;s a lot of different <font color="red">hardware</font> that works for this. I think the market over the last four years has converged into two or three patterns that are pretty consistent.</p>
+<p>For example people with compute typically are going for a 1 or 2 U box with six drives and teamed 10 gig <font color="red">NICs</font> and dual proc with 48 to 96 Gigs&#8230; I can give you &#8230; It&#8217;s not that hard to come up with the general spec. Even inside that spec you see how much wiggle room I&#8217;m giving myself. The reality is that&#8217;s normal and it&#8217;s a fool’s errand in my opinion to try and tell people they&#8217;re wrong when they have just a reasonable alternative. Our job was to create ways that you could abstract that&#8230; From Dell selling <font color="red">OpenStack</font> <font color="red">reference architectures</font>.</p>
+<p>If I told people, &#8220;Hey, we don&#8217;t use teamed 10 gig <font color="red">nics</font>,” which our original spec didn&#8217;t, they told us no. It wasn&#8217;t helpful and they weren&#8217;t wrong. It was more expensive. This is the biggest shock. Maybe it comes back to your question. Sometimes people make choices that are much more expensive than they have to because it&#8217;s what they&#8217;re comfortable with.</p>
+<p>Because they&#8217;re comfortable with the <font color="red">vendor</font> or because they think they need 10 gig teamed <font color="red">NICs</font> where they want to physically segregate their public and private traffic onto different physical networks. It&#8217;s not helpful for me to tell them they’re wrong and to me this is part of the challenge with community. One of our big challenges here is that in communities there&#8217;s a lot of right answers. There&#8217;s a lot of people who are right, there&#8217;s a lot of <font color="red">use cases</font> that are different. You get into a weird corner if you tell everybody, yes.</p>
+<p>You&#8217;ll also get in very and equally weird corner if you don&#8217;t tell anybody no, and I think that as we bridge into the <font color="red">OpenStack</font> community and things like that we can come back to that.</p>
+<p>Niki Acosta:               Have you learned that the hard way? Not telling people, &#8220;No.” It&#8217;s just as important as not telling anybody.</p>
+<p>Rob Hirschfeld:        On the <font color="red">OpenStack</font> side and I hope we have people who have &#8230; Who are here to talk here about <font color="red">OpenStack</font>, to talk about the <font color="red">OpenStack</font> core pieces. Two years ago we had a real dilemma about how we were going to define <font color="red">OpenStack</font> core. <font color="red">OpenStack</font> was still growing&#8211;at that point it seemed modestly compared to today&#8211;but it was still growing, and people were having trouble figuring out how to make two <font color="red">OpenStack</font> <font color="red">clouds</font> work together.</p>
+<p>Most famously Rackspace&#8217;s and HP&#8217;s didn&#8217;t, although we maybe gave them a harder time because they were the first for something that&#8217;s become a pattern a little bit.</p>
+<p>Niki Acosta:               Thanks for that Rob.</p>
+<p>Rob Hirschfeld:        This is the challenge being first, right? I think that kudos to getting the sites up. I think that this was a classic case where the aspirations of having a uniform <a href="http://www.cisco.com/web/solutions/trends/cloud/build-public-cloud.html" title="<font color="blue">public cloud</font>" target="_blank" class="seoal-link">public cloud</a> across multiple <font color="red">vendors</font> and the reality of what it took to do that was much, much more sophisticated than we thought. In part because we had to say no to things in order to create this interoperable base, and we didn’t. We spent a lot of times building a community which meant saying yes to people.</p>
+<p>You see this in the <font color="red">OpenStack</font> community today as we keep adding more and more projects. We love to bring in <font color="red">developers</font>, we love to bring in more projects, we like saying, &#8220;Yes, we want your code.&#8221; That&#8217;s exactly what a community should do. As an operator&#8211;and when I talk to operators&#8211;that same behavior is very frustrating. They will turn around and say, &#8220;Wait a second do I have to have this component? Do I have to have that component? Is Ceilometer a required piece? Or can I substitute?”</p>
+<p>Leaving that ambiguous is very frustrating to the community and it leads to funny behaviors where&#8230; I was listening to Michael Stills talk about Nova, and additions that were made into Nova to support, I think it was <font color="red">Trove</font>&#8211;I don&#8217;t remember exactly which project&#8211;that were causing other projects to have challenges in implementation or there are something stalled through the gate. It&#8217;s a complex series of interconnections.</p>
+<p>The fact the <font color="red">Trove</font> is a “yes” in <font color="red">OpenStack</font>&#8211;which makes sense&#8211;but is not clear yet to the operators if it&#8217;s a required piece or not a required piece really causes a lot of confusion. Then it causes us to make changes to the <font color="red">APIs</font> to support the project because we feel like it&#8217;s required. Then potentially interrupt other components that other people will think are required. You end up with this interlock dilemma of who&#8217;s most important. <font color="red">OpenStack</font> has been going through some really interesting things in the TC side with this levels definition.</p>
+<p>This big tent says, “We&#8217;re going to say yes to more people,” level says “But not all animals are equal,” in my animal farm reference. There needs to be somebody at the bottom that says, “These things have to integrate together as level zero.” Then we layer things on top of it and more radially. Things at the base have to be there that brighten my sunshine and then these two pieces don&#8217;t necessarily have to be related. It&#8217;s part of how you grow a project the size of <font color="red">OpenStack</font>.</p>
+<p>Jumping all the way back this was just an emerging problem two years ago when we started this core definition work where there&#8217;s a lot of stress between Swift and Nova and how we would work out what was required, what wasn&#8217;t required. We already singled out Ceph <font color="red">deployments</font> where people were substituting Ceph for Swift. I wish they&#8217;d made those phonetically more different.</p>
+<p>What we&#8217;ve seen here is that we needed to be able to tell people very clearly “This is what you had to have to have an <font color="red">OpenStack</font> <font color="red">cloud</font>.” “This is what you didn&#8217;t have to have to have an <font color="red">OpenStack</font> <font color="red">cloud</font>.”</p>
+<p>Niki Acosta:               That&#8217;s a tough thing to do, right? Just by sheer number of <font color="red">vendors</font> that are involved, you look at all the projects, you look at all the priorities of different companies that are participating. You&#8217;re trying to sort through all of that and figure out what you need, what you don&#8217;t need, what&#8217;s required, what&#8217;s not required. Does this work seamlessly with this other project, if I implement this this other work or does it break? That can be a very, very difficult process.</p>
+<p>To the point where someone might just throw their hands up and say, &#8220;I&#8217;m done with <font color="red">OpenStack</font>.&#8221; I think we&#8217;ve seen a lot of people go that route, the DIY route and say, &#8220;I&#8217;m going to build this on my own. It&#8217;s going to be great.&#8221; Then they start experiencing some of these intricacies and they just say, &#8220;Whoa.&#8221; Rob, you&#8217;ve done probably more than anybody else in the <font color="red">DefCore</font> front. If you wanted to talk &#8230; Maybe you define <font color="red">DefCore</font> for the people, I guess we already have.</p>
+<p>You&#8217;ve written a lot of blogs about it, you&#8217;ve talked to a lot of people about it and I think it&#8217;s an important movement. One that I certainly get a lot of questions about. Let&#8217;s hear a little bit about that.</p>
+<p>Rob Hirschfeld:        I&#8217;d be happy to talk about it. It&#8217;s not as big and scary as some people think. I&#8217;ve had people come back and say “When you explained it—it all makes perfect sense now.” Let me see if I can help take the people who are <font color="red">DefCore</font>&#8217;s critics and explain what we&#8217;re doing. The first thing that people don&#8217;t realize is it&#8217;s about commercial use of <font color="red">OpenStack</font>. We get a lot of people up in arms because they think we&#8217;re trying to run the technical side of this and it&#8217;s not at all that.</p>
+<p>What we&#8217;re really doing is, the <font color="red">OpenStack</font> Board controls the trademark for <font color="red">OpenStack</font>. It lets people use the word <font color="red">OpenStack</font> in their product and use the logo. If you want to do that we need to &#8230; For actually trademark management reasons we have to tell people you can use or can&#8217;t use <font color="red">OpenStack</font> in this way. If we don&#8217;t do it we actually could lose control of the trademark. It&#8217;s very important for us to describe that but it&#8217;s only commercial.</p>
+<p>People using in the community, contributing code that&#8217;s managed by the TC, the technical committee and they control which projects are in and which code is in and all that stuff. That&#8217;s the first thing that sort of gets people up and people understanding. We have a very commercial flavor about what we&#8217;re doing for <font color="red">DefCore</font> because we&#8217;re trying to help create a commercial <font color="red">ecosystem</font>.</p>
+<p>I&#8217;m very unapologetic, right, <font color="red">OpenStack</font> has to make money for the people, the companies that are paying, the <font color="red">developers</font> who participate. We’re at over 90% corporate sponsored development in <font color="red">OpenStack</font>, I think the number is even higher. The people&#8217;s sponsoring those <font color="red">developers</font> have to see some return for their investment. It’s all tied into that. I hate to be &#8230; In an <font color="red">open source community</font> you want to be able to say, &#8220;Kumbaya, we&#8217;re all doing this because we love <font color="red">open source</font>.&#8221;</p>
+<p>But <font color="red">OpenStack</font> is not exactly a Kumbaya project. It&#8217;s operations, infrastructure and at the end of the day like you were saying, it has to deliver <font color="red">workloads</font>. It has to be stable. Stability is a primary feature for <font color="red">OpenStack</font> even more than some of the bells and whistles we want to add on. That said when you start looking at Core you&#8217;re going to have to say no to people. Right, this is I&#8217;m thinking to be our theme for the <font color="red">Podcast</font> is you have to have a way to say no.</p>
+<p>It doesn&#8217;t work to say no if you just look at them and say, &#8220;You know I don&#8217;t like you. No.&#8221; You have to give them a way to &#8230; A reason why you&#8217;re saying no, you have to tell them what it would take to say yes and that&#8217;s a lot of what we spent the last two years doing with <font color="red">DefCore</font>. In <font color="red">DefCore</font> we started with some basic principles, to describe how everything fits together. We made a decision at the time that it would be test driven so it would be very quantitative, not qualitative in making decisions.</p>
+<p>Then we had to say, &#8220;How do we pick the test?&#8221; We spent another couple of months figuring out how pick tests and came up with 12 criteria that say, &#8220;These tests are going to be in, these tests are not.&#8221; They give very clear signals to the community. It seems like documentation is part of it, use is part of it. That is important. Then we also had to say which parts of the code would be required because <font color="red">OpenStack</font> is not an <font color="red">API</font>, it&#8217;s also a project with living code. We had to go through a process to say, &#8220;This is part of &#8230; These parts of the code are required or not.&#8221;</p>
+<p>The reason we&#8217;ve done that is when we start saying, &#8220;You can be. You are core. You&#8217;re not core.&#8221; It&#8217;s really not as much you are core, you&#8217;re not, you&#8217;re telling a <font color="red">vendor</font> “You must implement these parts of <font color="red">OpenStack</font>, you don&#8217;t have to implement those parts of <font color="red">OpenStack</font>.”</p>
+<p>Niki Acosta:               Do you expect a shorter list of <font color="red">vendors</font> that meet a ton of criteria or do you see a larger lists of <font color="red">vendors</font> that meet a smaller set of criteria? Where is that balance?</p>
+<p>Rob Hirschfeld:        It&#8217;s a great question. We actually were struggling with that balance on the Board. Because we have some <font color="red">vendors</font>, SwiftStack is a really good example but they&#8217;re not the only, there are going to be others in their wake. We just want to use Swift, right? They don&#8217;t need to use <font color="red">OpenStack</font> Nova in their product. That doesn&#8217;t help them. They really want a core definition that fits for them for their use. We have some <font color="red">vendors</font> like DreamHost who want to use Ceph, they were one of the original proponents for Ceph.</p>
+<p>They want to use Ceph as their object storage instead of Swift. They want <font color="red">OpenStack</font> Nova and the packaging around the compute side and they don&#8217;t want to be told they have to use Swift as part of their <font color="red">deployment</font>. In those case, yes, we can support smaller <font color="red">vendors</font>&#8211;this is the change we made in October&#8211;to create <font color="red">OpenStack</font> components for core so there&#8217;s a core component concept.</p>
+<p>Then there&#8217;ll be broader level <font color="red">vendors</font>, I know IBM is very interested at this level, I believe Red Hat will be too. At the platform level where they say, &#8220;We use all the components. Everything is good.&#8221; I think Rackspace will be a component because they have the history with Swift would be a component or a platform level where they are using both Swift and components but everything&#8230;</p>
+<p>There&#8217;s no free ride with any of this. I haven&#8217;t talked to any <font color="red">vendor</font> in the <font color="red">DefCore</font> process that said, &#8220;We&#8217;re already in compliance. It&#8217;s not going to be a big deal for us.&#8221; A great example is Keystone for Rackspace&#8230; Rackspace famously didn&#8217;t implement Keystone for I believe very sound technical reasons when they made those decisions. They have to figure out how they&#8217;re going to implement the Keystone requirements. Today Keystone code isn&#8217;t required&#8211;just the <font color="red">APIs</font>. Actually not even the <font color="red">APIs</font> in our current set.</p>
+<p>It&#8217;s very important to understand how all these pieces work together but we definitely have an outlet for people who don&#8217;t want the whole project. We have an added mark or more flexible mark for people, <font color="red">vendors</font> who can implement the whole project. Then what&#8217;s very important to me is we have a community process by which people can see what&#8217;s coming with this. Can talk about which capabilities and tests they think should be in Core. They can talk about which code should be required or not.</p>
+<p>Our goal is not&#8230; And really the board isn&#8217;t capable of doing this. I can explain capable maybe a little bit more. We&#8217;re not in a position to make a caveat decision with 24 board members. We want this, we don&#8217;t want that. We have to have a way that people can say, &#8220;I see what you&#8217;re doing. I come to you with an opinion. I have an objection to this.&#8221; If the objection makes sense we incorporate it. If they don&#8217;t reflect the majority view then we have an outlet so that they don&#8217;t get trumped on by the community.</p>
+<p>There&#8217;s been a lot of nuance in those things. There&#8217;s a lot of safety valves in the process but we at the end of the day have to be able to define something, say &#8220;This is the limit,&#8221; and then move on.</p>
+<p>Niki Acosta:               That&#8217;s got to be a really a tough job. Just thinking about the scope of the number of people involved in those decisions and all the things that <font color="red">vendors</font> are going to have to do to meet that core definition. At the end of the day for people who are seeking that commercial option, it&#8217;s probably a good thing. It doesn&#8217;t mean that if you&#8217;re not using &#8230; Someone who meets that core definition that you&#8217;re not going to get what you need, right?</p>
+<p>There&#8217;s going to be probably some due diligence on the part of users to figure that out for their own sake, right?</p>
+<p>Rob Hirschfeld:        I think so. What we really want is people to start with the Core when they do an implementation then extend forward, right. People will pull in projects that they think are valuable. We want to know what those projects are so we can start adding it to Core. That&#8217;s one of the other things, this isn’t a recommendation, it&#8217;s a base. And then from that if you want to add <font color="red">Trove</font>. <font color="red">Trove</font>’s really good, I think up and coming candidate to be a component of Core then you have <font color="red">Trove</font>, you start using it.</p>
+<p>The more people use it the more likely it is to become a core component because here&#8217;s our goal. If I write an application and I&#8217;m very <font color="red">ecosystem</font> focused with <font color="red">OpenStack</font>. <font color="red">OpenStack</font> has a great community, it has a great development community but it&#8217;s evolved. To be very frank on this. It doesn&#8217;t really do us that much good if we have a whole bunch of people getting together in exotic locations, Paris isn&#8217;t that exotic but in Paris or whatever, in Vancouver and we all pat each other on the back and say we&#8217;re great.</p>
+<p>Because that&#8217;s internal inside our own community. The thing that we really want is a thriving <font color="red">ecosystem</font> of people who are building applications, building tools and things like that above us. Right? Anyway, Amazon is fantastic for having a very vibrant <font color="red">ecosystem</font> of people who understand how to use it and they build products that extend the product.</p>
+<p>Niki Acosta:               Pause right there. Let me ask you a trick question. Do you think <font color="red">vendors</font> have been selfish in their interpretations of <font color="red">OpenStack</font>?</p>
+<p>Rob Hirschfeld:        It&#8217;s a very interesting… Selfish in what sense?</p>
+<p>Niki Acosta:               Selfish in the sense that they may disregard things potentially that may be important to everyone for the sake of making their x work with <font color="red">OpenStack</font>?</p>
+<p>Rob Hirschfeld:        The tragedy of the commons question if I can ask a clarification. I think that any <font color="red">open source project</font> will have a certain need for tragedy of the commons. This is an interesting need to fix tragedy of the commons. The idea here is that one <font color="red">vendor</font> contributes a lot into making <font color="red">OpenStack</font> work. QA efforts and build efforts, right? HP has been doing a really good job with paying people salaries to do nothing but run the CI system. Right? It&#8217;s been fantastic for sponsoring that type of the work.</p>
+<p>They are not the only ones but they certainly stepped forward from leadership perspective there. What I think you need to make sure is that people are contributing back upstream and being part of the community and doing things that help everybody else succeed. One of the challenges to me is that there&#8217;s two parts. One is you need a lever to make people do upstreams and we don&#8217;t really have&#8230; This is the benevolent dictator challenge and I&#8217;m hoping Core will fill this role a little bit.</p>
+<p>Benevolent dictator can say, &#8220;We&#8217;re not doing what you want until you help the community.&#8221; We rely on the community to carry that message and say that. The social pressure is enormous on these companies to contribute and participate. I don&#8217;t see them being particularly selfish in that but it&#8217;s not very clear where they should be selfish or not selfish. Somebody might say, &#8220;I&#8217;m doing my community, my work by doing this, by contributing this piece of code.&#8221; It could be that piece of code isn&#8217;t what the community needs most, so they are not exactly being selfish but they are not being directed in the places that they shouldn&#8217;t be selfish.</p>
+<p>I feel like it&#8217;s a little bit of a cop-out answer but I really feel like this ties into some work I was doing with Allison Randal and Sean Roberts about what we call hidden influencers that become the open site <font color="red">product managers</font> group.</p>
+<p>Niki Acosta:               Yup.</p>
+<p>Rob Hirschfeld:        This was really exciting to me, after the Atlanta Summit we had some great conversations where people were pulling their hair out. The Atlanta Summit theme to me was “Where are the <font color="red">product managers</font>, right?” We need product management. We look to each other, we realize that all these companies have <font color="red">product managers</font>. <font color="red">Product managers</font> understand <font color="red">OpenStack</font>, they are relatively involved in the community but they have their own timelines to answer to.</p>
+<p>A percent of time they allocate to the community, they do allocate some, we all agree that but it&#8217;s not allocated in a consistent way so they sometimes undo each others work. They sometimes show up at the wrong place.</p>
+<p>Niki Acosta:               And they don&#8217;t talk to each other, right?</p>
+<p>Rob Hirschfeld:        That&#8217;s 100% the challenge. So we started putting together a <font color="red">product managers</font> group, it&#8217;s called now the product group. They are starting to have meet ups and things like that. Just talk to each other. The reason we called it hidden influencers was because they are not talking. They don&#8217;t show up as an organized group at the Summit and so you don&#8217;t realize that the <font color="red">developers</font> in this &#8230; This to me is one of the real challenges with <font color="red">OpenStack</font> and the process. We do a whole bunch of work in design and face to face things with <font color="red">developers</font> in Summit sitting in a circle saying, &#8220;Yes I think we can do that, yes we should do that.&#8221;</p>
+<p>At the end of the day <font color="red">developers</font> really can&#8217;t make big commitments of their time if they are paid by a company to do certain work. While three <font color="red">developers</font> from different companies might sit down and agree that they are going to support each other in doing the work, if their <font color="red">product managers</font>, respective <font color="red">product managers</font> don&#8217;t back up that commitment, you&#8217;re going to end up at the end of the release and we see this happen. You&#8217;ll end up at the end of the release with code that, people want to come in but hasn&#8217;t been finished or hasn&#8217;t been supported by the other people who are needed to support it to get it over the finish line.</p>
+<p>That&#8217;s where it&#8217;s maybe subtle type of selfishness but during the release focusing on getting your own stuff done, which is good normally, can cost us features, collaboration and things moving, getting good flow through our gate process because people are more focused on their own work. That is the point.</p>
+<p>Niki Acosta:               It&#8217;s what&#8217;s slowing things down, right? It&#8217;s interesting, we talked to &#8230; At this point quite a few people on the show, and you speak to people who believe that there should be components&#8211;for reasons I can completely understand&#8211;that you have some proprietary special sauce that you put in or under your <font color="red">OpenStack</font> powered <font color="red">cloud</font> to make it your own. Then you talk to other people who are just like, &#8220;Hey, anything we write we&#8217;re going to try to give it back.&#8221;</p>
+<p>They might develop something and they think it’s a really good idea and they might put in their project or in their product but then when they try to give it to <font color="red">OpenStack</font>, <font color="red">OpenStack</font> is like, &#8220;We don&#8217;t necessarily want that. Maybe if you do it this way.&#8221; You get all of these different forks of what could be really good ideas moving different directions. I think that a lot of the <font color="red">developers</font>, the actual design conference portion of the summit is meant to address these.</p>
+<p>But I think often times I&#8217;ve sat in a lot of those design sessions and you end up getting a lot of <font color="red">developers</font> and none of the business people who are trying to help you know, meeting you halfway and helping meet their customers needs. I&#8217;m wondering if there&#8217;s a better way to do that, you know? I think the product group is a good start.</p>
+<p>Rob Hirschfeld:        I think product group is a really good start. I was concerned, is the right word for this? I felt like there was a lot of drift in Paris between the product teams, the business side and the teams that were productizing <font color="red">OpenStack</font> in the <font color="red">developer</font> summit. I think that we <font color="red">product managers</font> were the place where that gets on together. It means that the <font color="red">developers</font> are going to have to take those influences and reprioritize things at times.</p>
+<p>One of the things about Core is and it&#8217;s funny because there&#8217;s two things. Let me track three threads with this. We have to actually change the bylaws that I need to encourage people to vote in the bylaws election. Let&#8217;s placemark that and come back to it because it&#8217;s interesting there. Being Core or not Core, originally we defined that as “project,” so Nova was core and Swift was Core.</p>
+<p>Niki Acosta:               Right.</p>
+<p>Rob Hirschfeld:        The reality is Nova is huge. Swift is huge. There are pieces in Swift that are stable and haven&#8217;t changed. There&#8217;s pieces in Swift that are changing and dynamic and new. Having your code designated as core as a <font color="red">developer</font> sort of sucks, frankly because what you&#8217;re doing is you&#8217;re saying, &#8220;Hey, this code is in use and it&#8217;s production grade and people depend on it so don&#8217;t change it.&#8221; If you think you found a better way to swizzle this, you can&#8217;t do it here because if you change the <font color="red">APIs</font> you break things. If you change the behaviors you break things. So code in Core really should be under a microscope, it should be slowed down, it won&#8217;t move as fast. It&#8217;s not where the innovation is going to occur in <font color="red">OpenStack</font>…by definition. Core is about repeatable interoperable <font color="red">clouds</font> and if we&#8217;re innovating at the core then we can&#8217;t interoperate because somebody&#8217;s going to be at a different version and it breaks everything.</p>
+<p>Part of your thread with all this stuff is that we need to actually have much more fine grained definitions of where the innovation goes and where the stable core is. I&#8217;m hoping that core itself will be at signal that will help <font color="red">product managers</font> differentiate and know when they are dealing with making core more stable. Core extensions versus whole new projects that are more of the <font color="red">ecosystem</font> around this. There&#8217;s another point in there and I lost it.</p>
+<p>Niki Acosta:               That&#8217;s okay. It happens. It happens to me all the time.</p>
+<p>Rob Hirschfeld:        I was so excited about tying the core and the other pieces together.</p>
+<p>Niki Acosta:               The members of the foundation, do they feel the pressure of all this happening? From the outside it&#8217;s probably easy to say, &#8220;<font color="red">OpenStack</font> should just make up its mind and they should just decide and we should move on.&#8221; I can imagine it&#8217;s probably a lot harder for those who choose to run and we are chosen to be a project team lead or be on the technical committee. How do you manage through all of those conversations and motions? People probably, the naysayers, right? I mean, there&#8217;s always going to be naysayers.</p>
+<p>Rob Hirschfeld:        We definitely, I was calling some of the <font color="red">OpenStack</font> &#8230; Some of the core blog posting I did was, sometimes you just dive straight in and you got to take it. I was saying the Core is that your-baby-is-ugly process. That&#8217;s part of what people feel like we&#8217;re doing, we&#8217;re back at the emotional piece. People feel like we&#8217;re saying, &#8220;Hey, your baby is ugly. We don&#8217;t want it.&#8221; Our perspective on that has been, &#8220;All babies are ugly.&#8221; People&#8217;s babies to themselves are beautiful and you look at somebody else&#8217;s baby…it&#8217;s not that exciting.</p>
+<p>What we realize with Core is: That&#8217;s good. Right? We&#8217;re looking for the adolescents, we&#8217;re looking for not even adolescents, we&#8217;re looking for the grown-ups. Right? We&#8217;re looking for the mature, stable part of the community, those are the core ones. Those are the ones we depend on. Babies are things you take care of, right? You nurture and you help them grow because they have potential. That&#8217;s how I look at the project and it&#8217;s not something everybody sees when they look at this and I wish they did.</p>
+<p>I wish we were more excited about the new projects but thought of them as babies. I will tell you that operators and customers do. They have that perspective and maybe I&#8217;ve never articulated it quite this way but one of the things, one of the harms that we do in the <font color="red">OpenStack</font> community is when we talk about a baby as if it&#8217;s a grown-up. We undermine our own credibility in the community and we really hurt <font color="red">OpenStack</font> from that perspective. There have been a lot of times where people have talked about projects that were still at even just being considered&#8211;they have no real code&#8211;as if they were <font color="red">OpenStack</font> projects, and they were going to solve problems for people.</p>
+<p>You need to talk about their potential but when I talk to operators and users and customers of <font color="red">OpenStack</font> they want to know, &#8220;Can it run my <font color="red">workload</font>? Is the <font color="red">API</font> stable? Does it deliver this?&#8221; It doesn&#8217;t help when we spend a lot of time in the presentation talking about the ins and outs of I&#8217;ll pick on Ceilometer today. Ins and outs of Ceilometer. Ceilometer performs an important function and conceptually it&#8217;s really important but it&#8217;s not a blocking factor for whether or not people can run a <font color="red">workload</font>.</p>
+<p>We need to respect the relative maturity points for that. And <font color="red">DefCore</font>&#8217;s job has been to define help but make sure that we have a way to pick these things because for some backwards reason everybody wants to be a Core project because they think it&#8217;s a mark of importance, certainly a mark of use but that you need to figure that out. Right? Otherwise you end up looking like a child’s soccer team. Everybody&#8217;s getting a trophy and you wouldn&#8217;t want to field them against a pro soccer team.</p>
+<p>Niki Acosta:               Your analogies are priceless today, Rob.</p>
+<p>Rob Hirschfeld:        I need to open my drawer.</p>
+<p>Niki Acosta:               All of the babies, everyone gets a trophy. Look, obviously today we&#8217;re talking about a lot of the issues, problems. Maybe perhaps showing people a little bit of how to be &#8230; How the sausage is made, behind the scenes in <font color="red">OpenStack</font> and the real challenge is that the community people like yourself and others have to grapple with on a regular basis. For other people, especially end-users what would you say to them?</p>
+<p>Obviously they are hearing, &#8220;Gosh, there&#8217;s all these projects. They are probably not ready.&#8221; What do you say to a user who you want to instill confidence in the direction of <font color="red">OpenStack</font>? Obviously you want them to believe, &#8220;Hey, look it has its problems but from where it&#8217;s at right now it&#8217;s pretty dang good.&#8221; What do you say?</p>
+<p>Rob Hirschfeld:        A couple of things. The first thing I tell people when they are looking at not just <font color="red">OpenStack</font> but any <font color="red">cloud</font> is focus on operations and automation. Right? Deal with <font color="red">automated deployments</font> and get that working. Right? That&#8217;s your table stakes. It comes back to a lot of what we talked about with the puppies and cattle analogy and what I found is customers of <font color="red">OpenStack</font> have been successful back in the Cactus days. They were successful when they automated their provisioning, when they brought their <font color="red">workloads</font> in and they knew what they were doing.</p>
+<p>If you look at the user studies there&#8217;s great case studies of people who are very effective with <font color="red">OpenStack</font> <font color="red">deployments</font>. By and large they had a specific <font color="red">use case</font> that fit the capabilities of <font color="red">OpenStack</font> at the time they were using it and they automated their provisioning so that if they had to upgrade or change or fix something they weren&#8217;t manually deploying things. They were using the <font color="red">APIs</font> the way you would expect to do those <font color="red">deployments</font>.</p>
+<p>Niki Acosta:               In other words, there were treating compute units and <font color="red">VMs</font> as dumb compute, right?</p>
+<p>Rob Hirschfeld:        Exactly right. They were being <font color="red">cloud</font> users and I consider the DevOps drivers to be fundamentally part of using <font color="red">cloud computing</font>. If you&#8217;re setting up things by hand you&#8217;re not in my opinion you&#8217;re not doing <font color="red">cloud computing</font>, you&#8217;re doing old school IT.</p>
+<p>Niki Acosta:               I&#8217;m feeling that. Look, it&#8217;s such a struggle too because I think especially when you look at enterprises you&#8217;re starting to see a big divide of your more traditional application authors, <font color="red">developers</font>, infrastructure folks, and then you&#8217;ve got these <font color="red">new cloud</font> groups that are just moving super fast and super agile and are delivering stuff at an alarming rate. Gartner calls it bimodal IT.</p>
+<p>There’s your two groups that are grappling with this but it&#8217;s going to be interesting to see what that end state looks like because I think we&#8217;re still… none of that old stuff is going away and everybody wants to get on at least on a path where they are just trying to do that new stuff but I still see a lot of occasions where people are bringing old habits over to <font color="red">cloud</font>. They are still trying to apply the principles in which they develop and scale applications over to <font color="red">cloud</font>. I think a lot of that is just frankly it&#8217;s a lot of <font color="red">VMware</font> users that expect <font color="red">OpenStack</font> to have these substitutes for features that they&#8217;ve been depending on for a long time.</p>
+<p>Rob Hirschfeld:        I think <font color="red">VMware</font> is a great crutch for <font color="red">OpenStack</font>. Meaning that it keeps <font color="red">OpenStack</font> focused on delivering <font color="red">cloud</font> <font color="red">workloads</font> and doesn&#8217;t force us to solve how do we create puppies, how do we support puppies in <font color="red">OpenStack</font>. I&#8217;m not a believer that people should uninstall everything else in their <font color="red">data center</font>, put in an <font color="red">OpenStack</font> layer and then move forward. I don&#8217;t think that <font color="red">OpenStack</font> is going to run on every server in the <font color="red">data center</font>. Maybe that&#8217;s heresy from a community perspective, but I don&#8217;t.</p>
+<p>I think <font color="red">OpenStack</font> has its utility and it should focus on delivering that utility as an infrastructure, as a service and a great <font color="red">ecosystem</font> of things on top of that. There are going to be applications that don&#8217;t make sense to run on <font color="red">OpenStack</font> and there&#8217;s going to be alternatives to <font color="red">OpenStack</font> that companies are going to explore. Just like we started this conversation saying that one size doesn&#8217;t fit all for <font color="red">hardware</font> and people have reasons for adopting it.</p>
+<p>I think it&#8217;s much better for us to be good at what we&#8217;re good at, than try to cover every <font color="red">use case</font> and spread ourselves really thin. My preference is to see <font color="red">OpenStack</font> focusing on doing the things that it needs to do really well. One part of that is servicing people who have automated, bring automated <font color="red">workloads</font> into the <font color="red">cloud</font>. That&#8217;s a really important specialty. As soon as we start to try to attack turning off <font color="red">VMware</font> in <font color="red">data centers</font> I think we&#8217;ve made our life a lot harder for ourselves. We&#8217;ve actually lost what people are really excited about in the beginning.</p>
+<p>Niki Acosta:               I wonder how many comments are going to come out of this from viewers. Look, you always have great opinions. I can see where a lot of people wouldn&#8217;t agree with you but I think there&#8217;s a lot of people that probably do. I don&#8217;t know. It&#8217;s good to hear from our viewers on that one.</p>
+<p>Rob Hirschfeld:        I&#8217;ll be interested to see, I think some of these opinions I&#8217;ve had and maybe this is a bigger megaphone. I think when you look at what has been important to me for core was sending us signal to what parts of <font color="red">OpenStack</font> were usable and ready and people can rely on. We&#8217;ve been doing that, you can go back to a blog post I did in 2011 saying <font color="red">OpenStack</font> is ready. And what I said was it was ready if you knew what you were doing and knew how to use it and wanted to make the operational investments for it. I think that&#8217;s been true in every single release that we&#8217;ve gone on.</p>
+<p>Niki Acosta:               Do you think that a lot of the extra projects are being driven by demands from end-users to their <font color="red">vendors</font> like, &#8220;Hey, this is great but figure out a way to deploy an automatically scalable bad ass implementation of <font color="red">Hadoop</font>.&#8221; Do you think it&#8217;s coming from the customers and that&#8217;s why people are trying to work that back into <font color="red">OpenStack</font> is to make that easier for them?</p>
+<p>Rob Hirschfeld:        I think that there&#8217;s several motivations for that. I&#8217;ll throw Crowbar into the middle of this because we use Crowbar because it makes it easier for us to do <font color="red">automated deployment</font> of things like <font color="red">Hadoop</font>. Which in my opinion run really, really best, I won&#8217;t say best. Really, there&#8217;s a lot of <font color="red">use cases</font> for <font color="red">Hadoop</font> that are bare metal <font color="red">use cases</font> just like I wouldn&#8217;t run Ceph inside of <font color="red">VMs</font>.</p>
+<p>That wouldn&#8217;t make any sense because I need access to the physical media. What I think is that and this is good. We want people to be building <font color="red">ecosystems</font> on top of and around <font color="red">OpenStack</font>. That makes a lot of sense, we should be doing that. Some of the <font color="red">Hadoop</font> scalability stuff, half of the <font color="red">use cases</font> I know for <font color="red">Hadoop</font> are very strongly done in elastic compute where you have, you do nightly <font color="red">workloads</font> or you spin up <font color="red">VMs</font> to run a job. It&#8217;s a good <font color="red">use case</font> for <font color="red">Hadoop</font>. I don&#8217;t think it&#8217;s a right or wrong thing.</p>
+<p>Niki Acosta:               Should that be an <font color="red">OpenStack</font> project? Or part of an <font color="red">OpenStack</font> project?</p>
+<p>Rob Hirschfeld:        Here&#8217;s an existential question, I&#8217;m trying to help us use Core as a definition for this. I think that there are, <font color="red">OpenStack</font> is deciding if it&#8217;s a big tent, we&#8217;ve been calling it big tent or a sweep project that includes the <font color="red">ecosystem</font> and <font color="red">Hadoop</font>, Sahara might be an example of that. Then, it has a core that is sort of this fundamental building blocks that everybody could have. This isn&#8217;t just my opinion. I&#8217;ve talked to a lot of different people and there&#8217;s things that &#8230; There&#8217;s no clear consensus at this point. There&#8217;s people who believe very strongly that <font color="red">OpenStack</font> should be a very simple small core of projects that deliver IS and then everything else that we&#8217;re talking about are <font color="red">ecosystem</font> projects and should be in the <font color="red">ecosystem</font>.</p>
+<p>Niki Acosta:               Let&#8217;s talk about requirements because we just got a comment in the chat box.</p>
+<p>Rob Hirschfeld:        Okay.</p>
+<p>Niki Acosta:               I think it&#8217;s a really good one. Feature comparison with Amazon is inevitable. Isn&#8217;t that a legitimate source of requirements?</p>
+<p>Rob Hirschfeld:        I think it&#8217;s a great source of requirements such I just am not sure if they are <font color="red">OpenStack</font>&#8217;s requirements or <font color="red">OpenStack</font>&#8217;s <font color="red">ecosystem</font> requirements. One of the things that I&#8217;ve seen in <font color="red">OpenStack</font> that I think is not a particularly healthy thing for us to do. I hear a lot of people express the same opinion that when we create a project in <font color="red">OpenStack</font> that has, that does something one way. Heat is a good example, Heat is an orchestration system originally designed to compete with the Amazon capability. When we make&#8211;and I think it&#8217;s totally appropriate and I think we should have it and it&#8217;s great&#8211;I think that as soon as you make it the <font color="red">OpenStack</font> orchestration with the word &#8216;the&#8217; in it.</p>
+<p>Niki Acosta:               You&#8217;re killing the rest, right?</p>
+<p>Rob Hirschfeld:        You are sending a very clear signal that others ways to solve that problem aren&#8217;t welcome. I think that there are a lot of ways I mean Scalr has an orchestration system that runs on top of <font color="red">OpenStack</font> and Amazon and they&#8217;ve been part &#8230; I met them at the Austin conference or the Bear conference. Great, it&#8217;s a good community. Really good product. I don&#8217;t know if they feel this way. I would say they would appear competitive with Heat to me. Why is that? Heat is the chosen one from a lot of people&#8217;s perspective and I think we&#8217;re trying to look at how this works and what we need to do.</p>
+<p>I&#8217;ve talked to a lot of people who want <font color="red">OpenStack</font> the project and so I&#8217;m trying to represent a diversity of use here and it&#8217;s part of what my job has been with Core is to be balanced with this. I meet a lot of people who believe that <font color="red">OpenStack</font> should have all this capability…should take on Amazon. I think it&#8217;s dangerous to do that. I have a very pragmatic reason why I think that we end up&#8230; <font color="red">OpenStack</font> is a community ends up in a trap if we pick one component in the <font color="red">ecosystem</font> and make it the <font color="red">OpenStack</font> thing, is that it limits our ability to innovate.</p>
+<p>If you took a Core perspective on this, the most likely competitor the Nova or Swift or Heat or Glance or Keystone is those own projects themselves next generation project or somebody says, &#8220;Hey, I have a new way to do Nova. I want to make some serious changes to it. I need to replace it.&#8221; Either it changes implementation, heaven forbid changes language in components or potentially change the way it works to make it more container-friendly.</p>
+<p>Right? It actually works with containers in a more seamless way. Those changes are coming, it&#8217;s not a matter of “we&#8217;ll adapt to them.” We have to have our project definitions resilient enough that we can within the project expand and change. As soon as we lock in to “Nova is the <font color="red">OpenStack</font> compute engine,” we potentially find ourselves very vulnerable to our own community splitting out as people say, &#8220;You know, I don&#8217;t want to do it that way anymore.&#8221;</p>
+<p>Niki Acosta:               Jeff is writing again. He says, &#8220;Isn&#8217;t this the <font color="red">API</font> versus code question again, Single <font color="red">API</font>, multiple implementations?&#8221;</p>
+<p>Rob Hirschfeld:        It is and this has been part of the maturity we&#8217;ve seen as we go through this. It&#8217;s worth trying to respect the clocks because I need to put in the pitch about the bylaws change. I&#8217;ll tee it up. Today, there&#8217;s a lot of people in the community who believe <font color="red">OpenStack</font> is code and the code must be required. That is a very dominant view. Not dominant, it&#8217;s a very prevalent view. There&#8217;s a lot of people who think <font color="red">OpenStack</font> ultimately will be an <font color="red">API</font> definition and spec.</p>
+<p>In my opinion I think that ultimately we do need to be an <font color="red">API</font> spec. I think maturity-wise that&#8217;s going to take a long time to go and right now the best thing for the project is to be code and <font color="red">API</font> together and work that out. Get good at validating the <font color="red">API</font> is consistent and repeatable and interoperable. Using a same code base before we go and try and say, all right, we&#8217;re going to do this with different code bases I think that makes the problem exponentially harder.</p>
+<p><font color="red">DefCore</font> has from the very beginning been a compromise approach. We&#8217;ve always tried to look at a lot of different viewpoints. I&#8217;ve been trying to reflect those in this <font color="red">podcast</font> and I&#8217;ve been very open to how diverse our community is, and it&#8217;s our strength. A lot of what we have to do is solve the problems we can solve today and then move forward in time and give ourselves some flexibility. That&#8217;s actually one of the things from the bylaws perspective that we didn&#8217;t do in the bylaws.</p>
+<p>The bylaws were very, “This project is core, this project is not core,” and at the time I think that was fine. Today we realized that even in the project there&#8217;s a more nuanced definition of what core is, what core isn&#8217;t. Especially when you talk to <font color="red">vendors</font>, they know they need to know which features they have to use and which features they can optionally implement and ones they can extend.</p>
+<p>That puts us in this interesting position, we&#8217;ve done a lot of work over the last two years to define <font color="red">DefCore</font> and help give the community clear signals but the bylaws don&#8217;t reflect all of that work. They reflect some of that but for the most part we&#8217;ve never changed the bylaws, we&#8217;ve had them in place for several years. It&#8217;s now time for us to modify the bylaws to make this core definition and there&#8217;s a couple of other provisions in bylaws that we want to be more flexible. That allow us to change things on a more regular basis.</p>
+<p>Niki Acosta:               We&#8217;re about out of time. If people want to reach out or have this discussion or look for more information about this where they can find that and how can they find information about your company?</p>
+<p>Rob Hirschfeld:        The best place for my company is go to it&#8217;s website, RackN.com. OpenCrowbar.com will also take you through all the Crowbar stuff. For <font color="red">DefCore</font>, I would send people to my blog robhirschfeld.com.</p>
+<p>Niki Acosta:               Tweet at you?</p>
+<p>Rob Hirschfeld:        Tweet at me, I&#8217;m zehicle on Twitter. I&#8217;m happy to talk about that. I do need to put in a final plug. Vote in the upcoming elections or in the bylaws process&#8211;it&#8217;s also board member elections. I love for people to vote for me and get back on the board and finish the <font color="red">DefCore</font> work, but even if you don&#8217;t vote for me, even if you don&#8217;t vote for the bylaws changes, please vote. We could actually not have our bylaws changes even considered by the community if we don&#8217;t get enough people voting. We need a quorum of voters so if you are in <font color="red">OpenStack</font> make a point to vote. I don&#8217;t care how you vote, just vote.</p>
+<p>Niki Acosta:               All right. Real quick, last question. Two people you want to see on the show?</p>
+<p>Rob Hirschfeld:        There are two, I&#8217;m going to give you some people who should get a little bit more spotlight I&#8217;d love to see [inaudible 00:59:34] who works for [Yahweh 00:59:35], who has been really influential in test and in [ResStack 00:59:39] and <font color="red">DefCore</font> work. I appreciate her time, she&#8217;d be a great guest. Shamail Tahir who works in EMC in the CTO&#8217;s office has been quietly on the <font color="red">product manager</font> front and he and I talked in Paris. He has some incredibly strong insights.</p>
+<p>Niki Acosta:               Awesome. Thank you so much for joining us today, Rob. Really appreciate you taking the time. Hopefully this is a must view-video for anyone who wants to know about the nuances of what the Core definition is.</p>
+<p>Rob Hirschfeld:        Appreciate the time. Thank you.</p>
+<p>Niki Acosta:               Great. We&#8217;ll see you guys next week. Bye-bye.</p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=crowbar">Crowbar</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=defcore">DefCore</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=opencrowbar">OpenCrowbar</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=openstack-podcast">OpenStack Podcast</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=rob-hirschfeld">Rob Hirschfeld</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+		</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Open at Cisco</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/Cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/Cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://www.youtube.com/Cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogOpenAtCisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://blogs.the451group.com/opensource/" target="_blank">451</a></li>
+                      <li><a href="http://www.apache.org/" target="_blank">Apache</a></li>
+                      <li><a href="http://news.cnet.com/openroad/" target="_blank">CNET</a></li>
+                      <li><a href="http://blogs.eweek.com/" target="_blank">eWeek</a></li>
+                      <li><a href="http://www.fsf.org/blogs/" target="_blank">FSF</a></li>
+                      <li><a href="http://www.linuxfoundation.org/news-media/blogs" target="_blank">Linux Foundation</a></li>
+                      <li><a href="http://www.linux.com/news/featured-blogs" target="_blank">Linux.com</a></li>
+                      <li><a href="http://blogs.olliancegroup.com/" target="_blank">Olliance</a></li>
+                      <li><a href="http://slashdot.org/" target="_blank">Slashdot</a></li>
+                      <li><a href="http://www.zdnet.com/topics/open+source?tag=header;header-sec" target="_blank">ZDnet</a></li>
+                  </ul>
+              <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="http://developer.cisco.com/web/cdc" target="_blank">Cisco Developer Network</a></li>
+                        <li><a href="http://www.cisco.com/go/openatcisco" target="_blank">Open at Cisco</a></li>
+                        <li><a href="http://www.cisco.com/web/about/ac50/ac207/crc_new/index.html" target="_blank">University Research</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/Cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/Cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 161477;
+			var orig_count = 0;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://cs.co/9007xO8P&text=Rob Hirschfeld on OpenStack Core: Your baby is ugly, and so is everyone else’s.&via=Cisco" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/openatcisco/rob-hirschfeld-on-openstack-core-your-baby-is-ugly-and-so-is-everyone-elses&title=Rob Hirschfeld on OpenStack Core: Your baby is ugly, and so is everyone else’s." data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/openatcisco/rob-hirschfeld-on-openstack-core-your-baby-is-ugly-and-so-is-everyone-elses" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/openatcisco/rob-hirschfeld-on-openstack-core-your-baby-is-ugly-and-so-is-everyone-elses" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Rob Hirschfeld on OpenStack Core: Your baby is ugly, and so is everyone else’s.&body=I saw this post on Cisco Open at Cisco blog and thought you might like to read it.%0A%0ARob Hirschfeld on OpenStack Core: Your baby is ugly, and so is everyone else’s.%0A%0Ahttps://blogs.cisco.com/openatcisco/rob-hirschfeld-on-openstack-core-your-baby-is-ugly-and-so-is-everyone-elses%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

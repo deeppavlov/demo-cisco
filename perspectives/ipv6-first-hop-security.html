@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  IPv6 First-Hop-Security</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"155233"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='It Is Never Too Early To Build A Mobility Strategy' href='https://blogs.cisco.com/wireless/it-is-never-too-early-to-build-a-mobility-strategy' />
+<link rel='next' title='#NCSAM: Cisco’s Cyber Security Story' href='https://blogs.cisco.com/government/ncsam-ciscos-cyber-security-story' />
+
+<link rel="canonical" href="https://blogs.cisco.com/perspectives/ipv6-first-hop-security" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=155233' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="IPv6 First-Hop-Security"/>
+  <meta property="og:url" content="https://blogs.cisco.com/perspectives/ipv6-first-hop-security"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2014-10-20T09:00:00+00:00"/>
+  <meta property="article:modified_time" content="2014-10-22T11:57:46+00:00" />
+  <meta property="og:updated_time" content="2014-10-22T11:57:46+00:00" />
+  <meta property="article:section" content="Perspectives"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="IPv6 First-Hop-Security"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/perspectives/ipv6-first-hop-security"/>
+  <meta name="twitter:description" content="If you’ve worked with networking sometime in the last decade, I’m sure you’ve heard of this thing called IPv6. IPv6 has been around for quite a while, but it seems to be growing increasingly more popular as of late.
+
+My focus on this article will be some of the challenges with security and IPv6, pri"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:creator" content="@https://twitter.com/sthorvaldsen"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521465096";
+		var sig = "790d2fe82ee4af817267e72b6c04bb98";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=An error has occurred while trying to fetch the Tiny URL for: http://blogs.cisco.com/perspectives/ipv6-first-hop-security/. Client ID[1098] is not valid"}&text=IPv6+First-Hop-Security+%23ciscochampion+http%3A%2F%2Fblogs.cisco.com%2Fperspectives%2Fipv6-first-hop-security%2F&via=sthorvaldsen" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/perspectives/ipv6-first-hop-security&title=IPv6 First-Hop-Security" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/perspectives/ipv6-first-hop-security" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/perspectives/ipv6-first-hop-security" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: IPv6 First-Hop-Security&body=I saw this post on Cisco Perspectives blog and thought you might like to read it.%0A%0AIPv6 First-Hop-Security%0A%0Ahttps://blogs.cisco.com/perspectives/ipv6-first-hop-security%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/perspectives/'>Perspectives</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category9088.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Perspectives  						</span>
+						<h1 id="post-155233" class="kindle_title title">IPv6 First-Hop-Security</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1994.thumbnail.5436bc160d7cf.jpg"></div><div class="author_rewards_box"></div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/steffenthorvaldsen" title="Posts by Steffen Thorvaldsen" rel="author">Steffen Thorvaldsen</a> - October 20, 2014 - 0 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p>If you’ve worked with networking sometime in the last decade, I’m sure you’ve heard of this thing called <font color="red">IPv6</font>. <font color="red">IPv6</font> has been around for quite a while, but it seems to be growing increasingly more popular as of late.<br />
+My focus on this article will be some of the challenges with <font color="red">security</font> and <font color="red">IPv6</font>, primarily those that <font color="red">Cisco</font> <font color="red">IPv6</font> First-Hop-Security (FHS) solves.</p>
+<p>Several times I’ve found myself looking at the <font color="red">network</font> <font color="red">traffic</font> traversing a customer’s <font color="red">network</font>, asking if they use <font color="red">IPv6</font>.<br />
+Unfortunately, most of the times the answer is no, even though I can see the Link-local and <font color="red">multicast addresses</font> flying by my screen.<br />
+When I proceed to ask if they’ve added any <font color="red">security</font> measurements in the <font color="red">network</font> to protect against <font color="red">IPv6</font> <font color="red">attacks</font>, the answer is mostly: “Why would we need any <font color="red">IPv6</font> <font color="red">security</font> if we don’t use <font color="red">IPv6</font>”?<span id="more-155233"></span></p>
+<p>The statement I’ll be trying to relay with this article is that even though your <font color="red">network</font> isn’t using <font color="red">IPv6</font> (yet), you still need to <font color="red">address</font> these issues, and when you do start to use <font color="red">IPv6</font>, what do you need to think about, security-wise.<br />
+Both <font color="red">IPv6</font> and <font color="red">IPv4</font> are subject to <font color="red">attacks</font>, but most of them can be mitigated with some simple steps.<br />
+The hardest part seems to be awareness.<br />
+<script type="text/javascript" src="https://www.ciscofeedback.vovici.com/poll.ashx?p=705E3ECD45552BC0" language="javascript"></script><br />
+<noscript>Your browser does not support JavaScript, therefore the poll can not be rendered.</noscript><br />
+<span class="perseus-link">Powered by Verint: Conduct your own <a href="http://www.verint.com/solutions/enterprise-workforce-optimization/products/enterprise-feedback-management/index" target="_blank">online surveys</a></span> I’ll include two feasible <font color="red">scenarios</font> which will show three different <font color="red">attacks</font> that are inherent to the <font color="red">IPv6</font> <font color="red">protocol</font>. These <font color="red">attacks</font> and solutions also have their <font color="red">IPv4</font> counterparts. As a rule of thumb, if you’re using any <font color="red">security</font> measurements on your <font color="red">LAN</font> for <font color="red">IPv4</font> (which you should), you’ll need to secure <font color="red">IPv6</font> as well. I’ll try to keep the discussion on a high-level overview, but the following terms might benefit from some explanation before we proceed:</p>
+<ul>
+<li><font color="red">Neighbor Discovery</font> <font color="red">Protocol</font> (NDP/ND – RFC4861) is a <font color="red">protocol</font> used for a number of things in <font color="red">IPv6</font>. For example; determine the link-layer <font color="red">address</font> of other hosts on the same link; check for duplicate <font color="red">addresses</font> in the <font color="red">network</font>. It is also used by <font color="red">SLAAC</font> described next.</li>
+<li>Stateless <font color="red">Address</font> Autoconfiguration (<font color="red">SLAAC</font> &#8211; <font color="red">RFC</font> 4862) is basically a method for <font color="red">IPv6</font> hosts to receive an <font color="red">IPv6</font> <font color="red">prefix</font> from an <font color="red">IPv6</font> <font color="red">Router</font> that they can use to generate their own unique <font color="red">IPv6 address</font>.</li>
+<li>Recursive <font color="red">DNS</font> <font color="red">Server</font> (RDNSS – RFC6106) is a fairly new feature which adds an option to the <font color="red">ICMPv6</font> <font color="red">Router</font> Advertisement, so that the hosts can automatically receive a <font color="red">DNS</font> <font color="red">server</font> with the other information required for the <font color="red">IPv6</font> auto-configuration.</li>
+<li><font color="red">ICMPv6</font> defines some new <font color="red">packet</font> types to be used for different functions in the <font color="red">network</font>:</li>
+<li>Neighbor Solicitation (NS): Used to request link-layer information from an <font color="red">IPv6</font> neighbor on the link.</li>
+<li>Neighbor Advertisement (NA): Used to respond to a NS message.</li>
+<li><font color="red">Router</font> Solicitation (RS): Used by a host to locate <font color="red">IPv6</font> <font color="red">routers</font> on the link.</li>
+<li><font color="red">Router</font> Advertisement (RA): Used by <font color="red">routers</font> to advertise <font color="red">IPv6</font> information, and to respond to RS messages.</li>
+</ul>
+<p><strong><font color="red">Scenario</font> 1</strong> Let me start off with a common <font color="red">scenario</font>. Company A is using IPv4-only in their <font color="red">network</font>, the company doesn’t see the need for <font color="red">IPv6</font> because they have no shortage of <font color="red">IPv4 addresses</font> because of RFC1918 and NAT, <font color="red">IPv6</font> is therefore ignored on this <font color="red">network</font>. This also means that none of the company’s <font color="red">workstations</font> have <font color="red">IPv6 support</font> disabled. (Sounds familiar yet?) The Operating System (OS) in use on the company <font color="red">workstations</font> will prefer using <font color="red">IPv6</font> if available, and does support both <font color="red">SLAAC</font> and RDNSS. Basically, this means that the <font color="red">workstations</font> will automatically try look for an <font color="red">IPv6</font> capable <font color="red">router</font> that can provide an <font color="red">IPv6</font> <font color="red">prefix</font>. This <font color="red">prefix</font> can then be used by the <font color="red">workstation</font> to generate their own global <font color="red">IPv6</font> unicast <font color="red">address</font>. The simple <font color="red">network</font> below <font color="red">addresses</font> the issue where an <font color="red">attacker</font> uses <font color="red">IPv6</font> to put himself in the middle of the <font color="red">traffic flow</font> from the user to internal corporate services, or the Internet.</p>
+<p><img class=" wp-image-155236 alignnone" alt="Business Critical Services" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/Business-Critical-Services.jpg" width="314" height="458" /></p>
+<p>This <font color="red">attack</font> consist of 4 simplified steps</p>
+<ul>
+<li>The user’s <font color="red">workstation</font> is looking for an <font color="red">IPv6</font> capable <font color="red">router</font> that can provide an <font color="red">IPv6 address</font>. The <font color="red">router</font> is not <font color="red">IPv6</font> capable, so it discards the request.</li>
+<li>The <font color="red">attacker</font> receives the request (<font color="red">ICMPv6</font> RS) and responds with a <font color="red">prefix</font> and claiming to be <font color="red">router</font> for which the client can use to send its <font color="red">traffic</font> (<font color="red">ICMPv6</font> RA).</li>
+<li>The client has both <font color="red">IPv4</font> and <font color="red">IPv6 addresses</font>, it prefers using <font color="red">IPv6</font> and sends legitimate data towards the “<font color="red">router</font>” with the highest preference, i.e. the <font color="red">attacker</font>.</li>
+<li>The <font color="red">attacker</font> can now capture <font color="red">traffic</font>, manipulate the sending or receiving <font color="red">traffic</font>, and translate the <font color="red">IPv6 traffic</font> into <font color="red">IPv4</font> <font color="red">traffic</font> using its own legitimate <font color="red">IPv4 address</font> on the <font color="red">network</font>.</li>
+</ul>
+<p>A different approach the <font color="red">attacker</font> could do is to use the R<font color="red">DNS</font>S to manipulate the DNS requests, pointing the user to a malicious <font color="red">server</font>, or black-hole <font color="red">traffic</font> causing Denial-Of-Service. There have also been cases where <font color="red">IPv6</font> <font color="red">nodes</font> have been flooding the <font color="red">network</font> with <font color="red">ICMPv6</font> RA, inadvertently causing a Denial-Of-Service situation.<script type="text/javascript" src="https://www.ciscofeedback.vovici.com/poll.ashx?p=705E3ECD73A80DFE" language="javascript"></script></p>
+<p><noscript>Your browser does not support JavaScript, therefore the poll can not be rendered.</noscript><span class="perseus-link">Powered by Verint <a href="http://www.verint.com" target="_blank">survey software</a></span></p>
+<p>The point I’m trying to convey with this <font color="red">scenario</font> is that even though this company isn’t even thinking of using <font color="red">IPv6</font>, and are most likely unaware of this <font color="red">vulnerability</font>, most modern OS today prefer using <font color="red">IPv6</font> if available. And mind you, there are <font color="red">attack</font> tools designed to take advantage of this, and other <font color="red">IPv6</font> related <font color="red">security</font> issues.</p>
+<p>The exact solution to this example is simple, and it’s something I’ve started to implement on all <font color="red">new network</font> equipment I set up: RA Guard.<br />
+A different approach is to disable <font color="red">IPv6</font> on all hosts, but this might be difficult to implement and verify. Plus, you probably need to start using <font color="red">IPv6</font> eventually, maybe sooner than you think?<br />
+In fact, some OS vendors actually require <font color="red">IPv6</font> to be enabled, to maintain proper operation.</p>
+<p><strong><font color="red">Scenario</font> 2</strong><br />
+Company B has seen the light and implemented <font color="red">IPv6</font> to some degree. They are now running dual-stack on most of their hosts, but no <font color="red">security</font> measurements exists besides static <font color="red">IPv6</font> access-lists on their edge <font color="red">firewall</font>. (Well, it’s a start right?)</p>
+<p>The <font color="red">IPv6</font> <font color="red">attacker</font> from Company A is back, and this time he is trying to take down the poor <font color="red">router</font> in the <font color="red">network</font>.<br />
+In this <font color="red">attack</font>, the <font color="red">attacker</font> is trying to exhaust the memory on the unit. The <font color="red">attack</font> consist of sending <font color="red">traffic</font> to every legitimate <font color="red">IPv6 addresses</font> in a /64 <font color="red">network</font> (or several), causing the <font color="red">router</font> to send <font color="red">ICMPv6</font> Neighbor Solicitation for the <font color="red">IPv6 addresses</font>. Eventually the <font color="red">routers</font> neighbor cache will be full and the <font color="red">attacker</font> would have caused Denial-of-service on the <font color="red">network</font>.</p>
+<p><img class=" wp-image-155238 alignnone" alt="User Attacker" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/User-Attacker-550x354.jpg" width="440" height="283" /></p>
+<p>Here we see the <font color="red">attacker</font> sending <font color="red">traffic</font> to 2^64 <font color="red">addresses</font>, the <font color="red">router</font> has to cache these entries and eventually the cache will be full.</p>
+<p>The good news is, Company B is using newer <font color="red">Cisco</font> equipment which by default rate limits the number of Neighbor Solicitation <font color="red">packets</font> in queue waiting for Neighbor Advertisement response, default 16 <font color="red">packets</font>. Therefore, this particular <font color="red">attack</font> won’t do Company B any harm.</p>
+<p>The <font color="red">attacker</font> then moves on to a different approach, taking advantage of the duplicate <font color="red">address</font> <font color="red">detection</font> feature in <font color="red">IPv6</font>.<br />
+The <font color="red">attacker</font> is now listening for all possible solicited <font color="red">node</font> <font color="red">multicast addresses</font>, and every time a client is trying to claim an <font color="red">IPv6 address</font>, the <font color="red">attacker</font> responds with Neighbor Advertisement, telling the client that the <font color="red">address</font> is already in use.</p>
+<p><img class=" wp-image-155239 alignnone" alt="User Attacker1" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/User-Attacker1-550x320.jpg" width="440" height="256" /></p>
+<p>With this <font color="red">attack</font> none of the <font color="red">IPv6</font> clients will be able to generate their own global unicast <font color="red">IPv6 address</font>. Solution: ND Inspection<br />
+This feature inspects the <font color="red">ICMPv6</font> NA <font color="red">packet</font> and makes sure the <font color="red">IPv6 address</font> is correct and is actually owned by the host claiming it.</p>
+<p><strong>Conclusion</strong><br />
+As you can imagine, the number of <font color="red">attacks</font> that can be leveraged on both <font color="red">IPv4</font> and <font color="red">IPv6</font> is pretty high. Using dual stack requires you to secure both <font color="red">IPv6</font> and <font color="red">IPv4</font>.</p>
+<p>Whether you already have <font color="red">IPv6</font> in your <font color="red">network</font>, planning to implement <font color="red">IPv6</font> soon, or not using <font color="red">IPv6</font> at all, there are some concerns that needs to be <font color="red">addressed</font> if you want your <font color="red">network</font> to be secure.<br />
+This article focused mostly on <font color="red">LAN</font> <font color="red">security</font>, so-called First Hop <font color="red">Security</font>, but there are other parts of your <font color="red">network</font> that needs securing as well. For example: routing <font color="red">protocol</font>(s), control-plane and management-plane.</p>
+<p>A few other <font color="red">attack</font> types that is worth mentioning in regards to <font color="red">LAN</font> <font color="red">security</font>:</p>
+<ul>
+<li>NA Spoofing<br />
+<font color="red">Attacker</font> is claiming to be a different host by responding to a Neighbor Solicitation with its own link-layer <font color="red">address</font>.<br />
+Equivalent to ARP spoofing</li>
+<li><font color="red">Router</font> Discovery poison<br />
+The <font color="red">attacker</font> is spoofing a RA from a legitimate <font color="red">router</font> changing the lifetime of the RA entry, after the lifetime for the legitimate <font color="red">router</font> has been expired, the <font color="red">attacker</font> sends its own RA which causes the client to send all <font color="red">traffic</font> towards the <font color="red">attacker</font>.</li>
+<li>DHCPv6 Spoofing<br />
+The <font color="red">attacker</font> sets up a rogue DHCPv6 <font color="red">server</font> which can provide both illegitimate and legitimate <font color="red">IPv6 addresses</font>, depending on the goal of the <font color="red">attacker</font>.</li>
+<li>Reconnaissance <font color="red">attack</font> using <font color="red">IPv6</font> <font color="red">Multicast addresses</font></li>
+<li><font color="red">IPv6 address</font> spoofing<br />
+<font color="red">Attacker</font> is claiming to be sending from a spoofed legitimate <font color="red">IPv6 address</font>.</li>
+</ul>
+<p>This is by no means an exhaustive list.</p>
+<p>I’ve already mentioned some of the <font color="red">security</font> features that <font color="red">Cisco</font> offers in their products, but I would strongly recommend looking more into the following tools:<br />
+ND Inspection<br />
+RA Guard<br />
+<font color="red">IPv6</font> Source Guard<br />
+DHCPv6 Snooping</p>
+<p>SeND is especially a <font color="red">protocol</font> worth mentioning.<br />
+SeND – Secure <font color="red">Neighbor Discovery</font> (<font color="red">RFC</font> 3972) is possible the best First Hop <font color="red">Security</font> feature you can implement on your <font color="red">network</font>.<br />
+SeND uses PKI certificates to validate the <font color="red">Neighbor Discovery</font> <font color="red">Protocol</font> messages.<br />
+The downside with this <font color="red">protocol</font> is that it is generally not supported on the common OSes.</p>
+<p>Links:<br />
+<a href="http://www.cisco.com/en/US/products/ps12961/products_ios_protocol_group_home.html">http://www.cisco.com/en/US/products/ps12961/products_ios_protocol_group_home.html</a><br />
+<a href="http://www.cisco.com/en/US/docs/ios/ipv6/configuration/guide/ip6-first_hop_security.html">http://www.cisco.com/en/US/docs/ios/ipv6/configuration/guide/ip6-first_hop_security.html</a></p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=ciscochampion">#ciscochampion</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=ipv6">IPv6</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=ipv6-security">IPv6-security</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+		</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Perspectives:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogPerspectives', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogPerspectives" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Perspectives</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/Cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/Cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://www.youtube.com/Cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogPerspectives"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="http://gobuild.cisco.com/" target="_blank">Built For Your Business</a></li>
+                        <li><a href="http://www.cisco.com/en/US/solutions/ns1007/collaboration_business_case.html" target="_blank">Collaboration Business Case</a></li>
+                        <li><a href="http://www.cisco.com/en/US/solutions/ns340/ns517/ns224/dc_case_studies.html" target="_blank">Data Center Case Studies</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/Cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/Cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 155233;
+			var orig_count = 0;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=An error has occurred while trying to fetch the Tiny URL for: http://blogs.cisco.com/perspectives/ipv6-first-hop-security/. Client ID[1098] is not valid"}&text=IPv6+First-Hop-Security+%23ciscochampion+http%3A%2F%2Fblogs.cisco.com%2Fperspectives%2Fipv6-first-hop-security%2F&via=sthorvaldsen" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/perspectives/ipv6-first-hop-security&title=IPv6 First-Hop-Security" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/perspectives/ipv6-first-hop-security" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/perspectives/ipv6-first-hop-security" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: IPv6 First-Hop-Security&body=I saw this post on Cisco Perspectives blog and thought you might like to read it.%0A%0AIPv6 First-Hop-Security%0A%0Ahttps://blogs.cisco.com/perspectives/ipv6-first-hop-security%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Piecing Together Malicious Behavior in Encrypted Traffic</title>
+
+	<meta property="og:image" content="https://alln-extcloud-storage.cisco.com/ciscoblogs/cta-2-460x230.png"/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; Piecing Together Malicious Behavior in Encrypted Traffic Comments Feed" href="https://blogs.cisco.com/security/piecing-together-malicious-behavior-in-encrypted-traffic/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"206324"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Mission-Driven Cybersecurity' href='https://blogs.cisco.com/government/mission-driven-cybersecurity' />
+<link rel='next' title='A new paradigm for dealing with illegal redistribution of content' href='https://blogs.cisco.com/sp/a-new-paradigm-for-dealing-with-illegal-redistribution-of-content' />
+
+<link rel="canonical" href="https://blogs.cisco.com/security/piecing-together-malicious-behavior-in-encrypted-traffic" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=206324' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Piecing Together Malicious Behavior in Encrypted Traffic"/>
+  <meta property="og:url" content="https://blogs.cisco.com/security/piecing-together-malicious-behavior-in-encrypted-traffic"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2016-10-20T12:57:36+00:00"/>
+  <meta property="article:modified_time" content="2016-10-20T12:57:36+00:00" />
+  <meta property="og:updated_time" content="2016-10-20T12:57:36+00:00" />
+  <meta property="article:section" content="Security"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Piecing Together Malicious Behavior in Encrypted Traffic"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/security/piecing-together-malicious-behavior-in-encrypted-traffic"/>
+  <meta name="twitter:description" content="This post was authored by Jan Kohout, Veronica Valeros and Petr Somol.
+
+
+
+Increasing adoption of encryption in web communication significantly contributes to protection of users&#039; privacy. However, it also brings tough challenges for intrusion detection systems that need to analyze the traffic withou"/>
+  <meta name="twitter:image" content="https://alln-extcloud-storage.cisco.com/ciscoblogs/cta-2.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521512376";
+		var sig = "33698f839e598204e7495e2bc42c133c";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/2eypz8a&text=Piecing Together Malicious Behavior in Encrypted Traffic&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/piecing-together-malicious-behavior-in-encrypted-traffic&title=Piecing Together Malicious Behavior in Encrypted Traffic" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/piecing-together-malicious-behavior-in-encrypted-traffic" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/piecing-together-malicious-behavior-in-encrypted-traffic" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Piecing Together Malicious Behavior in Encrypted Traffic&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0APiecing Together Malicious Behavior in Encrypted Traffic%0A%0Ahttps://blogs.cisco.com/security/piecing-together-malicious-behavior-in-encrypted-traffic%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/security/'>Security</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/cta-2-460x230.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Security  						</span>
+						<h1 id="post-206324" class="kindle_title title">Piecing Together Malicious Behavior in Encrypted Traffic</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1473189121-bpthumb.jpg"></div><div class="author_rewards_box">			<ul class = "nitro_author206324 bunchballAwards">
+		<li>
+			<div class = "nitro_badge badgenitro_author206324">
+			</div>
+			<div class = "nitro_points pointsnitro_author206324">
+			</div>
+		</li>
+		<script>
+var nitroName = 'jkohout';
+var sessionKey = '';
+
+
+nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "postBadges", "nitro_author206324");</script>
+
+		</ul>
+		</ul>
+	<div class = "clear"></div>
+</div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/jankohout" title="Posts by Jan Kohout" rel="author">Jan Kohout</a> - October 20, 2016 - 3 Comments      					</span>
+      					<br />
+      					<br />
+      					Contributors: <a href ="https://blogs.cisco.com/author/valeros">Veronica Valeros</a>					</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p><em>This post was authored by Jan Kohout, Veronica Valeros and Petr Somol.</em></p>
+<p>Increasing adoption of <font color="red">encryption</font> in web <font color="red">communication</font> significantly contributes to protection of users&#8217; <font color="red">privacy</font>. However, it also brings tough challenges for intrusion <font color="red">detection</font> systems that need to analyze the <font color="red">traffic</font> without actually decrypting it. There is not much information left in encrypted <font color="blue">web traffic</font> logs that could be leveraged for <font color="blue">malicious activity</font> <font color="red">detection</font>. Information about visited URL, user agent used and other important fields are no longer available. If users&#8217; <font color="red">privacy</font> is to be preserved, a <font color="red">detection</font> system has to rely only on very high-level information. Clearly, simple rule-based solutions can hardly achieve satisfying accuracy in such environment.</p>
+<div id="attachment_206332" style="max-width: 560px" class="wp-caption aligncenter"><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/cta1.png"><img class="size-large wp-image-206332" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/cta1-550x352.png" alt="Figure 1 - Adoption of encrypted <font color="red">HTTPs</font> helps to preserve users' <font color="red">privacy</font> but it also hides fields bearing the richest information usable for <font color="red">detection</font> of <font color="red">malware</font>." width="550" height="352" /></a><p class="wp-caption-text">Figure 1 &#8211; Adoption of encrypted HTTPs helps to preserve users&#8217; privacy but it also hides fields bearing the richest information usable for detection of malware.</p></div>
+<p>However, the situation changes when <font color="red">machine learning</font> algorithms and smart representations of gathered information are called up for duty.</p>
+<p><font color="red">Cisco</font> Cognitive <font color="red">Threat</font> Analytics leverages machine learning to identify <font color="blue">malicious behavior</font> even in encrypted <font color="red">traffic</font>. In this blog post, we demonstrate on real-world examples, that even very basic features of <font color="red">communication</font> &#8211; just the sizes and timings of transferred information &#8211; can bear a lot of useful information if we correlate the observations in the right way. Imagine putting together a complex puzzle: from just one piece of puzzle with few colored dots, one can not say what the final picture is, but when many of those pieces are put together, then the final image appears clearly. Similarly, by observing sizes and timings of <font color="red">communication</font> between two computers, we can have a clear view of the <font color="red">communication</font> patterns.</p>
+<div id="attachment_206334" style="max-width: 560px" class="wp-caption aligncenter"><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/cta-2.png"><img class="size-large wp-image-206334" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/cta-2-550x176.png" alt="Figure 2 - Encrypted <font color="red">traffic</font> resembles a complex puzzle. Individual requests may not tell much. Correlating multiple flows can reveal otherwise invisible characteristics of the whole <font color="red">connection</font> over time (although the transferred content remains secret)." width="550" height="176" /></a><p class="wp-caption-text">Figure 2 &#8211; Encrypted traffic resembles a complex puzzle. Individual requests may not tell much. Correlating multiple flows can reveal otherwise invisible characteristics of the whole connection over time (although the transferred content remains secret).</p></div>
+<h2><strong>Fight Infections with <font color="red">Connection</font> Fingerprints</strong></h2>
+<p>The challenge we face is how to differentiate encrypted <font color="red">malicious traffic</font> over <font color="red">HTTPs</font> from benign <font color="red">communication</font>, when the only source of <font color="red">data</font> is a log from web proxy. The roots of success of our methods are in putting many small pieces of information together. If we repeatedly observe simple behavioral characteristics of some object (e.g., a <font color="red">web server</font> or a <font color="red">communication</font> session) for a certain period of time, we will collect enough information to discover the behavioral pattern which is typical for the given object. We see this problem of information gathering as the problem of capturing <font color="red">probability distributions</font> based on limited number of observations. We work with so called <strong>fingerprints of</strong> <font color="red"><strong>connections</strong></font>, formed by histograms capturing properties of the <font color="red">communication</font>. The <font color="red">communication</font> belonging to one <font color="red">server</font> is treated as determined by some unknown <font color="red">probability distribution</font> over the observed quantities. Each observation &#8211; for example, quantities extracted from one request-response pair to the given <font color="red">web server</font> &#8211; is treated as one realization of that <font color="red">probability distribution</font>. Under this setting, the <font color="red">server</font> can be represented by a histogram which models the unknown <font color="red">probability distribution</font> by capturing frequencies of the observed values. On top of the histograms, it is easy to train a <font color="red">classifier</font> for some specific <font color="blue">malicious behavior</font> or use unsupervised techniques such as clustering to discover new behavioral patterns. In the following examples, you will see that with the help <font color="red">connections</font> fingerprinting, <font color="red">CTA</font> is capable of:</p>
+<ul>
+<li>training a <font color="red">classifier</font> which detects <font color="red">data exfiltrations</font></li>
+<li>finding a structure of an unknown <font color="red">service</font> to improve <font color="red">detection</font> of its misuses</li>
+<li>linking together <font color="red">servers</font> contacted by similar malware</li>
+</ul>
+<h2><strong>Detection of <font color="red">data exfiltration</font></strong></h2>
+<p>In Cognitive <font color="red">Threat</font> <font color="red">Analytics</font>, the <font color="red">connections</font> fingerprinting and a <font color="red">classifier</font> trained on top the fingerprints are used to detect possible <font color="red">exfiltrations</font> of <font color="red">data</font> via encrypted <font color="red">connections</font>, as shown in Figure 1 (see the related blog <a href="https://blogs.cisco.com/security/malware-stealing-gigabytes-of-your-data-as-seen-by-cognitive-threat-analytics">here</a>). With this representation, the only features extracted from <font color="blue">web traffic</font> logs by the <font color="red">classifier</font> are the timings and sizes of the <font color="red">connections</font>. In this way it is able to identify suspicious <font color="red">exfiltrations</font> without relying on any features that would be hidden by TLS <font color="red">encryption</font>.</p>
+<div id="attachment_206335" style="max-width: 560px" class="wp-caption aligncenter"><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/cta3.png"><img class="size-large wp-image-206335" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/cta3-550x162.png" alt="Figure 3 - <font color="red">Exfiltration</font> of <font color="red">data</font> via encrypted <font color="red">connection</font> which was detected by <font color="red">Cisco</font> <font color="red">CTA</font> with the help of encrypted <font color="red">connections</font> fingerprinting." width="550" height="162" /></a><p class="wp-caption-text">Figure 3 &#8211; Exfiltration of data via encrypted connection which was detected by Cisco CTA with the help of encrypted connections fingerprinting.</p></div>
+<h2><strong>Sub-Service Identification</strong></h2>
+<p>Understanding the structure of a <font color="red">service</font> helps to model users&#8217; behavior more accurately and, thus, significantly increases our chance to detect anomalies and misuses. The modeling of <font color="red">probability distributions</font> can be successfully used to discover functional parts of a complex but possibly unknown web <font color="red">service</font>, such as on-line file storage or even more complex <font color="red">cloud platforms</font>. This decomposition can be done even if the target <font color="red">service</font> is accessed via encrypted <font color="red">connections</font>, because &#8211; as we showed in the previous example &#8211; the fingerprinting technique can work even with very basic features that can be extracted even from encrypted <font color="red">traffic</font> without decryption.</p>
+<p>As an example, we show how the <font color="red">servers</font> under the dropbox.com top level domain can be <font color="red">clustered</font> into groups that represent individual functional parts of the Dropbox <font color="red">service</font>. We observed the behavior of totally 188 <font color="red">servers</font> for a couple of days and created their fingerprints capturing frequencies of the observed values. As most of the <font color="red">servers</font> are accessed by <font color="red">HTTPs</font>, the only observed quantities were:</p>
+<ul>
+<li><font color="red">Bytes</font> sent in one request</li>
+<li><font color="red">Bytes</font> received in the corresponding response</li>
+<li>Duration of the request-response loop</li>
+<li>Inter-arrival time between two consecutive requests from the same client</li>
+</ul>
+<p>After the fingerprints of <font color="red">servers</font> were created, they were <font color="red">clustered</font> according to their pairwise similarities. The result of the clustering can be seen in Figure 4 below in a form of a similarity graph:</p>
+<div id="attachment_206336" style="max-width: 560px" class="wp-caption aligncenter"><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/cta4.png"><img class="size-large wp-image-206336" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/cta4-550x389.png" alt="Figure 4 - Clustering of <font color="red">servers</font> under the dropbox.com TLD visualized by a similarity graph. Each node of the graph represents one <font color="red">server</font>, the <font color="red">servers</font> with similar fingerprints are close to each other while <font color="red">servers</font> with dissimilar fingerprints are repulsed. Colors mark different <font color="red">clusters</font> discovered be a clustering algorithm which uses the fingerprints' similarities (grey color marks unclustered <font color="red">servers</font> - 9 out of 188 - that are not members of some dedicated sub-service). <font color="red">Clusters</font> are annotated with the type of <font color="red">service</font> they provide (the annotations were obtained from the work [4])." width="550" height="389" /></a><p class="wp-caption-text">Figure 4 &#8211; Clustering of servers under the dropbox.com TLD visualized by a similarity graph. Each node of the graph represents one server, the servers with similar fingerprints are close to each other while servers with dissimilar fingerprints are repulsed. Colors mark different clusters discovered be a clustering algorithm which uses the fingerprints&#8217; similarities (grey color marks unclustered servers &#8211; 9 out of 188 &#8211; that are not members of some dedicated sub-service). Clusters are annotated with the type of service they provide (the annotations were obtained from the work [4]).</p></div>
+<h2><strong>Relationship Modeling for <font color="red">Malicious</font> Campaign Discovery</strong></h2>
+<p>Relationship modeling is the topmost layer of <font color="red">data processing</font> in Cognitive <font color="red">Threat</font> <font color="red">Analytics</font> which correlates information from detected incidents to discover new <font color="red">threat</font> campaigns (see <a href="https://blogs.cisco.com/security/cognitive-threat-analytics-turn-your-proxy-into-security-device">this blog</a>). Relationship modeling in <font color="red">CTA</font> uses the fingerprinting technique to find <font color="red">malicious</font> <font color="red">servers</font> that are contacted by the same family of <font color="red">malware</font>. <font color="red">Malware</font> typically uses multiple <font color="red">servers</font> for its C&amp;C <font color="red">communication</font>. If not all of them are blacklisted (often they won&#8217;t be), the <font color="red">malware</font> is still able to contact the C&amp;C <font color="red">server</font> on the remaining ones. Our method of fingerprinting can help to find those additional <font color="red">servers</font>. <font color="red">Malware</font> usually uses the same <font color="red">communication</font> protocol to contact the C&amp;C <font color="red">servers</font>. Therefore, their histogram fingerprints will be very similar to each other due to the similar patterns in the <font color="red">communication</font>. The C&amp;C <font color="red">servers</font> used by the same <font color="red">malware</font> can be thus viewed as members of one specific sub-service on the Internet. If we apply the clustering algorithm on a set <font color="red">servers</font>&#8217; fingerprints in which we include also fingerprints of known <font color="red">malicious</font> <font color="red">servers</font>, the new <font color="red">malicious</font> ones can be easily discovered by looking at those which belong to <font color="red">clusters</font> containing the known <font color="red">malicious</font> ones. Together with other algorithms, the fingerprinting of <font color="red">servers</font> helps <font color="red">CTA</font> to extend the list of confirmed infections.</p>
+<h2><strong>How Does Building of Fingerprints Work?</strong></h2>
+<p>As we mentioned earlier, the fingerprints are histograms modeling frequencies of observed features. Just capturing a <font color="red">probability distribution</font> with a histogram might seem simple. However, there are multiple challenges that have to be addressed. First, how to reliably model a joint <font color="red">probability distribution</font> of multiple quantities without need of large amount of <font color="red">data</font>. Second, how to make this approach practically usable, as we face the limitations with respect to computational requirements. To overcome these problems, we introduced so called <strong>soft-histograms</strong>.</p>
+<p>Soft-histograms are a smoothed version of standard histograms. Commonly, if a standard histogram is updated with a new observation, one nearest bin is selected and its value is increased by 1. In soft-histograms, additional filtering <font color="red">functions</font> centered at each bin divide contribution of each update among multiple bins proportionally to their distances to the observation. This has a smoothing effect on the resulting histogram which helps us to suppress noise present in the observations and which would otherwise make the histogram-based approach unreliable. Parameters of the filtering <font color="red">functions</font> can be optimized jointly with the positions of histogram’s bins during supervised training such that the number of effectively used bins is low which memory and computational requirements. There is a large variety of filtering <font color="red">functions</font> that can be used &#8211; for example, the triangular filters as illustrated in Figure 5.</p>
+<div id="attachment_206337" style="max-width: 554px" class="wp-caption aligncenter"><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/cta5.png"><img class="size-full wp-image-206337" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/cta5.png" alt="Figure 5 - Illustration of an update of a soft-histogram. In this example, the histogram's bins are centered at points 0, 1, ..., 5 and it is update with the value 2.6. This update contributes to two nearest bins (as determined by the highlighted triangular filters) centered at 2 and 3. The contribution is divided proportionally to the distances from these two bins. The proportions are determined by the shape of the filtering <font color="red">functions</font>." width="544" height="278" /></a><p class="wp-caption-text">Figure 5 &#8211; Illustration of an update of a soft-histogram. In this example, the histogram&#8217;s bins are centered at points 0, 1, &#8230;, 5 and it is update with the value 2.6. This update contributes to two nearest bins (as determined by the highlighted triangular filters) centered at 2 and 3. The contribution is divided proportionally to the distances from these two bins. The proportions are determined by the shape of the filtering <font color="red">functions</font>.</p></div>
+<p>The triangular filters are not the only <font color="red">functions</font> that can be used. It is possible to use, for example, Gaussian functions for filtering and tune their <font color="red">bandwidths</font> in each dimension to change sensitivity of each bin for different feature, which we show in the next section.</p>
+<h2><strong>One step further: Understanding a <font color="red">malware</font>&#8217;s behavioral pattern</strong></h2>
+<p>When used in supervised <font color="red">learning</font>, the fingerprinting technique helps to find the most important properties of <font color="red">malware</font>&#8217;s behavior. If we have samples of some <font color="red">specific malware</font> family, a <font color="red">classifier</font> can be trained, working on top of the histogram-based representation of its behavior. Together with the <font color="red">classifier</font>&#8217;s parameters, the learning algorithm can also optimize positions of the soft-histogram bins and filtering <font color="red">functions</font>&#8217; parameters to support the classification performance. Then, by looking at the positions of the bins to which the <font color="red">learning</font> algorithm assigned the highest weights, we can determine which values of which feature represent the important patterns of the <font color="red">malware</font>&#8217;s behavior. Again, let us use another example found in networks protected by <font color="red">CTA</font> &#8211; for this demonstration, we used fingerprints of <font color="red">connections</font> belonging to Miuref/Boaxxe <font color="red">malware</font>, which is identified as the #CMST01 <font color="red">threat</font> by Cognitive <font color="red">Threat</font> <font color="red">Analytics</font> (see Figure 6).</p>
+<div id="attachment_206338" style="max-width: 560px" class="wp-caption aligncenter"><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/cta6.png"><img class="size-large wp-image-206338" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/cta6-550x275.png" alt="Figure 6 - The #CMST01 <font color="red">threat</font> as seen by <font color="red">CTA</font> which was used for the <font color="red">malware</font>'s behavior analysis." width="550" height="275" /></a><p class="wp-caption-text">Figure 6 &#8211; The #CMST01 threat as seen by <font color="red">CTA</font> which was used for the malware&#8217;s behavior analysis.</p></div>
+<p>As seen in the screenshot from CTA&#8217;s user interface, the <font color="red">connections</font> can be identified thanks to the considerable amount of encoded <font color="red">data</font> tunneled through the URLs. However, this is not the only evidence usable for <font color="red">detection</font> of this <font color="red">malware</font>. This <font color="red">malware</font> also exhibits a specific pattern with respect to <font color="red">communication</font> timings and sizes of individual requests. These features were used to create soft-histogram fingerprints of the <font color="red">connections</font> and to train a <font color="red">classifier</font> for the Miuref/Boaxxe <font color="red">malware</font>. However, in this case, we used Gaussian <font color="red">functions</font> as the filters and the learning algorithm was able to move the bins&#8217; centers and also adjust their sensitivity for each feature by changing the <font color="red">bandwidth</font> of the Gaussians. Thanks to this, the <font color="red">classifier</font> could use only limited number of bins positioned such that they had maximal discriminative power for identification of this <font color="red">specific malware</font>. The <font color="red">classifier</font> ended up with just four bins with weights significantly higher than zero and, moreover, each of these four bins was sensitive for different feature(s). The sensitivity of the bins for specific features could be achieved by appropriate setting of <font color="red">bandwidths</font> of the Gaussian filtering <font color="red">functions</font> for the respective features.</p>
+<p>The positions of the most important bins are summarized in the table below:</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/cta6-chart.png"><img class="aligncenter size-full wp-image-206341" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/cta6-chart.png" alt="cta6-chart" width="498" height="178" /></a></p>
+<p>By looking at the distributions of individual features, we can find answer to the question why did the <font color="red">classifier</font> &#8220;choose&#8221; these positions for the specialized bins (we use logarithmic scale for all the features). In Figure 7 below, we compare distribution of values of each feature for the legitimate (background) <font color="red">traffic</font> to distribution of values observed in the <font color="red">traffic</font> belonging to the <font color="red">malware</font> for which the <font color="red">classifier</font> was trained. As we can see, the most important bins are placed at positions that represent values that are observed in the <font color="red">malware</font>&#8217;s <font color="red">traffic</font> with high probabilities. This helps an analyst to discover the <font color="red">malware</font>&#8217;s behavioral pattern. In this example, the pattern is: always zero <font color="red">bytes</font> in the request body, the <font color="red">server</font>&#8217;s response has mostly around 16 <font color="red">bytes</font>. Furthermore, the <font color="red">malware</font> appears to be operating in two modes &#8211; in one mode, the R-R loop duration is about 245ms (5.5 in log-scale), while in the second mode, the duration is about 3000ms (8 in log-scale). The second mode of operation is what makes the <font color="red">malware</font> detectable &#8211; the similar pattern is shared by only few percent of benign <font color="red">traffic</font>. Finally, repeating requests with inter-arrival time between 3 and 4 minutes contributes to the typical behavioral pattern of this <font color="red">malware</font>.</p>
+<div id="attachment_206342" style="max-width: 560px" class="wp-caption aligncenter"><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/cta7-1.png"><img class="size-large wp-image-206342" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/cta7-1-550x478.png" alt="Figure 7 - Distributions of feature values observed in the legitimate background <font color="red">traffic</font> (blue) and in the <font color="red">traffic</font> belonging to <font color="red">malware</font> marked as #CMST01 <font color="red">threat</font> campaign by <font color="red">CTA</font> (red)." width="550" height="478" /></a><p class="wp-caption-text">Figure 7 &#8211; Distributions of feature values observed in the legitimate background traffic (blue) and in the traffic belonging to malware marked as #CMST01 threat campaign by CTA (red).</p></div>
+<h2><strong>Where to go next</strong></h2>
+<p>For overview of Cognitive <font color="red">Threat</font> Analytics, see <a href="https://blogs.cisco.com/security/cognitive-threat-analytics-turn-your-proxy-into-security-device">https://blogs.cisco.com/security/cognitive-threat-analytics-turn-your-proxy-into-security-device</a>. To request more information or a quote see <a href="http://cognitive.cisco.com/">cognitive.cisco.com</a>. Algorithms that are using the <font color="red">connection</font> fingerprinting were presented at several scientific conferences, for further reading we recommend papers [1], [2] and [3].</p>
+<h2><strong>References</strong></h2>
+<p>[1] Kohout, J., Pevny, T. (2015). Unsupervised <font color="red">detection</font> of <font color="red">malware</font> in persistent <font color="blue">web traffic</font>. <a href="http://ieeexplore.ieee.org/document/7178272/">http://ieeexplore.ieee.org/document/7178272/</a></p>
+<p>[2] Lokoc, J. et al. (2016). k-NN Classification of <font color="red">Malware</font> in HTTPS <font color="red">Traffic</font> Using the Metric Space Approach. <a href="https://link.springer.com/chapter/10.1007%2F978-3-319-31863-9_10">https://link.springer.com/chapter/10.1007%2F978-3-319-31863-9_10</a></p>
+<p>[3] Kohout, J., Pevny, T. (2015). Automatic discovery of <font color="red">web servers</font> hosting similar applications. <a href="http://ieeexplore.ieee.org/document/7140487/">http://ieeexplore.ieee.org/document/7140487/</a></p>
+<p>[4] Drago, I. et al. (2012). Inside Dropbox: understanding personal <font color="red">cloud</font> storage <font color="red">services</font>. <a href="https://dl.acm.org/citation.cfm?id=2398827">https://dl.acm.org/citation.cfm?id=2398827</a></p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=cisco-cognitive-threat-analytics">Cisco Cognitive Threat Analytics</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=encrypted-traffic">encrypted traffic</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=https">https</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=malware-in-https">malware in https</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">3 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+<li>
+			<div id="comment-2419438">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg' width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+							<a href = "https://blogs.cisco.com/rewards-profile/10164">Abdulwakil Abdulkarim</a>
+						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 29, 2016 at 1:08 pm</span>
+
+					</div>
+				<div class="comment_text">
+					<ul class = "comment_id2419438 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'aaconsult46gmailcom';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2419438");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2419438">
+								</div>
+								<div class = "nitro_points pointscomment_id2419438">
+								</div>
+							</li>
+							</ul>
+					<div class = "clear"></div> <p>This is highly educative, Kudos Security should be more in practical form now a days, because that is the way out.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2419438" class = "commentLikeButton commentlike" data-nitro =aaconsult46gmailcom >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li class="comment even thread-even depth-1" id="li-comment-2418846">
+				<div id="comment-2418846">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1515004303-bpthumb.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/tobiasmayer'>Tobias Mayer</a></span><br />
+							<span class="comment-meta commentmetadata">October 25, 2016 at 12:27 am</span>
+
+						</div>
+						<div class="comment_text">
+							<ul class = "comment_id2418846 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'tmayer';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2418846");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2418846">
+								</div>
+								<div class = "nitro_points pointscomment_id2418846">
+								</div>
+							</li>
+							</ul>
+							<div class = "clear"></div>
+							<p>Very nicely written!</p>						</div>
+
+							<div class = "roblike">
+					<a  href = "#" id = "clickLike2418846" class = "commentLikeButton commentlike" data-nitro =tmayer >0 likes</a>				</div>
+				<div class="reply">
+															</div>
+							<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+	</li><!-- #comment-## -->
+
+<li>
+			<div id="comment-2418652">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg' width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+							<a href = "https://blogs.cisco.com/rewards-profile/8155">Dr. Jose A. Wong - Perez</a>
+						</span>
+						<br />
+						<span class="comment-meta commentmetadata">October 23, 2016 at 1:51 pm</span>
+
+					</div>
+				<div class="comment_text">
+					<ul class = "comment_id2418652 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'Spoulakk4';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2418652");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2418652">
+								</div>
+								<div class = "nitro_points pointscomment_id2418652">
+								</div>
+							</li>
+							</ul>
+					<div class = "clear"></div> <p>Excellent blog post. I'll never be tired to repeat: "The more I read, the more I learn from the security blog posts", thank you for delivering such knowledge through this place. My respects.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2418652" class = "commentLikeButton commentlike" data-nitro =Spoulakk4>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Security:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogSecurity', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogSecurity" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Security</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscosecurity?ref=nf"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/ciscosecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://youtubecisco.com/security"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogSecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.cert.org/blogs/vuls/" target="_blank">CERT Vulnerability Analysis</a></li>
+                      <li><a href="http://blogs.technet.com/b/srd/" target="_blank">Microsoft Security Research & Defense</a></li>
+                      <li><a href="http://isc.sans.edu/index.html" target="_blank">SANS Internet Storm Center</a></li>
+                      <li><a href="http://www.schneier.com/" target="_blank">Schneier on Security</a></li>
+                  </ul>
+              <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="http://www.cisco.com/en/US/products/products_security_advisories_listing.html" target="_blank">Advisories and Responses</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/cyberRiskReport.x" target="_blank">Cyber Risk Reports</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/intelliPapers.x?i=55" target="_blank">Security Best Practices</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/home.x" target="_blank">Security Intelligence Operations</a></li>
+                        <li><a href="http://www.cisco.com/en/US/products/hw/vpndevc/index.html" target="_blank">Security Products</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscosecurity?ref=nf'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/ciscosecurity'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 206324;
+			var orig_count = 9;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/2eypz8a&text=Piecing Together Malicious Behavior in Encrypted Traffic&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/piecing-together-malicious-behavior-in-encrypted-traffic&title=Piecing Together Malicious Behavior in Encrypted Traffic" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/piecing-together-malicious-behavior-in-encrypted-traffic" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/piecing-together-malicious-behavior-in-encrypted-traffic" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Piecing Together Malicious Behavior in Encrypted Traffic&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0APiecing Together Malicious Behavior in Encrypted Traffic%0A%0Ahttps://blogs.cisco.com/security/piecing-together-malicious-behavior-in-encrypted-traffic%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

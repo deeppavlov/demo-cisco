@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Deep Dive into AMP and Threat Grid integration with Cisco Email Security</title>
+
+	<meta property="og:image" content="https://alln-extcloud-storage.cisco.com/ciscoblogs/598b18a5a13e8-460x230.jpg"/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; Deep Dive into AMP and Threat Grid integration with Cisco Email Security Comments Feed" href="https://blogs.cisco.com/security/deep-dive-into-amp-and-threat-grid-integration-with-cisco-email-security/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"230605"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Start Up to Scale Up – The Role of Universities in Anchoring Innovation Systems' href='https://blogs.cisco.com/education/start-up-to-scale-up-the-role-of-universities-in-anchoring-innovation-systems' />
+<link rel='next' title='The future of healthcare—it’s in your hands' href='https://blogs.cisco.com/healthcare/the-future-of-healthcare-its-in-your-hands' />
+
+<link rel="canonical" href="https://blogs.cisco.com/security/deep-dive-into-amp-and-threat-grid-integration-with-cisco-email-security" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=230605' />
+<meta property="og:image" content="http://i.ytimg.com/vi/W7IuchQR7dA/default.jpg" />
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Deep Dive into AMP and Threat Grid integration with Cisco Email Security"/>
+  <meta property="og:url" content="https://blogs.cisco.com/security/deep-dive-into-amp-and-threat-grid-integration-with-cisco-email-security"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2017-08-09T06:00:44+00:00"/>
+  <meta property="article:modified_time" content="2018-01-14T09:09:49+00:00" />
+  <meta property="og:updated_time" content="2018-01-14T09:09:49+00:00" />
+  <meta property="article:section" content="Security"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Deep Dive into AMP and Threat Grid integration with Cisco Email Security"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/security/deep-dive-into-amp-and-threat-grid-integration-with-cisco-email-security"/>
+  <meta name="twitter:description" content="In our previous blog posts about AMP and Threat Grid on Cisco Email Security, we have discussed the approach to email security, that organizations could take to protect themselves against advanced threats. We have as well discussed the components of the solution and how they work together to protect"/>
+  <meta name="twitter:image" content="https://alln-extcloud-storage.cisco.com/ciscoblogs/598b18a5a13e8.jpg"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521511999";
+		var sig = "a085165db968dd52d8ae3de52921c597";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/2upg6Hx&text=Deep Dive into AMP and Threat Grid integration with Cisco Email Security&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/deep-dive-into-amp-and-threat-grid-integration-with-cisco-email-security&title=Deep Dive into AMP and Threat Grid integration with Cisco Email Security" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/deep-dive-into-amp-and-threat-grid-integration-with-cisco-email-security" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/deep-dive-into-amp-and-threat-grid-integration-with-cisco-email-security" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Deep Dive into AMP and Threat Grid integration with Cisco Email Security&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0ADeep Dive into AMP and Threat Grid integration with Cisco Email Security%0A%0Ahttps://blogs.cisco.com/security/deep-dive-into-amp-and-threat-grid-integration-with-cisco-email-security%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/security/'>Security</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/598b18a5a13e8-460x230.jpg">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Security  						</span>
+						<h1 id="post-230605" class="kindle_title title">Deep Dive into AMP and Threat Grid integration with Cisco Email Security</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1490296395-bpthumb.jpg"></div><div class="author_rewards_box"></div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/evgenymirolyubov" title="Posts by Evgeny Mirolyubov" rel="author">Evgeny Mirolyubov</a> - August 9, 2017 - 9 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p>In our <font color="red">previous blog posts</font> about <font color="red">AMP</font> and <font color="red">Threat Grid</font> on <font color="red">Cisco</font> Email <font color="red">Security</font>, we have discussed the <a href="https://blogs.cisco.com/<font color="red">security</font>/how-to-protect-against-the-most-advanced-email-based-attacks">approach to email security</a>, that organizations could take to protect themselves against advanced <font color="red">threats</font>. We have as well discussed the components of the <font color="red">solution</font> and <a href="https://blogs.cisco.com/security/under-the-hood-why-you-need-amp-on-esa">how they work together</a> to protect <font color="red">customers</font> from the number one <font color="red">threat vector</font>. As mentioned in <font color="red">Cisco</font>’s <a href="https://engage2demand.cisco.com/cisco_2017_midyear_cybersecurity_report?CAMPAIGN=SC-04&amp;COUNTRY_SITE=US&amp;POSITION=link&amp;REFERRING_SITE=cisco.com+blogs&amp;CREATIVE=2017+MCR+Blogs&amp;CCID=cc000153&amp;DTID=esootr000515&amp;OID=tlpsc000841">2017 Midyear <font color="red">Cybersecurity</font> report</a>, email continues to be a primary delivery method for <font color="red">ransomware</font> and other <font color="red">malware</font>, so defenders should stay focused on addressing this risk before it becomes impossible to manage.</p>
+<p>In this <font color="red">blog post</font>, we are going to dive deeper and explain the <font color="red">workflows</font> of <font color="red">AMP</font> and <font color="red">Threat Grid</font> integration with <font color="red">Cisco</font> Email <font color="red">Security</font> (applies to both <font color="red">Cloud</font> Email <font color="red">Security</font> and on premise Email <font color="red">Security Appliance</font>), as well as help administrators refine <font color="blue">security posture</font> in their organizations. Let’s start with a quick recap of how <font color="blue">file reputation</font>, <font color="red">file analysis</font> and file retrospection work together in general.</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/598a446a32f8a.png"><img class="aligncenter size-full wp-image-230607" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/598a446a32f8a.png" alt="" width="1117" height="435" /></a></p>
+<p><font color="red">File Reputation</font> <font color="red">service</font> allows the ability capture a file on a <font color="red">network</font>, email, web gateway or on the <font color="red">endpoint</font>, calculate a hash and query the <font color="red">AMP cloud</font> to receive a disposition back – either clean, malicious or unknown. Malicious and clean files are normally not a subject for additional investigations and a policy action can be taken accordingly. For unknown files, this is when we want to provide additional analysis – we can do so by taking the file out of the <font color="red">network</font> and uploading it up to the <font color="red">File Analysis</font> <font color="red">service</font> – <font color="red">Threat Grid</font>. <font color="red">Threat Grid</font> applies both static and <font color="blue">dynamic analysis</font> techniques and records results of file execution into a human-readable analysis report. It also issues a <font color="red">threat score</font> overall. The two together help determine how likely it is that the file is malicious. The <font color="red">AMP cloud</font> may be updated with the analysis results from <font color="red">Threat Grid</font>, which can lead to <font color="red">AMP cloud</font> changing the disposition for a given file. <font color="red">Cisco</font> <font color="red">Talos</font> also constantly pushes intelligence about the files they analyze into the <font color="red">AMP cloud</font>, which complements <font color="red">AMP</font>’s global intelligence. This can trigger retrospective events, that help us notify our <font color="red">customers</font> about all the locations where these files were seen on their <font color="red">network</font> &#8211; whether it was seen by <font color="red">network</font> or content gateway or the <font color="red">endpoint</font>, depending on where you have deployed the <font color="red">AMP</font> license. What’s important to remember is that the authoritative source to convict a file is the <font color="red">AMP cloud</font>, not <font color="red">Threat Grid</font>.</p>
+<p><em>[<span class="s1">Note: The following <font color="red">blog post</font> describes <font color="red">AMP</font> and <font color="red">Threat Grid</font> integration with <font color="red">Cisco</font> Email <font color="red">Security</font> up to version 11.0, future versions may have notable <font color="red">workflow</font> enhancements.]</span></em></p>
+<p>Now let’s have a look at how we can apply the concepts, that we have just reviewed to <font color="red">Cisco</font> Email <font color="red">Security solution</font> (referred to as “<font color="red">ESA</font>” further). <font color="red">AMP</font> is a name of an add-on license for <font color="red">Cisco</font> <font color="red">ESA</font>, which brings:</p>
+<ul>
+<li><font color="red">capability</font> to run <font color="blue">file reputation</font> queries on attachments against the <font color="red">AMP cloud</font></li>
+<li><font color="red">capability</font> to submit unknown attachments that meet the criteria to <font color="red">Threat Grid</font></li>
+<li>receive retrospective notifications from <font color="red">AMP</font>, in case of a disposition change</li>
+</ul>
+<p>So, where do those <font color="red">capabilities</font> sit it in the <font color="red">ESA</font> workqueue?</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/598a4559a4757.png"><img class="aligncenter size-full wp-image-230610" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/598a4559a4757.png" alt="" width="1036" height="624" /></a></p>
+<p>Assuming the message wasn’t blocked by the preceding <font color="red">ESA</font> inspection layers, such as sender reputation, message filters, multiple anti-spam engines, multiple anti-virus engines – the message arrives to <font color="red">AMP</font> and <font color="red">Threat Grid</font> inspection point.</p>
+<p><strong><font color="red">AMP</font> <font color="red">File Reputation</font> <font color="red">Workflow</font></strong></p>
+<p>In the first <font color="red">phase</font>, <font color="red">ESA</font> attempts to derive the disposition of the attachment from <font color="red">AMP</font>, let’s break it down and review the exact steps taken by <font color="red">ESA</font> in this <font color="red">phase</font>.</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/598a457d8a3fe.png"><img class="aligncenter size-full wp-image-230611" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/598a457d8a3fe.png" alt="" width="1303" height="611" /></a></p>
+<p>When a message with an attachment reaches <font color="red">AMP</font> after anti-virus scanning, <font color="red">ESA</font> attempts to parse the attachment from the message by checking the message headers (check for compliance with RFC 2045). Even if the message is not fully compliant, <font color="red">ESA</font> still makes best effort to parse the attachment. The next step is to check whether an attachment is an archive file and if so &#8211; attempt to unpack it. If any of the above steps fail, due to for example format errors or file corruption, the configurable policy for unscannable attachments comes into effect.</p>
+<p>The files (along with the original compressed archive, if applicable) are then sent to the next step &#8211; checking of the internal <font color="red">ESA</font> <font color="red">AMP</font> <font color="red">cache</font> to understand whether a disposition of this file was already queried in the past and whether it could be now derived from <font color="red">cache</font>. On a side note, a useful addition in <font color="red">ESA</font> 11.0 is the ability to configure the <font color="blue">file reputation</font> <font color="red">cache</font> time to live, giving administrators more granular control over the <font color="red">cache</font> usage. If the <font color="red">cache</font> doesn’t contain an entry for this file, <font color="red">ESA</font> will communicate with the <font color="red">AMP Cloud</font> (public or private) to query the <font color="blue">file reputation</font>, which will return back a verdict: either clean, malicious or unknown. Clean files continue through <font color="red">ESA</font> workqueue to perform graymail <font color="red">detection</font>, content filtering and outbreak filtering inspections, if configured to do so. <font color="red">Malicious files</font> are processed according to the configured policy. It’s important to keep in mind that if an archive has multiple files inside – if even one is malicious then the entire archive and message will be seen as malicious. Attachments with unknown disposition are treated differently and they may be requested by the <font color="red">AMP Cloud</font> for upload to <font color="red">Threat Grid</font> – this may happen when <font color="red">file analysis</font> results for a given attachment are not available in the <font color="red">AMP cloud</font>, meaning they were not shared by <font color="red">Threat Grid</font> in the past, likely because the attachment was not analysed in <font color="red">Threat Grid</font>. Such files can proceed to the <font color="blue">next phase</font>.<strong> </strong></p>
+<p><strong>File Upload Criteria <font color="red">Workflow</font></strong></p>
+<p>In the second <font color="red">phase</font>, <font color="red">ESA</font> performs a couple of checks to see if the unknown file meets the upload criteria and if it contains suspicious content, that could likely show up as malicious.</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/598a45b7b31ec.png"><img class="aligncenter size-full wp-image-230612" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/598a45b7b31ec.png" alt="" width="983" height="498" /></a></p>
+<p><font color="red">ESA</font> first checks whether a file meets the following criteria:</p>
+<ul>
+<li>supported file type – at the time of <font color="red">File Analysis</font> configuration, <font color="red">ESA</font> administrator can select the desired file types</li>
+<li>does not exceed the file size threshold defined by <font color="red">Threat Grid</font></li>
+</ul>
+<p>If the two criteria above are met, the attachment continues to the next step – ClamAV pre-classification check. This step helps determine whether there is dynamic content and object streams inside, such as macros, embedded EXE, flash, etc. This step is needed to ensure that only files that can possibly be malicious are uploaded to <font color="red">Threat Grid</font>, and others that have no chance of being malicious are not uploaded and do not burn out file upload limits unnecessarily.</p>
+<p>If either of those criteria are not met – the message continues through the workqueue without uploading the file to <font color="red">Threat Grid</font>. Alternatively, if both criteria are met, <font color="red">ESA</font> proceeds to the <font color="blue">next phase</font>.</p>
+<p><strong><font color="red">Threat Grid</font> <font color="red">File Analysis</font> <font color="red">Workflow</font></strong></p>
+<p>In the third <font color="red">phase</font>, more validations are performed before <font color="red">ESA</font> finally uploads the attachment for analysis to <font color="red">Threat Grid</font>. Let’s have a look at the <font color="red">workflow</font>.</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/59d8248271f62.png"><img class="aligncenter size-full wp-image-234844" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/59d8248271f62.png" alt="" width="2620" height="1332" /></a></p>
+<p>In this <font color="red">phase</font>, the first couple of steps for <font color="red">ESA</font> are to check whether the local file upload <font color="red">queue</font> is full or not and whether <font color="red">Threat Grid</font> (public or appliance) is reachable. If either of these conditions is not met, the attachment is not sent for analysis and the message continues through <font color="red">ESA</font> work<font color="red">queue</font> (Content Filters and Outbreak Filters). Assuming the local upload queue is not full and <font color="red">Threat Grid</font> is reachable, <font color="red">ESA</font> proceeds by placing the associated message into <font color="red">File Analysis</font> <font color="red">quarantine</font> and by checking whether the attachment was already uploaded to <font color="red">Threat Grid</font> by another device (for example, another <font color="red">ESA</font>). If that’s the case, a duplicate will not be uploaded for analysis again. Alternatively, if the attachment is not yet known to <font color="red">Threat Grid</font>, <font color="red">ESA</font> would proceed and submit the file for analysis. This time it’s up to <font color="red">Threat Grid</font> to check if the sample upload limit was reached. If that’s the case, <font color="red">Threat Grid</font> discards the request and the associated message is released from <font color="red">quarantine</font>. <font color="red">Customers</font> can easily add more daily sample submissions to <font color="red">Threat Grid</font> through <a href="http://www.cisco.com/c/en/us/products/collateral/security/amp-threat-grid-cloud/datasheet-c78-733495.html">Sample Packs or Premium subscription</a>.</p>
+<p>If the upload limit wasn’t reached, the file gets accepted and <font color="red">queued</font> by <font color="red">Threat Grid</font>. Simultaneously, <font color="red">ESA</font> adds a record of the <font color="red">SHA256</font> of this file to its internal database (where it’s kept for up to 12 hours) and starts periodically querying if the analysis was complete, until it receives a positive response back from the <font color="red">File Analysis</font> <font color="red">service</font>. If there is no “<font color="red">file analysis</font> complete” message from <font color="red">Threat Grid</font> within 12 hours and if the <font color="red">File Analysis</font> <font color="red">quarantine</font> was configured to hold the message that long, the <font color="red">SHA256</font> ages out and <font color="red">ESA</font> releases the message from <font color="red">quarantine</font> to the workqueue. Alternatively, once <font color="red">Threat Grid</font> analysis is complete, the results of this analysis are added to the <font color="red">AMP</font> <font color="red">cache</font> on <font color="red">ESA</font>. At the same time, <font color="red">Threat Grid</font> shares this information with the <font color="red">AMP cloud</font>, so that other <font color="red">AMP</font> and <font color="red">Threat Grid</font> integrated devices on the <font color="red">network</font> can take advantage of the new intelligence. <font color="red">Threat Grid</font> <font color="red">cloud</font> can share analysis results with <font color="red">AMP</font> <a href="http://www.cisco.com/web/solutions/trends/cloud/build-public-cloud.html" title="<font color="blue">public cloud</font>" target="_blank" class="seoal-link">public cloud</a> and <font color="red">Threat Grid</font> appliance can share results with <font color="red">AMP</font> <font color="blue">private cloud</font>, but not the other way around.</p>
+<p>Along with the <font color="red">AMP</font> <font color="red">cache</font> update on <font color="red">ESA</font> and the intelligence sharing between <font color="red">Threat Grid</font> and <font color="red">AMP clouds</font>, the associated message with an attachment is released from <font color="red">File Analysis</font> <font color="red">quarantine</font>. Further workqueue rescanning would skip the <font color="red">File Analysis</font> <font color="red">workflow</font>, since <font color="red">File Reputation</font> query would use the updated <font color="red">AMP</font> <font color="red">cache</font> to derive a disposition for this file. Even if <font color="red">ESA</font> still derives an ‘unknown’ disposition from <font color="red">cache</font>, the upload to <font color="red">File Analysis</font> <font color="red">service</font> wouldn’t happen again, since the file is already known to <font color="red">Threat Grid</font>.</p>
+<p>It’s important to keep in mind, that either <font color="red">ESA</font> or the <font color="red">AMP cloud</font> can convict a file based on a <font color="red">threat score</font> returned back after analysis. <font color="red">Threat Grid</font> itself is not a <font color="red">solution</font> to convict files or assign disposition to files directly, that’s also one of the reasons <font color="red">customers</font> sometimes would see significant numbers of unknowns.</p>
+<p><strong>Retrospective Verdict</strong></p>
+<p>File verdicts can change as new information emerges &#8211; we’ve mentioned that <font color="red">AMP cloud</font> can change file dispositions based on <font color="red">Talos</font> analysis and based on <font color="red">Threat Grid</font> analysis. <font color="red">Cisco</font> <font color="red">ESA</font> is constantly staying in touch with the <font color="red">AMP cloud</font> by sending a periodic Heartbeat message, which also asks the <font color="red">cloud</font> if there were any changes in dispositions of files, that were sent through <font color="red">ESA</font>. If there was indeed a disposition change for a particular file that passed through <font color="red">AMP</font> and <font color="red">Threat Grid</font> inspection on <font color="red">ESA</font>, the <font color="red">solution</font> would alert the administrator, specifying the details necessary to go back and perform proper investigation. A notification includes information about the message and the attachment &#8211; such as subject, sender and recipient, file name and hash, and a new disposition.</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/598a45fae4460.png"><img class="aligncenter size-full wp-image-230613" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/598a45fae4460.png" alt="" width="918" height="220" /></a></p>
+<p>The best way to track down how <font color="red">AMP</font> and <font color="red">Threat Grid</font> inspection works on your <font color="red">Cisco</font> Email <font color="red">Security solution</font> is to review the reports presented in the user interface, as well as to follow the traces in the <a href="https://www.cisco.com/c/en/us/td/docs/security/esa/esa11-0/user_guide_fs/b_ESA_Admin_Guides/b_ESA_Admin_Guide_chapter_0100110.html#con_1181859"><font color="red">AMP</font> Engine logs</a>. This information combined together will present a clear idea to the Email <font color="red">Security</font> administrators about how <font color="red">File Reputation</font> and <font color="red">File Analysis</font> <font color="red">services</font> work.</p>
+<p>Securing your organization from advanced email-based <font color="red">threats</font> is not an easy task and requires a multi-layered approach with all the inspection layers tightly working together and complementing each other. Make sure to always include <a href="https://www.youtube.com/watch?v=W7IuchQR7dA"><font color="red">Threat Grid</font> Premium</a> subscription with your <font color="red">AMP</font> on <font color="red">Cisco</font> Email <font color="red">Security</font> evaluations to get access to <font color="red">Threat Grid</font> <font color="red">cloud</font> portal for manual file and URL uploads, extensive reporting, <font color="red">API</font> for further integrations and premium <font color="blue">threat intelligence</font> feeds. To learn more about the integration of <font color="red">AMP</font> and <font color="red">Threat Grid</font> with <font color="red">Cisco</font> Email <font color="red">Security solution</font>, review the additional resources below:</p>
+<p><a href="https://www.ciscolive.com/online/connect/sessionDetail.ww?SESSION_ID=93754&amp;backBtn=true"><font color="red">AMP</font> and <font color="red">Threat Grid</font> Integrations with Email, Web and <font color="red">Endpoint Security</font> – <font color="red">Cisco</font> Live</a></p>
+<p><a href="https://supportforums.cisco.com/document/13229856/enabling-amp-content-security-products-best-practices">Enabling <font color="red">AMP</font> on <font color="red">Content Security</font> products – Best Practices</a></p>
+<p><a href="https://youtu.be/eodBQU9MDRk"><font color="red">AMP</font> and <font color="red">Threat Grid</font> on <font color="red">Cisco</font> Email <font color="red">Security</font> – Chalk Talk</a></p>
+<p><a href="https://www.cisco.com/c/en/us/td/docs/security/esa/esa11-0/user_guide_fs/b_ESA_Admin_Guides/b_ESA_Admin_Guide_chapter_0100110.html#con_1181859"><font color="red">AMP</font> Engine Logs</a></p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=advanced-malware-protection">Advanced Malware Protection</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=cisco-amp">Cisco AMP</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=email-security">email security</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=threat-grid">Threat Grid</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">9 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+<li>
+			<div id="comment-2471533">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/photo_1503991834.jpg' width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+							<a href = "https://blogs.cisco.com/rewards-profile/17437">Qamar Islam</a>
+						</span>
+						<br />
+						<span class="comment-meta commentmetadata">September 25, 2017 at 10:38 pm</span>
+
+					</div>
+				<div class="comment_text">
+					<ul class = "comment_id2471533 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'qamarislamcommtelae';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2471533");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2471533">
+								</div>
+								<div class = "nitro_points pointscomment_id2471533">
+								</div>
+							</li>
+							</ul>
+					<div class = "clear"></div> <p>Hi Evgeny,
+
+
+
+I just need to know about the commuication ports through which it will talk to public cloud and Threat grid.
+
+
+
+My deployment scenario change:
+
+I have Two ESA appliances and one SMA for management, On premises dedicated amp 8050 appliance and Threat Grid with Private cloud in my case, Do you have any work flow for above mentioned appliances connectivity?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2471533" class = "commentLikeButton commentlike" data-nitro =qamarislamcommtelae>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+<li>
+			<div id="comment-2469626">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/photo_1504710098.jpg' width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+							<a href = "https://blogs.cisco.com/rewards-profile/17643">Christian Amador</a>
+						</span>
+						<br />
+						<span class="comment-meta commentmetadata">September 6, 2017 at 7:58 am</span>
+
+					</div>
+				<div class="comment_text">
+					<ul class = "comment_id2469626 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'christianamador';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2469626");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2469626">
+								</div>
+								<div class = "nitro_points pointscomment_id2469626">
+								</div>
+							</li>
+							</ul>
+					<div class = "clear"></div> <p>Excellent way to explan ESA. Thank you for the workflows. Could you share with us the workflow of the other security solutions? Regards,</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2469626" class = "commentLikeButton commentlike" data-nitro =christianamador>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+<li>
+			<div id="comment-2469631">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/photo_1488883754.jpg' width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+							<a href = "https://blogs.cisco.com/rewards-profile/12790">Evgeny Mirolyubov</a>
+						</span>
+						<br />
+						<span class="comment-meta commentmetadata">September 6, 2017 at 9:28 am</span>
+
+					</div>
+				<div class="comment_text">
+					<ul class = "comment_id2469631 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'emirolyu';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2469631");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2469631">
+								</div>
+								<div class = "nitro_points pointscomment_id2469631">
+								</div>
+							</li>
+							</ul>
+					<div class = "clear"></div> <p>Thank you, Christian. Which other solutions present the most interest?
+
+Here is the blog post explaining AMP for Endpoints + CTA workflow for Incident Response: https://blogs.cisco.com/security/take-incident-response-to-the-next-level-with-amp-for-endpoints-and-cognitive-threat-analytics</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2469631" class = "commentLikeButton commentlike" data-nitro =emirolyu >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+<li>
+			<div id="comment-2467858">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/photo_1503991834.jpg' width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+							<a href = "https://blogs.cisco.com/rewards-profile/17437">Qamar Islam</a>
+						</span>
+						<br />
+						<span class="comment-meta commentmetadata">August 29, 2017 at 12:05 am</span>
+
+					</div>
+				<div class="comment_text">
+					<ul class = "comment_id2467858 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'qamarislamcommtelae';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2467858");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2467858">
+								</div>
+								<div class = "nitro_points pointscomment_id2467858">
+								</div>
+							</li>
+							</ul>
+					<div class = "clear"></div> <p>Great Information thanks,
+
+I just want to know about for the best performances of the cisco amp 8050 and threat grid with ESA, What are their best placements in DC?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2467858" class = "commentLikeButton commentlike" data-nitro =qamarislamcommtelae>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+<li>
+			<div id="comment-2469486">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/photo_1488883754.jpg' width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+							<a href = "https://blogs.cisco.com/rewards-profile/12790">Evgeny Mirolyubov</a>
+						</span>
+						<br />
+						<span class="comment-meta commentmetadata">September 5, 2017 at 11:15 am</span>
+
+					</div>
+				<div class="comment_text">
+					<ul class = "comment_id2469486 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'emirolyu';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2469486");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2469486">
+								</div>
+								<div class = "nitro_points pointscomment_id2469486">
+								</div>
+							</li>
+							</ul>
+					<div class = "clear"></div> <p>Thank you, Qamar. Can you please clarify your question - performance in terms of the number of analyzed files, throughput?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2469486" class = "commentLikeButton commentlike" data-nitro =emirolyu >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2465121">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Anonymous						</span>
+						<br />
+						<span class="comment-meta commentmetadata">August 14, 2017 at 5:22 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Great Blog, very informative.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2465121" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2465056">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						KJ						</span>
+						<br />
+						<span class="comment-meta commentmetadata">August 13, 2017 at 4:43 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>This is a great explanation for how to process FILE on the AMP. Thanks!</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2465056" class = "commentLikeButton commentlike" data-nitro = >2 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li class="comment even thread-even depth-1" id="li-comment-2464593">
+				<div id="comment-2464593">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1515004303-bpthumb.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/tobiasmayer'>Tobias Mayer</a></span><br />
+							<span class="comment-meta commentmetadata">August 10, 2017 at 7:15 am</span>
+
+						</div>
+						<div class="comment_text">
+							<ul class = "comment_id2464593 bunchballAwards" style="margin-top: 5px; margin-right: -20px; margin-left: 0px; height: 55px;">
+								<script>
+									var nitroName = 'tmayer';
+									var sessionKey = '';
+
+
+									nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "commentBadges", "comment_id2464593");</script>
+
+							<li>
+								<div class = "nitro_badge badgecomment_id2464593">
+								</div>
+								<div class = "nitro_points pointscomment_id2464593">
+								</div>
+							</li>
+							</ul>
+							<div class = "clear"></div>
+							<p>Very nice writeup and clear explanations!</p>						</div>
+
+							<div class = "roblike">
+					<a  href = "#" id = "clickLike2464593" class = "commentLikeButton commentlike" data-nitro =tmayer>1 like</a>				</div>
+				<div class="reply">
+															</div>
+							<div class="clear"></div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+	</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2464565">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Dhiren						</span>
+						<br />
+						<span class="comment-meta commentmetadata">August 9, 2017 at 11:07 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Thanks for sharing. This is explained in a simple manner and contains very useful information.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2464565" class = "commentLikeButton commentlike" data-nitro =>1 like</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Security:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogSecurity', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogSecurity" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Security</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscosecurity?ref=nf"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/ciscosecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://youtubecisco.com/security"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogSecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.cert.org/blogs/vuls/" target="_blank">CERT Vulnerability Analysis</a></li>
+                      <li><a href="http://blogs.technet.com/b/srd/" target="_blank">Microsoft Security Research & Defense</a></li>
+                      <li><a href="http://isc.sans.edu/index.html" target="_blank">SANS Internet Storm Center</a></li>
+                      <li><a href="http://www.schneier.com/" target="_blank">Schneier on Security</a></li>
+                  </ul>
+              <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="http://www.cisco.com/en/US/products/products_security_advisories_listing.html" target="_blank">Advisories and Responses</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/cyberRiskReport.x" target="_blank">Cyber Risk Reports</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/intelliPapers.x?i=55" target="_blank">Security Best Practices</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/home.x" target="_blank">Security Intelligence Operations</a></li>
+                        <li><a href="http://www.cisco.com/en/US/products/hw/vpndevc/index.html" target="_blank">Security Products</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscosecurity?ref=nf'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/ciscosecurity'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 230605;
+			var orig_count = 6;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/2upg6Hx&text=Deep Dive into AMP and Threat Grid integration with Cisco Email Security&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/deep-dive-into-amp-and-threat-grid-integration-with-cisco-email-security&title=Deep Dive into AMP and Threat Grid integration with Cisco Email Security" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/deep-dive-into-amp-and-threat-grid-integration-with-cisco-email-security" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/deep-dive-into-amp-and-threat-grid-integration-with-cisco-email-security" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Deep Dive into AMP and Threat Grid integration with Cisco Email Security&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0ADeep Dive into AMP and Threat Grid integration with Cisco Email Security%0A%0Ahttps://blogs.cisco.com/security/deep-dive-into-amp-and-threat-grid-integration-with-cisco-email-security%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

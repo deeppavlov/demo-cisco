@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Correlating NetFlow Data for Proactive Security: Network Notoriety</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; Correlating NetFlow Data for Proactive Security: Network Notoriety Comments Feed" href="https://blogs.cisco.com/security/correlating-netflow-data-for-proactive-security-network-notoriety/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"57763"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Forrester Report on Virtual Security Adoption in the Data Center' href='https://blogs.cisco.com/datacenter/forrester-report-on-virtual-security-adoption-in-the-data-center' />
+<link rel='next' title='From San Jose to London' href='https://blogs.cisco.com/enterprise/from-san-jose-to-london' />
+
+<link rel="canonical" href="https://blogs.cisco.com/security/correlating-netflow-data-for-proactive-security-network-notoriety" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=57763' />
+<meta property="og:image" content="http://i.ytimg.com/vi/lTzByQTeyJQ/default.jpg" />
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Correlating NetFlow Data for Proactive Security: Network Notoriety"/>
+  <meta property="og:url" content="https://blogs.cisco.com/security/correlating-netflow-data-for-proactive-security-network-notoriety"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2012-01-18T16:49:36+00:00"/>
+  <meta property="article:modified_time" content="2012-01-18T16:49:36+00:00" />
+  <meta property="og:updated_time" content="2012-01-18T16:49:36+00:00" />
+  <meta property="article:section" content="Security"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Correlating NetFlow Data for Proactive Security: Network Notoriety"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/security/correlating-netflow-data-for-proactive-security-network-notoriety"/>
+  <meta name="twitter:description" content="Prelude
+
+In this short article the reader will first learn what NetFlow is and how it works. Next the reader will understand how it can be as an important security tool. Finally, a technique for correlating NetFlow results with public sources of Internet reputation, along with the tool “Netoriety,”"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521513977";
+		var sig = "984def1995bcb5bdcb867f833b07af02";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=https://blogs.cisco.com/security/correlating-netflow-data-for-proactive-security-network-notoriety&text=Correlating NetFlow Data for Proactive Security: Network Notoriety&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/correlating-netflow-data-for-proactive-security-network-notoriety&title=Correlating NetFlow Data for Proactive Security: Network Notoriety" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/correlating-netflow-data-for-proactive-security-network-notoriety" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/correlating-netflow-data-for-proactive-security-network-notoriety" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Correlating NetFlow Data for Proactive Security: Network Notoriety&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0ACorrelating NetFlow Data for Proactive Security: Network Notoriety%0A%0Ahttps://blogs.cisco.com/security/correlating-netflow-data-for-proactive-security-network-notoriety%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/security/'>Security</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category50.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Security  						</span>
+						<h1 id="post-57763" class="kindle_title title">Correlating NetFlow Data for Proactive Security: Network Notoriety</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/MikeSchiffman.thumbnail.4cb4c4a1b2f7b.jpg"></div><div class="author_rewards_box"></div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/MikeSchiffman" title="Posts by Mike Schiffman" rel="author">Mike Schiffman</a> - January 18, 2012 - 5 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<h2>Prelude</h2>
+<p>In this short article the reader will first learn what <font color="red">NetFlow</font> is and how it works. Next the reader will understand how it can be as an <font color="red">important security</font> tool. Finally, a technique for correlating <font color="red">NetFlow</font> results with public sources of Internet reputation, along with the tool “Netoriety,” which implements the technique, will be introduced and explained.<br />
+<span id="more-57763"></span></p>
+<h3>Ok, I&#8217;m here, now give me the quick version &#8212; what is <font color="red">NetFlow</font>?</h3>
+<p><a href="http://www.cisco.com/en/US/products/ps6601/products_ios_protocol_group_home.html" target="_blank"><font color="red">NetFlow</font></a> is a <a href="http://en.wikipedia.org/wiki/User_Datagram_Protocol">UDP</a>-exported <font color="red">network</font> profiling protocol originally developed by <font color="red">Cisco</font> Systems in 1996. It enables participating devices (typically <font color="red">routers</font> and switches) to report <a href="http://en.wikipedia.org/wiki/Telemetry"><font color="red">telemetry</font></a> <font color="red">data</font> on the <font color="red">network</font> <font color="red">traffic</font> flowing through them (such a device is called a <font color="red">NetFlow</font> exporter). This <font color="red">data</font> is sent to a downstream machine, called a <font color="red">NetFlow</font> Collector:</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/NF02-1.jpg"><img src="https://alln-extcloud-storage.cisco.com/ciscoblogs/NF02-1.jpg" alt="" title="NF02-1" width="292" height="272" class="aligncenter size-full wp-image-57784" /></a></p>
+<p>The <font color="red">data</font> can then be collated, sorted, analyzed, trended, and so on. The most widely deployed version of <font color="red">NetFlow</font>, version 5, offers the capability to track the following flow <font color="red">data</font> (the traditional <font color="red">Cisco</font> 7-tuple is highlighted in blue):</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/NF6-2.jpg"><img src="https://alln-extcloud-storage.cisco.com/ciscoblogs/NF6-2.jpg" alt="" title="NF6-2" width="227" height="328" class="aligncenter size-full wp-image-57785" /></a></p>
+<p><font color="red">NetFlow</font> version 9 introduced much more power with the capability to dynamically change the <font color="red">packet</font> format using templates and match on just about anything using <a href="http://www.cisco.com/en/US/products/ps6965/products_ios_protocol_option_home.html">Flexible <font color="red">NetFlow</font></a>.</p>
+<p>If <font color="red">packet capture</font> can be thought of as a wiretap, <a href="http://www.cisco.com/en/US/prod/collateral/iosswrel/ps6537/ps6586/ps6642/prod_presentation0900aecd80311f49.pdf"><font color="red">NetFlow</font> can be considered the phone bill</a>. <font color="red">NetFlow</font> allows the <font color="red">Network Administrator</font> and <font color="red">Security</font> Practitioner to determine:</p>
+<ul>
+<li>Who is talking to who</li>
+<li>Over what ports (or protocols)</li>
+<li>For how long</li>
+<li>At what speed</li>
+</ul>
+<p>It is obvious this sort of <font color="red">data</font> can be useful in spades for organizations that need to do <font color="red">traffic</font> shaping, profiling, and metering. We will see that it is also useful to add additional layers of <font color="red">network security</font>.</p>
+<h3>I&#8217;m slightly interested, but why is <font color="red">NetFlow</font> important to the <font color="red">security</font> of my <font color="red">network</font>?</h3>
+<h2><span class="Apple-style-span" style="font-size: 13px; font-weight: normal;">By vastly increasing the awareness of what is going on in a <font color="red">network</font>, the security-related benefits of <font color="red">NetFlow</font> are numerous. Some of these include: </span></h2>
+<ul>
+<li><a href="http://www.youtube.com/watch?v=lTzByQTeyJQ">The Everything&#8217;s OK Alarm</a>: <font color="red">NetFlow</font> can be used to record a baseline <font color="red">traffic</font> snapshot that meets your site&#8217;s policy guidelines. Subsequently, if something deviates from that norm, your <font color="red">NetFlow</font> collector can alert you about the problem and give you details on the machine causing it.</li>
+<li><a href="http://www.networkworld.com/news/2006/020606-argonne-netflow.html"><font color="red">Data</font> Mining for Misuse</a>: <font color="red">NetFlow</font> flows, when aggregated, can provide an excellent target for <font color="red">data</font> mining. Suspicious, unusual, or even illegal behaviors can be tracked and trended.</li>
+<li>Detecting Denial of Service attacks: Companies like Arbor Networks use <font color="red">NetFlow</font> to power their Distributed Denial of Service <font color="red">detection</font> and prevention tool, <a href="http://www.arbornetworks.com/arbor-pravail-availability-protection-system.html">Pravail</a>.</li>
+<li><a href="http://blogs.cisco.com/security/netflow-for-incident-response/"><font color="red">Incident Response</font></a>: <font color="red">NetFlow</font> excels at providing audit and actuarial <font color="red">data</font> for <font color="red">security</font> <font color="red">incidents</font>. For example, if a <a href="http://www.cisco.com/en/US/products/ps5729/Products_Sub_Category_Home.html"><font color="red">Cisco</font> <font color="red">IPS</font></a> fires on a malevolent <font color="red">packet</font>, <font color="red">NetFlow</font> <font color="red">data</font> can provided much needed context on the flow or flows that precede, contain, and follow the attack.</li>
+</ul>
+<h3>You make some good points, but how can I extend <font color="red">NetFlow</font>&#8217;s abilities?</h3>
+<p>The Internet isn&#8217;t all <a href="http://www.doobybrain.com/wp-content/uploads/2008/10/research-paper-vs-internet-comic.jpg">cake, parties, rocket ships, and dinosaurs</a>. As you know, it also has its share of seedy villains and outright evildoers; the kinds of folks you just don&#8217;t want anything to do with: <a href="http://en.wikipedia.org/wiki/Spam_(electronic)">spammers</a>, <a href="http://en.wikipedia.org/wiki/Botnet"><font color="red">botnet</font></a> command-and-control hosts, <a href="http://blogs.cisco.com/security/a_brief_history_of_malware_obfuscation_part_1_of_2/">worm- and malware-</a>infected hosts, <a href="http://en.wikipedia.org/wiki/Porn">porn</a> and <a href="http://en.wikipedia.org/wiki/Warez">warez</a> hosting sites, and so on. If this type of <font color="red">traffic</font> was traversing your <font color="red">network</font>, you&#8217;d probably want to know about it right away. We&#8217;ve learned that <font color="red">NetFlow</font> can tell us <em>who</em> is talking to <em>who</em> across our <font color="red">network</font>, but how can we tell if either <em>who</em> is a <font color="red">bad actor</font>? By checking the reputation of the <font color="red">IP addresses</font> at both ends of the conversation.</p>
+<h3>IP-Based Reputation</h3>
+<p>All <font color="red">Internet traffic</font> must originate from an <font color="red">IP address</font>. For malevolent <font color="red">traffic</font>, if it can be sourced, it can be tracked (yes, we are turning a blind eye to the vagaries of <font color="red">IP</font> spoofing and <font color="red">attackers</font> hiding behind <font color="red">proxies</font>). There are a plethora of organizations that use various criteria and methods to rank, rate, and score <font color="red">IP addresses</font> with respect to how &#8220;notorious&#8221; they are. More specifically, if a given <font color="red">IP address</font> is known to be that of a spammer or a part of a <font color="red">botnet</font> army it can be flagged in one of the ill repute databases, often with a numeric score contextual to the rating system. For example, <font color="red">Cisco</font>&#8217;s <a href="http://www.senderbase.org/help/sbrs">IronPort</a> uses an integral system from -10 for the worst offenders to +10 for the most angelic. Another vendor, <a href="http://www.reputationauthority.org/">ReputationAuthority</a> has a slick interface for querying individual <font color="red">IP addresses</font> against their reputation database. There are many <font color="red">open source</font> variants as well, such as <a href="http://www.spamrats.com/">SpamRats</a>, <a href="http://www.spamcop.net/">SpamCop</a>, and <a href="http://www.spamhaus.org/">Spamhaus</a>.</p>
+<p>Since these databases are all keyed on <font color="red">IP address</font>, <font color="red">NetFlow</font> <font color="red">data</font> can be correlated against them and subsequent <font color="red">malicious traffic</font> patterns can be observed, blocked, or flagged for further action. This is <font color="red">NetFlow</font> Correlation.</p>
+<div>
+<h3>Netoriety</h3>
+<p>Netoriety (amalgamation of <font color="red">network</font> and notoriety) is a proof-of-concept tool built by <font color="red">Cisco</font>&#8217;s Applied <font color="red">Security</font> Research team to demonstrate the concept of <font color="red">NetFlow</font> Correlation. It is designed to work as a special <font color="red">NetFlow</font> collector that issues alerts if it detects any <font color="red">traffic</font> flows of contemptuous reputation. The central component of Netoriety is its <font color="red">bad actor</font> database. This is a <a href=" http://fallabs.com/kyotocabinet/">Kyoto Cabinet</a>-based key/value store (built using a separate tool) designed to work with any <font color="red">IP</font> reputation database that keys off of v4 <font color="red">IP address</font>.  Additionally, if <font color="red">reputation scores</font> are available, Netoriety can optionally be configured to trigger an alert if a tunable threshold is met.</p>
+<p>To the <font color="red">NetFlow</font> exporter, Netoriety looks and acts like any old <font color="red">NetFlow</font> collector. The  flow of control is shown below:</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/NF3-300x296-3.jpg"><img src="https://alln-extcloud-storage.cisco.com/ciscoblogs/NF3-300x296-3.jpg" alt="" title="NF3-300x296-3" width="300" height="296" class="aligncenter size-full wp-image-57786" /></a></p>
+<p>Currently, when a match is found in its database, Netoriety can issue console- and syslog-based alerts on the localhost, and XML-based alerts to a remote host. <font color="red">SNMP</font> trap functionality is planned.</p>
+<div>
+<h4>Netoriety Internals</h4>
+<p>Netoriety is C-based <font color="red">NetFlow</font> collector written for Unix-like operating systems. It is built on top of the following <font color="red">open source</font> libraries:</p>
+<ul>
+<li><a href="http://www.monkey.org/~provos/libevent/">libevent</a>: Asynchronous event handling</li>
+<li><a href="http://minixml.org">libmxml</a>: <font color="red">XML</font> alerting</li>
+<li><a href="http://fallabs.com">kyotocabinet</a>: Reputation database storage and lookups</li>
+</ul>
+<div>Each entry in the <font color="red">bad actor</font> database is of the following structure:</div>
+</div>
+<div>
+<pre><span style="color: #008000;">struct</span> internet_bad_actor_record</pre>
+<pre>{
+
+    <span style="color: #008000;">uint32_t</span> <font color="red">ip</font>;                    <span style="color: #008080;">/* <font color="red">ip address</font> (mandatory) */</span>
+
+    <span style="color: #008000;">uint16_t</span> type;                  <span style="color: #008080;">/* type of <font color="red">bad actor</font> (optional) */</span>
+
+<span style="color: #0000ff;">#define REP_REPUTATION</span>     <span style="color: #ff00ff;">0x0001</span>   <span style="color: #008080;">/* has <font color="red">reputation score</font> */</span>
+
+<span style="color: #0000ff;">#define REP_BOT</span>            <span style="color: #ff00ff;">0x0002</span>   <span style="color: #008080;">/* <font color="red">botnet</font> host */</span>
+
+<span style="color: #0000ff;">#define REP_IRCBOT</span>         <span style="color: #ff00ff;">0x0004</span>   <span style="color: #008080;">/* irc <font color="red">bot</font> */</span>
+
+<span style="color: #0000ff;">#define REP_CONFICKER</span>      <span style="color: #ff00ff;">0x0008</span>   <span style="color: #008080;">/* <font color="red">conficker</font> host */</span>
+
+<span style="color: #0000ff;">#define REP_ROUTER</span>         <span style="color: #ff00ff;">0x0010</span>   <span style="color: #008080;">/* <font color="red">router</font> */</span>
+
+<span style="color: #0000ff;">#define REP_PROXY</span>          <span style="color: #ff00ff;">0x0020</span>  <span style="color: #008080;"> /* <font color="red">proxy</font> */</span>
+
+<span style="color: #0000ff;">#define REP_DARKNET</span>        <span style="color: #ff00ff;">0x0040</span>   <span style="color: #008080;">/* darknet */</span>
+
+<span style="color: #0000ff;">#define REP_WAREZ</span>          <span style="color: #ff00ff;">0x0080</span>   <span style="color: #008080;">/* host known to <font color="red">traffic</font> warez */</span>
+
+<span style="color: #0000ff;">#define REP_UNKNOWN</span>        <span style="color: #ff00ff;">0x0000</span>   <span style="color: #008080;">/* uncategorized or unknown <font color="red">bad actor</font> */</span>
+
+    <span style="color: #008000;">int8_t</span> reputation;              <span style="color: #008080;">/* <font color="red">reputation score</font> (optional) */</span>
+
+<span style="color: #0000ff;">#define REP_REPUNKNOWN</span>     <span style="color: #ff00ff;">0xb0</span>     <span style="color: #008080;">/* hopefully this won't be used */</span>
+
+    <span style="color: #008000;">uint8_t</span> action;                 <span style="color: #008080;">/* recommended action (optional) */</span>
+
+<span style="color: #0000ff;">#define REP_ACTION_DROP</span>    <span style="color: #ff00ff;">0x01</span>     <span style="color: #008080;">/* recommended action: should drop */</span>
+
+<span style="color: #0000ff;">#define REP_ACTION_MONITOR</span> <span style="color: #ff00ff;">0x02</span>     <span style="color: #008080;">/* recommended action: should monitor */</span>
+
+<span style="color: #0000ff;">#define REP_ACTION_BLOCK</span>   <span style="color: #ff00ff;">0x04</span>     <span style="color: #008080;">/* recommended action: should block */</span>
+
+    <span style="color: #008000;">uint8_t</span> source;                 <span style="color: #008080;">/* source of <font color="red">data</font> (optional) */</span>
+
+<span style="color: #0000ff;">#define REP_SRC_PRIVATE</span>    <span style="color: #ff00ff;">0x01</span>     <span style="color: #008080;">/* private or unlisted source */</span>
+
+<span style="color: #0000ff;">#define REP_SRC_CISCOIBRS</span>  <span style="color: #ff00ff;">0x02</span>     <span style="color: #008080;">/* <font color="red">Cisco</font> IBRS */</span>
+
+    <span style="color: #008000;">time_t</span> timestamp;               <span style="color: #008080;">/* timestamp (optional) */</span>
+
+    <span style="color: #008000;">char</span> comments[<span style="color: #ff00ff;">80</span>];              <span style="color: #008080;">/* short textual comments (optional) */</span>
+
+};
+
+<span style="color: #008000;">typedef</span> <span style="color: #008000;">struct</span> internet_bad_actor_record bad_actor_t;</pre>
+</div>
+</div>
+<p>&nbsp;</p>
+<h4>Netoriety Console</h4>
+<p>Netoriety is a real-time application. It multiplexes across the <font color="red">network</font> and the keyboard to look for input to act upon. For example, if the user presses &#8216;c&#8217; to bring up the console, the following screen will pop up and give some situational and statistical information:</p>
+<pre>|-------------------------------------------------------------------------|
+
+|                            Netoriety console                            |
+
+|-------------------------------------------------------------------------|
+
+|local time:                    Fri Dec 16 14:13:47 2011
+
+|uptime:                        196 days 1 hour 2 minutes 37 seconds
+
+|listening at:                  any UDP/9995
+
+|process <font color="red">ID</font>:                    27000
+
+|<font color="red">bad actor</font> db:                  ../netoriety-db/bad_actor.kch
+
+|alert modules active:          console <font color="red">XML</font>
+
+|<font color="red">XML</font> alert host at:             127.0.0.1 UDP/9999
+
+|logging disposition:           debug
+
+|-------------------------------------------------------------------------|
+
+|flows   (v5):                  92513136
+
+|flows   (v9):                  0
+
+|<font color="red">packets</font> (v5):                  3160575
+
+|<font color="red">packets</font> (v9):                  0
+
+|<font color="red">bad actors</font>:                    8054
+
+|<font color="red">bots</font>:                          0
+
+|irc <font color="red">bots</font>:                      188
+
+|<font color="red">conficker</font>:                     7868
+
+|<font color="red">router</font>:                        0
+
+|<font color="red">proxy</font>:                         0
+
+|darknet:                       0
+
+|warez:                         0
+
+|unknown:                       0
+
+|octets read:                   4516484328
+
+|db hits:                       8054
+
+|db misses:                     185018218
+
+|alerts sent:                   7942
+
+|-------------------------------------------------------------------------|</pre>
+<p>&nbsp;</p>
+<h4>Netoriety <font color="red">XML</font> Alert</h4>
+<p>If so configured, Netoriety can issue <font color="red">XML</font> alerts over UDP to a host. These alerts can be used by the administrator to take action based on Netoriety&#8217;s recommendation (&#8220;recommended action&#8221;), or just logged for later use. While there is currently no <a href="http://www.w3.org/XML/Schema">schema</a> exists, the basic alert structure is shown below:</p>
+<p><span style="color: #008080;">&lt;Netoriety&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;Device</span> <span style="color: #339966;">exporterAddress</span>=<span style="color: #ff00ff;">&#8220;xxx.xxx.xxx.xxx&#8221;</span><span style="color: #008080;">&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Flow&gt;</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #008080;">&lt;FlowRecord&gt; <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Timestamp</span> <span style="color: #339966;">type</span>=<span style="color: #ff00ff;">&#8220;start&#8221;</span><span style="color: #008080;">&gt;</span>2011-12-16 11:55:45<span style="color: #008080;">&lt;/Timestamp&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Timestamp</span> <span style="color: #339966;">type</span>=<span style="color: #ff00ff;">&#8220;end&#8221;</span><span style="color: #008080;">&gt;</span>2011-12-16 11:56:00<span style="color: #008080;">&lt;/Timestamp&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;PacketCount&gt;</span>5<span style="color: #008080;">&lt;/PacketCount&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Bytes&gt;</span>444<span style="color: #008080;">&lt;/Bytes&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;BPS&gt;</span>236<span style="color: #008080;">&lt;/BPS&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Flows&gt;</span>7680<span style="color: #008080;">&lt;/Flows&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Interface</span> <span style="color: #339966;">type</span>=<span style="color: #ff00ff;">&#8220;source&#8221;</span><span style="color: #008080;">&gt;</span>2<span style="color: #008080;">&lt;/Interface&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Interface</span> <span style="color: #339966;">type</span>=<span style="color: #ff00ff;">&#8220;destination&#8221;</span><span style="color: #008080;">&gt;</span>1<span style="color: #008080;">&lt;/Interface&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Address</span> <span style="color: #339966;">type</span>=<span style="color: #ff00ff;">&#8220;source&#8221;</span><span style="color: #008080;">&gt;</span>yyy.yyy.yyy.yyy<span style="color: #008080;">&lt;/Address&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Address</span> <span style="color: #339966;">type</span>=<span style="color: #ff00ff;">&#8220;destination&#8221;</span><span style="color: #008080;">&gt;</span>zzz.zzz.zzz.zzz<span style="color: #008080;">&lt;/Address&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;TOS&gt;</span>0<span style="color: #008080;">&lt;/TOS&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Protocol&gt;</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #008080;">&lt;Type</span> <span style="color: #339966;">number</span>=<span style="color: #ff00ff;">&#8220;6&#8221;</span><span style="color: #008080;">&gt;</span>tcp<span style="color: #008080;">&lt;/Type&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Port</span> <span style="color: #339966;">type</span>=<span style="color: #ff00ff;">&#8220;source&#8221;</span><span style="color: #008080;">&gt;</span>80<span style="color: #008080;">&lt;/Port&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Port</span> <span style="color: #339966;">type</span>=<span style="color: #ff00ff;">&#8220;destination&#8221;</span><span style="color: #008080;">&gt;</span>22282<span style="color: #008080;">&lt;/Port&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/Protocol&gt;</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #008080;">&lt;/FlowRecord&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;BadActor&gt;</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #008080;">&lt;Address</span> <span style="color: #339966;">type</span>=<span style="color: #ff00ff;">&#8220;source&#8221;</span><span style="color: #008080;">&gt;</span>mmm.mmm.mmm.mmm<span style="color: #008080;">&lt;/Address&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Type</span> <span style="color: #339966;">code</span>=<span style="color: #ff00ff;">&#8220;8&#8221;</span><span style="color: #008080;">&gt;</span><font color="red">conficker</font><span style="color: #008080;">&lt;/Type&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;ReputationScore&gt;</span>unknown<span style="color: #008080;">&lt;/ReputationScore&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;RecommendedAction</span> code=<span style="color: #ff00ff;">&#8220;5&#8221;</span><span style="color: #008080;">&gt;</span>drop, block<span style="color: #008080;">&lt;/RecommendedAction&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;DataSource</span> <span style="color: #339966;">code</span>=<span style="color: #ff00ff;">&#8220;1&#8221;</span><span style="color: #008080;">&gt;</span>private<span style="color: #008080;">&lt;/DataSource&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Timestamp</span> <span style="color: #339966;">type</span>=<span style="color: #ff00ff;">&#8220;source&#8221;</span><span style="color: #008080;">&gt;</span>2011-03-31 04:10:59<span style="color: #008080;">&lt;/Timestamp&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Comments&gt;</span>srcport: 45166; destaddr: fff.fff.fff.fff<span style="color: #008080;">&lt;/Comments&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/BadActor&gt;</span><br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #008080;">&lt;/Flow&gt;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/Device&gt;</span><br />
+<span style="color: #008080;">&lt;/Netoriety&gt;</span></p>
+<h2>Denouement</h2>
+<p>I trust you&#8217;ve found this article a bit interesting, if not somewhat life-changing. We&#8217;ve learned how to extend <font color="red">NetFlow</font> from issuing <font color="red">telemetry</font> <font color="red">data</font> to providing an additional layer of <font color="red">security</font> comfort. Finally, to answer the burning question of where and when you can get your fingers on the code, at the time of this writing, Netoriety is currently an under development prototype project and is not available for public download. If you need a tool to play with, <a href="http://nfdump.sourceforge.net/">NFDUMP</a> is an <font color="red">open source</font> package containing many easy to use <font color="red">NetFlow</font> related tools. Until next time, my friends.</p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=netflow">netflow</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=reputation">reputation</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=security-2">security</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">5 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+			<li>
+			<div id="comment-547713">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Nathan Kaminski						</span>
+						<br />
+						<span class="comment-meta commentmetadata">February 9, 2012 at 5:35 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>The combination of edge to core visibility (That Netflow can provide) and a heuristics engine to help make sense of it all is a powerful way to enhance your layered security strategy.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike547713" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-546468">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Pius Nolih						</span>
+						<br />
+						<span class="comment-meta commentmetadata">February 5, 2012 at 5:20 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>My First On the job training in 1999, I discovered Netflow by just searching in ask.com...I downloaded a trial collector and configure my work router from Collins &amp; Leahy...and never looked back ever since...I love netflow....its just getting better</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike546468" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-537758">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Shashank Pawar						</span>
+						<br />
+						<span class="comment-meta commentmetadata">January 23, 2012 at 5:00 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>This is great Netflow.
+
+Thanks.!</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike537758" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-537104">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						wael almasry						</span>
+						<br />
+						<span class="comment-meta commentmetadata">January 22, 2012 at 4:55 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>thanks sir 
+
+
+
+i prepare now to CCNP SEC , really I benefited greatly from this article</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike537104" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-534663">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						David Shaw						</span>
+						<br />
+						<span class="comment-meta commentmetadata">January 18, 2012 at 5:30 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Thanks for the post! I know a few people I will be passing this link to.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike534663" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Security:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogSecurity', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogSecurity" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Security</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscosecurity?ref=nf"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/ciscosecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://youtubecisco.com/security"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogSecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.cert.org/blogs/vuls/" target="_blank">CERT Vulnerability Analysis</a></li>
+                      <li><a href="http://blogs.technet.com/b/srd/" target="_blank">Microsoft Security Research & Defense</a></li>
+                      <li><a href="http://isc.sans.edu/index.html" target="_blank">SANS Internet Storm Center</a></li>
+                      <li><a href="http://www.schneier.com/" target="_blank">Schneier on Security</a></li>
+                  </ul>
+              <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="http://www.cisco.com/en/US/products/products_security_advisories_listing.html" target="_blank">Advisories and Responses</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/cyberRiskReport.x" target="_blank">Cyber Risk Reports</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/intelliPapers.x?i=55" target="_blank">Security Best Practices</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/home.x" target="_blank">Security Intelligence Operations</a></li>
+                        <li><a href="http://www.cisco.com/en/US/products/hw/vpndevc/index.html" target="_blank">Security Products</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscosecurity?ref=nf'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/ciscosecurity'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 57763;
+			var orig_count = 0;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=https://blogs.cisco.com/security/correlating-netflow-data-for-proactive-security-network-notoriety&text=Correlating NetFlow Data for Proactive Security: Network Notoriety&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/correlating-netflow-data-for-proactive-security-network-notoriety&title=Correlating NetFlow Data for Proactive Security: Network Notoriety" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/correlating-netflow-data-for-proactive-security-network-notoriety" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/correlating-netflow-data-for-proactive-security-network-notoriety" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Correlating NetFlow Data for Proactive Security: Network Notoriety&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0ACorrelating NetFlow Data for Proactive Security: Network Notoriety%0A%0Ahttps://blogs.cisco.com/security/correlating-netflow-data-for-proactive-security-network-notoriety%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

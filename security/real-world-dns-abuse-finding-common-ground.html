@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Real World DNS Abuse: Finding Common Ground</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content="The Domain Name System (DNS) is the protocol leveraged within the Internet´s distributed name and address database architecture. Originally implemented to make access to Internet-based resources human-friendly, DNS quickly became critical infrastructure in the intricate behind-the-scenes mechanics of the Internet, second only to routing in its importance. When DNS becomes inaccessible, the functionality of many common Internet-based applications such as e-mail, Web browsing, and e-commerce can be adversely affected—sometimes on a wide scale. This short blog will explore some real-world examples of DNS abuse. I\'d like to welcome and thank Andrae Middleton for joining me as a co-author and presenting his expertise on this article.
+
+
+
+There are a few different types of DNS attacks: cache poisoning, hijacking attacks, and denial of service (DoS) attacks (which primarily include reflection and amplification). In the news as of late are widespread and focused DoS attacks. Cisco Security Intelligence Operations (SIO), with its distributed sensors, is able observe and measure various aspects of the global DNS infrastructure. What follows are two vignettes detailing recent Internet DNS DoS attacks against the Internet\'s DNS infrastructure. We will see that, though the attacks are different, the results are similar and the countermeasures and mitigations are the same."/><meta name="description" content="The Domain Name System (DNS) is the protocol leveraged within the Internet´s distributed name and address database architecture. Originally implemented to make access to Internet-based resources human-friendly, DNS quickly became critical infrastructure in the intricate behind-the-scenes mechanics of the Internet, second only to routing in its importance. When DNS becomes inaccessible, the functionality of many common Internet-based applications such as e-mail, Web browsing, and e-commerce can be adversely affected—sometimes on a wide scale. This short blog will explore some real-world examples of DNS abuse. I\'d like to welcome and thank Andrae Middleton for joining me as a co-author and presenting his expertise on this article.
+
+
+
+There are a few different types of DNS attacks: cache poisoning, hijacking attacks, and denial of service (DoS) attacks (which primarily include reflection and amplification). In the news as of late are widespread and focused DoS attacks. Cisco Security Intelligence Operations (SIO), with its distributed sensors, is able observe and measure various aspects of the global DNS infrastructure. What follows are two vignettes detailing recent Internet DNS DoS attacks against the Internet\'s DNS infrastructure. We will see that, though the attacks are different, the results are similar and the countermeasures and mitigations are the same."/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; Real World DNS Abuse: Finding Common Ground Comments Feed" href="https://blogs.cisco.com/security/real-world-dns-abuse-finding-common-ground/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"93122"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Cisco’s Global Hunger Relief Campaign Exemplifies “Giving Tuesday”' href='https://blogs.cisco.com/csr/ciscos-global-hunger-relief-campaign-exemplifies-giving-tuesday' />
+<link rel='next' title='The Next Evolution of Cisco’s Cloud Partner Strategy: Cloud and Managed Services Program' href='https://blogs.cisco.com/partner/the-next-evolution-of-ciscos-cloud-partner-strategy-cloud-and-managed-services-program' />
+
+<link rel="canonical" href="https://blogs.cisco.com/security/real-world-dns-abuse-finding-common-ground" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=93122' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Real World DNS Abuse: Finding Common Ground"/>
+  <meta property="og:url" content="https://blogs.cisco.com/security/real-world-dns-abuse-finding-common-ground"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2012-11-27T08:12:34+00:00"/>
+  <meta property="article:modified_time" content="2012-11-27T08:32:25+00:00" />
+  <meta property="og:updated_time" content="2012-11-27T08:32:25+00:00" />
+  <meta property="article:section" content="Security"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Real World DNS Abuse: Finding Common Ground"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/security/real-world-dns-abuse-finding-common-ground"/>
+  <meta name="twitter:description" content="The Domain Name System (DNS) is the protocol leveraged within the Internet´s distributed name and address database architecture. Originally implemented to make access to Internet-based resources human-friendly, DNS quickly became critical infrastructure in the intricate behind-the-scenes mechanics o"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521513729";
+		var sig = "18dc11bc34865b581716ee2000ecc655";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1FaNvam&text=Real World DNS Abuse: Finding Common Ground&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/real-world-dns-abuse-finding-common-ground&title=Real World DNS Abuse: Finding Common Ground" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/real-world-dns-abuse-finding-common-ground" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/real-world-dns-abuse-finding-common-ground" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Real World DNS Abuse: Finding Common Ground&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0AReal World DNS Abuse: Finding Common Ground%0A%0Ahttps://blogs.cisco.com/security/real-world-dns-abuse-finding-common-ground%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/security/'>Security</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category50.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Security  						</span>
+						<h1 id="post-93122" class="kindle_title title">Real World DNS Abuse: Finding Common Ground</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/MikeSchiffman.thumbnail.4cb4c4a1b2f7b.jpg"></div><div class="author_rewards_box"></div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/MikeSchiffman" title="Posts by Mike Schiffman" rel="author">Mike Schiffman</a> - November 27, 2012 - 1 Comment      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<h2>Prologue</h2>
+<p>The <font color="red">Domain</font> Name System (<font color="red">DNS</font>) is the protocol leveraged within the Internet´s distributed name and address database architecture. Originally implemented to make access to Internet-based resources human-friendly, <font color="red">DNS</font> quickly became <font color="blue">critical infrastructure</font> in the intricate behind-the-scenes mechanics of the Internet, second only to routing in its importance. When <font color="red">DNS</font> becomes inaccessible, the functionality of many common Internet-based applications such as e-mail, <font color="red">Web browsing</font>, and e-commerce can be adversely affected—sometimes on a wide scale. This short blog post will explore some real-world examples of <font color="red">DNS</font> abuse. I would like to welcome and thank <a href="http://blogs.cisco.com/author/andraemiddleton/">Andrae Middleton</a> for joining me as a co-author and presenting his expertise on this article.</p>
+<p>There are a few different types of <font color="red">DNS</font> <font color="red">attacks</font>: <a href="http://www.networkworld.com/news/tech/2008/102008-tech-update.html">cache poisoning</a>, <a href="http://www.darkreading.com/advanced-threats/167901091/security/<font color="red">attacks</font>-breaches/232500513/hacktivists-turn-to-dns-hijacking.html">hijacking <font color="red">attacks</font></a>, and <a href="http://securityskeptic.typepad.com/the-security-skeptic/anatomy-of-dns-ddos-attack.html">denial of service (DoS) attacks</a> (which primarily include reflection and amplification). In the news as of late are widespread and focused <font color="red">DoS attacks</font>. <font color="red">Cisco</font> <font color="red">Security</font> Intelligence Operations (SIO), with its distributed <font color="red">sensors</font>, is able observe and measure various aspects of the global <font color="red">DNS</font> <font color="red">infrastructure</font>. What follows are two vignettes detailing recent Internet <font color="red">DNS</font> <font color="red">DoS attacks</font> against the Internet&#8217;s <font color="red">DNS</font> <font color="red">infrastructure</font>. We will see that, though the <font color="red">attacks</font> are different, the results are similar and the countermeasures and <font color="red">mitigations</font> are the same.</p>
+<p><span id="more-93122"></span></p>
+<h3>Vignette One: Sodu.org</h3>
+<p>During the month of September 2012, <font color="red">Cisco</font> SIO <font color="red">telemetry</font> collection and analysis systems detected <font color="red">anomalous behavior</font> in the form of <font color="red">traffic</font> spikes from three of our <font color="red">sensors</font> located in the Eastern United States (EUS), Western United States (WUS), and in Central Europe (CE). After isolating the <font color="red">traffic</font> and analyzing it, it was determined we observed a DNS-based <font color="red">DoS attack</font>. On two separate occasions an <font color="red">attacker</font> sent a large number of spoofed <a href="http://en.wikipedia.org/wiki/List_of_DNS_record_types">A record</a> <font color="red">queries</font> for the <a href="http://www.statscrop.com/www/sodu.org">&#8220;sodu.org&#8221;</a> <font color="red">domain</font> to two <a href="http://en.wikipedia.org/wiki/.org">org</a> <a href="http://en.wikipedia.org/wiki/Generic_top-level_domain">Generic Top Level <font color="red">Domain</font> (gTLD)</a> <font color="red">nameservers</font>.</p>
+<p>Details of the <font color="red">attack</font> are below:</p>
+<h2><font color="red">Attack</font> 1:</h2>
+<p><strong>Approximate Start date:</strong> September 01, 2012 at 23:30 UTC<br />
+<strong>Approximate Stop date:</strong> September 02, 2012 at 05:00 UTC<br />
+<strong>Approximate <font color="red">Attack</font> duration:</strong> 5.5 hours</p>
+<p><strong><font color="red">Query</font> Request <font color="red">packet</font> type:</strong> A record<br />
+<strong><font color="red">Query</font> Request <font color="red">packet</font> counts:</strong></p>
+<ul>
+<li>CE: 1,529,965,717</li>
+<li>EUS: 4,299,977,251</li>
+<li>WUS: 4,530,979,956</li>
+<li>total: 10,360,922,924</li>
+</ul>
+<p><strong><font color="red">Query</font> Request size:</strong> 72 <font color="red">bytes</font><br />
+<strong><font color="red">Total Traffic</font> Generated:</strong> 745,986,450,528 <font color="red">bytes</font> (695G)</p>
+<p><strong><font color="red">Query</font> Response <font color="red">packet</font> type:</strong> referral response<br />
+<strong><font color="red">Query</font> Response <font color="red">packet</font> counts:</strong></p>
+<ul>
+<li>CE: 293,930,730</li>
+<li>EUS: 345,615,061</li>
+<li>WUS: 354,119,645</li>
+<li>total: 993,665,436</li>
+</ul>
+<p><strong><font color="red">Query</font> Response size:</strong> 159 <font color="red">bytes</font><br />
+<strong><font color="red">Total Traffic</font> Generated:</strong> 157,992,804,324 <font color="red">bytes</font> (147G)</p>
+<h2><font color="red">Attack</font> 2:</h2>
+<p><strong>Approximate Start date:</strong> September 05, 2012 at 14:00 UTC<br />
+<strong>Approximate Stop date:</strong> September 06, 2012 at 02:30 UTC<br />
+<strong>Approximate <font color="red">Attack</font> duration:</strong> 5 hours</p>
+<p><strong><font color="red">Query</font> Request <font color="red">packet</font> type:</strong> A record<br />
+<strong><font color="red">Query</font> Request <font color="red">packet</font> counts:</strong></p>
+<ul>
+<li>CE: 1,280,172,566</li>
+<li>EUS: 2,455,378,453</li>
+<li>WUS: 2,350,329,545</li>
+<li>total: 6,085,880,564</li>
+</ul>
+<p><strong><font color="red">Query</font> Request size:</strong> 72 <font color="red">bytes</font><br />
+<strong><font color="red">Total Traffic</font> Generated:</strong> 438,183,400,608 <font color="red">bytes</font> (408G)</p>
+<p><strong><font color="red">Query</font> Response <font color="red">packet</font> type:</strong> referral response<br />
+<strong><font color="red">Query</font> Response <font color="red">packet</font> counts:</strong></p>
+<ul>
+<li>CE: 372,305,159</li>
+<li>EUS: 326,794,446</li>
+<li>WUS: 353,189,760</li>
+<li>total: 1,052,289,365</li>
+</ul>
+<p><strong><font color="red">Query</font> Response size:</strong> 159 <font color="red">bytes</font><br />
+<strong><font color="red">Total Traffic</font> Generated:</strong> 167,314,009,035 <font color="red">bytes</font> (155G)</p>
+<h3><font color="red">Technical Discussion</font></h3>
+<p>The <font color="red">attacks</font> were intermittent and each only lasted a few hours, but they caused a pretty large spike in org gTLD <font color="red">traffic</font>. During the <font color="red">attacks</font>, the spoofed <font color="red">queries</font> were responsible for approximately 79% of all <font color="red">queries</font> across all three <font color="red">sensors</font>. Figure 1 clearly depicts the massive spike in A record <font color="red">query</font> request <font color="red">traffic</font> (click to enlarge):</p>
+<div id="attachment_93125" style="max-width: 560px" class="wp-caption aligncenter"><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/A-record-queries.png"><img class=" wp-image-93125 " title="A Record Queries" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/A-record-queries-550x253.png" alt="" width="550" height="253" /></a><p class="wp-caption-text">Figure 1. <font color="red">DNS</font> A Record <font color="red">Traffic</font></p></div>
+<p>Given that the <font color="red">query</font> <font color="red">packet</font> was approximately 72 <font color="red">bytes</font> and the response <font color="red">packet</font> was about 159 <font color="red">bytes</font> (yielding a 2x multiplier), this <font color="red">attack</font> can probably be classified as a some sort of a low-rung <font color="red">DNS</font> <font color="red">amplification attack</font>. Figure 2 shows the referral response <font color="red">traffic</font> spikes (click to enlarge):</p>
+<div id="attachment_93127" style="max-width: 560px" class="wp-caption aligncenter"><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/referral-responses.png"><img class="size-large wp-image-93127" title="Referral Responses" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/referral-responses-550x253.png" alt="" width="550" height="253" /></a><p class="wp-caption-text">Figure 2. <font color="red">DNS</font> Referral Response <font color="red">Traffic</font></p></div>
+<p>A true <font color="red">DNS</font> reflection/amplification <font color="red">attack</font> is much more devastating (as we will see below) and has a few key differences.</p>
+<p>In a traditional <font color="red">DNS</font> reflection/amplification <font color="red">attack</font>, the <font color="red">attacker</font> takes advantage of a few Internet truisms:</p>
+<ul>
+<li>A single <font color="red">DNS</font> <font color="red">query</font> can result in a response eight or more times the original size (the amplification)</li>
+<li><font color="red">UDP</font> <font color="red">packets</font> are easily forged or spoofed (the reflection)</li>
+<li>Over 10 million open <font color="red">resolvers</font> exist on the Internet</li>
+</ul>
+<p>In a typical <font color="red">DNS</font> reflection/amplification <font color="red">attack</font>, <font color="red">UDP</font> datagrams are spoofed to purport their <font color="red">source address</font> as the intended target and the <font color="red">DNS</font> <font color="red">query</font> request is sent to an open recursive <font color="red">resolver</font>. Once the open recursive <font color="red">resolver</font> has iterated through the <font color="red">DNS</font> to resolve the <font color="red">domain</font>, it will emit larger responses to the intended target, effectively flooding it with un-asked <font color="red">DNS</font> response <font color="red">packets</font>.</p>
+<p>While the <font color="red">attack</font> here shares some similarities in that it spoofs a <font color="red">query</font> to a <font color="red">DNS</font> <font color="red">server</font>, it is not a true <font color="red">DNS</font> reflection/amplification <font color="red">attack</font> (in fact it appears to be more similar to the venerable ping flood <font color="red">attack</font> of yesterday). Most notably, the <font color="red">attacker</font> did not spoof the <font color="red">IP address</font> of a specific target, but rather spoofed random <font color="red">IP addresses</font>. In the first <font color="red">attack</font>, SIO found around 2000 unique random source <font color="red">IP addresses</font>, and in the second <font color="red">attack</font>, a much larger amount, around 53 million. One theory is that the <font color="red">attacker</font> was refining the tool being used to generate the spoofed <font color="red">DNS</font> <font color="red">query</font> requests and this explosion in the range of spoofed <font color="red">IP addresses</font> might reflect the evolution of the tool.</p>
+<p>Additionally, it appears as though most of the <font color="red">queries</font> went unanswered, either through some sort of org gTLD sanity check or through some other countermeasure or happenstance.</p>
+<p style="text-align: left;">Finally, it bears mentioning that as a second order effect, some number of ICMP destination unreachable messages (with varying codes) were also generated as the targeted <font color="red">nameservers</font> attempted to respond to the spoofed <font color="red">IP addresses</font> which would add to the <font color="red">total traffic</font> count. A sampling of these messages, ICMP port unreachables, is shown below in Figure 3 (click to enlarge).</p>
+<div id="attachment_93126" style="max-width: 560px" class="wp-caption aligncenter"><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/icmp_port_unreach.png"><img class="size-large wp-image-93126" title="ICMP Port Unreachable" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/icmp_port_unreach-550x274.png" alt="" width="550" height="274" /></a><p class="wp-caption-text">Figure 3. ICMP port unreachable messages</p></div>
+<h3><font color="red">Attack</font> Assessment</h3>
+<p>The SIO team had no visibility into the residuum of the <font color="red">attack</font> and did not receive any report from the gTLD operators concerning overall impact. All things considered, the deleterious effects of the <font color="red">attack</font> were probably not that severe—and it certainly didn&#8217;t last for very long (some <font color="red">DNS</font> <font color="red">DoS attacks</font> are known to go on for weeks). Perhaps these were just nascent tests of a new tool that is being erected with larger ambitions.</p>
+<h2>Vignette 2: <font color="red">DNS</font> Amplification &#8211; Utilizing <font color="red">DNSSEC</font> and large E<font color="red">DNS</font>0 buffer size</h2>
+<p>DNS <font color="red">Amplification attacks</font> are consistently prevalent at the <font color="red">DNS</font> root level of the Internet. Throughout the month of October 2012 and consistently to-date, <font color="red">Cisco</font> SIO has detected <font color="red">anomalous behavior</font> from the EUS and CE <font color="red">sensors</font>.</p>
+<p>Starting on October 3rd, the CE <font color="red">sensor</font> captured <font color="red">traffic</font> that <font color="red">Cisco</font> SIO identified as being used to <font color="red">attack</font> a number of <font color="red">IPs</font>.</p>
+<p>As we look further and dig into the details we discover that 864,065,748 <a href="http://en.wikipedia.org/wiki/List_of_DNS_record_types#Other_types_and_pseudo_resource_records">‘ANY’</a> responses were directed at a specific <font color="red">IP</font>, compared to 22,073,375 non-attack related ‘ANY’ responses.</p>
+<p>Just as one would predict, if some is good, seemingly more is better&#8230;..</p>
+<p>On October 5th, our EUS <font color="red">sensor</font> was seeing an <font color="red">attack</font> against another address:</p>
+<p>Specifically, 793,426,549 ‘ANY’ responses were directed at this <font color="red">IP</font> compared to 107,166,894 non-<font color="red">attack</font> ‘ANY’ responses. This second attack rolled into the 5th and 6th of October, and the footprint of these two <font color="red">attacks</font> is significantly more than any other <font color="red">DNS</font> ‘ANY’ responses combined. Note, for those wondering who the sources are, as most often is the case the <font color="red">source addresses</font> are quite random and allude to <font color="red">traffic</font> being sent from spoofed sources as the addresses.</p>
+<p style="text-align: left;">For further insight into these <font color="red">attacks</font>, <font color="red">packet</font> statistics divulging the <font color="red">DNS</font> ‘ANY’ responses juxtaposed with EDNS <font color="red">payload</font> size breakdown (with 9000 <font color="red">bytes</font> being the typical size for the <font color="red">attacks</font>) for the CE <font color="red">sensor</font> is provided in Figure 4 below (click to enlarge):</p>
+<div id="attachment_93124" style="max-width: 560px" class="wp-caption aligncenter"><img class="size-large wp-image-93124" title="DNS Payload Size and ANY Queries" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/andrae-blog-550x253.png" alt="" width="550" height="253" /><p class="wp-caption-text">Figure 4. <font color="red">UDP</font> &quot;ANY&quot; <font color="red">Packet</font> Counts and EDNS 9000 <font color="red">Payload</font> Size Counts</p></div>
+<h3><font color="red">Technical Discussion</font></h3>
+<p>Alright, enough with the numbers and quantitative nature, what does all of this actually mean for society? Well to understand that, one must first understand the nature of the <font color="red">attacks</font>.</p>
+<p>As we know, <font color="red">DNS</font> amplification is based on the simple premise of sending voluminous amounts of <font color="red">data</font> to specific sectors/links of the Internet, inherently reducing the ability for that link to send or receive legitimate <font color="red">data</font>. <font color="red">DNS</font> amplification is an evolution of <font color="red">DNS</font> recursion <font color="red">attacks</font> in which miscreants would leverage the inherent functionality of <font color="red">DNS</font> <font color="red">queries</font> for resource records to wage flooding <font color="red">attacks</font>. <font color="red">DNS</font> <font color="red">amplification attacks</font> typically leverage the <font color="red">DNS</font> <font color="red">query</font> type &#8216;ANY&#8217; by allowing a miscreant using a host (note, this can be spoofed or compromised hosts or simply one in which the miscreant has control of) to (mis)use an authoritative <font color="red">DNS</font> <font color="red">server</font> and instantiate a large text file on a record. This is exacerbated due to the evolution of <font color="red">DNSSEC</font>, a <font color="red">solution</font> developed to protect against various <font color="red">DNS</font> <font color="red">threats</font> by cryptographically signing aspects of the <font color="red">DNS</font> <font color="red">infrastructure</font> so others can be assured it is trustworthy and valid. <font color="red">DNSSEC</font> requires support for <a href="http://tools.ietf.org/html/rfc2671">Extension Mechanisms for <font color="red">DNS</font> (E<font color="red">DNS</font>0)</a> which allows the <font color="red">DNS</font> protocol to adopt changes and enhancements.</p>
+<p>The inception of EDNS0 allows a DNS sender to advertise the largest <font color="red">UDP</font> <font color="red">payload</font> that it can reassemble, thus opening Pandora&#8217;s Box and increased nefarious behaviors—specifically <font color="red">amplification attacks</font>. For further details regarding EDNS, refer to <a href="http://tools.ietf.org/html/rfc2671">RFC2671</a>. The miscreant will subsequently send <font color="red">queries</font> (from the spoofed/compromised machines) to open recursive <font color="red">resolvers</font> for a large resource record. This act will essentially “prime” the <font color="red">DNS</font> <font color="red">servers</font> as they look up the large record, answer the <font color="red">query</font>, but more importantly cache the answer (the large record). From this point forward the miscreants send subsequent <font color="red">queries</font> from spoofed/compromised hosts, further amplifying the <font color="red">attack surface</font>.</p>
+<h3><font color="red">Attack</font> Assessment</h3>
+<p>Due to the nature of this <font color="red">traffic</font> profile, the <font color="red">attack surface</font> is vast and cascading. Certainly <font color="red">DNS</font> root <font color="red">servers</font> are the main proponents; however, all entities leveraging <font color="red">DNS</font> are potentially impacted depending on the nature of a particular event.</p>
+<h3><font color="red">Mitigation</font> Solutions</h3>
+<p>While <font color="red">Cisco</font> SIO was not directly involved with any remedial efforts for these incidents, there are a number of countermeasures and <font color="red">solutions</font> that can be employed to mitigate <font color="red">DNS</font> DoS (and similar <font color="red">attacks</font>) as outlined below:</p>
+<p>First and foremost, it is always a good practice to ensure that you do not place open <font color="red">DNS</font> <font color="red">resolvers</font> on the Internet. In fact, nowadays, organizations that do have open recursive <font color="red">resolvers</font> in their <font color="red">infrastructure</font> are <a href="http://arstechnica.com/security/2012/10/meet-the-network-operators-helping-fuel-the-spike-in-big-ddos-attacks/">greatly frowned upon</a>. Removing the &#8220;openness&#8221; from these <font color="red">resolvers</font> will limit who can access the recursive <font color="red">resolvers</font> which will decrease the ability of an <font color="red">attacker</font> to leverage them for <font color="red">malicious activities</font>. For further details take a look at the <a href="www.isc.org/">ISC</a> website regarding configuring <font color="red">DNS</font> <font color="red">resolvers</font> to NOT answer <font color="red">queries</font> outside a specified range (typically your clients), unless authoritative for a zone and if that is the case it should be provisioned to only answer <font color="red">queries</font> for names in that zone.</p>
+<p>Note: This can be accomplished using filtering and <font color="red">abstraction</font> techniques such as <font color="red">firewall</font> rules, <font color="red">router</font> <font color="red">IP</font> access lists, or other filtering methods.</p>
+<p>The <font color="red">DNS</font> Response Rate Limiting (<font color="red">DNS</font> RRL) is a relatively <a href="http://ss.vix.com/~vixie/isc-tn-2012-1.txt">new initiative by Paul Vixie of ISC and Vernon Schryver of Rhyolite</a> intended to give relief to victims of <font color="red">DNS</font> reflection/amplification <font color="red">attacks</font>. It works by offering a few techniques for limiting the number of responses a <font color="red">DNS</font> <font color="red">server</font> can emit. <font color="red">DNS</font> RRL is a wonderful way to help prevent <font color="red">DNS</font> <font color="red">nameservers</font> from participating in <font color="red">DoS attacks</font> by reducing the rate at which they can respond to incoming <font color="red">queries</font>. If all <font color="red">DNS</font> <font color="red">servers</font> supported some sort of rate limiting, the effects/impacts of a reflection/amplification based <font color="red">attack</font> would be substantially less effective, if not completely ineffective at saturating bandwidth (or spiking <font color="red">CPU</font> utilization).</p>
+<p>A succinct list of some <font color="red">mitigation</font> <font color="red">solutions</font> is provided below (largely based on <font color="red">Cisco</font> <font color="red">security</font> best practices):</p>
+<ul>
+<li>Limit the effect of <font color="red">IP address</font> spoofing by configuring Unicast Reverse Path Forwarding (URPF) on <font color="red">network</font> <font color="red">routers</font>. A <font color="red">router</font> configured to use URPF (as defined in <a href="http://www.ietf.org/rfc/rfc3704.txt">RFC3074</a>) limits an <font color="red">attacker</font>’s ability to spoof <font color="red">packets</font> by comparing the <font color="red">packet</font>’s <font color="red">source address</font> with its internal routing tables to determine if the address is plausible. If not, the <font color="red">packet</font> is discarded. For more details, see the <a href="http://www.cisco.com/web/about/security/intelligence/dns-bcp.html#4"><font color="red">DNS</font> Best Practices, <font color="red">Network</font> Protections, and <font color="red">Attack</font> Identification</a> whitepaper.</li>
+<ul>
+<li>Leveraging URPF can help weed out certain types of invalid <font color="red">IPs</font>:
+<ul>
+<li>Those with &#8216;0&#8217; in the first octet</li>
+<li>non-routable addresses as defined in <font color="red">RFC</font> 1918, <font color="red">RFC</font> 3927, and <font color="red">RFC</font> 5735</li>
+<li>Class E and possibly Class D addresses</li>
+</ul>
+</li>
+</ul>
+</ul>
+<ul>
+<li>Institute monitoring <font color="red">solutions</font> to identify <font color="red">DNSSEC</font> <font color="red">traffic</font> (<font color="red">traffic</font> with EDNS0 enabled). Potential indicators of such <font color="red">attacks</font> include large numbers of outbound <font color="red">packets</font> with the same destination address. Specifically those whose <font color="red">packet</font> counts suddenly spike. Note: This is a first step as one would still need to analyze this <font color="red">traffic</font> to disseminate and filter out permissible <font color="red">DNSSEC</font> <font color="red">traffic</font> from miscreant EDNS0-based <font color="red">traffic</font>.</li>
+<ul>
+<li>Some examples of these <font color="red">solutions</font> are as follows:</li>
+<ul>
+<li><font color="red">Netflow</font></li>
+<ul>
+<li>IOS <font color="red">Netflow</font></li>
+<li>NSEL for <font color="red">Cisco</font> Firewalls (Syslog over <font color="red">Netflow</font>)</li>
+</ul>
+<li>Syslog</li>
+<li>Wire Level <font color="red">Packet Capture</font></li>
+<li><font color="red">IPS</font> Solutions</li>
+<li>Baselining tools</li>
+<li><font color="red">Security Information</font> and Event Management (<font color="red">SIEM</font>) tools</li>
+</ul>
+</ul>
+<li>For those hardening enterprise environments, deploying filtering <font color="red">solutions</font> such as <font color="red">firewalls</font>, ACLs, and <font color="red">IPS</font> devices to drop, limit, or delay any suspect incoming <font color="red">packets</font> identified by the previously outlined tools/solutions is warranted. <span style="color: #ff0000;">(Note: In high <font color="red">traffic load</font> environments, (for example, <font color="red">DNS</font> operations and provider levels) these filtering <font color="red">solutions</font> are not recommended as they do not scale to such strenuous <font color="red">traffic loads</font>).</span> Leverage <font color="red">Cisco</font> <font color="red">Firewall</font> features (including <font color="red">DNS</font> inspection, <font color="red">DNS</font> guard, syslogs, and more) and <font color="red">IPS</font> signatures to identify and mitigate <font color="red">attacks</font>. See the <a href="http://www.cisco.com/web/about/security/intelligence/dns-bcp.html#5">Detecting and Preventing <font color="red">DNS</font> <font color="red">Attacks</font> using <font color="red">Cisco</font> Products and Features</a> section of the <a href="http://www.cisco.com/web/about/security/intelligence/dns-bcp.html"><font color="red">DNS</font> Best Practices, <font color="red">Network</font> Protections, and <font color="red">Attack</font> Identification</a> whitepaper for further details.</li>
+<li>Employ <font color="red">Cisco</font>&#8217;s <font color="red">Partner</font> <font color="red">solution</font> &#8211; Arbor Peakflow</li>
+<ul>
+<li>Native Peakflow <font color="red">SP</font> Product &#8211; <a href="http://www.arbornetworks.com/products/peakflow/sp">http://www.arbornetworks.com/products/peakflow/sp</a></li>
+<li><font color="red">Cisco</font> CRS Carrier-Grade Services Engine (CGSE) Module (Runs Arbor Peakflow <font color="red">SP</font>) &#8211; <a href="http://www.cisco.com/en/US/prod/collateral/routers/ps5763/data_sheet_c78-614893.html">http://www.cisco.com/en/US/prod/collateral/routers/ps5763/data_sheet_c78-614893.html</a></li>
+</ul>
+</ul>
+<p>&nbsp;</p>
+<h3>References and Additional Reading</h3>
+<ul>
+<li><a href="http://technet.microsoft.com/en-us/library/cc775637%28WS.10%29.aspx">How <font color="red">DNS</font> Queries Work</a></li>
+<li><a href="http://www.cisco.com/web/about/security/intelligence/dns-bcp.html"><font color="red">DNS</font> Best Practices, <font color="red">Network</font> Protections, and <font color="red">Attack</font> Identification</a></li>
+<li><a href="http://www.cisco.com/web/about/security/intelligence/dnssec.html">Preparing for <font color="red">DNSSEC</font></a></li>
+<li><a href="http://en.wikipedia.org/wiki/Denial-of-service_attack">Understanding Denial of Service <font color="red">Attacks</font></a></li>
+<li><a href="http://www.theinquirer.net/inquirer/news/1015743/dns-amplification-attacks-explained"><font color="red">DNS</font> <font color="red">Amplification Attacks</font> Explained</a></li>
+<li><a href="http://www.pcadvisor.co.uk/news/security/3407302/open-dns-resolvers-increasingly-abused-amplify-ddos-attacks-report-says/">Ongoing Analysis by <font color="red">DNS</font> Operators</a></li>
+<li><a href="http://dns.measurement-factory.com/surveys/openresolvers.html">Open <font color="red">Resolver</font> Survey</a></li>
+</ul>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=dns">dns</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=dns-attack">dns attack</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=dns-attack-analysis">dns attack analysis</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=security-2">security</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">1 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+			<li>
+			<div id="comment-697104">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://www.septu.dk' rel='external nofollow' class='url'>Martin Zimmermann</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">November 27, 2012 at 3:47 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Very interesting and informative posting. I find the DNSSEC issuse regarding 'EDNS0', and the problem with a system being used/drained by the  max. UDP payload size advertizing &amp; amplyfying especially interesting. It will be interesting to see the next move from 'the inventor'! I'll have to look a bit deeper into DNSSEC, a bit in closest future. I must re-read 4033 &amp; 4641 ASAP.  Think there might be another way to 'pile on' even more,. Must toy more with the UDP Payload technique even morefirst though! . Musttest , test...! And thank's, great work Mike &amp; Andrea! Thank's for sharing!</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike697104" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Security:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogSecurity', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogSecurity" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Security</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscosecurity?ref=nf"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/ciscosecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://youtubecisco.com/security"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogSecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.cert.org/blogs/vuls/" target="_blank">CERT Vulnerability Analysis</a></li>
+                      <li><a href="http://blogs.technet.com/b/srd/" target="_blank">Microsoft Security Research & Defense</a></li>
+                      <li><a href="http://isc.sans.edu/index.html" target="_blank">SANS Internet Storm Center</a></li>
+                      <li><a href="http://www.schneier.com/" target="_blank">Schneier on Security</a></li>
+                  </ul>
+              <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="http://www.cisco.com/en/US/products/products_security_advisories_listing.html" target="_blank">Advisories and Responses</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/cyberRiskReport.x" target="_blank">Cyber Risk Reports</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/intelliPapers.x?i=55" target="_blank">Security Best Practices</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/home.x" target="_blank">Security Intelligence Operations</a></li>
+                        <li><a href="http://www.cisco.com/en/US/products/hw/vpndevc/index.html" target="_blank">Security Products</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscosecurity?ref=nf'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/ciscosecurity'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 93122;
+			var orig_count = 0;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1FaNvam&text=Real World DNS Abuse: Finding Common Ground&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/real-world-dns-abuse-finding-common-ground&title=Real World DNS Abuse: Finding Common Ground" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/real-world-dns-abuse-finding-common-ground" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/real-world-dns-abuse-finding-common-ground" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Real World DNS Abuse: Finding Common Ground&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0AReal World DNS Abuse: Finding Common Ground%0A%0Ahttps://blogs.cisco.com/security/real-world-dns-abuse-finding-common-ground%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

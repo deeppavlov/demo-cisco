@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Five Golden Rules for Branch Consolidation</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"7822"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='The buzz at CTC 2009 &#8212; technology cutting costs, increasing mobility' href='https://blogs.cisco.com/video/the-buzz-at-ctc-2009-technology-cutting-costs-increasing-mobility' />
+<link rel='next' title='Something big is happening: Calling all fans &#038; skeptics of FCoE' href='https://blogs.cisco.com/datacenter/something_big_is_happening_calling_all_fans_skeptics_of_fcoe' />
+
+<link rel="canonical" href="https://blogs.cisco.com/cin/five_golden_rules_for_branch_consolidation" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=7822' />
+<meta property="og:image" content="http://i.ytimg.com/vi/R-SSVxsH7vw/default.jpg" />
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Five Golden Rules for Branch Consolidation"/>
+  <meta property="og:url" content="https://blogs.cisco.com/cin/five_golden_rules_for_branch_consolidation"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2009-09-24T12:00:00+00:00"/>
+  <meta property="article:modified_time" content="2009-09-24T12:00:00+00:00" />
+  <meta property="og:updated_time" content="2009-09-24T12:00:00+00:00" />
+  <meta property="article:section" content="TechWiseTV"/>
+  <meta property="article:author" content="http://facebook.com/robbboyd"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Five Golden Rules for Branch Consolidation"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/cin/five_golden_rules_for_branch_consolidation"/>
+  <meta name="twitter:description" content="The first new TechWiseTV show of our fourth season is a Data Center show and it happens to be episode 50.  What is the proper gift for hitting 50? I don&#039;t know...surprise me.  Welcome to the Show Notes!  If you have not seen the show yet, please check it out - it aired live on September 24 and shoul"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:creator" content="@http://www.twitter.com/robbboyd"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521445488";
+		var sig = "555c246d147799b14e93af6807c9b4a3";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1FaGuq3&text=Five Golden Rules for Branch Consolidation&via=techwisetv" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/cin/five_golden_rules_for_branch_consolidation&title=Five Golden Rules for Branch Consolidation" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/cin/five_golden_rules_for_branch_consolidation" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/cin/five_golden_rules_for_branch_consolidation" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Five Golden Rules for Branch Consolidation&body=I saw this post on Cisco TechWiseTV blog and thought you might like to read it.%0A%0AFive Golden Rules for Branch Consolidation%0A%0Ahttps://blogs.cisco.com/cin/five_golden_rules_for_branch_consolidation%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/cin/'>TechWiseTV</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category37.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							TechWiseTV  						</span>
+						<h1 id="post-7822" class="kindle_title title">Five Golden Rules for Branch Consolidation</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/RobbBoyd.thumbnail.4caa350205041.jpg"></div><div class="author_rewards_box">			<ul class = "nitro_author7822 bunchballAwards">
+		<li>
+			<div class = "nitro_badge badgenitro_author7822">
+			</div>
+			<div class = "nitro_points pointsnitro_author7822">
+			</div>
+		</li>
+		<script>
+var nitroName = 'robboyd';
+var sessionKey = '';
+
+
+nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "postBadges", "nitro_author7822");</script>
+
+		</ul>
+		</ul>
+	<div class = "clear"></div>
+</div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/robbboyd" title="Posts by Robb Boyd" rel="author">Robb Boyd</a> - September 24, 2009 - 0 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p><img style="float: left;" title="Jimmy Ray Purser, Steve Phillips, Robb Boyd" src="/upload/images/TWTV50-Laughing-3-Shot.png" alt="Fun on the Set of <font color="red">TechWiseTV</font> 50" width="450" height="253" />The first new TechWiseTV show of our fourth season is a <font color="red">Data Center</font> show and it happens to be episode 50.&nbsp; What is the proper gift for hitting 50? I don&#8217;t know&#8230;surprise me.&nbsp; Welcome to the Show Notes!&nbsp; If you have not seen the show yet, <a href="http://www.cisco.com/en/US/solutions/ns340/ns339/ns638/ns914/html_TWTV/twtv_episode_50.html" target="_blank">please check it out</a> &#8211; it aired live on September 24 and should be available for immediate <font color="red">replay</font> within 24 hours of said date&#8230;</p>
+<p>Before I get to the actual &#8216;notes&#8217; you may be looking for&#8230;what did you think of this show?&nbsp; We have a new production team that we are actually doing in-house and we have changed up the style quite a bit as we are also now shooting in San Jose&#8217;s building 13 &#8211; the Industry Briefing <font color="red">Center</font>&#8230;big shout out to Rob Sprenger and his team for letting us bunk down with him there as this is an OUTSTANDING place to see real <font color="red">Cisco</font> <font color="red">technology solutions</font> in these cool fake settings&#8230;like a doctors office, a hotel, a bank, a retail store, on and on&#8230;.great place to hang out. Please add this to your <font color="red">Cisco</font> &#8216;Bucket List&#8217; in the San Jose area and come say hi.</p>
+<p><span id="more-7822"></span></p>
+<p><font color="red">Segments</font> are getting shorter so we have a few more of them on the agenda &#8211; this show ran short of an hour by about 10 minutes but I am really pleased with the amount of technical depth and discussion. Lets go <font color="red">segment</font> by <font color="red">segment</font>.</p>
+<p><strong><font color="red">Segment</font> 1 &#8211; Today&#8217;s Objective: Find the 5 Golden Rules</strong></p>
+<p>Common wisdom now says that we must gather up all our precious <font color="red">data</font> and re-centralize it.&nbsp; This would allow us to keep a better eye on it, keep it available, redundant and secure.&nbsp; But our users (clients&hellip;offices&hellip;) are out close to the customer &ndash; getting the work done and they are demanding, insatiable, and increasing<img style="float: right;" src="/upload/images/twtv_50_robb_boyd_steve_phillips-kitchen.png" alt="Steve Phillips TechWiseTV 50 Data Center Show" width="400" height="225" />ly harder to please.&nbsp; So the question is, are we pursuing mutually exclusive goals?&nbsp; To move <font color="red">data</font> (and potentially the <font color="red">applications</font>) further from the users so we can care for it better&hellip; while at the same time acknowledging our <font color="red">end users</font> appetite for rich, engaging, productive expectations of their <font color="red">network</font> and what it supposed to provide them are only going to grow.</p>
+<p>Maybe it is time to re-think the relationship between &lsquo;physical proximity&rsquo; and its traditional cousins&hellip;speed, availability, responsiveness and so on.&nbsp;&nbsp; As we prepared the content for this show, I kept coming back to the obvious question: <em>Does distance really matter? </em></p>
+<p>All day every day, the heat of the e-commerce battle is unrelenting.&nbsp; At any given moment&hellip;no, at every given moment, demands are being made of the <font color="red">network</font>.&nbsp; Users, <font color="red">applications</font>, offices are craving the life-sustaining flow of <font color="red">data</font> to maintain this crucial commerce of your globally dispersed business.&nbsp;</p>
+<p>The increasing reality of Moore&rsquo;s law is only eclipsed by the reality none of this slows down.&nbsp;&nbsp; So the crucial questions for the ever talented <font color="red">data center</font> managers, <font color="red">network</font> managers and facility operators who must excel in the middle of all this:</p>
+<p>&nbsp;How do you:&nbsp;</p>
+<p>&#8211;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Determine if devices are available or unavailable?</p>
+<p>&#8211;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Know if key devices in the <font color="red">data center</font>(s) are overloaded?</p>
+<p>&#8211;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Measure the success of your load balancing technology?</p>
+<p>&#8211;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Determine which of your <font color="red">Data</font> Centers is closest to the requesting source? (or does it matter?)</p>
+<p>&#8211;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; React quickly to changes in load, availability or cost?</p>
+<p>&#8211;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Provide <font color="red">data center</font> persistence during a transaction?</p>
+<p>&#8211;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Give conditional responses in <font color="red">data center</font> availability and load?</p>
+<p><span style="font-size: 12pt; font-family: Calibri; color: black;">&nbsp;</span></p>
+<p><span style="font-size: 12pt; font-family: Calibri; color: black;">&nbsp;</span><strong><font color="red">Segment</font> 2 &#8211; Noam and Jimmy Ray in the Lab &#8211; WAAS &amp; <font color="red">SSL</font></strong></p>
+<p><span style="font-size: 12pt; font-family: Calibri; color: black;"><img title="TechWiseTV50 WAAS" src="/upload/images/TWTV50_WAAS_Noam_Syrkin.png" alt="Noam and Jimmy Ray talk WAAS and SSL" width="400" height="225" /></span></p>
+<h3>WAAS Ease of Installation with Elizabeth McKion:</h3>
+<p><object width="480" height="390" data="http://blip.tv/play/AcW1RIz6CQ" type="application/x-shockwave-flash"><param name="src" value="http://blip.tv/play/AcW1RIz6CQ" /><param name="allowfullscreen" value="true" /></object></p>
+<p style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 0in; direction: ltr; unicode-bidi: embed;">More reading on <a href="http://www.cisco.com/en/US/prod/collateral/contnetw/ps5680/ps6870/prod_white_paper0900aecd8051c0c8.html">WAAS &#8211; Wide Area <font color="red">Application Service</font></a></p>
+<p style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 0in; direction: ltr; unicode-bidi: embed;">&nbsp;</p>
+<p style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 0in; direction: ltr; unicode-bidi: embed;">Ted Grevers and Joel Christner wrote a nice book with <font color="red">Cisco</font> Press and their Fundamental&#8217;s Series (which I really find useful on a regular basis).&nbsp; Check it out <a href="http://www.ciscopress.com/bookstore/product.asp?isbn=1587053160">&#8216;<font color="red">Application Acceleration</font> and <font color="red">WAN Optimization</font> Fundamentals&#8217;</a></p>
+<p style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 0in; direction: ltr; unicode-bidi: embed;"><a href="http://www.cisco.com/en/US/products/ps5680/Products_Sub_Category_Home.html"><font color="red">WAN Optimization</font> at <font color="red">Cisco</font></a></p>
+<p style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 0in; direction: ltr; unicode-bidi: embed;">&nbsp;</p>
+<h4 style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 0in; direction: ltr; unicode-bidi: embed;">Some helpful notes and pictures from Noam:</h4>
+<p><span style="font-size: 12pt; font-family: Calibri; color: black;">&nbsp;</span><font color="red">SSL</font> (Secure Socket Layer) and its successor protocol (TLS &#8211; Transport Layer <font color="red">Security</font>) are the most commonly used <span style="font-size: 12pt; font-family: Calibri; color: black;">&nbsp;</span>cryptographic protocols to encrypt content in <font color="red">IP</font> <font color="red">networks</font>. <font color="red">SSL</font> used primarily by HTTP <font color="red">applications</font>, but also used to encrypt content within the enterprise.</p>
+<p><font color="red">SSL</font> provides <font color="red">data</font> encryption, <font color="red">server</font> <font color="red">authentication</font>, message integrity and optionally &#8211; client <font color="red">authentication</font>.</p>
+<p><span style="font-size: 12pt; font-family: Calibri; color: black;"><img style="float: left;" src="/upload/images/Slide2.jpg" alt="Cisco WAAS SSL Optimization Solution" width="470" height="353" /></span>WAAS <font color="red">optimization</font> benefits are maximized only when applied to decrypted payload.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>During initial <font color="red">SSL</font> handshake, only the WAE at the core participates in the conversation. The connection between the WAEs is established securely using the WAE device certificates and the WAE cross-authenticate each other. Once the <font color="red">SSL</font> handshake is done and the core WAE has the <font color="red">session key</font>, it will transmit the <font color="red">session key</font> (which is temporary) over to the edge WAE so that it can start decrypting the client transmissions and apply DRE. The optimized traffic is then re-encrypted using the WAE peer <font color="red">session key</font> and transmitted in-band over the current connection (i.e. maintaining transparency) to the core WAE. The core WAE then decrypt the optimized traffic, reassembles the original messages and re-encrypt them using the <font color="red">session key</font> with th e <font color="red">server</font>, to be transmitted to the <font color="red">server</font> securely.</p>
+<p>If the client is using a client certificate, the core WAE will validate the client certificate in front of a CA or an OCSP (Online Certificate Status Protocol) responder to verify that the client is indeed still approved. The WAE will then use its own client certificate to communicate with the <font color="red">server</font>.</p>
+<p>With <font color="red">Cisco</font> WAAS the <font color="red">SSL</font> trusted model is maintained in the <font color="red">Data Center</font> and ensures better enhanced <font color="red">security</font>. <font color="red">Server</font> <font color="red">private keys</font> are stored securely only on Core WAE, and are never pushed distributed to branch. <font color="red">SSL</font> <font color="red">Session keys</font> distributed to the Edge WAE over a secure HTTPS connection between the Edge and the Core WAE.</p>
+<p>Widest Range of <font color="red">SSL</font> Acceleration. Real-time <font color="red">security</font> check of certificates. Supports Client <font color="red">Authentication</font>. Supports highly secure <font color="red">session key</font> method default in some popular browser &amp; <font color="red">server</font></p>
+<p><font color="red">Flexible Deployment</font> &#8211; Import Original <font color="red">Server</font> Certificate and Private Keys signed by CA. Use Wildcard Certificates signed by CA. Generate Certificate signed by CA &ndash; derive <font color="red">session key</font> without original <font color="red">server</font> <font color="red">private key</font></p>
+<p>&nbsp;</p>
+<p><img style="float: right;" src="/upload/images/Slide1.jpg" alt="" width="470" height="354" /></p>
+<p><span style="font-size: 12pt; font-family: Calibri; color: black;">&nbsp;</span><span style="font-size: 12pt; font-family: Calibri; color: black;">&nbsp;</span></p>
+<p style="margin-top: 0pt; margin-bottom: 0pt; margin-left: 0in; direction: ltr; unicode-bidi: embed;">&nbsp;</p>
+<p><span style="font-size: 12pt; font-family: Calibri; color: black;"><br /></span></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><strong><font color="red">Segment</font> 3 &#8211; Robb &amp; Jimmy Ray &#8211; Is <font color="red">DNS</font> your weak link?</strong></p>
+<p>Key Point:&nbsp; The very first routing decision you make is <font color="red">DNS</font>.&nbsp;</p>
+<p>&nbsp;&#8211; DHCP/DNS are THE most expensive, free resources on your <font color="red">network</font> with the ability to instantly render your <font color="red">entire network</font> useless at a moments notice.</p>
+<p><font color="red">DNS</font> is not going to go away, but you how you deal with it could be that bit of knowledge that saves your job.&nbsp; The first hop in your <font color="red">network</font> should not be out of the frying pan and into the fire&hellip;</p>
+<p>NOTES:</p>
+<p>Steve Friedl&#8217;s did a very nice <a href="http://unixwiz.net/techtips/iguide-kaminsky-dns-vuln.html">Illustrated Guide to the Kaminsky <font color="red">DNS</font> <font color="red">Vulnerability</font></a></p>
+<p><a href="http://www.livinginternet.com/i/iw_dns_history.htm">History of DNS</a><br /><a href="http://www.wired.com/science/discoveries/news/2008/06/dayintech_0623">History (at Wired&#8230;1983)</a></p>
+<p>&#8220;June 23, 1983: DNS Test Sets Stage for <font color="red">Internet Growth</font>&#8221; (article published 2008)<br /><a href="http://en.wikipedia.org/wiki/Dan_Kaminsky">Dan Kaminsky</a><br />(used to work for <font color="red">Cisco</font>!)<br /><a href="http://www.wired.com/techbiz/people/magazine/16-12/ff_kaminsky">Great article on Kaminsky</a> from my favorite magazine,&nbsp; &#8216;Wired&#8217;<br /><em>&nbsp;</em></p>
+<p><em>&#8220;Oh s_it,&#8221; he mumbled. &#8220;I just broke the Internet.&#8221; &#8230;<br /></em></p>
+<p>&#8230; <em>The experts watched as Kaminsky opened his laptop and connected the overhead projector. He had created a &#8220;weaponized&#8221; version of his attack on this <font color="red">vulnerability</font> to demonstrate its power. A mass of <font color="red">data</font> flashed onscreen and told the story. In less than 10 seconds, Kaminsky had compromised a <font color="red">server</font> running BIND 9, Vixie&#8217;s <font color="red">DNS</font> routing software, which controls 80 percent of <font color="red">Internet traffic</font>. It was undeniable proof that Kaminsky had the power to take down large swaths of the Internet.</em></p>
+<p>&nbsp;</p>
+<p><a href="http://www.youtube.com/watch?v=R-SSVxsH7vw">Black Hat Interview with Dan</a><br /><a href="http://www.youtube.com/watch?v=03F-0-tzLIA&amp;feature=related">Steve Gibson and Leo Laporte on the <font color="red">Whiteboard</font></a></p>
+<p>Note on Paul Vixie: <a href="http://en.wikipedia.org/wiki/Paul_Vixie">(from Wikipedia)</a><br />Paul Vixie is the author of several RFCs and standard UNIX system programs, among them SENDS, proxynet, rtty and Vixie cron.<br />In 1988, while employed by DEC, he started working on the popular internet domain name <font color="red">server</font> BIND, of which he was the primary author and architect, until release 8.</p>
+<p>&nbsp;</p>
+<p><strong><font color="red">Segment</font> 4 &#8211; Steve with Jimmy Ray in the Lab to dig into &#8211; ACE GSS</strong></p>
+<p>More Reading on the <a href="http://www.cisco.com/en/US/products/hw/contnetw/ps4162/">ACE GSS &#8211; <font color="red">Application</font> Control Engine Global Site Selector</a></p>
+<p>&nbsp;</p>
+<p><img src="/upload/images/twtv_50_steve_phillips_jimmy_ray_purser.png" alt="Steve Phillips TechWiseTV 50 Data Center Show" width="400" height="225" /></p>
+<p><strong><font color="red">Segment</font> 5 &#8211; Pulling it all together&#8230;the <font color="red">Whiteboard</font> of Truth!</strong></p>
+<p>Check out <a href="http://www.cisco.com/en/US/netsol/ns751/networking_solutions_sub_program_home.html">Design Zone</a> for some great Design Guides and <font color="red">Application</font> Specific Implementations</p>
+<p><strong><br /></strong></p>
+<p><img src="/upload/images/twtv_050_whiteboard_8.png" alt="TWTV50 Whiteboard of Truth 1 of 2" width="470" height="354" /><img style="float: right;" src="/upload/images/twtv_050_whiteboard_1.png" alt="TWTV50 Whiteboard of Truth 2 of 2" width="470" height="352" /></p>
+<p>&nbsp;</p>
+<p><strong><a href="http://www.cisco.com/go/learningnetwork"><font color="red">Cisco</font> <font color="red">Learning</font> <font color="red">Network</font> </a>Update</strong></p>
+<p><font color="red">Cisco</font> is at the forefront of the rapidly evolving field of <font color="red">Data Center</font> unified <font color="red">computing</font> and the demand for individuals who can manage and maintain these advance solutions has never been greater. </p>
+<p>To meet this demand <font color="red">Cisco</font> is offering two new specialist <font color="red">certifications</font>. The <font color="red">Cisco</font> <font color="red">Data Center</font> <font color="red">Unified Computing</font> Design Specialist and the <font color="red">Cisco</font> <font color="red">Data Center</font> <font color="red">Unified Computing</font> Support Specialist repare individuals for <font color="red">Data Center</font> jobs and equip them with cutting-edge skills in <font color="red">Data Center virtualization</font>. <br />&nbsp;<br />The <font color="red">Cisco</font> <font color="red">Data Center</font> <font color="red">Unified Computing</font> Design Specialist is for <font color="red">Data Center</font> architects designing <font color="red">virtualized data centers</font> using <font color="red">Cisco</font>&rsquo;s &ldquo;<font color="red">Unified Computing System</font>&rdquo; and surrounding <font color="red">Data Center</font> topology while leveraging <font color="red">server</font>, <font color="red">network</font>, &amp; storage expertise, and incorporating <font color="red">VMware</font> or other <font color="red">virtualization</font> systems. <br />&nbsp;<br />The <font color="red">Cisco</font> <font color="red">Data Center</font> <font color="red">Unified Computing</font> Support Specialist is for <font color="red">Data Center</font> engineers who are implementing, deploying, operating, and supporting <font color="red">virtualized data centers</font> using <font color="red">Cisco</font>&rsquo;s &ldquo;<font color="red">Unified Computing System</font>&rdquo; &amp; surrounding <font color="red">Data Center</font> topology while leveraging <font color="red">server</font>, <font color="red">network</font>, &amp; storage expertise, and incorporating <font color="red">VMware</font> or other <font color="red">virtualization</font> systems. <br />&nbsp;<br /><strong>Two Options for <font color="red">Certification</font> </strong><br />Fast Track Exam Option Available For Both Specialist <font color="red">Certifications</font> <br /><font color="red">Cisco</font> will offer two options for candidates wishing to achieve their <font color="red">UC</font> Support or <font color="red">UC</font> Design Specialist <font color="red">certifications</font>: <br />&nbsp;<br />For candidates with a background in <font color="red">Cisco</font> <font color="red">datacenter</font> design and implementation, a Fast track or &ldquo;Qualifier&rdquo; exam will allows candidates to fulfill pre-requisite knowledge requirements. <br />&nbsp;<br />Candidates without a previous background in <font color="red">Cisco</font> <font color="red">Data Center technologies</font> and <font color="red">applications</font> may also achieve their specialist <font color="red">certification</font> by completing the currently available <font color="red">Cisco</font> <font color="red">Datacenter</font> Specialist Certifications for Architects and Engineers. <br />&nbsp;<br />&nbsp;<br />Individuals who attain these <font color="red">new Data Center</font> <font color="red">Unified Computing</font> Specialist <font color="red">certifications</font>&nbsp; will demonstrate the ability to design, deploy, and integrate storage <font color="red">networks</font>, advanced networking, <font color="red">application services</font>, <font color="red">virtualization</font>, and unified <font color="red">computing</font> technologies into a consolidated <font color="red">Cisco</font> <font color="red">Data Center</font> unified architecture. <br />&nbsp;<br />Courses for the <font color="red">new Data Center</font> <font color="red">Unified Computing</font> Specialist <font color="red">certifications</font>&nbsp; will be made available mid November through authorized <font color="red">Cisco</font> <font color="red">Learning</font> Partners. <font color="red">Data Center</font> <font color="red">Unified Computing</font> Specialist <font color="red">certifications</font> exams will be made available in mid December through authorized VUE testing <font color="red">centers</font>. <br />&nbsp;<br />Find out more about these <font color="red">new Data Center</font> <font color="red">Unified Computing</font> Specialists&nbsp; on the <font color="red">Cisco</font> <font color="red">Learning</font> <font color="red">Network</font> at <br /><a href="http://www.cisco.com/go/learningnetwork">www.cisco.com/go/learningnetwork</a>.</p>
+<p><!--StartFragment--> <!--StartFragment--> <!--StartFragment--> <!--EndFragment--> <!--EndFragment--> <!--EndFragment--></p>
+		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+		</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to TechWiseTV:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogCiscoInteractionNetwork', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogCiscoInteractionNetwork" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with TechWiseTV</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/techwise"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/techwisetv"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://www.youtube.com/Cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogCiscoInteractionNetwork"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.cisco.com/web/go/joinconversation/index.html" target="_blank">Cisco Collaboration Community</a></li>
+                      <li><a href="http://blogs.cisco.com/datacenter/" target="_blank">Cisco Data Center Blog</a></li>
+                      <li><a href="https://learningnetwork.cisco.com/index.jspa?ciscoHome=true" target="_blank">Cisco Learning Network</a></li>
+                      <li><a href="http://www.colinmcnamara.com/" target="_blank">DC Blogger: Colin McNamara</a></li>
+                      <li><a href="http://www.nojitter.com/" target="_blank">No Jitter</a></li>
+                      <li><a href="http://techcrunch.com/" target="_blank">TechCrunch</a></li>
+                  </ul>
+              <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="http://www.cisco.com/en/US/netsol/ns914/networking_solutions_program_home.html" target="_blank">Techwise TV</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/techwise'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/techwisetv'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 7822;
+			var orig_count = 0;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1FaGuq3&text=Five Golden Rules for Branch Consolidation&via=techwisetv" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/cin/five_golden_rules_for_branch_consolidation&title=Five Golden Rules for Branch Consolidation" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/cin/five_golden_rules_for_branch_consolidation" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/cin/five_golden_rules_for_branch_consolidation" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Five Golden Rules for Branch Consolidation&body=I saw this post on Cisco TechWiseTV blog and thought you might like to read it.%0A%0AFive Golden Rules for Branch Consolidation%0A%0Ahttps://blogs.cisco.com/cin/five_golden_rules_for_branch_consolidation%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

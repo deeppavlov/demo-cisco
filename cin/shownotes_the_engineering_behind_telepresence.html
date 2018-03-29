@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  ShowNotes: The Engineering Behind TelePresence</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; ShowNotes: The Engineering Behind TelePresence Comments Feed" href="https://blogs.cisco.com/cin/shownotes_the_engineering_behind_telepresence/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"8396"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Legal executives push video conferencing to the forefront of strategic planning' href='https://blogs.cisco.com/video/legal-executives-push-video-conferencing-to-the-forefront-of-strategic-planning' />
+<link rel='next' title='Video teleconferencing helps heal Haiti' href='https://blogs.cisco.com/video/video-teleconferencing-helps-heal-haiti' />
+
+<link rel="canonical" href="https://blogs.cisco.com/cin/shownotes_the_engineering_behind_telepresence" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=8396' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="ShowNotes: The Engineering Behind TelePresence"/>
+  <meta property="og:url" content="https://blogs.cisco.com/cin/shownotes_the_engineering_behind_telepresence"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2010-02-18T12:00:00+00:00"/>
+  <meta property="article:modified_time" content="2010-02-18T12:00:00+00:00" />
+  <meta property="og:updated_time" content="2010-02-18T12:00:00+00:00" />
+  <meta property="article:section" content="TechWiseTV"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="ShowNotes: The Engineering Behind TelePresence"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/cin/shownotes_the_engineering_behind_telepresence"/>
+  <meta name="twitter:description" content="Welcome to the Show Notes for TechWiseTV61 - Exploring the Engineering Behind TelePresence.  If you missed the show, don&#039;t hesitate to get the replay right away!  &quot;We looked at a simple scenario where two sites are connected via telepresence systems that have an estimated $115-per-hour cost of opera"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:creator" content="@https://twitter.com/tinashakour"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521445457";
+		var sig = "431ff71fe72de26f621581a2e5423bd5";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=https://blogs.cisco.com/cin/shownotes_the_engineering_behind_telepresence&text=ShowNotes: The Engineering Behind TelePresence&via=techwisetv" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/cin/shownotes_the_engineering_behind_telepresence&title=ShowNotes: The Engineering Behind TelePresence" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/cin/shownotes_the_engineering_behind_telepresence" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/cin/shownotes_the_engineering_behind_telepresence" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: ShowNotes: The Engineering Behind TelePresence&body=I saw this post on Cisco TechWiseTV blog and thought you might like to read it.%0A%0AShowNotes: The Engineering Behind TelePresence%0A%0Ahttps://blogs.cisco.com/cin/shownotes_the_engineering_behind_telepresence%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/cin/'>TechWiseTV</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category37.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							TechWiseTV  						</span>
+						<h1 id="post-8396" class="kindle_title title">ShowNotes: The Engineering Behind TelePresence</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1426580391-bpthumb.jpg"></div><div class="author_rewards_box">			<ul class = "nitro_author8396 bunchballAwards">
+		<li>
+			<div class = "nitro_badge badgenitro_author8396">
+			</div>
+			<div class = "nitro_points pointsnitro_author8396">
+			</div>
+		</li>
+		<script>
+var nitroName = 'tshakour';
+var sessionKey = '';
+
+
+nitro.callAPI("method=batch.run&methodFeed=%5B%27method%3Duser.getChallengeProgress%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getLevel%26userIds%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%2C%27method%3Duser.getPointsBalance%26userId%3D" + nitroName + "%26sessionKey%3D" + sessionKey + "%27%5D",  "postBadges", "nitro_author8396");</script>
+
+		</ul>
+		</ul>
+	<div class = "clear"></div>
+</div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/tinashakour" title="Posts by Tina Shakour" rel="author">Tina Shakour</a> - February 18, 2010 - 5 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p>Welcome to the Show Notes for TechWiseTV61 &#8211; <a href="http://www.cisco.com/offer/twtv_engineering/186916_26">Exploring the Engineering Behind <font color="red">TelePresence</font></a>.&nbsp; If you missed the show, don&#8217;t hesitate to get the <font color="red">replay</font> right away!</p>
+<p>&nbsp;</p>
+<p><img src="/upload/images/techwisetv/TWTV61/TWTV61.jpg" alt="" width="500" height="281" /></p>
+<p><span id="more-8396"></span></p>
+<p>&nbsp;</p>
+<p><!--StartFragment--><em><span style="font-size: large;"><span style="font-family: Times New Roman;"><span style="font-size: 12pt;">&#8220;We looked at a simple scenario where two sites are connected via <font color="red">telepresence</font> systems that have an estimated $115-per-hour cost of operation. We applied this scenario to a situation where <font color="red">telepresence</font> didn&#8217;t replace on-site work, but instead gave the organization the ability to send fewer staff members (one instead of three) to accomplish the same amount of work in the same amount of time (four days). In this case, the savings in transportation and hotel costs more than offset the cost of using the <font color="red">telepresence</font> systems, providing an estimated $1,345 in savings.&#8221;</span></span></span></em> <!--EndFragment--></p>
+<p><!--StartFragment--><span style="font-size: large;"><span style="font-family: Times New Roman;"><span style="font-size: 12pt;"><strong><a href="http://www.informationweek.com/news/telecom/presence/showArticle.jhtml?articleID=222400143">Next-Generation <font color="red">Telepresence</font> Is Here And It Works </a>(Information Week)</strong></span></span></span></p>
+<p><object width="425" height="350" data="http://www.youtube.com/v/b2yPNp_NA5Y" type="application/x-shockwave-flash"><param name="src" value="http://www.youtube.com/v/b2yPNp_NA5Y" /></object></p>
+<p>&nbsp;</p>
+<hr />
+<p><strong><font color="red">Segment</font> 1: The Making of <font color="red">TelePresence</font></strong></p>
+<p><font color="red">TelePresence</font> isn&rsquo;t just for the executives anymore. Recently our CEO John Chambers demonstrated the concept of <a title="Home TelePresence" href="http://www.networkworld.com/news/2010/010610-ciscos-chambers-demonstrates-home.html?fsrc=netflash-rssf">Home <font color="red">Telepresence</font></a> &#8211; bringing up questions in my mind on what has changed to make this all possible?</p>
+<p>Robb and I discuss the three <font color="red">service levels</font> for maximizing the reach and flexibility of <font color="red">Cisco</font> <font color="red">TelePresence</font>.</p>
+<p><img src="/upload/images/techwisetv/TWTV61/TWTV61_-_04.jpg" alt="Tina Shakour and Robb Boyd Segment 1" width="544" height="306" /></p>
+<p>&nbsp;</p>
+<p>The <font color="red">Immersive Experience</font> is the executive-class experience. Having sat through plenty of these meetings, I can tell you there does come a point where you forget the technology and just have a meeting.</p>
+<p>An Optimized Experience allows you to provide a <font color="red">high quality experience</font> while leveraging existing <font color="red">conference rooms</font>. Typically, this will be the smaller <a title="Cisco <font color="red">TelePresence</font> 1100 and 1300" href="http://www.youtube.com/user/ciscoCIN#p/a/u/1/QlQ7VbeZFuI">TelePresence units such as the 1100 and 1300</a>.</p>
+<p>The big news is the Extended Reach experience. This allows small offices and home offices with dedicated T1 <font color="red">bandwidth</font> levels to leverage <font color="red">TelePresence</font>.</p>
+<p>&nbsp;</p>
+<p><img src="/upload/images/techwisetv/TWTV61/TWTV61_-_Seg1.jpg" alt="Introducing Extended Reach" width="544" height="306" /></p>
+<p>&nbsp;</p>
+<p>See the <font color="red">full video</font> that Michael and Team created about the new <font color="red">TelePresence</font> 1100 and 1300 systems:</p>
+<p><object style="width: 480px; height: 291px;" width="480" height="291" data="http://www.youtube.com/v/QlQ7VbeZFuI" type="application/x-shockwave-flash"><param name="src" value="http://www.youtube.com/v/QlQ7VbeZFuI" /></object></p>
+<hr />
+<p><strong><font color="red">Segment</font> 2: Designing Your <font color="red">Network</font> for <font color="red">TelePresence</font></strong></p>
+<p>Beyond the simplicity and ease of use is a reality that the <font color="red">network</font> can make or break a successful experience.&nbsp; Sporting my new official <font color="red">TechWiseTV</font> bowling shirt, I joined Jimmy Ray in the lab as we look at some of the <font color="red">network</font> requirements and we practice some math and physics along the way!</p>
+<p>&nbsp;</p>
+<p>In the <font color="red">Immersive experience</font> with three cameras and three microphones, average <font color="red">bandwidth</font> is 11<font color="red">Mbps</font> but can reach as much as 15<font color="red">Mbps</font>.</p>
+<p>&nbsp;</p>
+<p>&nbsp;<img src="file:///Users/tshakour/Desktop/twtv61_seg2_a.jpg" alt="" /><img src="/upload/images/techwisetv/TWTV61/TWTV61_-_Seg_2-2.jpg" alt="" width="544" height="306" /></p>
+<p><img src="/upload/images/techwisetv/TWTV61/TWTV61_-_Seg_2.jpg" alt="" width="544" height="306" /></p>
+<p>It is important to remember the &ldquo;80/20&rdquo; rule for QoS: Only about 20% of where your traffic travels is under your control. It is important to keep this in mind as you plan out your network.For more details and fun, check out the <a title="Cisco TelePresence Network Design" href="http://www.cisco.com/en/US/docs/solutions/Enterprise/Video/TP-Book.html"><font color="red">network design</font> guide for <font color="red">TelePresence</font></a> <a href="http://www.cisco.com/en/US/docs/solutions/Enterprise/Video/TP-Book.html"></a>and <a title="Geek to Geek blog" href="http://www.networkworld.com/community/node/56316">Jimmy Ray&rsquo;s blog on <font color="red">QoS</font></a>.</p>
+<p>(NOTE from Robb: You may have missed this in <font color="red">segment</font> 2 if you were not watching closely&#8230;but thanks to the hard work of our senior editor, <a href="http://leaders.creativecow.net/leaders/bassett_doug/">Doug Bassett</a>, we witness the ceremonial &#8216;exchange of chicken&#8217; for Jimmy Ray agreeing to work on a voice project with Tina.)</p>
+<p><img src="/upload/images/techwisetv/TWTV61/jimmys_chicken.jpg" alt="Tina bribes Jimmy Ray" width="544" height="306" /></p>
+<p>&nbsp;</p>
+<hr />
+<p><strong><font color="red">Segment</font> 3: <font color="red">TelePresence</font> <font color="red">Interoperability</font> Protocol </strong></p>
+<p>The future of simple <font color="red">interoperability</font> can be found within the innovation of open protocols like TIP that allow any vendor to inter-operate.&nbsp; <font color="red">Cisco</font> <font color="red">TelePresence</font> Engineer Michael Thomma stops by the lab to help dissect the protocol. He and Jimmy Ray dive into how TIP, based on open standards, allows vendors to natively interoperate with <font color="red">Cisco</font> <font color="red">TelePresence</font> and enable enhanced features such as:</p>
+<ul>
+<li>H.264 720p and 1080p <font color="red">interoperability</font> &ndash; TIP is geared for the more high-end, HD sessions</li>
+<li>Triple-screen <font color="red">interoperability</font></li>
+<li>AAC-LD and G.722 audio</li>
+<li>Point-to-point and multipoint support (in both transcoded and <font color="red">switched</font> environments)</li>
+<li><font color="red">Cisco</font> <font color="red">TelePresence</font> Extended Reach</li>
+</ul>
+<p>&nbsp;</p>
+<p>For more on TIP and TIP licensing, check out <a title="TIP Q&amp;A" href="http://www.cisco.com/en/US/prod/collateral/ps7060/ps8329/ps8331/ps7315/q_a_c67-580285.html">this Q&amp;A</a>.</p>
+<p>&nbsp;</p>
+<p><img src="/upload/images/techwisetv/TWTV61/TWTV61_-_Seg_3-5.jpg" alt="Understanding the TIP Protocol" width="544" height="306" /></p>
+<p>&nbsp;</p>
+<p><img src="/upload/images/techwisetv/TWTV61/TWTV61_-_Seg_3-3.jpg" alt="Michael Thomma and Jimmy Ray" width="544" height="306" /></p>
+<p>&nbsp;</p>
+<p>For more information on <font color="red">TelePresence</font> <font color="red">Interoperability</font> without TIP, watch the <font color="red">full video</font> highlighted in the show starring Michael Thomma and team:</p>
+<p>&nbsp;</p>
+<p><object width="480" height="300" data="http://blip.tv/play/AYHDx14A" type="application/x-shockwave-flash"><param name="src" value="http://blip.tv/play/AYHDx14A" /><param name="allowfullscreen" value="true" /></object></p>
+<hr />
+<p><strong><font color="red">Segment</font> 4: Multi-point <font color="red">TelePresence</font> Architecture</strong></p>
+<p><strong><br /></strong></p>
+<p>The myths surrounding <font color="red">Cisco</font> <font color="red">TelePresence</font> Mulit-point <font color="red">Switch</font> are debunked! Shobana Shankar and Jimmy Ray dig into the &ldquo;meat and taters&rdquo; of the CTMS.</p>
+<p>&nbsp;</p>
+<p><img src="/upload/images/techwisetv/TWTV61/TWTV61_-_Seg4.jpg" alt="Shobana Shankar" width="544" height="306" /></p>
+<p>&nbsp;</p>
+<p>The CTMS, a hardware-based appliance is built for high-speed switching. This is not your typical MCU, it is truly built <font color="red">video</font>, adding less than 10ms of <font color="red">latency</font> for the <font color="red">switch</font>ing function.</p>
+<p>Shobana walks Jimmy Ray the configuration of the switch and some of the feature settings. The <font color="red">GUI</font>, built off the Call Manager / Communications Manager, provides familiar access to service and security settings and system status.</p>
+<hr />
+<p><strong><font color="red">Segment</font> 5: The Fundamentals of <font color="red">Deployment</font></strong></p>
+<p>Tim Szigeti, co-author of <font color="red">Cisco</font> <font color="red">TelePresence</font> Fundamentals, joined us live from Canada via <font color="red">TelePresence</font>. He shareed his Top 5 <font color="red">Deployment</font> Recommendations for a successful rollout &ndash; and yes, one of these did include a conversation about paint &ndash; but for a very good reason.&nbsp; <img title="Wink" src="/tinymce/jscripts/tiny_mce/plugins/emotions/img/smiley-wink.gif" border="0" alt="Wink" /></p>
+<p>&nbsp;</p>
+<p><img src="/upload/images/techwisetv/TWTV61/tim_szigeti.jpg" alt="" width="500" height="281" /></p>
+<p>&nbsp;</p>
+<ul>
+<li>For the <font color="red">Immersive experience</font>, follow the room design recommendations:</li>
+</ul>
+<ol> </ol>
+<p style="padding-left: 30px;">This is not just about aesthetics &#8211; deviations will directly impact <font color="red">network</font> behavior and change traffic characteristics and <font color="red">network</font> requirements.</p>
+<ul>
+<li>Design your <font color="red">network</font> to be highly available:</li>
+</ul>
+<ol> </ol>
+<p style="padding-left: 30px;"><font color="red">TelePresence</font> streams utilize high compression ratios (over 99.9%) making it over 100 times more sensitive to <font color="red">packet loss</font> as compared to VoIP. However, <font color="red">TelePresence</font> traffic is also far more bursty and variable</p>
+<ul>
+<li>&nbsp;Follow the <font color="red">QoS</font> design recommendations for <font color="red">TelePresence</font>:</li>
+</ul>
+<ol> </ol>
+<p style="padding-left: 30px;">Classify <font color="red">TelePresence</font> traffic separately from other types of <font color="red">video</font> <font color="red">conferencing</font>. It should be marked as CS4.&nbsp; Use hardware priority queuing for <font color="red">TelePresence</font> in the campus and LLQ in the <font color="red">WAN</font>. When LLQ is cost-prohibitive, use CBWFQ.</p>
+<ul>
+<li>Be aware of hardware-specific limitations:</li>
+</ul>
+<ol> </ol>
+<p style="padding-left: 30px;">If using stackable <font color="red">switches</font>, enable ingress queuing and when using oversubscribed linecards, limit these to the access-layer of the campus.</p>
+<ul>
+<li>&nbsp;Harden <font color="red">TelePresence</font> <font color="red">deployments</font> by following security recommendations:</li>
+</ul>
+<ol> </ol>
+<p style="padding-left: 30px;">Use SSH and other secure protocols for management, follow correct <font color="red">firewall</font> configurations and use ingress policers to prevent trust abuse.</p>
+<p>&nbsp;</p>
+<p>To stay engaged with what is new and coming in <font color="red">Cisco</font> <font color="red">TelePresence</font>, join the conversation on the <a title="Cisco <font color="red">Collaboration</font> Community" href="https://www.myciscocommunity.com/community/technology/collaboration/product/telepresence">Collaboration Community</a>.</p>
+<p>To hear Tim Szigeti dig deeper into his <font color="red">deployment</font> recommendations, join us for a <a title="Cisco TelePresence Workshop" href="http://www.cisco.com/pcgi-bin/sreg2/register/banner.pl?PRIORITY_CODE=163710_1&amp;LANGUAGE=E&amp;METHOD=D&amp;TOPIC_CODE=S11750&amp;FAMILY_CODE=355&amp;SEM_O_DETAIL_ID=&amp;f">live workshop</a> with Q&amp;A on Wednesday, March 3<sup>rd</sup>. ()</p>
+<p>Finally, as Robb says at the close of just about every show: we can&rsquo;t do this without your feedback. What do you want to hear about in Unified Communications and <font color="red">Collaboration</font>? Post a note here, write on our Facebook wall, or tweet me @tinashakour.</p>
+<p>&nbsp;</p>
+		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">5 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+			<li>
+			<div id="comment-23452">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://www.trsstaffing.com' rel='external nofollow' class='url'>Engineering Recruitment Consultants</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">March 19, 2010 at 2:50 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>A collossal post, it's always very interesting following the world of Cisco!</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike23452" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-22098">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Michael Thomma						</span>
+						<br />
+						<span class="comment-meta commentmetadata">March 3, 2010 at 3:22 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Currently encryption is not supported for Telepresence interop calls.As far as I know CUVC-M cannot be used to monitor the TelePresence endpoints.Yes audio-only calls can join into a TelePresence call via the CUVC MCU. Although an MCU is not neccesary to add audio only calls. In a TelePresence multipoint call, each endpoint is able to add a single audio endpoint into the meeting.Cascading multiple CTMS's is on the roadmap and should be available later this year.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike22098" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-21223">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						brooke harry						</span>
+						<br />
+						<span class="comment-meta commentmetadata">February 22, 2010 at 12:10 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Interoperability:How does CTS provide support for end to end encyrption between H.323 endpoints connected via CUVC/MCU.Can Telepresence endpoint be monitored from CUVC-M NMS systems. Is it possible to monitor sessions statistics by using the CUVC-M in a CUVC environment.Can a voice/audio endpoint join a Telepresence session via an MCU?Can the CTS support cascaded or multiparty conferences?</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike21223" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-21127">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Robb Boyd						</span>
+						<br />
+						<span class="comment-meta commentmetadata">February 18, 2010 at 7:31 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Melvin,Did you raise this issue during the show?  This sounds like a windows or real media issue.  The show is quality checked multiple times and it was right on the mark for the two computers I monitored with during the show. The replay will be available within 24 hours - I encourage you to try again, if even for a moment to see if we can resolve the issue.  Thank you for watching!</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike21127" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-21125">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						<a href='http://www.gill-simpson.com' rel='external nofollow' class='url'>Melvin Voyyzey</a>						</span>
+						<br />
+						<span class="comment-meta commentmetadata">February 18, 2010 at 7:27 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>It would have really been great if the voice and video were in sync. We experienced about 3 sec delay - voice was trailing video.I'm really glad I didn''t have my CCO set in as an attempt to sell this technology based on this presentation - I would have been run off the campus.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike21125" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to TechWiseTV:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogCiscoInteractionNetwork', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogCiscoInteractionNetwork" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with TechWiseTV</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/techwise"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/techwisetv"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://www.youtube.com/Cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogCiscoInteractionNetwork"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.cisco.com/web/go/joinconversation/index.html" target="_blank">Cisco Collaboration Community</a></li>
+                      <li><a href="http://blogs.cisco.com/datacenter/" target="_blank">Cisco Data Center Blog</a></li>
+                      <li><a href="https://learningnetwork.cisco.com/index.jspa?ciscoHome=true" target="_blank">Cisco Learning Network</a></li>
+                      <li><a href="http://www.colinmcnamara.com/" target="_blank">DC Blogger: Colin McNamara</a></li>
+                      <li><a href="http://www.nojitter.com/" target="_blank">No Jitter</a></li>
+                      <li><a href="http://techcrunch.com/" target="_blank">TechCrunch</a></li>
+                  </ul>
+              <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="http://www.cisco.com/en/US/netsol/ns914/networking_solutions_program_home.html" target="_blank">Techwise TV</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/techwise'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/techwisetv'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 8396;
+			var orig_count = 0;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=https://blogs.cisco.com/cin/shownotes_the_engineering_behind_telepresence&text=ShowNotes: The Engineering Behind TelePresence&via=techwisetv" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/cin/shownotes_the_engineering_behind_telepresence&title=ShowNotes: The Engineering Behind TelePresence" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/cin/shownotes_the_engineering_behind_telepresence" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/cin/shownotes_the_engineering_behind_telepresence" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: ShowNotes: The Engineering Behind TelePresence&body=I saw this post on Cisco TechWiseTV blog and thought you might like to read it.%0A%0AShowNotes: The Engineering Behind TelePresence%0A%0Ahttps://blogs.cisco.com/cin/shownotes_the_engineering_behind_telepresence%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

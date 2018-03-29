@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Tools of the Trade: The Compressed Pcap Packet Indexing Program</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content="The Compressed Pcap Packet Indexing Program (cppip) is a tool to enable extremely fast extraction of packets from a compressed pcap file. This tool is intended for security and network folk who work with large pcap files. This article provides a complete discussion of the tool and is split into two parts."/><meta name="description" content="The Compressed Pcap Packet Indexing Program (cppip) is a tool to enable extremely fast extraction of packets from a compressed pcap file. This tool is intended for security and network folk who work with large pcap files. This article provides a complete discussion of the tool and is split into two parts."/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; Tools of the Trade: The Compressed Pcap Packet Indexing Program Comments Feed" href="https://blogs.cisco.com/security/tools-of-the-trade-the-compressed-pcap-packet-indexing-program/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"111746"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Don&#8217;t Miss Simplified Network Infrastructure &#038; 802.11ac Tomorrow!' href='https://blogs.cisco.com/wireless/dont-miss-simplified-network-infrastructure-802-11ac-tomorrow' />
+<link rel='next' title='Ignore the Mouse &#8211; Get Your IPv6 Learn On at Cisco Live Orlando 2013' href='https://blogs.cisco.com/sp/ignore-the-mouse-get-your-ipv6-learn-on-at-cisco-live-orlando-2013' />
+
+<link rel="canonical" href="https://blogs.cisco.com/security/tools-of-the-trade-the-compressed-pcap-packet-indexing-program" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=111746' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Tools of the Trade: The Compressed Pcap Packet Indexing Program"/>
+  <meta property="og:url" content="https://blogs.cisco.com/security/tools-of-the-trade-the-compressed-pcap-packet-indexing-program"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2013-04-30T10:23:07+00:00"/>
+  <meta property="article:modified_time" content="2013-05-01T07:37:42+00:00" />
+  <meta property="og:updated_time" content="2013-05-01T07:37:42+00:00" />
+  <meta property="article:section" content="Security"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Tools of the Trade: The Compressed Pcap Packet Indexing Program"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/security/tools-of-the-trade-the-compressed-pcap-packet-indexing-program"/>
+  <meta name="twitter:description" content="The Compressed Pcap Packet Indexing Program (cppip) is a tool to enable extremely fast extraction of packets from a compressed pcap file. This tool is intended for security and network folk who work with large pcap files. This article provides a complete discussion of the tool and is split into two"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521513591";
+		var sig = "f9b2a093de4c59d938a546cca2feb996";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1crXxZq&text=Tools of the Trade: The Compressed Pcap Packet Indexing Program&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/tools-of-the-trade-the-compressed-pcap-packet-indexing-program&title=Tools of the Trade: The Compressed Pcap Packet Indexing Program" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/tools-of-the-trade-the-compressed-pcap-packet-indexing-program" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/tools-of-the-trade-the-compressed-pcap-packet-indexing-program" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Tools of the Trade: The Compressed Pcap Packet Indexing Program&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0ATools of the Trade: The Compressed Pcap Packet Indexing Program%0A%0Ahttps://blogs.cisco.com/security/tools-of-the-trade-the-compressed-pcap-packet-indexing-program%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/security/'>Security</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category50.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Security  						</span>
+						<h1 id="post-111746" class="kindle_title title">Tools of the Trade: The Compressed Pcap Packet Indexing Program</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/MikeSchiffman.thumbnail.4cb4c4a1b2f7b.jpg"></div><div class="author_rewards_box"></div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/MikeSchiffman" title="Posts by Mike Schiffman" rel="author">Mike Schiffman</a> - April 30, 2013 - 3 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<p><strong>Prologue</strong><br />
+The Compressed <font color="red">Pcap</font> <font color="red">Packet</font> <font color="red">Indexing</font> Program (<font color="red">cppip</font>) is a tool to enable extremely fast extraction of <font color="red">packets</font> from a compressed <font color="red">pcap file</font>. This tool is intended for security and <font color="red">network</font> folk who work with large <font color="red">pcap files</font>. This article provides a complete discussion of the tool and is split into two parts. The first part, intended for end-users, will explain in detail how to build and use the tool. The second part, intended for C programmers, covers <font color="red">cppip</font>&#8217;s inner workings.</p>
+<p><strong>Introduction</strong><br />
+<font color="red">Cppip</font> is a <font color="red">command line</font> utility designed to make <font color="red">packet</font> extraction from large <font color="red">pcap files</font> extremely fast &#8212; without having to uncompress the entire file. It relies on <font color="red">pcap files</font> that have been compressed using the freely available <a href="http://samtools.sourceforge.net/tabix.shtml"><font color="red">bgzip</font></a>, a backward compatible <a href="http://www.gzip.org">gzip</a> utility that boasts a special additive &#8212; the ability to quickly and cheaply uncompress specific regions of the file on the fly. You will find <font color="red">cppip</font> quite useful if you work with large <font color="red">pcap files</font> and have the need to extract one or more <font color="red">packets</font> for subsequent inspection. As you&#8217;ll see, preparing your <font color="red">pcap files</font> for use with <font color="red">cppip</font> is a two step process of compressing the <font color="red">pcap file</font> with <font color="red">bgzip</font> and then <font color="red">indexing</font> it with <font color="red">cppip</font>. But before you can use <font color="red">cppip</font>, you first have to install it.<span id="more-111746"></span></p>
+<p><strong>Installation</strong><br />
+<font color="red">Cppip</font> is distributed with a <a href="http://www.gnu.org/software/autoconf/#TOCintroduction">GNU autoconf <font color="red">script</font></a> intended to make your life easier. Those of you familiar with autoconf-scaffolded tools are familiar with the `./<font color="red">configure</font> &amp;&amp; make` sequence of commands for <font color="red">configuring</font> and building such packages. In <font color="red">cppip</font>&#8217;s case however, one of the core dependencies, the tabix library, does not neatly install itself on the host operating system without some intervention. Because the tabix maintainer does not employ GNU&#8217;s powerful autoconf framework, you have to do a bit of prep-work before <font color="red">cppip</font> can be built and installed. To do so, follow these easy steps:</p>
+<ol>
+<li><strong>Download <font color="red">cppip</font>:</strong> <font color="red">Cppip</font> lives at GitHub and can be found <a href="https://github.com/mschiffm/cppip">here</a>.</li>
+<li><strong>Download and build tabixtools: </strong>Download the most recent version of the tabix toolkit (at the time of this writing that is 0.2.6):
+<div style="width: 600px; background-color: #dddddd; overflow-x: scroll; margin: 10px;">
+<pre><span style="font-weight: bold;">[sb:~]$ curl -O http://superb-dca2.dl.sourceforge.net/project/samtools/tabix/tabix-0.2.6.tar.bz2</span></pre>
+</div>
+<p>It contains the <font color="red">bgzip</font> utility as well as libtabix.a, a simple <a href="http://crasseux.com/books/ctutorial/Building-a-library.html">static C library</a> that contains all of the <font color="red">bgzip</font> functions. To build and use <font color="red">cppip</font>, you&#8217;ll need both (<font color="red">bgzip</font> will be used to compress your <font color="red">pcap files</font> and you&#8217;ll need the library against which to link the <font color="red">cppip</font> tool). After uncompressing and unarchiving, go ahead run `./<font color="red">configure</font> &amp;&amp; make` to build the tool and library. Unfortunately, the tabix maintainers did not include an install target in their Makefile so you can&#8217;t just run `make install` and have everything deposited where you need it. Because of this, it is recommended that you copy <font color="red">bgzip</font> somewhere in your $PATH so it is convenient to use (/usr/local/bin or /opt/local/bin are probably good choices). It is also because of the lack of the install target that you have to perform the next two steps:</li>
+<li><strong>Tell <font color="red">cppip</font>&#8217;s <font color="red">configure</font> <font color="red">script</font> where the libtabix.a library lives:</strong>Here are two easy options: either copy libtabix.a to something like /usr/local/lib where the <font color="red">configure</font> <font color="red">script</font> will find it:
+<div style="width: 600px; background-color: #dddddd; overflow-x: scroll; margin: 10px;">
+<pre><span style="font-weight: bold;">[sb:tabix-0.2.6]$ sudo cp libtabix.a /usr/local/lib </span></pre>
+</div>
+<p>Or if you don&#8217;t have root privileges or don&#8217;t plan to use libtabix.a again, you can pass the fully qualified path of where you built libtabix.a (usually this will be something like &#8220;tabix-0.2.6&#8221;) to <font color="red">cppip</font>&#8217;s <font color="red">configure</font> <font color="red">script</font>. For example, if you built tabixtools in the directory adjacent to <font color="red">cppip</font> as per the following:</p>
+<div style="width: 600px; background-color: #dddddd; overflow-x: scroll; margin: 10px;">
+<pre><span style="font-weight: bold;">[sb:<font color="red">cppip</font>]$ ls</span>
+
+<font color="red">cppip</font>                        tabix-0.2.6</pre>
+</div>
+<p>Then you will invoke <font color="red">configure</font> with something like:</p>
+<div style="width: 600px; background-color: #dddddd; overflow-x: scroll; margin: 10px;">
+<pre><span style="font-weight: bold;">[sb:<font color="red">cppip</font>]$ ./<font color="red">configure</font> LDFLAGS=-L/Users/mike/Code/cppip/tabix-0.2.6/ </span></pre>
+</div>
+</li>
+<li><strong>Inform <font color="red">configure</font> where bgzf.h is kept: </strong>In much the same vein as above, if you plan to use libtabix.a again you can copy it to /usr/local/include where <font color="red">configure</font> will find it:
+<div style="width: 600px; background-color: #dddddd; overflow-x: scroll; margin: 10px;">
+<pre><span style="font-weight: bold;">[sb:tabix-0.2.6]$ sudo cp bgzf.h /usr/local/include </span></pre>
+</div>
+<p>Otherwise you can pass another argument to <font color="red">configure</font> to tell it where to find the header file:</p>
+<div style="width: 600px; background-color: #dddddd; overflow-x: scroll; margin: 10px;">
+<pre><span style="font-weight: bold;">[sb:<font color="red">cppip</font>]$ ./<font color="red">configure</font> CPPFLAGS=-I/Users/mike/Code/cppip/tabix-0.2.6/ </span></pre>
+</div>
+</li>
+<li><strong>Invoke <font color="red">configure</font> with the added options:</strong>You can indicate both sets of flags with something like:
+<div style="width: 600px; background-color: #dddddd; overflow-x: scroll; margin: 10px;">
+<pre><span style="font-weight: bold;">[sb:<font color="red">cppip</font>]$ ./<font color="red">configure</font> CPPFLAGS=-I/Users/mike/Code/<font color="red">cppip</font>/tabix-0.2.6/ LDFLAGS=-L/Users/mike/Code/cppip/tabix-0.2.6/ </span></pre>
+</div>
+</li>
+<li><strong>Build cppip:</strong> Now run `make`.</li>
+</ol>
+<p><strong>The Tool: <font color="red">CPPIP</font></strong><br />
+You&#8217;ll be working with the first official release of <font color="red">cppip</font>, version 1.3. Before you dive into some examples, let&#8217;s first explore all of the options you can specify when using the tool, to do that, invoke <font color="red">cppip</font> with the -h <font color="red">switch</font>:</p>
+<div style="width: 600px; background-color: #dddddd; overflow-x: scroll; margin: 10px;">
+<pre><span style="font-weight: bold;">[sb:<font color="red">cppip</font>] $ ./src/cppip -h</span>
+
+
+
+Compressed <font color="red">Pcap</font> <font color="red">Packet</font> <font color="red">Indexing</font> Program
+
+(c) <font color="red">Cisco</font> Systems 2013, Inc
+
+Mike Schiffman 
+
+
+
+Fast compressed <font color="red">pcap</font> <font color="red">indexing</font> and extraction, made easy
+
+see http://blogs.cisco.com/tag/<font color="red">cppip</font> for complete documentation
+
+
+
+Usage: cppip [options] [file(s)...]
+
+
+
+<font color="red">Indexing</font>:
+
+ -i <font color="red">index</font>_mode:index_level index.cppip pcap.gz
+
+			index a <font color="red">bgzip</font> compressed pcap.gz file using `index_mode`
+
+			index.cppip will be created or overwritten and <font color="red">packets</font>
+
+			will be <font color="red">indexed</font> at every `index_level` mark.
+
+			invoke with -I for more information/help on <font color="red">indexing</font>
+
+ -I			print supported index/extract modes/format guidelines
+
+ -v index.cppip		verify <font color="red">index file</font>
+
+ -d index.cppip		dump <font color="red">index file</font>
+
+
+
+Extracting:
+
+ -e index_mode:n|n-m index.cppip pcap.gz new.pcap
+
+			extract using `index_mode` the nth <font color="red">packet</font> or n-m <font color="red">packets</font>
+
+			from pcap.gz into new.pcap
+
+			invoke with -I for more information/help on extracting
+
+ -f			enable fuzzy matching (<font color="red">timestamp</font> extraction only)
+
+
+
+General Options:
+
+ -D			enable debug messages
+
+ -V			program version
+
+ -h			this message</pre>
+</div>
+<p>Let&#8217;s talk through some of the main options:</p>
+<ul>
+<li><strong>-i (<font color="red">index</font>)</strong> Typically, this is the first step &#8212; you&#8217;ll create one <font color="red">index file</font> for every pcap.gz</li>
+<li><strong>-e (extract)</strong> This mode is used when you want to extract one or more <font color="red">packets</font> from the pcap.gz</li>
+<li><strong>-I (print modes)</strong> This option displays supported <font color="red">indexing</font> modes</li>
+<li><strong>-v (verification)</strong> This option is used to verify an <font color="red">index file</font> was built correctly, check its version, and see how many records it has</li>
+<li><strong>-d (dump)</strong> This option dumps the entire <font color="red">index file</font></li>
+<li><strong>-f (fuzzy matching)</strong> This option allows for fuzzy matches when extracting in <font color="red">timestamp</font> mode (more on this later)</li>
+<li><strong>-D (debug)</strong> Enable debug messages</li>
+</ul>
+<p><strong>Compressing the <font color="red">Pcap</font></strong><br />
+First things first. We need to compress your monster <font color="red">pcap file</font> using <font color="red">bgzip</font>. Sidebar: in the following examples, in order to obtain information about what&#8217;s inside a <font color="red">pcap file</font> (compressed or not), we will use <font color="red">Wireshark</font>&#8217;s <a href="http://www.wireshark.org/docs/man-pages/capinfos.html">capinfos</a> tool. For all following examples we will use a 2GB <font color="red">pcap file</font> containing just over 7.5M <font color="red">packets</font>:</p>
+<div style="width: 600px; background-color: #dddddd; overflow-x: scroll; margin: 10px;">
+<pre><span style="font-weight: bold;">[sb:<font color="red">cppip</font>]$ ls -l *.<font color="red">pcap</font></span>
+
+-rw-r--r--   1 mike  staff  2000000101 Apr 19 20:43 pktdump.pcap
+
+<span style="font-weight: bold;">[sb:<font color="red">cppip</font>]$ capinfos -cuae pktdump.pcap.gz</span>
+
+File name:           pktdump.pcap.gz
+
+Number of <font color="red">packets</font>:   7552072
+
+Capture duration:    411 seconds
+
+Start time:          Fri Apr 19 16:56:44 2013
+
+End time:            Fri Apr 19 17:03:35 2013</pre>
+</div>
+<p>For reference, you&#8217;ll notice the <font color="red">pcap</font> compresses with plain old gzip to about 892M:</p>
+<div style="width: 600px; background-color: #dddddd; overflow-x: scroll; margin: 10px;">
+<pre><span style="font-weight: bold;">[sb:<font color="red">cppip</font>]$ ls -l *.<font color="red">pcap</font>*</span>
+
+-rw-r--r--   1 mike  staff  838087510 Apr 19 20:43 pktdump.pcap.gz</pre>
+</div>
+<p>Compressing a file with <font color="red">bgzip</font> will introduce some overhead, in our case only about 7% at 838M:</p>
+<div style="width: 600px; background-color: #dddddd; overflow-x: scroll; margin: 10px;">
+<pre><span style="font-weight: bold;">[sb:<font color="red">cppip</font>]$ <font color="red">bgzip</font> pktdump.pcap</span>
+
+<span style="font-weight: bold;">[sb:<font color="red">cppip</font>]$ ls -l *.<font color="red">pcap</font>*</span>
+
+-rw-r--r--   1 mike  staff  892089319 Apr 19 20:43 pktdump.pcap.gz</pre>
+</div>
+<p><strong><font color="red">Packet</font> <font color="red">Indexing</font></strong><br />
+Once you&#8217;ve compressed the file, you&#8217;ll need to <font color="red">index</font> it with <font color="red">cppip</font>. When <font color="red">indexing</font>, <font color="red">cppip</font> will create a companion file that will contain <font color="red">bgzip</font> offsets for <font color="red">packets</font> in pcap.gz. In other words, the <font color="red">index file</font> will hold addresses to <font color="red">packets</font> that live in the compressed <font color="red">pcap</font>. These addresses will subsequently be used to rapidly extract <font color="red">packets</font> later on.</p>
+<p>Currently, <font color="red">cppip</font> supports two modes of <font color="red">indexing</font>: <em><font color="red">packet number</font></em> and <em><font color="red">timestamp</font></em>. The <font color="red">packet number</font> mode <font color="red">indexes</font> <font color="red">packets</font> via their ordinal position in the <font color="red">pcap file</font> while the <font color="red">timestamp</font> mode <font color="red">indexes</font> <font color="red">packets</font> by their <font color="red">pcap header</font> <font color="red">timestamp</font>. Deciding which mode to use to build the <font color="red">index</font> is going to be tied to how you expect to need to extract <font color="red">packets</font>. We&#8217;ll learn more about both in the next few sections.</p>
+<p>After you decide on an <font color="red">index</font> mode, you&#8217;ll need to choose an <em><font color="red">index level</font></em>. This is a value that indicates for how many <font color="red">packets</font> <font color="red">cppip</font> will store addresses. In a perfect world, you could choose the smallest possible <font color="red">index level</font> and in some cases store the address of every <font color="red">single packet</font> and have near instantaneous look-ups. This would also result in a very large <font color="red">index file</font>. In practice, the <font color="red">index level</font> will be a larger value that offers a good balance between <font color="red">index file</font> size and look-up speed. To see how <font color="red">cppip</font> expects an <font color="red">index level</font> to be specified, invoke <font color="red">cppip</font> with the -I option:</p>
+<div style="width: 600px; background-color: #dddddd; overflow-x: scroll; margin: 10px;">
+<pre><span style="font-weight: bold;">[sb:<font color="red">cppip</font>] $ ./src/cppip -I</span>
+
+
+
+pkt-num:		index_level should be a single integer from:
+
+			1 - (total number of <font color="red">packets</font> - 1)
+
+			To <font color="red">index</font> every 1000 <font color="red">packets</font>:	-i pkt-num:1000
+
+
+
+<font color="red">timestamp</font>:		<font color="red">index</font>_level should be a number indicating the <font color="red">index</font>
+
+			followed by a time range specifier which can be one of
+
+			following:
+
+			d - days
+
+			h - hours
+
+			m - minutes
+
+			s - seconds
+
+			To index every 100 seconds:	-i <font color="red">timestamp</font>:100s</pre>
+</div>
+<p><strong><font color="red">Packet</font> <font color="red">Indexing</font> via <font color="red">Packet Number</font></strong><br />
+When choosing a <font color="red">packet number</font> <font color="red">index level</font>, you need to consider the number of <font color="red">packets</font> in the pcap.gz and decide which is more important: disk space or execution speed. A smaller <font color="red">index level</font> translates into more <font color="red">packets</font> being <font color="red">indexed</font> and results in a bigger <font color="red">index file</font>. For <font color="red">pcap files</font> with a large of number of <font color="red">packets</font>, this will result in a very sizable <font color="red">index file</font>. The benefit here is faster seek times since the more granular the <font color="red">indexing</font>, the closer, on average, <font color="red">cppip</font> will be able to get to your target extraction (we&#8217;ll see this in action shortly). If you choose the smallest possible <font color="red">index level</font> of 1, you&#8217;re telling <font color="red">cppip</font> &#8220;please store the address of every <font color="red">packet</font> in my <font color="red">index file</font>&#8221; and it will dutifully write an <font color="red">index record</font> for every <font color="red">packet</font> in the <font color="red">pcap</font>. This will result in the largest possible <font color="red">index file</font> and fastest possible extractions since <font color="red">cppip</font> will know the address of every <font color="red">single packet</font> and can seek directly to the <font color="red">index record</font> containing the <font color="red">BGZF</font> offset for the desired <font color="red">packet</font>. In practice, you&#8217;ll probably want to choose something that offers a balance in terms of <font color="red">index file</font> size.</p>
+<p>In the following example, we&#8217;ll <font color="red">index</font> the pcap.gz file using a reasonable <font color="red">index level</font> of 1,000, which results in a 120K <font color="red">index file</font>:</p>
+<div style="width: 600px; background-color: #dddddd; overflow-x: scroll; margin: 10px;">
+<pre><span style="font-weight: bold;">[sb:<font color="red">cppip</font>]$ ./src/<font color="red">cppip</font> -i pkt-num:1000 index-pn-1000.cppip pktdump.pcap.gz</span>
+
+<font color="red">indexing</font> pktdump.pcap.gz...
+
+wrote 7552072 records to index-pn-01.<font color="red">cppip</font>
+
+<span style="font-weight: bold;">[sb:<font color="red">cppip</font>]$ ls -l index-pn-1000.<font color="red">cppip</font></span>
+
+-rw-r--r--  1 mike  staff  120876 Apr 15 12:03 index-pn-1000.<font color="red">cppip</font></pre>
+</div>
+<p><strong><font color="red">Packet</font> Extraction via <font color="red">Packet Number</font></strong><br />
+Now that you&#8217;ve got your <font color="red">index file</font> built, you can actually get some work done! Say you have a pressing need for <font color="red">packets</font> 3,480,123 through 4,080,012 from deep inside that pcap.gz. The infographic below depicts this typical workflow scenario:</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/cppip-1.png"><img class="aligncenter size-large wp-image-111753" alt="cppip-1" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/cppip-1-550x623.png" width="550" height="623" /></a></p>
+<ol>
+<li><strong><font color="red">Cppip</font> consults in the <font color="red">index file</font>:</strong> Using the specified <font color="red">packet</font> range, <font color="red">cppip</font> looks inside the <font color="red">index file</font> to find the closest <font color="red">BGZF</font> offset of the starting <font color="red">packet</font>. If <font color="red">cppip</font> is lucky enough to land directly on a <font color="red">packet</font> <font color="red">index</font>, it will know the exact address of where your desired <font color="red">packet</font> range begins inside pcap.gz. If not, as is the case above, it will get as close as possible. This works because <font color="red">packets</font> are stored in a sequential, monotonically increasing fashion. So <font color="red">cppip</font> knows that <font color="red">packet number</font> 3,473,920 is the closest antecedent neighbor <em>that it knows the address for</em> to the desired starting <font color="red">packet</font> of 3,480,123.</li>
+<li><strong><font color="red">Cppip</font> <font color="red">indexes</font> directly into pcap.gz:</strong> Using the <font color="red">BGZF</font> offset obtained from the <font color="red">index file</font> query, <font color="red">cppip</font> will directly seek to that address in the pcap.gz and do a <font color="red">linear search</font> to find the desired starting <font color="red">packet</font>.</li>
+<li><strong><font color="red">Cppip</font> writes the <font color="red">packets</font> to new.pcap:</strong> Once it finds the starting <font color="red">packet</font>, <font color="red">cppip</font> will copy over the original 24-byte <font color="red">pcap file</font> header and then write to new.pcap each <font color="red">packet</font> in the specified range.</li>
+</ol>
+<p>Let&#8217;s see what this looks like at the <font color="red">command line</font>, and so you have an idea of how long this takes, let&#8217;s time it:</p>
+<div style="width: 600px; background-color: #dddddd; overflow-x: scroll; margin: 10px;">
+<pre><span style="font-weight: bold;">[sb:<font color="red">cppip</font>] $ time ./src/<font color="red">cppip</font> -e pkt-num:3480123-4080012 index-pn-1000.cppip pktdump.pcap.gz new.pcap</span>
+
+wrote 599890 <font color="red">packets</font> to new.pcap
+
+        1.42 real         0.56 user         0.84 sys</pre>
+</div>
+<p>Sweet. Using the <font color="red">packet number</font> <font color="red">index file</font> with records every 7,552 <font color="red">packets</font> on my admittedly speedy MacBook Pro it took <font color="red">cppip</font> less than one and a half seconds to locate, read, and write almost 600,000 <font color="red">packets</font>. For good measure, let&#8217;s check <font color="red">cppip</font>&#8217;s work:</p>
+<div style="width: 600px; background-color: #dddddd; overflow-x: scroll; margin: 10px;">
+<pre><span style="font-weight: bold;">[sb:<font color="red">cppip</font>] $ capinfos -c new.pcap</span>
+
+File name:           new.pcap
+
+Number of <font color="red">packets</font>:   599890</pre>
+</div>
+<p>Looks good! Using <font color="red">packet number</font> <font color="red">indexing</font>, <font color="red">cppip</font> can extract a <font color="red">single packet</font>, or a range of <font color="red">packets</font> from a compressed <font color="red">pcap file</font>. Next we&#8217;ll move on and have a look at <font color="red">cppip</font>&#8217;s <font color="red">timestamp</font> <font color="red">indexing</font> and extraction capabilities.</p>
+<p><strong><font color="red">Packet</font> <font color="red">Indexing</font> via <font color="red">Timestamp</font></strong><br />
+<font color="red">Timestamp</font> <font color="red">indexing</font> <font color="red">indexes</font> <font color="red">packets</font> based on their capture <font color="red">timestamp</font> in the <font color="red">pcap file</font>. <font color="red">Cppip</font> will be keying <font color="red">packets</font> based on when they arrived in the pcap.gz file rather than their relative position in the file. While <font color="red">packet</font> <font color="red">timestamps</font> will <a href="http://comments.gmane.org/gmane.network.tcpreplay.user/1161">almost always increase</a>, we can&#8217;t rely on them to do so monotonically. When choosing a <font color="red">timestamp</font> <font color="red">index level</font>, you need to be cognizant of the duration of your capture file.</p>
+<p>Currently, as of version 1.3, the smallest value you can choose for a <font color="red">timestamp</font> <font color="red">index level</font> is 1 second. Let&#8217;s have a look at the standard workflow for <font color="red">timestamp</font> based <font color="red">indexing</font> and extraction:</p>
+<p>Since we know the pcap.gz file spans the relatively short timeframe of 411 seconds, let&#8217;s create an <font color="red">index file</font> using the smallest possible <font color="red">index level</font> of 1 second which will result in a tiny <font color="red">index file</font> of 411 records:</p>
+<div style="width: 600px; background-color: #dddddd; overflow-x: scroll; margin: 10px;">
+<pre><span style="font-weight: bold;">[sb:<font color="red">cppip</font>]$ ./src/cppip -i <font color="red">timestamp</font>:1s index-ts-1s.<font color="red">cppip</font> pktdump.pcap.gz</span>
+
+<font color="red">indexing</font> ../pktdump.pcap.gz...
+
+wrote 411 records to index-ts-1s.<font color="red">cppip</font>
+
+<span style="font-weight: bold;">[sb:<font color="red">cppip</font>]$ ls -l index-ts-1s.<font color="red">cppip</font></span>
+
+-rw-r--r--  1 mike  staff  9920 Apr 20 16:21 index-ts-1s.<font color="red">cppip</font></pre>
+</div>
+<p><strong><font color="red">Packet</font> Extraction via <font color="red">Timestamp</font></strong><br />
+While you can&#8217;t specify <font color="red">microsecond</font> resolution for <font color="red">packet</font> <font color="red">indexing</font>, you have that option for extraction. You can specify <font color="red">timestamps</font> with or without <font color="red">microseconds</font>:</p>
+<ul>
+<li><strong>With <font color="red">microseconds</font>:</strong> YYYY-MM-DD:HH:MM:SS.uuuuuu</li>
+<li><strong>Without <font color="red">microseconds</font>: </strong>YYYY-MM-DD:HH:MM:SS</li>
+</ul>
+<p>Let&#8217;s take a look at another typical <font color="red">cppip</font> use-case. In this scenario, your stalwart <a href="http://www.cisco.com/en/US/products/ps5729/Products_Sub_Category_Home.html"><font color="red">Cisco</font> <font color="red">IPS</font></a> has informed you of a break-in attempt that happened at 5:00pm, local time. Your internal forensic team wants all <font color="red">network</font> traffic from 4:59pm to 5:02pm. Since you had previously setup an automated process that <font color="red">bgzip</font> compresses and <font color="red">cppip</font> <font color="red">indexes</font> all of your perimeter <font color="red">pcap files</font>, you&#8217;re all set to handle this request. Let&#8217;s grab all <font color="red">packets</font> from one minute before the incident and two minutes afterwards:</p>
+<p><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/cppip-2.png"><img class="aligncenter size-large wp-image-111754" alt="cppip-2" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/cppip-2-550x643.png" width="550" height="643" /></a></p>
+<p>The <font color="red">command line</font> for this looks like:</p>
+<div style="width: 600px; background-color: #dddddd; overflow-x: scroll; margin: 10px;">
+<pre><span style="font-weight: bold;">[sb:<font color="red">cppip</font>] $ ./src/cppip -e <font color="red">timestamp</font>:2012-10-07:16:59:00-2012-10-07:17:02:00 index-ts:1s pktdump_20121008000335.pcap.gz new2.pcap</span>
+
+extracting from pktdump.pcap.gz using index-ts:1s...
+
+extract(): 2013-04-19 16:59:00.000000 not found, closest is 2013-04-19 16:59:00.000102 (try -f)
+
+wrote 0 <font color="red">packets</font> to new2.pcap.</pre>
+</div>
+<p>Huh. What happened here? Evidently we didn&#8217;t specify a specific enough <font color="red">timestamp</font> for <font color="red">cppip</font> to match a corresponding starting <font color="red">packet</font>. To solve this, you have two options:</p>
+<ol>
+<li><strong>Specify the specific <font color="red">timestamp</font>:</strong> <font color="red">Cppip</font> was kind enough to tell you the closest matching <font color="red">timestamp</font> to your request so you could just use that one. However, it&#8217;s likely you&#8217;ll run into the same problem with the closing <font color="red">timestamp</font> (this is, however, a useful way to capture all <font color="red">packets</font> from a starting <font color="red">timestamp</font> until the end of the pcap.gz).</li>
+<li><strong>Use fuzzy matching:</strong> With this handy option, <font color="red">cppip</font> will look for the specified <font color="red">timestamp</font>, but if it can&#8217;t find it, <font color="red">cppip</font> will start and stop matching on the <font color="red">timestamps</font> closest to the ones specified at the <font color="red">command line</font>. Let&#8217;s try that.</li>
+</ol>
+<div style="width: 600px; background-color: #dddddd; overflow-x: scroll; margin: 10px;">
+<pre><span style="font-weight: bold;">[sb:<font color="red">cppip</font>] $ ./src/cppip -f -e <font color="red">timestamp</font>:2012-10-07:16:59:00-2012-10-07:17:02:00 index-ts:1s pktdump_20121008000335.pcap.gz new2.pcap</span>
+
+extracting from pktdump_20121008000335.pcap.gz using index-ts:1s...
+
+start ts: 2012-10-07 16:59:00.000000 not found, instead fuzzy matched on 2012-10-07 16:59:00.000102
+
+stop ts: 2012-10-07 17:02:00.000000 not found, instead fuzzy matched on 2012-10-07 17:02:00.000046
+
+wrote 3461342 <font color="red">packets</font> to new2.pcap.</pre>
+</div>
+<p>Awesome! You&#8217;ve got your <font color="red">packets</font> and it&#8217;s time for some <font color="red">forensic analysis</font>.</p>
+<p>Finally, let&#8217;s explore some of <font color="red">cppip</font>&#8217;s diagnostic functionality.</p>
+<p><strong><font color="red">Packet</font> Verification and <font color="red">Index</font> Dumping</strong><br />
+<font color="red">Cppip</font> offers some diagnostic functionality that will give you an opportunity to look inside the <font color="red">index file</font> to ensure its validity and explore its contents. The first is a simple command that verifies the <font color="red">index file</font> and displays some of its metadata:</p>
+<div style="width: 600px; background-color: #dddddd; overflow-x: scroll; margin: 10px;">
+<pre><span style="font-weight: bold;">[sb:<font color="red">cppip</font>] mike% ./src/<font color="red">cppip</font> -v index-pn-1000.<font color="red">cppip</font></span> 
+
+valid cppip <font color="red">index file</font>
+
+version:	1.3
+
+created:	2013-04-19 20:03:17.463926
+
+<font color="red">packets</font> in <font color="red">pcap</font>:7552072
+
+<font color="red">indexing</font> mode:	packet-number
+
+<font color="red">index level</font>:	1000
+
+record count:	7552</pre>
+</div>
+<p>We see that our <font color="red">index file</font> is pretty much as expected. One takeaway here is to ensure the version of the <font color="red">index file</font> you&#8217;re using is in-line with version of <font color="red">cppip</font>. I can promise I&#8217;ll try to make future versions backward compatible, but as with all things, your mileage may vary.</p>
+<p>The other nifty diagnostic feature <font color="red">cppip</font> exposes is an option to dump the contents of the <font color="red">index file</font>. This is useful if you want to see how the <font color="red">packets</font> are physically laid out inside your pcap.gz:</p>
+<div style="width: 600px; background-color: #dddddd; overflow-x: scroll; margin: 10px;">
+<pre><span style="font-weight: bold;">[sjc-vpn5-288:~/Code/<font color="red">cppip</font>/<font color="red">cppip</font>] mike% ./src/cppip -d index-pn-1000.cppip |&amp; more</span>
+
+valid cppip <font color="red">index file</font>
+
+version:        1.3
+
+created:        2013-04-19 20:03:17.463926
+
+<font color="red">packets</font> in <font color="red">pcap</font>:7552072
+
+<font color="red">indexing</font> mode:  packet-number
+
+<font color="red">index level</font>:    1000
+
+record count:   7552
+
+pkt num:1000
+
+offset: 153b9d4c5
+
+pkt num:2000
+
+offset: 30e3bae9f
+
+pkt num:3000
+
+offset: 4dadb7482
+
+pkt num:4000
+
+...</pre>
+</div>
+<p>That wraps up the user manual, so let&#8217;s move on to have a look at how <font color="red">cppip</font> does what it does.</p>
+<p><strong>Under the Hood</strong><br />
+As I&#8217;ve done in the past, in all of my technical blogs where I release code, I like to choose some linchpin code block and discuss it. So how does <font color="red">cppip</font> do what it does? Let&#8217;s find out! We&#8217;ll have a look under the hood at the <font color="red">index file</font> header, the <font color="red">index record</font> and a few of the functions used to extract the <font color="red">index</font>.</p>
+<p><strong>The <font color="red">Packet Number</font> <font color="red">Index Record</font></strong><br />
+Since we&#8217;re going to explore the <font color="red">indexing</font> and extraction process for the <font color="red">packet number</font> mode, it&#8217;s only fitting that we open with a look at the <font color="red">packet number</font> <font color="red">index record</font>. As you would expect, it&#8217;s a pretty simple structure. It has room for an unsigned 32-bit counter for the <font color="red">packet number</font> and a 64-bit address into the pcap.gz:</p>
+<div style="width: 600px; background-color: #dddddd; overflow-x: scroll; margin: 10px;">
+<pre><span style="color: #0000ff;">/* 
+
+ * <font color="red">Packet Number</font> <font color="red">Index Record</font>:
+
+ *
+
+ *  0                   1                   2                   3
+
+ *  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+
+ * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+ * |                        <font color="red">Packet Number</font>                          |
+
+ * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+ * |              Virtual <font color="red">BGZF</font> Virtual Record Locator              |
+
+ * |                                                               |
+
+ * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+ */</span>
+
+<span style="color: #009900;">struct</span> cppip_record_pn
+
+{
+
+    <span style="color: #009900;">uint32_t</span> pkt_num;           <span style="color: #0000ff;">/** the <font color="red">packet number</font> */</span>
+
+    <span style="color: #009900;">uint64_t</span> <font color="red">bgzf</font>_offset;       <span style="color: #0000ff;">/** its offset into bgzf file */</span>
+
+};
+
+<span style="color: #009900;">typedef struct</span> cppip_record_pn cppip_record_pn_t;
+
+<span style="color: #ff00ff;">#define CPPIP_REC_PN_SIZ</span> sizeof(<span style="color: #009900;">struct</span> cppip_record_pn)</pre>
+</div>
+<p><strong>Packet-Number <font color="red">Indexing</font></strong><br />
+The next block is the main event loop for building the <font color="red">index file</font>. You&#8217;ll notice the first thing <font color="red">cppip</font> does is obtain the current address of the file pointer into the pcap.gz. Not shown is the code block that already read and wrote out the <font color="red">pcap file</font> header, so for the loop&#8217;s first iteration, the call to bgzf_tell() will reflect the fact that <font color="red">cppip</font> has already read those <font color="red">bytes</font>. After reading a <font color="red">packet</font> and ensuring it didn&#8217;t encounter an error or end of file, <font color="red">cppip</font> checks to see if it&#8217;s got the <font color="red">first packet</font> in the <font color="red">pcap</font> or (via the modulo operator) one that is a multiple of the <font color="red">index level</font>. If either state is true, <font color="red">cppip</font> will write the <font color="red">packet number</font>, offset to the <font color="red">index file</font>, and bump a few counters. If debugging is enabled, the you&#8217;ll get a nice message informing you what just happened. The next block simply skips the contents of the <font color="red">packet</font> &#8212; <font color="red">cppip</font> doesn&#8217;t care about them while it&#8217;s <font color="red">indexing</font>. This process repeats until an error is encountered or <font color="red">cppip</font> reaches the end of the <font color="red">pcap</font>.gz.</p>
+<div style="width: 600px; background-color: #dddddd; overflow-x: scroll; margin: 10px;">
+<pre>    <span style="color: #ff8c00;">for</span> (rec_cnt = <span style="color: #ffb6c1;">0</span>, pkt_cnt = <span style="color: #ffb6c1;">1</span>, done = <span style="color: #ffb6c1;">0</span>; !done; pkt_cnt++)
+
+    {
+
+        <span style="color: #0000ff;">/** ...[pcap <font color="red">packet</font> header][<font color="red">packet</font>]... 
+
+         *     ^ 
+
+         * <font color="red">bgzf</font> fp is pointing here, the <font color="red">BGZF</font> offset to this
+
+         * <font color="red">packet</font>.. This is
+
+         * the offset we will record in our <font color="red">index</font>
+
+         */</span>
+
+        offset = bgzf_tell(c-&gt;<font color="red">pcap</font>);
+
+        <span style="color: #ff8c00;"><font color="red">switch</font></span> (bgzf_read(c-&gt;<font color="red">pcap</font>, <font color="red">buf</font>, PCAP_PKTH_SIZ))
+
+        {
+
+            <span style="color: #ff8c00;">case</span> -<span style="color: #ffb6c1;">1</span>:
+
+                <font color="red">snprintf</font>(c-&gt;<font color="red">errbuf</font>, <span style="color: #ff00ff;"><font color="red">BUFSIZ</font></span>, <span style="color: #dc143c;">"bgzf_read() error\n"</span>);
+
+                <span style="color: #ff8c00;">return</span> (-<span style="color: #ffb6c1;">1</span>);
+
+            <span style="color: #ff8c00;">case</span> <span style="color: #ffb6c1;">0</span>:
+
+                <span style="color: #0000ff;">/* all done */</span>
+
+                done = <span style="color: #ffb6c1;">1</span>;
+
+                <span style="color: #ff8c00;">break</span>;
+
+            <span style="color: #ff8c00;">default</span>:
+
+                pcap_h = (pcap_offline_pkthdr_t *)<font color="red">buf</font>;
+
+                <span style="color: #0000ff;">/** write <font color="red">first packet</font> then write as per <font color="red">index</font>_level */</span>
+
+                if (pkt_cnt == <span style="color: #ffb6c1;">1</span> || pkt_cnt % c-&gt;index_level.num == <span style="color: #ffb6c1;">0</span>)
+
+                {
+
+                    cppip_rec.pkt_num     = pkt_cnt;
+
+                    cppip_rec.bgzf_offset = offset;
+
+                    <span style="color: #ff8c00;">if</span> (write(c-&gt;index, &amp;cppip_rec, CPPIP_REC_PN_SIZ) == -<span style="color: #ffb6c1;">1</span>)
+
+                    {
+
+                        <font color="red">snprintf</font>(c-&gt;<font color="red">errbuf</font>, <span style="color: #ff00ff;"><font color="red">BUFSIZ</font></span>, <span style="color: #dc143c;">"write(): %s"</span>, 
+
+                                strerror(errno));
+
+                        <span style="color: #ff8c00;">return</span> (-<span style="color: #ffb6c1;">1</span>);
+
+                    }
+
+                    rec_cnt++;
+
+                    <span style="color: #ff8c00;">if</span> (c-&gt;flags &amp; CPPIP_CTRL_DEBUG)
+
+                    {
+
+                        fprintf(stderr, <span style="color: #dc143c;">"DBG: add&gt; [%d]: %d @ %llx\n"</span>,
+
+                                rec_cnt, pkt_cnt, offset);
+
+                    }
+
+                }
+
+                <span style="color: #0000ff;">/**
+
+                 * we don't care about the contents -- we skip past the
+
+                 * <font color="red">packet</font>
+
+                 */</span>
+
+                <span style="color: #ff8c00;">if</span> (bgzf_skip(c-&gt;<font color="red">pcap</font>, pcap_h-&gt;caplen) == -<span style="color: #ffb6c1;">1</span>)
+
+                {
+
+                    <font color="red">snprintf</font>(c-&gt;<font color="red">errbuf</font>, <span style="color: #ff00ff;"><font color="red">BUFSIZ</font></span>, <span style="color: #dc143c;">"bgzf_skip() error\n"</span>);
+
+                    <span style="color: #ff8c00;">return</span> (-<span style="color: #ffb6c1;">1</span>);
+
+                }
+
+        }
+
+    }</pre>
+</div>
+<p><strong>Packet-Number Extraction</strong><br />
+The extraction logic is responsible for getting you your <font color="red">packets</font>. Let&#8217;s see how it works. First of all <font color="red">cppip</font> wants to make sure you didn&#8217;t screw up at the <font color="red">command line</font> and specify a stop <font color="red">packet</font> that exceeds the total number of <font color="red">packets</font> in the pcap.gz. If your input passes that test, <font color="red">cppip</font> will then set itself to locating the start <font color="red">packet</font>. If the start <font color="red">packet</font> is smaller than the <font color="red">index level</font>, <font color="red">cppip</font> will issue a <font color="red">linear search</font> from the very <font color="red">first packet</font> until it reaches the specified starting <font color="red">packet</font>. If the start <font color="red">packet</font> is larger than the <font color="red">index level</font>, <font color="red">cppip</font> will divide the <font color="red">first packet</font> by the <font color="red">index level</font> to obtain the closest <font color="red">index record</font> and then lseek() to that location in the <font color="red">index file</font>. Next, <font color="red">cppip</font> reads that record, seeks to the appropriate location in the pcap.gz, and again executes a <font color="red">linear search</font> until it finds the start <font color="red">packet</font>. <font color="red">Cppip</font> then descends into the extraction loop, reads the <font color="red">pcap header</font> to obtain <font color="red">packet capture</font> length, and then reads the <font color="red">packet</font> itself. It then copies both the <font color="red">pcap header</font> and <font color="red">packet</font> to a memory buffer and writes that buffer to the new <font color="red">pcap file</font>. <font color="red">Cppip</font> continues this process until it hits the stop <font color="red">packet</font> or encounters an error.</p>
+<div style="width: 600px; background-color: #dddddd; overflow-x: scroll; margin: 10px;">
+<pre>    <span style="color: #0000ff;">/** sanity check only checks stop, we verified earlier stop &gt; start */</span>
+
+    <span style="color: #ff8c00;">if</span> (c-&gt;e_pkts.pkt_stop  &gt; c-&gt;cppip_h.pkt_cnt)
+
+    {
+
+        <font color="red">snprintf</font>(c-&gt;<font color="red">errbuf</font>, <span style="color: #ff00ff;"><font color="red">BUFSIZ</font></span>, 
+
+            <span style="color: #dc143c;">"extraction would exceed <font color="red">packet</font> count, %d and/or %d &gt; %d\n"</span>, 
+
+            c-&gt;e_pkts.pkt_start, c-&gt;e_pkts.pkt_stop, c-&gt;cppip_h.pkt_cnt);
+
+        <span style="color: #ff8c00;">return</span> (-<span style="color: #ffb6c1;">1</span>);
+
+    }
+
+
+
+    <span style="color: #0000ff;">/**
+
+     * We need to locate the offset of pkt_start and then we can
+
+     * extract in a linear fashion until we hit pkt_last.
+
+     *
+
+     * If the <font color="red">indexing</font> is too coarse the pkt_start will lie before the
+
+     * first <font color="red">index</font>. If this is the case we have to do a <font color="red">linear search</font> from
+
+     * the very <font color="red">first packet</font> until we find pkt_first...
+
+     */</span>
+
+    <span style="color: #ff8c00;">if</span> (c-&gt;e_pkts.pkt_start &lt; c-&gt;cppip_<font color="red">index</font>_pn_hdr.index_level)
+
+    {
+
+        <span style="color: #ff8c00;">if</span> (linear_search(c, <span style="color: #ffb6c1;">1</span>, c-&gt;e_pkts.pkt_start) == -<span style="color: #ffb6c1;">1</span>)
+
+        {
+
+            <span style="color: #ff8c00;">return</span> (-<span style="color: #ffb6c1;">1</span>);
+
+        }
+
+    }
+
+    <span style="color: #0000ff;">/** seek to index, obtain closest offset, <font color="red">linear search</font> from there */</span>
+
+    <span style="color: #ff8c00;">else</span>
+
+    {
+
+        <span style="color: #0000ff;">/**
+
+         * pkt_start / index_level will give us the closest <font color="red">index record</font> to our
+
+         * starting <font color="red">packet</font>. We lseek to 1 before this location so we don't
+
+         * step past the record we need.
+
+         */</span>
+
+        <span style="color: #ff8c00;">if</span> (lseek(c-&gt;<font color="red">index</font>, 
+
+            (((c-&gt;e_pkts.pkt_start / c-&gt;cppip_index_pn_hdr.index_level) - <span style="color: #ffb6c1;">1</span>)
+
+            * CPPIP_REC_PN_SIZ) + CPPIP_FH_SIZ + CPPIP_INDEX_PN_H_SIZ, 
+
+            SEEK_SET) == -<span style="color: #ffb6c1;">1</span>)
+
+        {
+
+            <font color="red">snprintf</font>(c-&gt;<font color="red">errbuf</font>, <span style="color: #ff00ff;"><font color="red">BUFSIZ</font></span>, <span style="color: #dc143c;">"lseek() error: %s\n"</span>, strerror(errno));
+
+            return (-<span style="color: #ffb6c1;">1</span>);
+
+        }
+
+        <span style="color: #ff8c00;">if</span> (read(c-&gt;<font color="red">index</font>, (cppip_record_pn_t *)&amp;rec, CPPIP_REC_PN_SIZ) 
+
+            != CPPIP_REC_PN_SIZ)
+
+        {
+
+            <font color="red">snprintf</font>(c-&gt;<font color="red">errbuf</font>, <span style="color: #ff00ff;"><font color="red">BUFSIZ</font></span>, <span style="color: #dc143c;">"read() error: %s\n"</span>, strerror(errno));
+
+            <span style="color: #ff8c00;">return</span> (-<span style="color: #ffb6c1;">1</span>);
+
+        }
+
+        <span style="color: #ff8c00;">if</span> (bgzf_seek(c-&gt;<font color="red">pcap</font>, rec.bgzf_offset, SEEK_SET) == -<span style="color: #ffb6c1;">1</span>)
+
+        {
+
+            <font color="red">snprintf</font>(c-&gt;<font color="red">errbuf</font>, <span style="color: #ff00ff;"><font color="red">BUFSIZ</font></span>, <span style="color: #dc143c;">"bgzf_seek() error.\n"</span>);
+
+            <span style="color: #ff8c00;">return</span> (-<span style="color: #ffb6c1;">1</span>);
+
+        }
+
+        <span style="color: #ff8c00;">if</span> (linear_search(c, rec.pkt_num, c-&gt;e_pkts.pkt_start) == -<span style="color: #ffb6c1;">1</span>)
+
+        {
+
+            <span style="color: #ff8c00;">return</span> (-<span style="color: #ffb6c1;">1</span>);
+
+        }
+
+    }
+
+    <span style="color: #0000ff;">/** we've got pkt_first, do extraction until we hit pkt_last */</span>
+
+    <span style="color: #ff8c00;">for</span> (c-&gt;e_pkts.pkts_w = <span style="color: #ffb6c1;">0</span>, i = c-&gt;e_pkts.pkt_start; 
+
+            i &lt; (c-&gt;e_pkts.pkt_stop + <span style="color: #ffb6c1;">1</span>); i++, c-&gt;e_pkts.pkts_w++)
+
+    {
+
+        <span style="color: #ff8c00;">if</span> (bgzf_read(c-&gt;<font color="red">pcap</font>, (pcap_offline_pkthdr_t *)&amp;pcap_h, PCAP_PKTH_SIZ)
+
+            != PCAP_PKTH_SIZ)
+
+        {
+
+            <font color="red">snprintf</font>(c-&gt;<font color="red">errbuf</font>, <span style="color: #ff00ff;"><font color="red">BUFSIZ</font></span>, 
+
+                <span style="color: #dc143c;">"bgzf_read() error: cant read <font color="red">pcap</font> hdr\n"</span>);
+
+            <span style="color: #ff8c00;">return</span> (-<span style="color: #ffb6c1;">1</span>);
+
+        }
+
+        pkt_caplen = <font color="red">pcap</font>_h.caplen;
+
+        <span style="color: #ff8c00;">if</span> (bgzf_read(c-&gt;pcap, <font color="red">buf</font>, pkt_caplen) != pkt_caplen)
+
+        {
+
+            <font color="red">snprintf</font>(c-&gt;<font color="red">errbuf</font>, <span style="color: #ff00ff;"><font color="red">BUFSIZ</font></span>, 
+
+                <span style="color: #dc143c;">"bgzf_read() error: can't read <font color="red">packet</font>\n"</span>);
+
+            <span style="color: #ff8c00;">return</span> (-<span style="color: #ffb6c1;">1</span>);
+
+        }
+
+        memcpy(&amp;<font color="red">buf</font>2, &amp;pcap_h, PCAP_PKTH_SIZ);
+
+        memcpy(&amp;buf2[PCAP_PKTH_SIZ], &amp;buf, pkt_caplen);
+
+        <span style="color: #ff8c00;">if</span> (write(c-&gt;pcap_new, buf2, PCAP_PKTH_SIZ + pkt_caplen) != 
+
+                PCAP_PKTH_SIZ + pkt_caplen)
+
+        {
+
+            <font color="red">snprintf</font>(c-&gt;<font color="red">errbuf</font>, <span style="color: #ff00ff;"><font color="red">BUFSIZ</font></span>, <span style="color: #dc143c;">"write() error: %s\n"</span>, strerror(errno));
+
+            <span style="color: #ff8c00;">return</span> (-<span style="color: #ffb6c1;">1</span>);
+
+        }
+
+    }
+
+    <span style="color: #ff8c00;">return</span> (<span style="color: #ffb6c1;">1</span>);</pre>
+</div>
+<p><strong>Conclusion and Future</strong><br />
+In this article you learned about the latest craze in compressed <font color="red">pcap</font> <font color="red">packet</font> <font color="red">indexing</font> and extraction, <font color="red">cppip</font>. We explored how to install and use the tool as well as peeking at some of its internals. In the future, I plan to do a fair amount of code cleanup and optimization. I also plan on adding <font color="red">microsecond</font> level <font color="red">timestamp</font> <font color="red">indexing</font>, endianness information in the file header, creating a C library, possibly some new <font color="red">indexing</font> methods based on protocol. As always <a href="https://help.github.com/articles/using-pull-requests">pull requests</a> are welcomed. Thanks for your time, and please feel free to leave some comments!</p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=open-source">open source</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=packet-capture">packet capture</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=pcap">pcap</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=security-2">security</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">3 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+			<li>
+			<div id="comment-731139">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Abe Ghazal						</span>
+						<br />
+						<span class="comment-meta commentmetadata">May 4, 2013 at 9:46 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Mike, you came a long way since I thought you the basics of hacking. This stuff looks legit though, but I'll email you few pointers where you can improve the code. Don't worry, I won't charge you. Call me when you get my email :)</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike731139" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li class="comment byuser comment-author-MikeSchiffman bypostauthor even depth-2" id="li-comment-731366">
+				<div id="comment-731366">
+					<div class="comment_image">
+						<img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/MikeSchiffman.thumbnail.4cb4c4a1b2f7b.jpg">					</div>
+					<div class="comment_act">
+						<div class="comment_user_info">
+							<span class="fn"><a href = 'https://blogs.cisco.com/author/MikeSchiffman'>Mike Schiffman</a></span>
+							<br />
+							<span class="comment-meta commentmetadata">May 5, 2013 at 11:58 am</span>
+
+						</div>
+						<div class="comment_text">
+							<p>Thanks Abe! Tell me, where do you think I can improve the code? Clearly the extraction module is a mess. Where should I start?</p>						</div>
+						<div class = "roblike">
+					<a  href = "#" id = "clickLike731366" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+						<div class="reply">
+													</div>
+
+					</div>
+					<div class="clear"></div>
+				</div>
+			</li>
+			<ul class="children">
+
+			<li>
+			<div id="comment-731370">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Abe Ghazal						</span>
+						<br />
+						<span class="comment-meta commentmetadata">May 5, 2013 at 12:10 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Both the index module and the extraction module need tweaking.
+
+Check your email.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike731370" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Security:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogSecurity', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogSecurity" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Security</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscosecurity?ref=nf"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/ciscosecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://youtubecisco.com/security"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogSecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.cert.org/blogs/vuls/" target="_blank">CERT Vulnerability Analysis</a></li>
+                      <li><a href="http://blogs.technet.com/b/srd/" target="_blank">Microsoft Security Research & Defense</a></li>
+                      <li><a href="http://isc.sans.edu/index.html" target="_blank">SANS Internet Storm Center</a></li>
+                      <li><a href="http://www.schneier.com/" target="_blank">Schneier on Security</a></li>
+                  </ul>
+              <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="http://www.cisco.com/en/US/products/products_security_advisories_listing.html" target="_blank">Advisories and Responses</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/cyberRiskReport.x" target="_blank">Cyber Risk Reports</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/intelliPapers.x?i=55" target="_blank">Security Best Practices</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/home.x" target="_blank">Security Intelligence Operations</a></li>
+                        <li><a href="http://www.cisco.com/en/US/products/hw/vpndevc/index.html" target="_blank">Security Products</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscosecurity?ref=nf'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/ciscosecurity'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 111746;
+			var orig_count = 1;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1crXxZq&text=Tools of the Trade: The Compressed Pcap Packet Indexing Program&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/tools-of-the-trade-the-compressed-pcap-packet-indexing-program&title=Tools of the Trade: The Compressed Pcap Packet Indexing Program" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/tools-of-the-trade-the-compressed-pcap-packet-indexing-program" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/tools-of-the-trade-the-compressed-pcap-packet-indexing-program" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Tools of the Trade: The Compressed Pcap Packet Indexing Program&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0ATools of the Trade: The Compressed Pcap Packet Indexing Program%0A%0Ahttps://blogs.cisco.com/security/tools-of-the-trade-the-compressed-pcap-packet-indexing-program%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  

@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+
+<html lang="eng-US" xmlns:nitro="https://www.bunchball.com/nitro">
+
+<head>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<title>  Step-by-Step Setup of ELK for NetFlow Analytics</title>
+
+	<meta property="og:image" content=""/><meta property="og:description" content=""/><meta name="description" content=""/>	<meta property="og:site_name" content="blogs@Cisco - Cisco Blogs"/>
+
+	<meta name="google-site-verification" content="9MlQU9MMQ1jHLMUkONKe6QzZ-ZIGRv0BCD1_rY1Zdmc" />
+
+		<meta name="bitly-verification" content="25789e2a57d8"/>
+
+	<meta name="accessLevel" content="GUEST, CUSTOMER, PARTNER"/>
+
+	<meta name="language" content="en"/>
+
+	<meta name="country" content="US"/>
+
+	<meta name="contentType" content="ciscoBlogs"/>
+
+			<meta name="docType" content="blogPost" />
+
+		<link rel="stylesheet" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/style.css" type="text/css" media="screen" />
+
+	<link rel="alternate" type="application/rss+xml" title="Cisco Blog RSS Feed" href="https://blogs.cisco.com/feed" />
+
+	<link rel="shortcut icon" href="https://blogs.cisco.com/wp-content/themes/cisco_responsive/favicon.ico" />
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+
+
+	<link rel='dns-prefetch' href='//www.cisco.com' />
+<link rel='dns-prefetch' href='//platform.twitter.com' />
+<link rel='dns-prefetch' href='//s.w.org' />
+<link rel="alternate" type="application/rss+xml" title="Cisco Blog &raquo; Step-by-Step Setup of ELK for NetFlow Analytics Comments Feed" href="https://blogs.cisco.com/security/step-by-step-setup-of-elk-for-netflow-analytics/feed" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/2.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/blogs.cisco.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.9.2"}};
+			!function(a,b,c){function d(a,b){var c=String.fromCharCode;l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,a),0,0);var d=k.toDataURL();l.clearRect(0,0,k.width,k.height),l.fillText(c.apply(this,b),0,0);var e=k.toDataURL();return d===e}function e(a){var b;if(!l||!l.fillText)return!1;switch(l.textBaseline="top",l.font="600 32px Arial",a){case"flag":return!(b=d([55356,56826,55356,56819],[55356,56826,8203,55356,56819]))&&(b=d([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]),!b);case"emoji":return b=d([55358,56794,8205,9794,65039],[55358,56794,8203,9794,65039]),!b}return!1}function f(a){var c=b.createElement("script");c.src=a,c.defer=c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var g,h,i,j,k=b.createElement("canvas"),l=k.getContext&&k.getContext("2d");for(j=Array("flag","emoji"),c.supports={everything:!0,everythingExceptFlag:!0},i=0;i<j.length;i++)c.supports[j[i]]=e(j[i]),c.supports.everything=c.supports.everything&&c.supports[j[i]],"flag"!==j[i]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[j[i]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(h=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",h,!1),a.addEventListener("load",h,!1)):(a.attachEvent("onload",h),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),g=c.source||{},g.concatemoji?f(g.concatemoji):g.wpemoji&&g.twemoji&&(f(g.twemoji),f(g.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='css-css'  href='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='normalize-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/normalize.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='slidebarsstyle-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/slidebars.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='single-css'  href='https://blogs.cisco.com/wp-content/themes/cisco_responsive/styles/single.css?ver=4.9.2' type='text/css' media='all' />
+<link rel='stylesheet' id='codecolorer-css'  href='https://blogs.cisco.com/wp-content/plugins/codecolorer/codecolorer.css?ver=0.9.14' type='text/css' media='screen' />
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery.js?ver=3.3.1'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.0.0'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/bunchball.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.cookie.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/jquery.slimscroll.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/moment.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/plugins/bunchball/livestamp.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/modernizr.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/slidebars.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.lazyload.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/theme_script.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/assets/swa/j/blogs.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://www.cisco.com/c/dam/cdc/t/ctm.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tools.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.tipTip.minified.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/jquery.sharrre.min.js?ver=4.9.2'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var single_script_vars = {"ajax_url":"https:\/\/blogs.cisco.com\/wp-admin\/admin-ajax.php","post_id":"159201"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-content/themes/cisco_responsive/js/single.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://platform.twitter.com/widgets.js?ver=4.9.2'></script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://blogs.cisco.com/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="https://blogs.cisco.com/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='#CiscoChampion Radio S1|Ep 42. Jimmy Ray Purser Talks Tech' href='https://blogs.cisco.com/perspectives/ciscochampion-radio-s1ep-42-jimmy-ray-purser-talks-tech' />
+<link rel='next' title='Is IT Automation the Key to Operational Excellence? Industry Analysts Think So' href='https://blogs.cisco.com/datacenter/is-it-automation-the-key-to-operational-excellence-industry-analysts-think-so' />
+
+<link rel="canonical" href="https://blogs.cisco.com/security/step-by-step-setup-of-elk-for-netflow-analytics" />
+<link rel='shortlink' href='https://blogs.cisco.com/?p=159201' />
+
+<!-- START - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+ <!-- Facebook Open Graph -->
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:title" content="Step-by-Step Setup of ELK for NetFlow Analytics"/>
+  <meta property="og:url" content="https://blogs.cisco.com/security/step-by-step-setup-of-elk-for-netflow-analytics"/>
+  <meta property="og:type" content="article"/>
+  <meta property="article:published_time" content="2014-12-02T06:00:10+00:00"/>
+  <meta property="article:modified_time" content="2014-12-08T06:49:22+00:00" />
+  <meta property="og:updated_time" content="2014-12-08T06:49:22+00:00" />
+  <meta property="article:section" content="Security"/>
+  <meta property="article:publisher" content="https://www.facebook.com/Cisco"/>
+ <!-- Google+ / Schema.org -->
+ <!-- Twitter Cards -->
+  <meta name="twitter:title" content="Step-by-Step Setup of ELK for NetFlow Analytics"/>
+  <meta name="twitter:url" content="https://blogs.cisco.com/security/step-by-step-setup-of-elk-for-netflow-analytics"/>
+  <meta name="twitter:description" content="Contents
+
+ 
+
+
+
+	Intro
+
+	Java
+
+	Elasticsearch
+
+	Logstash
+
+	Kibana
+
+
+
+ 
+
+Intro
+
+ 
+
+
+
+The ELK stack is a set of analytics tools. Its initials represent Elasticsearch, Logstash and Kibana. Elasticsearch is a flexible and powerful open source, distributed, real-time search and analytics engine. Logstash"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:site" content="@Cisco"/>
+ <!-- SEO -->
+ <!-- Misc. tags -->
+ <!-- is_singular -->
+<!-- END - Twitter Cards, G+, Facebook Tags 2.2.3.1 -->
+	
+
+
+
+
+</head>
+
+<body>
+
+	<div id = "rewards_fix"></div>
+
+	<script src="//assets.bunchball.net/scripts/nitro/current/nitro.js" type="text/javascript"></script>	<script>
+		var apiKey = "6912c6c82ccc4863a0311dc8b586b8fb";
+		var userId = "anon";
+		var time = "1521513030";
+		var sig = "b9b2700dfb1abde24f684ba32d997c12";
+		var connectionParams={};
+    		connectionParams.apiKey = apiKey ;
+    		connectionParams.timeStamp = time;
+    		connectionParams.signature = sig;
+    		connectionParams.server =  "//CiscoSupportCommunities2.nitro.bunchball.net/nitro/json/";
+    		connectionParams.userId = userId;
+    	var nitro = new Nitro(connectionParams);
+    	nitro.showPendingNotifications();
+	</script> <header class = "sb-slide">
+        <div id = "hero">
+            <div class = "top_third">
+                <div id="hamburger" class = "sb-open-left">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class = "top_third">
+                <div id = "cisco_logo">
+                    <div class="dropdown">
+                        <div class = "logo_hover"></div>
+                        <div class="dropdown-content">
+                            <ul>
+                                <li><a href = "https://cisco.com">All of Cisco</a></li>
+                                <li><a href = "https://blogs.cisco.com">Blogs Home</a></li>
+                            </ul>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "hero_header_text">Cisco Blogs</div>
+                <div id = "mobile_search_top">
+                    <i class="fa fa-search"></i>
+                </div>
+
+                <a class = "top_login" href = "https://socialrewards-prod.cloudapps.cisco.com/">Log In to Cisco.com</a>
+                
+                <div id = "normal_search">
+                    <div id = "normal_search_box"><form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+</div>
+                        <i class="fa fa-search"></i>
+                    <div class = "clear"></div>
+                </div>
+            <div class = "clear"></div>
+            <div id = "normal_menu">
+                <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+            </div>
+            <div id = "mobile_search">
+                <div id = "mobile_search_box">
+                    <form method="get" id="searchform" action="https://blogs.cisco.com/">
+
+	<input type="text" value=""
+
+    	name="s" id="s">
+
+    </input>
+
+<input type="submit" value=" " class="searchSubmit"/>
+
+</form>
+
+                </div>
+        </div>
+        </div>  
+    </header>
+     
+        
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1crUG2A&text=Step-by-Step Setup of ELK for NetFlow Analytics&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/step-by-step-setup-of-elk-for-netflow-analytics&title=Step-by-Step Setup of ELK for NetFlow Analytics" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/step-by-step-setup-of-elk-for-netflow-analytics" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/step-by-step-setup-of-elk-for-netflow-analytics" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Step-by-Step Setup of ELK for NetFlow Analytics&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0AStep-by-Step Setup of ELK for NetFlow Analytics%0A%0Ahttps://blogs.cisco.com/security/step-by-step-setup-of-elk-for-netflow-analytics%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  <div id="sb-site">
+<div id = "main_content">
+
+	<div id = "blog_content">
+	<div id = "main_left">
+
+		<article id = "article_post">
+			<p class = "breadcrumb">
+			<a href=' https://blogs.cisco.com'>Cisco Blog</a> > <a href=' https://blogs.cisco.com/category/security/'>Security</a></p>
+					<div id = "post_image"><img src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/category50.png">  					</div>
+  					<div id = "post_info">
+  						<span class = "post_category">
+  							Security  						</span>
+						<h1 id="post-159201" class="kindle_title title">Step-by-Step Setup of ELK for NetFlow Analytics</h1>
+						<div class="author_image"><img class = "img-circle" src = "https://alln-extcloud-storage.cisco.com/ciscoblogs/userphoto/1515174506-bpthumb.jpg"></div><div class="author_rewards_box"></div><div class = "clear"></div><span class = "list_author"><a href="https://blogs.cisco.com/author/panoskampanakis" title="Posts by Panos Kampanakis" rel="author">Panos Kampanakis</a> - December 2, 2014 - 6 Comments      					</span>
+      					<br />
+      					<br />
+      										</div>
+					<div class ="clear"></div>
+					<div id ="content">
+					<h1>Contents</h1>
+<p>&nbsp;</p>
+<ul>
+<li><a href="#intro">Intro</a></li>
+<li><a href="#java"><font color="red">Java</font></a></li>
+<li><a href="#elasticsearch"><font color="red">Elasticsearch</font></a></li>
+<li><a href="#logstash"><font color="red">Logstash</font></a></li>
+<li><a href="#kibana">Kibana</a></li>
+</ul>
+<p>&nbsp;</p>
+<h1><a id="intro"></a>Intro</h1>
+<p>&nbsp;</p>
+<p>The ELK stack is a set of <font color="red">analytics</font> tools. Its initials represent <font color="red">Elasticsearch</font>, <font color="red">Logstash</font> and Kibana. <a title="elasticsearch overview" href="http://www.elasticsearch.org/overview/" target="_blank"><font color="red">Elasticsearch</font></a> is a flexible and powerful <font color="red">open source</font>, distributed, real-time search and <font color="red">analytics</font> engine. <a title="logstash" href="http://logstash.net/docs/1.4.2/tutorials/getting-started-with-logstash" target="_blank"><font color="red">Logstash</font></a> is a tool for receiving, processing and outputting logs, like system logs, webserver logs, error logs, application logs and many more. <a title="kibana" href="http://www.elasticsearch.org/guide/en/kibana/current/_introduction.html" target="_blank">Kibana</a> is an <font color="red">open source</font> (Apache-licensed), browser-based <font color="red">analytics</font> and search <font color="red">dashboard</font> for <font color="red">Elasticsearch</font>.</p>
+<p>ELK is a very <font color="red">open source</font>, useful and efficient <font color="red">analytics</font> platform, and we wanted to use it to consume flow <font color="red">analytics</font> from a network. The reason we chose to go with ELK is that it can efficiently handle lots of <font color="red">data</font> and it is <font color="red">open source</font> and highly customizable for the user&#8217;s needs. The flows were exported by various hardware and <font color="red">virtual infrastructure</font> devices in <font color="red">NetFlow</font> <font color="red">v5</font> format. Then <font color="red">Logstash</font> was responsible for processing and storing them in <font color="red">Elasticsearch</font>. Kibana, in turn, was responsible for reporting on the <font color="red">data</font>. Given that there were no complete guides on how to use <font color="red">NetFlow</font> with ELK, <em>below we present a step-by-step guide on how to set up ELK from scratch and enabled it to consume and display <font color="red">NetFlow</font> <font color="red">v5</font> information.</em> Readers should note that ELK includes more tools, like <a title="shield" href="http://www.elasticsearch.org/overview/shield/">Shield</a> and <a title="marvel" href="http://www.elasticsearch.org/overview/marvel/">Marvel</a>, that are used for security and <font color="red">Elasticsearch</font> monitoring, but their use falls outside the scope of this guide.</p>
+<p>In our setup, we used</p>
+<ul>
+<li><font color="red">Elasticsearch</font> 1.3.4</li>
+<li><font color="red">Logstash</font> 1.4.2</li>
+<li>Kibana 3.1.1</li>
+</ul>
+<p>For our example purposes, we only deployed one <font color="red">node</font> responsible for collecting and indexing <font color="red">data</font>. We did not use multiple <font color="red">nodes</font> in our <font color="red">Elasticsearch</font> <font color="red">cluster</font>. We used a single-node <font color="red">cluster</font>. Experienced users could leverage Kibana to consume <font color="red">data</font> from multiple <font color="red">Elasticsearch</font> <font color="red">nodes</font>. <font color="red">Elasticsearch</font>, <font color="red">Logstash</font> and Kibana were all running in our Ubuntu 14.04 <font color="red">server</font> with <font color="red">IP</font> address 10.0.1.33. For more information on <font color="red">clusters</font>, <font color="red">nodes</font> and shard refer to the <a title="elasticsearch cluster" href="http://www.elasticsearch.org/guide/en/elasticsearch/guide/current/distributed-cluster.html" target="_blank"><font color="red">Elasticsearch</font> guide</a>.</p>
+<p><span id="more-159201"></span></p>
+<h1><a id="java"></a><font color="red">Java</font></h1>
+<p>&nbsp;</p>
+<p><font color="red">Elasticsearch</font> requires a recent version of <font color="red">Java</font>. That can be installed using</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp; &nbsp; <font color="red">sudo</font> apt-get install openjdk-7-jre</div></div>
+
+</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h1><a id="elasticsearch"></a><font color="red">Elasticsearch</font></h1>
+<p>&nbsp;</p>
+<p>To download and run <font color="red">Elasticsearch</font>, use the following:</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">curl -O https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.1.1.tar.gz<br />
+&nbsp; tar zxvf elasticsearch-1.1.1.tar.gz<br />
+&nbsp; cd elasticsearch-1.3.4/<br />
+&nbsp; ./bin/elasticsearch</div></div>
+
+</pre>
+<p><font color="red">Elasticsearch</font> can also be started in the background using the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">-d</div></div>
+<p>option</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp; ./bin/elasticsearch -d</div></div>
+
+</pre>
+<p>Alternatively, someone that wanted to <strong>run <font color="red">Elasticsearch</font> as a <font color="red">service</font> </strong>could download the .deb file from the <a title="elasticsearch download" href="http://www.elasticsearch.org/downloads/" target="_blank"><font color="red">Elasticsearch</font> download page</a> and install it using</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp; dpkg -i elasticsearch.deb</div></div>
+
+</pre>
+<p>To stop or start the <font color="red">Logstash</font> <font color="red">service</font>, use</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp; dpkg -i elasticsearch.deb<br />
+&nbsp; <font color="red">sudo</font> <font color="red">service</font></div></div>
+
+<font color="red">elasticsearch</font> restart / stop / status</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h1><a id="logstash"></a><font color="red">Logstash</font></h1>
+<p>&nbsp;</p>
+<p>1. To run <font color="red">Logstash</font>, just download the latest version tar.gz and extract the archive.</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp; curl -O https://download.elasticsearch.org/logstash/logstash/logstash-1.4.2.tar.gz<br />
+&nbsp; zxvf logstash-1.4.2.tar.gz<br />
+&nbsp; cd logstash-1.4.2</div></div>
+
+</pre>
+<p>Then you can test that it works by manual sending logs to <font color="red">Logstash</font></p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp; &nbsp; bin/logstash -e 'input { stdin { } } output { stdout {} }'</div></div>
+
+</pre>
+<p>and type</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp; &nbsp; hello world</div></div>
+
+</pre>
+<p><font color="red">Logstash</font> should print the log:</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">2014-11-01T01:22:14.405+0000 0.0.0.0 hello world</div></div>
+
+</pre>
+<p>To test <font color="red">Logstash</font> with <font color="red">Elasticsearch</font>, tell <font color="red">Logstash</font> to take the logs from standard input (console) and output them to <font color="red">Elasticsearch</font> that is in the same <font color="red">server</font> as <font color="red">Logstash</font> using the following command:</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp; bin/logstash -e 'input { stdin { } } <br />
+&nbsp; &nbsp; &nbsp; output { <font color="red">elasticsearch</font> { host =&amp;gt; localhost } }'</div></div>
+
+</pre>
+<p>and type some text that will be the log that will be stored in <font color="red">Elasticsearch</font>. Then check the <font color="red">Elasticsearch</font> logs by going to</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">h++p://10.0.1.33:9200/_search?pretty</div></div>
+<p>More information can be found in the <a title="logstash getting started tutorial" href="http://logstash.net/docs/1.4.2/tutorials/getting-started-with-logstash" target="_blank"><font color="red">Logstash</font> 1.4.2 tutorial</a>.</p>
+<p>Alternatively, someone that wanted to <strong>run <font color="red">Logstash</font> as a <font color="red">service</font></strong> could download the .deb file from the <a title="elasticsearch download" href="http://www.elasticsearch.org/downloads/" target="_blank"><font color="red">Elasticsearch</font> download page</a> and install it using</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp; dpkg -i logstash.deb</div></div>
+
+</pre>
+<p>To stop or start the <font color="red">Logstash</font> <font color="red">service</font>, use</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp; dpkg -i logstash.deb<br />
+&nbsp; <font color="red">sudo</font> <font color="red">service</font> <font color="red">logstash</font> restart / stop / status</div></div>
+
+</pre>
+<p>&nbsp;</p>
+<p>2. <font color="red">Logstash</font> configuration</p>
+<p><font color="red">Logstash</font> can use static <font color="red">configuration files</font>. <font color="red">Logstash</font> comes with a <font color="red">NetFlow</font> <font color="red">codec</font> that can be used as</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">input</div></div>
+<p>or</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">output</div></div>
+<p>in <font color="red">Logstash</font> as explained in the <a title="logstash netflow" href="http://logstash.net/docs/1.4.2/codecs/netflow" target="_blank"><font color="red">Logstash</font> documentation</a>. Below we will create a file named</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer"><font color="red">logstash</font>-staticfile-netflow.conf</div></div>
+<p>in the logstash directory. The file will tell <font color="red">Logstash</font> to use the <a title="logstash <font color="red">udp</font> plugin" href="http://logstash.net/docs/1.4.2/outputs/udp" target="_blank">udp plugin</a> and listen on <font color="red">UDP</font> <font color="red">port</font> 9995 for <font color="red">NetFlow</font> <font color="red">v5</font> records as defined in <font color="red">Logstash</font>&#8217;s <font color="red">NetFlow</font> <font color="red">codec</font> <font color="red">yaml</font> file. <font color="red">Logstash</font> can consume <font color="red">NetFlow</font> <font color="red">v5</font> and v9 by default, but we chose to only list for <font color="red">v5</font> here.</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;height:300px;"><div class="text codecolorer">&nbsp; input {<br />
+&nbsp; &nbsp; <font color="red">udp</font> {<br />
+&nbsp; &nbsp; &nbsp; &lt;span style=&quot;color: #ff6600;&quot;&gt;<font color="red">port</font> =&amp;gt; 9995&lt;/span&gt;<br />
+&nbsp; &nbsp; &nbsp; &lt;span style=&quot;color: #ff6600;&quot;&gt;<font color="red">codec</font> =&amp;gt; <font color="red">netflow</font>&lt;/span&gt; {<br />
+&nbsp; &nbsp; &nbsp; &nbsp; definitions =&amp;gt; &quot;/home/administrator/logstash-1.4.2/lib/logstash/codecs/netflow/netflow.<font color="red">yaml</font>&quot;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; versions =&amp;gt; [5]<br />
+&nbsp; &nbsp; &nbsp; }<br />
+&nbsp; &nbsp; }<br />
+&nbsp; }<br />
+<br />
+&nbsp; output {<br />
+&nbsp; &nbsp; stdout { <font color="red">codec</font> =&amp;gt; rubydebug }<br />
+&nbsp; &nbsp; &lt;span style=&quot;color: #ff6600;&quot;&gt;if ( [host] =~ &quot;10\.1\.1[12]\.1&quot; )&lt;/span&gt; {<br />
+&nbsp; &nbsp; &nbsp; <font color="red">elasticsearch</font> {<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <font color="red">index</font> =&amp;gt; &quot;logstash_netflow5-&lt;span style=&quot;color: #ff6600;&quot;&gt;%{+YYYY.MM.dd}&lt;/span&gt;&quot;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; host =&amp;gt; &quot;localhost&quot;<br />
+&nbsp; &nbsp; &nbsp; }<br />
+&nbsp; &nbsp; } else {<br />
+&nbsp; &nbsp; &nbsp; <font color="red">elasticsearch</font> {<br />
+&nbsp; &nbsp; &nbsp; &nbsp; <font color="red">index</font> =&amp;gt; &quot;<font color="red">logstash</font>-&lt;span style=&quot;color: #ff6600;&quot;&gt;%{+YYYY.MM.dd}&lt;/span&gt;&quot;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; host =&amp;gt; &quot;localhost&quot;<br />
+&nbsp; &nbsp; &nbsp; }<br />
+&nbsp; &nbsp; }<br />
+&nbsp; }</div></div>
+
+</pre>
+<p>Note that in the <font color="red">configuration file</font> above, if the source of the <font color="red">NetFlow</font> is one of 10.1.11.1 or 10.1.12.1, the <font color="red">data</font> is exported to <font color="red">Elasticsearch</font> in an <font color="red">index</font> named</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">logstash_netflow5-YYYY.MM.dd</div></div>
+<p>where</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">YYYY.MM.dd</div></div>
+<p>is the date the <font color="red">data</font> was received. The rest of the collected <font color="red">data</font> that come from different sources will be stored in <font color="red">indices</font> named</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">logstash-YYYY.MM.dd</div></div>
+<p>. That way we use different <font color="red">indices</font> for <font color="red">NetFlow</font> from our sources of interest. As we will see later, the <font color="red">index</font> will be use in Kibana to only view logs of interest. Separate daily <font color="red">indices</font> also make it easier to purge <font color="red">data</font>.</p>
+<p>The <font color="red">Logstash</font> <font color="red">configuration file</font> can then be tested for errors and used in <font color="red">Logstash</font> to listen for <font color="red">NetFlow</font> and export it to <font color="red">Elasticsearch</font>.</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp; bin/logstash --configtest -f logstash-live-netflow.conf<br />
+&nbsp; bin/logstash -f logstash-live-netflow.conf</div></div>
+
+</pre>
+<p>If <font color="red">Logstash</font> is installed as a <font color="red">service</font>, the <font color="red">configuration file</font> needs to be copied to the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/etc/logstash/conf.d</div></div>
+<p>directory and the <font color="red">service</font> restarted:</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp; cp logstash-live-netflow.conf /etc/logstash/conf.d/logstash/logstash-live-netflow.conf<br />
+&nbsp; <font color="red">sudo</font> <font color="red">service</font> <font color="red">logstash</font> restart</div></div>
+
+</pre>
+<p>More information about static <font color="red">Logstash</font> <font color="red">configuration files</font> is in the <a title="logstash getting started tutorial" href="http://logstash.net/docs/1.4.2/tutorials/getting-started-with-logstash" target="_blank"><font color="red">Logstash</font> 1.4.2 tutorial</a>.</p>
+<p><font color="red">Logstash</font> can also be run using the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">web</div></div>
+<p>option that enables both the agent and the <font color="red">Logstash</font> web <font color="red">interface</font> in the same process. Then it can be accessed using h++p://10.0.1.33:9292. We will not be using the <font color="red">Logstash</font> web <font color="red">interface</font> in our deployment.</p>
+<p>After running <font color="red">Logstash</font> with the <font color="red">NetFlow</font> <font color="red">config</font> file, if <font color="red">Logstash</font> sees <font color="red">NetFlow</font> records on <font color="red">UDP</font> <font color="red">port</font> 9995 it will store the <font color="red">data</font> in the <font color="red">indices</font> defined in the <font color="red">configuration file</font>. To view statistics about the <font color="red">indices</font> and an <font color="red">index</font> named</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">logstash_netflow5-2014.11.10</div></div>
+<p>in <font color="red">Elasticsearch</font>, you can use</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp; curl 'localhost:9200/_cat/indices?v'<br />
+&nbsp; curl 'localhost:9200/logstash_netflow5-2014.11.10/_stats'</div></div>
+
+</pre>
+<p>To delete an <font color="red">index</font> in <font color="red">Elasticsearch</font> named</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">logstash_netflow5-2014.11.10</div></div>
+<p>you can use</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp; curl -XDELETE 'http://localhost:9200/logstash_netflow5-2014.11.10'</div></div>
+
+</pre>
+<p>&nbsp;</p>
+<p>3. <font color="red">Elasticsearch</font> <font color="red">index</font> templates</p>
+<p>The <font color="red">indices</font> we created before contain information imported from <font color="red">NetFlow</font>. To be able to parse the fields from <font color="red">NetFlow</font> using types that we want, we will use <font color="red">index</font> templates by using the following in the <font color="red">Elasticsearch</font> <font color="red">node</font>:</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;height:300px;"><div class="text codecolorer">&nbsp; curl -XPUT localhost:9200/_template/logstash_netflow5 -d '{<br />
+&nbsp; &nbsp; &quot;template&quot; : &quot;logstash_netflow5-*&quot;,<br />
+&nbsp; &nbsp; &quot;settings&quot;: {<br />
+&nbsp; &nbsp; &nbsp; &quot;<font color="red">index</font>.refresh_interval&quot;: &quot;5s&quot;<br />
+&nbsp; &nbsp; },<br />
+&nbsp; &nbsp; &quot;mappings&quot; : {<br />
+&nbsp; &nbsp; &nbsp; &quot;_default_&quot; : {<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;_all&quot; : {&quot;enabled&quot; : false},<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &quot;properties&quot; : {<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;@version&quot;: { &quot;index&quot;: &quot;analyzed&quot;, &quot;type&quot;: &quot;<font color="red">integer</font>&quot; },<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;@timestamp&quot;: { &quot;<font color="red">index</font>&quot;: &quot;analyzed&quot;, &quot;type&quot;: &quot;date&quot; },<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;<font color="red">netflow</font>&quot;: {<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;dynamic&quot;: true,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;type&quot;: &quot;object&quot;,<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;properties&quot;: {<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;version&quot;: { &quot;<font color="red">index</font>&quot;: &quot;analyzed&quot;, &quot;type&quot;: &quot;<font color="red">integer</font>&quot; },<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;flow_seq_num&quot;: { &quot;<font color="red">index</font>&quot;: &quot;not_analyzed&quot;, &quot;type&quot;: &quot;long&quot; },<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;engine_type&quot;: { &quot;<font color="red">index</font>&quot;: &quot;not_analyzed&quot;, &quot;type&quot;: &quot;<font color="red">integer</font>&quot; },<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;engine_id&quot;: { &quot;<font color="red">index</font>&quot;: &quot;not_analyzed&quot;, &quot;type&quot;: &quot;<font color="red">integer</font>&quot; },<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;sampling_algorithm&quot;: { &quot;<font color="red">index</font>&quot;: &quot;not_analyzed&quot;, &quot;type&quot;: &quot;<font color="red">integer</font>&quot; },<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;sampling_interval&quot;: { &quot;<font color="red">index</font>&quot;: &quot;not_analyzed&quot;, &quot;type&quot;: &quot;<font color="red">integer</font>&quot; },<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;flow_records&quot;: { &quot;<font color="red">index</font>&quot;: &quot;not_analyzed&quot;, &quot;type&quot;: &quot;<font color="red">integer</font>&quot; },<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;ipv4_src_addr&quot;: { &quot;<font color="red">index</font>&quot;: &quot;analyzed&quot;, &quot;type&quot;: &quot;<font color="red">ip</font>&quot; },<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;ipv4_dst_addr&quot;: { &quot;<font color="red">index</font>&quot;: &quot;analyzed&quot;, &quot;type&quot;: &quot;<font color="red">ip</font>&quot; },<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;ipv4_next_hop&quot;: { &quot;<font color="red">index</font>&quot;: &quot;analyzed&quot;, &quot;type&quot;: &quot;<font color="red">ip</font>&quot; },<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;input_snmp&quot;: { &quot;<font color="red">index</font>&quot;: &quot;not_analyzed&quot;, &quot;type&quot;: &quot;long&quot; },<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;output_snmp&quot;: { &quot;<font color="red">index</font>&quot;: &quot;not_analyzed&quot;, &quot;type&quot;: &quot;long&quot; },<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;in_pkts&quot;: { &quot;<font color="red">index</font>&quot;: &quot;analyzed&quot;, &quot;type&quot;: &quot;long&quot; },<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;in_bytes&quot;: { &quot;<font color="red">index</font>&quot;: &quot;analyzed&quot;, &quot;type&quot;: &quot;long&quot; },<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;first_switched&quot;: { &quot;<font color="red">index</font>&quot;: &quot;not_analyzed&quot;, &quot;type&quot;: &quot;date&quot; },<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;last_switched&quot;: { &quot;<font color="red">index</font>&quot;: &quot;not_analyzed&quot;, &quot;type&quot;: &quot;date&quot; },<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;l4_src_port&quot;: { &quot;<font color="red">index</font>&quot;: &quot;analyzed&quot;, &quot;type&quot;: &quot;long&quot; },<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;l4_dst_port&quot;: { &quot;<font color="red">index</font>&quot;: &quot;analyzed&quot;, &quot;type&quot;: &quot;long&quot; }, <br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;tcp_flags&quot;: { &quot;<font color="red">index</font>&quot;: &quot;analyzed&quot;, &quot;type&quot;: &quot;<font color="red">integer</font>&quot; },<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;<font color="red">protocol</font>&quot;: { &quot;<font color="red">index</font>&quot;: &quot;analyzed&quot;, &quot;type&quot;: &quot;<font color="red">integer</font>&quot; },<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;src_tos&quot;: { &quot;<font color="red">index</font>&quot;: &quot;analyzed&quot;, &quot;type&quot;: &quot;<font color="red">integer</font>&quot; },<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;src_as&quot;: { &quot;<font color="red">index</font>&quot;: &quot;analyzed&quot;, &quot;type&quot;: &quot;<font color="red">integer</font>&quot; },<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;dst_as&quot;: { &quot;<font color="red">index</font>&quot;: &quot;analyzed&quot;, &quot;type&quot;: &quot;<font color="red">integer</font>&quot; },<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;src_mask&quot;: { &quot;<font color="red">index</font>&quot;: &quot;analyzed&quot;, &quot;type&quot;: &quot;<font color="red">integer</font>&quot; },<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;dst_mask&quot;: { &quot;<font color="red">index</font>&quot;: &quot;analyzed&quot;, &quot;type&quot;: &quot;<font color="red">integer</font>&quot; }<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; }<br />
+&nbsp; &nbsp; &nbsp; &nbsp; }<br />
+&nbsp; &nbsp; &nbsp; }<br />
+&nbsp; &nbsp; }<br />
+&nbsp; }'</div></div>
+
+</pre>
+<p>The above template tells <font color="red">Elasticsearch</font> that for all <font color="red">indices</font> that start with</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">logstash_netflow5-</div></div>
+<p>, every 5s, it should parse the fields according to the types defined in the template and only include the fields of interest to be collected for analysis. For example, the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">in_bytes</div></div>
+<p>and</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">in_pkts</div></div>
+<p>are imported as strings by default, and we convert them to long <font color="red">integers</font> that will help us with the Kibana graphs. Also the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer"><font color="red">ip</font>v4_src_addr</div></div>
+<p>and</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">ipv4_dst_addr</div></div>
+<p>are converted to</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">type: &quot;ip&quot;</div></div>
+<p>in <font color="red">Elasticsearch</font>, which is a numeric value that allows easy sorts and range queries (using <font color="red">ip</font> values). Of course, we could keep the default</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&quot;string&quot;</div></div>
+<p>type.</p>
+<p>If someone wanted to create a template that includes more fields, for example for <font color="red">NetFlow</font> v9, one could easily put them in the template. To be able to view the fields from a <font color="red">NetFlow</font> record, visit h++p://10.0.1.33:9200/_search?pretty to view the fields of the records and then add them to the template.</p>
+<p>To view the <font color="red">Elasticsearch</font> templates, you can use</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp; curl -XGET localhost:9200/_template?pretty<br />
+&nbsp; curl -XGET localhost:9200/_template/logstash_netflow5?pretty</div></div>
+
+</pre>
+<p>To delete a template named logstash_netflow5, you can use</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp; curl -XDELETE localhost:9200/_template/logstash_netflow5</div></div>
+
+</pre>
+<p>More information about <font color="red">Elasticsearch</font> <font color="red">index</font> templates is in the <a title="elastic search index templates" href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-templates.html#indices-templates"><font color="red">Elasticsearch</font> documentation</a>.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<h1><a id="kibana"></a>Kibana</h1>
+<p>&nbsp;</p>
+<p>1. Download and run Kibana as explained in the <a title="Kibana installation" href="http://www.elasticsearch.org/overview/kibana/installation/" target="_blank">Kibana installation instructions</a>:</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp; wget https://download.elasticsearch.org/kibana/kibana/kibana-3.1.1.tar.gz<br />
+&nbsp; tar xvf kibana-3.1.1.tar.gz</div></div>
+
+</pre>
+<p>&nbsp;</p>
+<p>2. Kibana <font color="red">config</font>uration</p>
+<p>Change the Kibana config file</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp; <font color="red">sudo</font> vi ~/kibana-3.1.1/config.js</div></div>
+
+</pre>
+<p>by putting in it</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp; <font color="red">elasticsearch</font>: &quot;http://&quot;10.0.1.33&quot;,</div></div>
+
+</pre>
+<p>&nbsp;</p>
+<p>3. Move Kibana files to the appropriate <font color="red">location</font> in the Ubuntu <font color="red">server</font> web directory</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp; <font color="red">sudo</font> mkdir -p /var/www/kibana3<br />
+&nbsp; <font color="red">sudo</font> cp -R ~/kibana-3.1.1/* /var/www/kibana3/</div></div>
+
+</pre>
+<p>Readers should note that every time there are updates in the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">kibana-3.1.1</div></div>
+<p>directory, files would need to be recopied after cleaning up the directory:</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp; <font color="red">sudo</font> rm -rf /var/www/kibana3/*<br />
+&nbsp; <font color="red">sudo</font> cp -R ~/kibana-3.1.1/* /var/www/kibana3</div></div>
+
+</pre>
+<p>&nbsp;</p>
+<p>4. Install and configure <font color="red">Nginx</font></p>
+<p><font color="red">Nginx</font> is an <font color="red">open source</font> web <font color="red">server</font> that we use to <font color="red">proxy</font> for <font color="red">Elasticsearch</font>. First let&#8217;s install it:</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp; &nbsp;<font color="red">sudo</font> apt-get install <font color="red">nginx</font></div></div>
+
+</pre>
+<p>The file</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/etc/nginx/sites-available/default</div></div>
+<p>tells <font color="red">Nginx</font> to <font color="red">proxy</font> request on <font color="red">port</font> 80 to <font color="red">Elasticsearch</font> running on <font color="red">port</font> 9200:</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp; &nbsp;vi /etc/nginx/sites-available/default</div></div>
+
+</pre>
+<p>The file content can be something like</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;height:300px;"><div class="text codecolorer">&nbsp; # If you use this, you'll want to point config.js at <br />
+&nbsp; # http://FQDN:80/ instead of http://FQDN:9200<br />
+&nbsp; #<br />
+<br />
+&lt;span style=&quot;color: #ff6600;&quot;&gt; &nbsp;upstream <font color="red">elasticsearch</font> {<br />
+&nbsp; &nbsp; <font color="red">server</font> 127.0.0.1:9200;<br />
+&nbsp; &nbsp; keepalive 15;<br />
+&nbsp; }&lt;/span&gt;<br />
+<br />
+&nbsp; <font color="red">server</font> {<br />
+&nbsp; &nbsp; listen *:80 ;<br />
+&nbsp; &nbsp; &lt;span style=&quot;color: #ff6600;&quot;&gt;server_name 10.0.1.33;&lt;/span&gt;<br />
+&nbsp; &nbsp; access_log /var/log/nginx/kibana.myhost.org.access.log;<br />
+<br />
+&nbsp; &nbsp; <font color="red">location</font> / {<br />
+&nbsp; &nbsp; &nbsp; &lt;span style=&quot;color: #ff6600;&quot;&gt;root /var/www/kibana3;&lt;/span&gt;<br />
+&nbsp; &nbsp; &nbsp; <font color="red">index</font> index.html index.htm;<br />
+&nbsp; &nbsp; &nbsp; &lt;span style=&quot;color: #ff6600;&quot;&gt;proxy_http_version 1.1;<br />
+&nbsp; &nbsp; &nbsp; proxy_set_header Connection &quot;Keep-Alive&quot;;<br />
+&nbsp; &nbsp; &nbsp; proxy_set_header Proxy-Connection &quot;Keep-Alive&quot;;&lt;/span&gt;<br />
+&nbsp; &nbsp; }<br />
+<br />
+&nbsp; &nbsp; <font color="red">location</font> ~ ^/_aliases$ {<br />
+&nbsp; &nbsp; &nbsp; proxy_pass http://127.0.0.1:9200;<br />
+&nbsp; &nbsp; &nbsp; proxy_read_timeout 90;<br />
+&nbsp; &nbsp; }<br />
+&nbsp; &nbsp; <font color="red">location</font> ~ ^/.*/_aliases$ {<br />
+&nbsp; &nbsp; &nbsp; proxy_pass http://127.0.0.1:9200;<br />
+&nbsp; &nbsp; &nbsp; proxy_read_timeout 90;<br />
+&nbsp; &nbsp; }<br />
+&nbsp; &nbsp; <font color="red">location</font> ~ ^/_<font color="red">nodes</font>$ {<br />
+&nbsp; &nbsp; &nbsp; proxy_pass http://127.0.0.1:9200;<br />
+&nbsp; &nbsp; &nbsp; proxy_read_timeout 90;<br />
+&nbsp; &nbsp; }<br />
+&nbsp; &nbsp; <font color="red">location</font> ~ ^/.*/_search$ {<br />
+&nbsp; &nbsp; &nbsp; proxy_pass http://127.0.0.1:9200;<br />
+&nbsp; &nbsp; &nbsp; proxy_read_timeout 90;<br />
+&nbsp; &nbsp; }<br />
+&nbsp; &nbsp; <font color="red">location</font> ~ ^/.*/_mapping {<br />
+&nbsp; &nbsp; &nbsp; proxy_pass http://127.0.0.1:9200;<br />
+&nbsp; &nbsp; &nbsp; proxy_read_timeout 90;<br />
+&nbsp; &nbsp; }<br />
+<br />
+&nbsp; &nbsp; # Password protected <font color="red">endpoints</font><br />
+&nbsp; &nbsp; <font color="red">location</font> ~ ^/&lt;span style=&quot;color: #ff6600;&quot;&gt;kibana-int&lt;/span&gt;/<font color="red">dashboard</font>/.*$ {<br />
+&nbsp; &nbsp; &nbsp; proxy_pass http://127.0.0.1:9200;<br />
+&nbsp; &nbsp; &nbsp; proxy_read_timeout 90;<br />
+&nbsp; &nbsp; &nbsp; limit_except GET {<br />
+&nbsp; &nbsp; &nbsp; &nbsp; proxy_pass http://127.0.0.1:9200;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; auth_basic &quot;Restricted&quot;;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; auth_basic_user_file /etc/nginx/conf.d/kibana.myhost.org.htpasswd;<br />
+&nbsp; &nbsp; &nbsp; }<br />
+&nbsp; &nbsp; }<br />
+&nbsp; &nbsp; <font color="red">location</font> ~ ^/&lt;span style=&quot;color: #ff6600;&quot;&gt;kibana-int&lt;/span&gt;/temp.*$ {<br />
+&nbsp; &nbsp; &nbsp; proxy_pass http://127.0.0.1:9200;<br />
+&nbsp; &nbsp; &nbsp; proxy_read_timeout 90;<br />
+&nbsp; &nbsp; &nbsp; limit_except GET {<br />
+&nbsp; &nbsp; &nbsp; &nbsp; proxy_pass http://127.0.0.1:9200;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; auth_basic &quot;Restricted&quot;;<br />
+&nbsp; &nbsp; &nbsp; &nbsp; auth_basic_user_file /etc/nginx/conf.d/kibana.myhost.org.htpasswd;<br />
+&nbsp; &nbsp; &nbsp; }<br />
+&nbsp; &nbsp; }<br />
+&nbsp; }</div></div>
+
+</pre>
+<p>In the file, for performance reasons, we made sure there is a persistent connection between <font color="red">Nginx</font> and <font color="red">Elasticsearch</font> using keepalives (</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">upstream</div></div>
+<p>and</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">proxy_set</div></div>
+<p>directives). The password-protected <font color="red">endpoints</font> ensure that users cannot create and save <font color="red">dashboards</font> without being able to authenticate according to the credentials in the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">/etc/nginx/conf.d/kibana.myhost.org.htpasswd</div></div>
+<p>directory.</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">kibana-int</div></div>
+<p>is the default <font color="red">Elasticsearch</font> <font color="red">index</font> to use for storing Kibana-specific objects such as stored <font color="red">dashboards</font> as defined in the Kibana <font color="red">configuration file</font> at</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">~/kibana-3.1.1/config.js</div></div>
+<p>. For more information on <font color="red">Elasticsearch</font> and <font color="red">Nginx</font>, refer to the more <a title="elasticsearch nginx" href="http://www.elasticsearch.org/blog/playing-http-tricks-nginx/" target="_blank">tricks with <font color="red">Nginx</font></a> guide.</p>
+<p>If you want to restrict users from seeing certain <font color="red">data</font>, theoretically using <a title="elasticsearch <font color="red">index</font> aliases" href="http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/indices-aliases.html" target="_blank">index aliases</a> with <font color="red">Nginx</font> could work, but according to <a title="restricting users" href="http://www.elasticsearch.org/blog/restricting-users-kibana-filtered-aliases/" target="_blank"><font color="red">Elasticsearch</font> documentation</a>, that will not work easily due to the way <font color="red">Nginx</font> interprets variables in regular expressions. Thus, someone would need to use complicated rewrites (explained <a title="restricting users" href="http://www.elasticsearch.org/blog/restricting-users-kibana-filtered-aliases/" target="_blank">here</a>) or use a different <font color="red">proxy</font>, not <font color="red">Nginx</font>.</p>
+<p>Also make sure that the Kibana <font color="red">configuration file</font></p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">~/kibana-3.1.1/config.j</div></div>
+<p>that you edited earlier still points to <font color="red">Elasticsearch</font> on <font color="red">port</font> 80, which <font color="red">Nginx</font> will <font color="red">proxy</font> and not the default 9200.</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp; <font color="red">elasticsearch</font>: &quot;http://10.0.1.33&quot;,</div></div>
+
+</pre>
+<p>Then let&#8217;s create the file with the credentials for user authentication in Kibana&#8217;s default</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">kibana-int <font color="red">index</font></div></div>
+<p>mentioned above. Use</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">htppasswd</div></div>
+<p>of</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">apache2-utils</div></div>
+<p>(after installing it) to configure a username usernameX and a password that will be able to make changes to Kibana like creating and saving <font color="red">dashboards</font>:</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp; <font color="red">sudo</font> apt-get install apache2-utils<br />
+&nbsp; <font color="red">sudo</font> cp nginx.conf /etc/nginx/sites-available/default<br />
+&nbsp; <font color="red">sudo</font> htpasswd -c /etc/nginx/conf.d/kibana.myhost.org.htpasswd usernameX<br />
+&nbsp; &nbsp; &amp;lt; ...password creating and confirmation... &amp;gt;</div></div>
+
+</pre>
+<p>&nbsp;</p>
+<p>5. Restart <font color="red">Nginx</font> after making all the changes:</p>
+<pre>
+
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">&nbsp; <font color="red">sudo</font> <font color="red">service</font> <font color="red">nginx</font> restart</div></div>
+
+</pre>
+<p>&nbsp;</p>
+<p>6. Kibana web <font color="red">interface</font></p>
+<p>For our exercise we wanted to use Kibana to view top destinations and <font color="red">ports</font> with most traffic, the <font color="red">protocols</font> that use the most traffic and a traffic graph. Of course, there are many more graphs that could be produced in Kibana.</p>
+<p>Before using the Kibana web <font color="red">interface</font>, make sure <font color="red">Elasticsearch</font> is running and potentially that <font color="red">Logstash</font> is also running and importing <font color="red">data</font> in <font color="red">Elasticsearch</font> as shown in the steps above. Note that the collected <font color="red">data</font> might take a few minutes to show in Kibana.</p>
+<p>Visit h++p://10.0.1.33. Kibana comes with some preinstalled <font color="red">dashboards</font> to use with <font color="red">Logstash</font>, for example, h++p://10.0.1.33/index.html#/dashboard/file/logstash.<font color="red">json</font>. Of course, administrators can edit and create new <font color="red">dashboards</font>. Dynamic scripted <font color="red">dashboards</font> (.js) are also possible. Here we will only show a couple of panels we used to demonstrate the <font color="red">NetFlow</font> <font color="red">data</font> collected.</p>
+<p>To be able to only see specific <font color="red">NetFlow</font> <font color="red">data</font> stored in the <font color="red">Elasticsearch</font> <font color="red">index</font> we created later, start from the h++p://10.0.1.33/index.html#/dashboard/file/logstash.<font color="red">json</font> <font color="red">dashboard</font> and change the <font color="red">dashboard</font> setting by clicking the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Configure <font color="red">Dashboard</font></div></div>
+<p>icon at the top right and set the <font color="red">Index</font> tab to have an</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer"><font color="red">Index</font> Pattern</div></div>
+<p>of</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">[logstash_netflow5-]YYYY.MM.DD</div></div>
+<p>and Timestamp value of</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">day</div></div>
+<p>.</p>
+<p>To filter the <font color="red">data</font> shown in Kibana&#8217;s <font color="red">dashboards</font>, we can use filters or queries. For example, to only view information about FTP&#8217;s control channel (TCP <font color="red">port</font> 21) we can use a querystring of</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">netflow.l4_dst_port:21</div></div>
+<p>. Similarly, we can use a filter or query with</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">netflow.protocol:17</div></div>
+<p>to only process <font color="red">UDP</font> flow information. Finally, a filter with</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Field: netflow.ipv4_dst_addr</div></div>
+<p>and</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Value: 10.0.1.21</div></div>
+<p>will filter on flows that were only destined to 10.0.1.21.</p>
+<p>For more information on filters and queries, refer to the <a title="kibana queries and filters" href="http://www.elasticsearch.org/guide/en/kibana/current/working-with-queries-and-filters.html" target="_blank">queries and filters</a> documentation.</p>
+<p>Now we can see the top destinations and top destination <font color="red">ports</font> based on the <font color="red">bytes</font> sent. We create a</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">table</div></div>
+<p>panel with the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Inspect checkbox</div></div>
+<p>checked, with</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Term Mode: terms_ stats</div></div>
+<p>,</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Stats type: total</div></div>
+<p>,</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Field: netflow.ipv4_dst_addr</div></div>
+<p>and</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Value Field: netflow.in_<font color="red">bytes</font></div></div>
+<p>. The Style is</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">pie</div></div>
+<p>. Similarly, we can do the same for destination <font color="red">ports</font>. We create an</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">able</div></div>
+<p>panel with the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Inspect checkbox</div></div>
+<p>checked, with</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Term Mode: terms_ stats</div></div>
+<p>,</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Stats type: total</div></div>
+<p>,</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Field: netflow.ipv4_dst_port</div></div>
+<p>and</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Value Field: netflow.in_<font color="red">bytes</font></div></div>
+<p>. The Style is</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">pie</div></div>
+<p>. These two pie charts show which destinations and <font color="red">ports</font> have seen the most <font color="red">data</font>:</p>
+<div id="attachment_159544" style="max-width: 257px" class="wp-caption aligncenter"><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/dstaddr-247x300.jpg"><img class="wp-image-159544 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/dstaddr-247x300.jpg" alt="dstaddr-247x300" width="247" height="300" /></a><p class="wp-caption-text"><font color="red">Destination address</font> piechart panel</p></div>
+<div id="attachment_159545" style="max-width: 266px" class="wp-caption aligncenter"><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/dst<font color="red">port</font>-256x300.jpg"><img class="wp-image-159545 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/dstport-256x300.jpg" alt="dstport-256x300" width="256" height="300" /></a><p class="wp-caption-text">Destination port piechart panel</p></div>
+<p>We can see that the <font color="red">destination addresses</font> are shown as numbers. That is because the <font color="red">Elasticsearch</font> <font color="red">index</font> template we created earlier treats the <font color="red">NetFlow</font> source and <font color="red">destination address</font> fields as</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">type: &quot;<font color="red">ip</font>&quot;</div></div>
+<p>and thus converts them to a sortable number. Queries and filters can still use the addresses, as we will see below. Administrators could, of course, choose to treat the addresses as strings, but that would affect sortability and querying and filtering performance.</p>
+<p>Now we can create a top <font color="red">protocols</font> table and traffic-over-time chart. First we create a</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">table</div></div>
+<p>panel with the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Inspect checkbox</div></div>
+<p>checked, with</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Term Mode: terms_ stats</div></div>
+<p>,</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Stats type: total</div></div>
+<p>,</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Field: netflow.protocol</div></div>
+<p>and</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Value Field: netflow.in_<font color="red">bytes</font></div></div>
+<p>. The Style is</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">table</div></div>
+<p>. Then we create a</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">histogram</div></div>
+<p>panel with the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Inspect checkbox</div></div>
+<p>checked, with</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Chart Value: total</div></div>
+<p>,</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Value Field: netflow.in_<font color="red">bytes</font></div></div>
+<p>and the</p>
+<div class="codecolorer-container text default" style="overflow:auto;white-space:nowrap;width:435px;"><div class="text codecolorer">Auto-interval checkbox</div></div>
+<p>checked. The top <font color="red">protocols</font> table and the traffic-over-time chart are shown below.</p>
+<div id="attachment_159546" style="max-width: 310px" class="wp-caption aligncenter"><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/protocols-300x153.jpg"><img class="wp-image-159546 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/protocols-300x153.jpg" alt="protocols-300x153" width="300" height="153" /></a><p class="wp-caption-text"><font color="red">Protocols</font> table panel</p></div>
+<div id="attachment_159547" style="max-width: 310px" class="wp-caption aligncenter"><a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/traffic-300x195.jpg"><img class="wp-image-159547 size-full" src="https://alln-extcloud-storage.cisco.com/ciscoblogs/traffic-300x195.jpg" alt="traffic-300x195" width="300" height="195" /></a><p class="wp-caption-text">Traffic panel</p></div>
+<p>The whole <font color="red">dashboard</font> can be found <a href="https://alln-extcloud-storage.cisco.com/ciscoblogs/Kibana-<font color="red">dashboard</font>.txt" target="_blank">here</a>.  Of course, Kibana offers many more panels and features that can be added in a <font color="red">dashboard</font>. The <font color="red">dashboard</font> that contains all these panels can be saved and reused after being prompted to use the htpasswd created earlier. Then it can be accessed using h++p://10.0.1.33/index.html#/dashboard/elasticsearch/&lt;dashboard_name&gt;. The dashboard can also be exported and saved in the Kibana-3.1.1/app/dashboards/ directory as a <font color="red">json</font> file and then copied into the /var/www/kibana3/app/dashboards/ directory. Afterward it can be accessed using h<strong>++</strong>p://10.0.1.33/index.html#/dashboard/file/&lt;dashboard filename&gt;.<font color="red">json</font>.</p>
+<p>For more information on rows, panels and <font color="red">dashboards</font>, refer to the <a title="kibana rows and panels" href="http://www.elasticsearch.org/guide/en/kibana/current/rows-and-panels.html" target="_blank">rows and panels</a> and <a title="kibana dashboard saving and loading" href="http://www.elasticsearch.org/guide/en/kibana/current/saving-and-loading-dashboards.html" target="_blank">saving and loading</a> documentation.</p>
+<p>In conclusion, ELK is a set of very useful, <font color="red">open source</font> <font color="red">analytics</font> tools. We just saw how to set them up from scratch to consume <font color="red">NetFlow</font>. Their capabilities are endless. It is up to the user to explore them&#8230;</p>
+<p><strong>Note:</strong> Readers should note that a prepackaged ELK stack can be downloaded in Vagrant. Someone using Vagrant would avoid taking all the steps to install and configure the ELK components, but would have less control and knowledge of how the ELK tools work together. For more information, refer to the <a title="Vagrant ELK" href="http://blog.comperiosearch.com/blog/2014/08/14/elk-one-vagrant-box/" target="_blank">Vagrant post</a>.</p>
+Tags:<br /><ul class = "tagged"><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=big-data">Big Data</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=big-data-analytics">big data analytics</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=netflow">netflow</a></li><li><a class = "post_tags" href="https://blogs.cisco.com/?tag=security-2">security</a></li></ul>		</div>
+			<div id = "comments">
+				<div id = "respond">
+				<p class = "cisco_respond">In an effort to keep conversations fresh, Cisco Blogs closes comments after 60 days. Please visit the <a href ="https://blogs.cisco.com">Cisco Blogs hub page</a> for the latest content.</p>
+			<p><span class = "comment_heading">6 Comments</span></p>
+		<ol class="commentlist" id="thecomments">
+				
+			<li>
+			<div id="comment-2230273">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Jose Bogarín						</span>
+						<br />
+						<span class="comment-meta commentmetadata">December 8, 2014 at 6:47 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Panos,
+
+
+
+Great post. I've been looking for a good open source solution for Netflow analysis for years. None of the ones that existed really covered what I like. ELK stack looks like a winner.
+
+
+
+You post is great tutorial, better than many out there on the wild. It would be nice if you could do follow ups regarding ELK, for netflow or network monitoring / troubleshooting in general</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2230273" class = "commentLikeButton commentlike" data-nitro = >2 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li>
+			<div id="comment-2230289">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Panos						</span>
+						<br />
+						<span class="comment-meta commentmetadata">December 8, 2014 at 7:01 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Thank you for the comment Jose. 
+
+
+
+ELK is indeed a pretty useful open-source tool. The are other commercial and a few open-source ones that can do the job of course. 
+
+
+
+As you are suggesting, we will try to blog for ELK with Netflow lessons learned from our infrastructure.
+
+Panos</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2230289" class = "commentLikeButton commentlike" data-nitro = >4 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2227504">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Phil Miles						</span>
+						<br />
+						<span class="comment-meta commentmetadata">December 5, 2014 at 7:24 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Hi there,
+
+
+
+having tried the netflow plugin, we were only able to establish a few hours before it crashed.  This was on a 24core box with oodles of memory.  Have you tried this plugin for monitoring +5Gb/s on a port flow monitoring?  
+
+
+
+Thanks,
+
+Phil.</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2227504" class = "commentLikeButton commentlike" data-nitro = >2 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li>
+			<div id="comment-2227511">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Panos						</span>
+						<br />
+						<span class="comment-meta commentmetadata">December 5, 2014 at 7:36 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Hi Phil,
+
+My rate in the lab we about 30 devices sending about 4 flow records each per second. So, about 120 total records per second and I didn't see Logstash act up. I am not sure about the rate that your Netflow exporter is sending, but probably it is much more. Also, I can't be sure if Logstash crashes due to overload. If Logstash crashes for you consistently maybe you can check their mailing list http://www.elasticsearch.com/community/ I am sorry I couldn't help more. 
+
+Panos</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2227511" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+
+			<li>
+			<div id="comment-2226771">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Mark Walkom						</span>
+						<br />
+						<span class="comment-meta commentmetadata">December 4, 2014 at 4:57 pm</span>
+
+					</div>
+				<div class="comment_text">
+				<p>FYI the images on this appear to be broken and you have a few instances of "h++p" instead of http.
+
+
+
+It'd also be awesome if you could post the dashboard json for people to quick load :D</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2226771" class = "commentLikeButton commentlike" data-nitro = >2 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		<ul class="children">
+
+			<li>
+			<div id="comment-2230283">
+				<div class="comment_image">
+					<img class = "img-circle img-noname" src = 'https://alln-extcloud-storage.cisco.com/ciscoblogs/nitro_users/empty.jpg'  width = "56" height = "56">
+				</div>
+				<div class="comment_act">
+					<div class="comment_user_info">
+						<span class="fn">
+						Panos						</span>
+						<br />
+						<span class="comment-meta commentmetadata">December 8, 2014 at 6:58 am</span>
+
+					</div>
+				<div class="comment_text">
+				<p>Hi Mark,
+
+We fixed the images issue. the "++" is the links is for HTML to not automatically link to a page in an internal server (10.0.1.33) that does not exist. I linked the dashboard in the blog as you suggested. It is at http://blogs.cisco.com/wp-content/uploads/Kibana-dashboard.txt
+
+Thank  you for the feedback.
+
+Panos</p>				</div>
+				<div class = "roblike">
+					<a  href = "#" id = "clickLike2230283" class = "commentLikeButton commentlike" data-nitro = >0 likes</a>				</div>
+				<div class="reply">
+									</div>
+
+				<div class="clear"></div>
+			</div>
+			<div class="clear"></div>
+		</div>
+		</li>
+		</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+			</ol>
+	</div>
+
+			</div>
+		</article>
+
+	</div>
+	<div id = "main_right">
+		<ul id = "sidebar">
+
+  <li id="subscribe" class="widget">
+    <h3>Subscribe to Security:</h3>
+    <div id="subscribe_box">
+      <form id ="subscribe_form" action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open('https://feedburner.google.com/fb/a/mailverify?uri=CiscoBlogSecurity', 'popupwindow', 'scrollbars=yes,width=550,height=520');return true">
+        <input type="text" class="subscribe" name="email" value="Enter email address" onFocus="if(this.value == 'Enter email address') {this.value = '';}" onBlur="if (this.value == '') {this.value = 'Enter email address';}"></input>
+        <input type="hidden" value="CiscoBlogSecurity" name="uri" ></input>
+        <input type="hidden" name="loc" value="en_US"></input>
+        <input type="submit" class="subscribe_button" value="Subscribe" ></input>
+        <div class="clear"></div>
+      </form>
+    </div>
+    <div class="clear"></div>
+
+</li>
+
+<li id="social_widget" class="widget">
+  <h3>Connect with Security</h3>
+  <ul>
+        <li><a target='_blank' href="https://www.facebook.com/ciscosecurity?ref=nf"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_fb.png" alt="Facebook"></a></li>
+    <li><a target='_blank' href="https://twitter.com/ciscosecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_tw.png" alt="Twitter"></a></li>
+    <li><a target='_blank' href="http://www.linkedin.com/company/cisco"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_li.png" alt="Linkedin"></a></li>
+    <li><a target='_blank' href="https://plus.google.com/106092229730683979920"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_gp.png" alt="Google+"></a></li>
+    <li><a target='_blank' href="https://www.slideshare.net/ciscosystems"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ss.png" alt="Slideshare"></a></li>
+    <li><a target='_blank' href="http://youtubecisco.com/security"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_yt.png" alt="YouTube"></a></li>
+    <li><a target='_blank' href="https://www.instagram.com/cisco/?hl=en"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/follow_ig.png" alt="Instagram"></a></li>
+    <li><a href="https://feeds.feedburner.com/CiscoBlogSecurity"><img src="https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/rss.png" width = "24" height = "24" alt = "Rss"></a></li>
+      </ul>
+</li>
+	<li>
+		<div id = "nitroLoggedOut" class="widget">
+			<div class = "consoleTitle">
+				Cisco Social Rewards
+			</div>
+			<div class = "consoleTextNoLog">
+				Get credit for all your Cisco site participation with Social Rewards. <a href = "https://blogs.cisco.com/rewards-about">Learn More</a>			</div>
+						<a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "joinNow">Join Today</a>
+			<div class = "consoleTextNoLog">
+				Already a member?  <a href = "https://socialrewards-prod.cloudapps.cisco.com/" class = "already">Log In</a>
+			</div>
+			</div>
+</li> 	<script>
+
+
+	nitro.callAPI("method=site.getActionFeed&apiKey=6912c6c82ccc4863a0311dc8b586b8fb&showLevelChanges=true&preferences=userFullName|profileUrl|userPhotoUrl", "newsfeed");
+	</script>
+	<li>
+		 <div id ="newsfeedWidget">
+			<div class = "newsfeed_header">
+				Latest Rewards
+				<a href = "https://blogs.cisco.com/rewards-about" class = "newsIcon"><img src = "/wp-content/plugins/bunchball/images/infoIcon.png"></a>
+			</div>
+			<div id = "newsInnerContent">
+				<ul id = "newsfeed">
+				</ul>
+			</div>
+		</div>
+	</li>
+    <li id="blogroll">
+            <ul id="blogroll_links">
+          <li class="roll_heading">What We're Reading</li>
+
+            <li><a href="http://www.cert.org/blogs/vuls/" target="_blank">CERT Vulnerability Analysis</a></li>
+                      <li><a href="http://blogs.technet.com/b/srd/" target="_blank">Microsoft Security Research & Defense</a></li>
+                      <li><a href="http://isc.sans.edu/index.html" target="_blank">SANS Internet Storm Center</a></li>
+                      <li><a href="http://www.schneier.com/" target="_blank">Schneier on Security</a></li>
+                  </ul>
+              <ul id="related_links">
+          <li class="roll_heading">Related Links</li>
+                    <li><a href="http://www.cisco.com/en/US/products/products_security_advisories_listing.html" target="_blank">Advisories and Responses</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/cyberRiskReport.x" target="_blank">Cyber Risk Reports</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/intelliPapers.x?i=55" target="_blank">Security Best Practices</a></li>
+                        <li><a href="http://tools.cisco.com/security/center/home.x" target="_blank">Security Intelligence Operations</a></li>
+                        <li><a href="http://www.cisco.com/en/US/products/hw/vpndevc/index.html" target="_blank">Security Products</a></li>
+                  </ul>
+          </li>
+  </ul>	</div>
+	<div class = "clear"></div>
+</div>
+</div>
+</div>
+   
+
+<div class="sb-slidebar sb-left sb-width-custom sb-momentum-scrolling " data-sb-width="50%">
+    <nav>
+  <a class = "hamburger_login" href = "https://blogs.cisco.com:9031/sp/startSSO.ping?PartnerIdpId=cloudsso.cisco.com">Log In to Cisco.com</a>      <ul>
+                  <li><a href='https://blogs.cisco.com'><span>All Blogs</span></a></li>
+                  <li><a href='#'><span>Technologies</span></a>
+                  <ul>
+            <div class = "bordertop"></div>
+            <li><a href="https://blogs.cisco.com/analytics-automation">Analytics &amp; Automation</a></li>
+            <li><a href="https://blogs.cisco.com/cloud">Cloud</a></li>
+            <li><a href='https://blogs.cisco.com/collaboration'>Collaboration</a></li>
+            <li><a href='https://blogs.cisco.com/datacenter'>Data Center</a></li>
+            <li><a href='https://blogs.cisco.com/digital'>Digital Transformation</a></li>
+            <li><a href='https://blogs.cisco.com/enterprise'>Enterprise Networks</a></li>
+            <li><a href='https://blogs.cisco.com/innovation'>Innovation</a></li>
+            <li><a href='https://blogs.cisco.com/wireless'>Mobility</a></li>
+            <li><a href='https://blogs.cisco.com/security'>Security</a></li>
+            <li class = "sub"><a href="https://blogs.cisco.com/talos" class="nav_menu" title="">Threat Research</a></li>
+            <li><a href='https://blogs.cisco.com/smallbusiness'>Small Business</a></li>
+            <li><a href='https://blogs.cisco.com/services'>Services</a></li>
+            <li><a href='https://blogs.cisco.com/sp'>SP360:Service Provider</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Industries</span></a>
+                      <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/education'>Education</a></li>
+            <li><a href='https://blogs.cisco.com/energy'>Energy</a></li>
+            <li><a href='https://blogs.cisco.com/financialservices'>Financial Services</a></li>
+            <li><a href='https://blogs.cisco.com/government'>Government</a></li>
+            <li><a href='https://blogs.cisco.com/healthcare'>Healthcare</a></li>
+            <li><a href='https://blogs.cisco.com/manufacturing'>Manufacturing</a></li>
+            <li><a href='https://blogs.cisco.com/retail'>Retail &amp; Hospitality</a></li>
+          </ul>
+        </li>
+                  <li><a href='#'><span>Partners</span></a> 
+          <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/partner'>Partner</a></li>
+          </ul>
+        </li>
+        <li><a href='#'><span>For the Tech Expert</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/getyourbuildon'>Architects &amp; Distinguished Engineers</a></li>
+            <li><a href='https://blogs.cisco.com/developer'>Developer</a></li>
+            <li><a href='https://blogs.cisco.com/performance'>High Performance Computing</a></li>
+            <li><a href='https://blogs.cisco.com/ciscoit'>Inside Cisco IT</a></li>
+            <li><a href='https://blogs.cisco.com/cin'>TechWiseTV</a></li>
+          </ul>
+        </li>
+         <li><a href='#'><span>Get to Know Cisco</span></a>           <ul>
+            <div class = "bordertop"></div>
+            <li><a href='https://blogs.cisco.com/csr'>Corporate Social Responsibility</a></li>
+            <li><a href='https://blogs.cisco.com/cle'>Connected Life Exchange</a></li>
+            <li><a href='https://blogs.cisco.com/customerstories'>Customer Stories</a></li>
+            <li><a href='https://blogs.cisco.com/socialmedia'>Digital and Social Media</a></li>
+            <li><a href='https://blogs.cisco.com/gov'>High Tech Policy</a></li>
+            <li><a href='https://blogs.cisco.com/diversity'>Inclusion and Diversity</a></li>
+            <li><a href='https://blogs.cisco.com/lifeatcisco'>Life at Cisco</a></li>
+            <li><a href='https://blogs.cisco.com/perspectives'>Perspectives</a></li>
+            <li><a href='https://blogs.cisco.com/news'>Executive Platform: News &amp; Insights</a></li>
+          </ul>
+        </li>
+        <li class = "countries"><a href='#'><span>Countries and Regions</span></a>
+          <ul>
+            <div class = "col_1">
+  <li><a href="https://apjc.thecisconetwork.com/">Asia Pacific</a>
+  <li><a href="https://gblogs.cisco.com/at/">Austria</a>
+  <li><span class = "sub_main">Belgium</span></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be">Dutch</a></li>
+    <li class = "sub"><a href="https://gblogs.cisco.com/be-fr">French</a></li>
+  <li><a href="https://gblogs.cisco.com/br/">Brazil</a>
+  <li><span class = "sub_main">Canada</span></li>
+    <li class = "sub"><a href="https://canadablog.cisco.com/">English</a></li>
+    <li class = "sub"><a href="https://ciscocanadafr.wordpress.com/">French</a></li>
+
+  </div>
+    <div class = "col_2">
+    <li><a href="https://gblogs.cisco.com/fin/">Finland</a>
+    <li><a href="https://gblogs.cisco.com/fr/">France</a>
+
+  <li><a href="https://gblogs.cisco.com/de">Germany</a></li>
+  <li><a href="https://gblogs.cisco.com/gr/">Greece</a>
+  <li><a href="https://gblogs.cisco.com/in">India</a></li>
+  <li><a href="https://gblogs.cisco.com/it/">Italy</a></li>
+  <li><a href="https://gblogs.cisco.com/jp/">Japan</a></li>
+  <li><a href="https://ciscokrblog.com/">Korea</a></li>
+
+  </div>
+  <div class = "col_3">
+  <li><span class = "sub_main">Latin America</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/la/">Latin America (Esp)</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/cansac/">Cansac</a></li>
+  <li><a href="https://gblogs.cisco.com/nl/">Netherlands</a></li>
+  <li><a href="https://gblogs.cisco.com/no">Norway</a></li>
+  <li><a href="https://gblogs.cisco.com/pl">Poland</a></li>
+  <li><a href="https://gblogs.cisco.com/pt">Portugal</a></li>
+  <li><a href="https://gblogs.cisco.com/ro">Romania</a></li>
+  </div>
+
+  <div class = "col_4">
+  <li><a href="https://gblogs.cisco.com/ru">Russia</a></li>
+  <li><a href="https://gblogs.cisco.com/es">Spain</a></li>
+  <li><span class = "sub_main">Switzerland</span></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-tech/">English</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-fr/">French</a></li>
+      <li class = "sub"><a href="https://gblogs.cisco.com/ch-de/">German</a></li>
+  <li><a href="https://gblogs.cisco.com/tr/">Turkey</a></li>
+  <li><a href="https://gblogs.cisco.com/uki/">UK &amp; Ireland</a></li>
+</div>
+<div class = "clear"></div>
+</ul>
+</li>
+      </ul>
+</nav>
+</div>
+<footer class = "sb-slide">
+	<section id = "footer_content">
+				<ul id = "footer_social">
+			<li class = "footer_social_title">Connect</li>
+
+			<li><a target='_blank' href='https://www.facebook.com/ciscosecurity?ref=nf'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_fb.png" height = "25" width = "25"></a></li>
+			<li><a target='_blank' href='https://twitter.com/ciscosecurity'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_tw.png"></a></li>
+			<li><a target='_blank' href='http://www.linkedin.com/company/cisco'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_li.png"></a></li>
+			<li><a target='_blank' href='https://plus.google.com/106092229730683979920'><img src = "https://blogs.cisco.com/wp-content/themes/cisco_responsive/img/footer_gp.png"></a></li>
+			<div class = "clear"></div>
+
+		</ul>
+
+
+		<section id="footer_new">
+			<ul>
+				<li><a href="https://www.cisco.com/web/siteassets/contacts/index.html">Contacts</a>  |  </li>
+				<li><a href="https://secure.opinionlab.com/ccc01/o.asp?id=jBjOhqOJ">Feedback</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/help/index.html">Help</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/sitemap/index.html">Site Map</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/terms_condition.html">Terms &amp; Conditions</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html">Privacy Statement</a>  |  </li>
+				<li><a href="https://www.cisco.com/web/siteassets/legal/privacy.html#cookies">Cookie Policy</a>  |  </li>
+    	 		<li><a href="https://www.cisco.com/web/siteassets/legal/trademark.html">Trademarks</a> <br /> </li>
+    	 	</ul>
+		</section>
+		<br class="clear" />
+    	<section id ="disclaimer">
+    		<b>Legal Disclaimer</b>
+			<p>Some of the individuals posting to this site, including the moderators, work for Cisco Systems. Opinions expressed here and in any corresponding comments are the personal opinions of the original authors, not of Cisco. The content is provided for informational purposes only and is not meant to be an endorsement or representation by Cisco or any other party. This site is available to the public. No information you consider confidential should be posted to this site. By posting you agree to be solely responsible for the content of all information you contribute, link to, or otherwise upload to the Website and release Cisco from any liability related to your use of the Website. You also grant to Cisco a worldwide, perpetual, irrevocable, royalty-free and fully-paid, transferable (including rights to sublicense) right to exercise all copyright, publicity, and moral rights with respect to any original content you provide. The comments are moderated. Comments will appear as soon as they are approved by the moderator.</p>
+    	</section>
+	</section>
+	<script>
+var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+jQuery(document).ready(function($) {
+
+	$('a.commentLikeButton').click(function(event){
+		var elemId = event.target.id;
+		var commentId = elemId.replace('clickLike','');
+
+		event.preventDefault();
+
+		var nitroID= $(this).attr("data-nitro");
+
+
+
+		var str = $(this).text();
+		if (str =='1 like') {
+			var total = str.replace('like','');
+		}
+		else {
+			var total = str.replace('likes','');
+		}
+		if ($(this).hasClass( "commentlike")) {
+			var theTotal = parseInt(total);
+   			theTotal1 = Number(theTotal) + 1;
+   			if (theTotal1 === 1){
+   				$(this).text(theTotal1+" like"); 
+   			}
+   			else {
+    			$(this).text(theTotal1+" likes");
+    		}
+    		var data = {
+        		'action': 'addLike',
+				'commentID': commentId,
+				'total': theTotal1
+			};
+
+
+			$.post(ajaxurl, data, function(response) {
+				if (typeof nitroID !== 'undefined') {
+					commentLike(nitroID);
+				}
+				commentLiked();
+			});
+
+    	}
+    	else{
+    		$(this).removeAttr("href");
+    		alert('You already liked this');
+    		/*var theTotal = parseInt(total);
+   			theTotal = Number(theTotal) - 1;
+   			if (theTotal == 1){
+   				$(this).text(theTotal+" like");
+   			}
+   			else {
+    			$(this).text(theTotal+" likes");
+    		}
+    		var data = {
+        		'action': 'removeLike',
+				'commentID': commentId,
+				'total': theTotal
+			};
+			$.post(ajaxurl, data, function(response) {
+				alert('disliked');
+			});*/
+    	}
+
+    	$(this).addClass('commentliked').removeClass('commentlike');
+	});
+});
+
+
+
+
+
+	</script>
+	
+	<script>
+		var ajaxurl = "https://blogs.cisco.com/wp-admin/admin-ajax.php";
+		
+		jQuery(document).ready(function($) {
+			var postID = 159201;
+			var orig_count = 2;
+			$(".twitter a").click(function() {
+
+				var theTotal = orig_count;
+   				var count = Number(theTotal) + 1;
+				var data = {
+        			'action': 'addtweet',
+					'postID': postID,
+					'total': count
+				};
+				$.post(ajaxurl, data, function(response){});
+			})
+		});
+	</script>
+
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/comment-reply.min.js?ver=4.9.2'></script>
+<script type='text/javascript' src='https://blogs.cisco.com/wp-includes/js/wp-embed.min.js?ver=4.9.2'></script>
+</footer>
+<script>//nitro.refreshNML();</script>
+
+
+
+
+</body>
+</html>
+
+  <div id="share_bar1">
+
+    <span class = "share_title">Share</span>
+    <div class="twitter sharrre">
+      <div class = "box">
+        <div class = "count twitcount"></div>
+        <a class = "twitclick" href="https://twitter.com/intent/tweet?url=http://bit.ly/1crUG2A&text=Step-by-Step Setup of ELK for NetFlow Analytics&via=ciscosecurity" data-config-metrics-group='social_shares' data-config-metrics-title='twitter_shares' data-config-metrics-item='twitter_share'>tweet</a>
+      </div>
+    </div>
+
+    <div class="facebook sharrre">
+      <div class = "box">
+        <div class = "count fbcount"></div>
+        <a class = "fbclick share" href = "http://www.facebook.com/sharer/sharer.php?u=https://blogs.cisco.com/security/step-by-step-setup-of-elk-for-netflow-analytics&title=Step-by-Step Setup of ELK for NetFlow Analytics" data-config-metrics-group='social_shares' data-config-metrics-title='facebook_shares' data-config-metrics-item='facebook_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+
+
+    <div class="linkedin sharrre">
+      <div class = "box">
+        <div class = "count licount"></div>
+        <a class = "liclick share" href = "https://www.linkedin.com/cws/share?url=https://blogs.cisco.com/security/step-by-step-setup-of-elk-for-netflow-analytics" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='linkedin_shares' data-config-metrics-item='linkedin_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+
+
+      </div>
+    </div>
+
+    <div class="googleplus sharrre">
+      <div class = "box">
+        <div class = "count gpcount"></div>
+        <a class = "gpclick share" href="https://plus.google.com/share?url=https://blogs.cisco.com/security/step-by-step-setup-of-elk-for-netflow-analytics" data-title=" " data-config-metrics-group='social_shares' data-config-metrics-title='google_shares' data-config-metrics-item='google_share' onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"></a>
+      </div>
+    </div>
+        <div class = "share_mail"><a class="email emclick" href="mailto:?subject=Cisco Blog: Step-by-Step Setup of ELK for NetFlow Analytics&body=I saw this post on Cisco Security blog and thought you might like to read it.%0A%0AStep-by-Step Setup of ELK for NetFlow Analytics%0A%0Ahttps://blogs.cisco.com/security/step-by-step-setup-of-elk-for-netflow-analytics%0A%0A****Disclaimer****%0A%0ACisco is not responsible for the content of this email, and its contents do not necessarily reflect Cisco’s views or opinions. Cisco has not verified the email address or name of the sender." data-config-metrics-group='social_shares' data-config-metrics-title='email_shares' data-config-metrics-item='email_share'></a></div>
+    <div class = "clear"></div>
+  </div>
+  
