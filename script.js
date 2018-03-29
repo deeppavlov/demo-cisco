@@ -26,8 +26,11 @@ new Vue({
                 console.log('ERROR!');
             })
         },
+        path(category, fileName){
+            return `${category.name}/${fileName}`;
+        },
         select(category, fileName){
-            this.selected = `${category.name}/${fileName}`
+            this.selected = this.path(category, fileName);
         }
     }
 })
